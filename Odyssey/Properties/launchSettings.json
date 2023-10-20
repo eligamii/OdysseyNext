@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Odyssey (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Odyssey (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
