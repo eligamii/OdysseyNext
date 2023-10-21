@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Main;
 using Odyssey.Shared.DataTemplates.Data;
 using System.Threading.Tasks;
+using Odyssey.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -52,13 +53,18 @@ namespace Odyssey.Views
 
         private void AddTabButton_Click(object sender, RoutedEventArgs e)
         {
+            SearchBar searchBar = new SearchBar();
+            FlyoutShowOptions options = new FlyoutShowOptions();
+            options.Placement = FlyoutPlacementMode.Bottom;
+            options.Position = new Point(MainView.Current.splitViewContentFrame.ActualWidth / 2, 100);
 
+            searchBar.ShowAt(MainView.Current.splitViewContentFrame, options);
         }
 
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var pos = e.GetPosition(TabsView);
-            int index = (int)(pos.Y / 40); // Get tab index
+            int index = (int)(pos.Y / 40); // Get tab index, idk if usable with more than 25 tabs
 
             var tabToRemove = Tabs.TabsList.ElementAt(index);
 
@@ -72,6 +78,11 @@ namespace Odyssey.Views
             if (index > 0) TabsView.SelectedIndex = index - 1;
             else if (Tabs.TabsList.Count > 0) TabsView.SelectedIndex = 0;
             else TabsView.SelectedIndex = -1;
+        }
+
+        private void TabsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MainView.Current.splitViewContentFrame.Content = (e.AddedItems[0] as Tab).MainWebView;
         }
     }
 }

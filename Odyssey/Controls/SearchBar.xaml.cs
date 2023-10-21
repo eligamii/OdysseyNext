@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Shared.DataTemplates.Data;
 using Odyssey.Data.Main;
 using Odyssey.Views;
+using Microsoft.Web.WebView2.Core;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,15 +24,26 @@ namespace Odyssey.Controls
 {
     public sealed partial class SearchBar : Flyout
     {
-        FWebView webView = FWebView.New();
+        private FWebView webView;
+        private bool webViewUsed = false;
         public SearchBar()
         {
             this.InitializeComponent();
+            if(FWebView.CurrentlySelected == null) webView = FWebView.New();
         }
 
         private void Flyout_Opened(object sender, object e)
         {
+            
+        }
 
+        private void Flyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+        {
+            if(!webViewUsed)
+            {
+                webView.Close();
+                webView = null;
+            }
         }
 
         private void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -53,6 +65,7 @@ namespace Odyssey.Controls
                     PaneView.Current.TabsView.SelectedItem = tab;
 
                     MainView.Current.splitViewContentFrame.Content = webView;
+                    webViewUsed = true;
                 }
 
                 Hide();

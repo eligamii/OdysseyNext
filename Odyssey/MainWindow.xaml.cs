@@ -3,10 +3,12 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Main;
 using Odyssey.Helpers;
 using Odyssey.Shared.DataTemplates.Data;
 using Odyssey.Views;
+using System;
 using System.Threading.Tasks;
 using WinUIEx;
 

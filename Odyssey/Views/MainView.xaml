@@ -93,6 +93,7 @@
                    PaneBackground="Transparent"
                    BorderBrush="#33808080"
                    BorderThickness="0,0,1,0"
+                   DisplayMode="Inline"
                    x:FieldModifier="public"
                    IsPaneOpen="True"
                    PaneClosing="SplitView_PaneClosing"
