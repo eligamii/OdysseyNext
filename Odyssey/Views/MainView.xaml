@@ -5,11 +5,128 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Odyssey.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:helpers="using:Odyssey.Helpers"
     mc:Ignorable="d"
     >
 
-    <Grid>
+    <Page.Resources>
+        <ResourceDictionary>
+            <!-- Transpatant button style -->
+            <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="VerticalAlignment" Value="Stretch"/>
+                <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Margin" Value="0,4"/>
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
 
+    <Grid x:Name="RootGrid" x:FieldModifier="public">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="42" x:Name="TitleBarRow"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!-- Titlebar content -->
+        <Grid x:Name="AppTitleBar" 
+              VerticalAlignment="Stretch"
+              BorderBrush="#33808080"
+              BorderThickness="0,0,0,0.5"
+              x:FieldModifier="public">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
+                <ColumnDefinition x:Name="ControlsColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Controls region -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,1,0,0">
+                <Button Click="HomeButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane}" x:Name="HomeButton" x:FieldModifier="public" Height="32" Content="&#xE10F;"  Margin="3,0,0,0"  FontFamily="Segoe Fluent Icons"/>
+                <AppBarSeparator/>
+                <Button ToolTipService.ToolTip="{helpers:ResourceString Name=GoBack}" Content="&#xE0A6;"/>
+                <Button ToolTipService.ToolTip="{helpers:ResourceString Name=GoForward}" Content="&#xE0AB;"/>
+                <Button ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh}" Content="&#xE149;"/>
+                <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb}" Content="&#xE11A;" FontSize="15"/>
+                <AppBarSeparator/>
+                <Button Padding="10,3" x:Name="infoButton">
+                    <Button.Content>
+                        <Grid x:Name="iconGrid" >
+                            <ProgressRing Width="15" Height="15"
+                                    Foreground="{ThemeResource FocusStrokeColorOuterBrush}"
+                                    x:Name="progressRing" Visibility="Collapsed"
+                                    />
+
+                            <Image Height="15" x:Name="favicon">
+                                <Image.Source>
+                                    <BitmapImage UriSource="/Assets/icon.png"/>
+                                </Image.Source>
+                            </Image>
+
+                        </Grid>
+                    </Button.Content>
+                </Button>
+
+            </StackPanel>
+
+            <!-- Info region -->
+            <StackPanel Margin="0,0,0,0" Grid.Column="2" Orientation="Horizontal">
+                <TextBlock x:FieldModifier="public" x:Name="documentTitle" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey}">
+                    <TextBlock.Transitions>
+                        <TransitionCollection>
+                            <RepositionThemeTransition />
+                        </TransitionCollection>
+                    </TextBlock.Transitions>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Main content -->
+        <SplitView x:Name="SplitView" Grid.Row="1"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Stretch"
+                   OpenPaneLength="231"
+                   PaneBackground="Transparent"
+                   BorderBrush="#33808080"
+                   BorderThickness="0,0,1,0"
+                   x:FieldModifier="public"
+                   IsPaneOpen="True"
+                   PaneClosing="SplitView_PaneClosing"
+                   PaneOpening="SplitView_PaneOpening">
+            
+            <!-- SplitView pane -->
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Main pane content -->
+                    <Grid Grid.Row="1" >
+                        <!-- Background - [TODO] Replace that -->
+                        <Rectangle Grid.RowSpan="2" Fill="{ThemeResource LayerFillColorDefaultBrush}" x:Name="LayerBackground" x:FieldModifier="public" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                        <Frame x:Name="SplitViewPaneFrame" x:FieldModifier="public"/>
+                    </Grid>
+                </Grid>
+            </SplitView.Pane>
+
+            <!-- Sidebar and WebView frame -->
+            <SplitView x:FieldModifier="public" x:Name="sidebar" PaneBackground="Transparent" BorderBrush="#33808080" BorderThickness="1,0,0,0" Grid.Row="1" DisplayMode="Inline" IsPaneOpen="False" PanePlacement="Right">
+
+                <Frame x:Name="splitViewContentFrame" BorderBrush="#33808080" x:FieldModifier="public" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
+
+                <SplitView.Transitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition />
+                    </TransitionCollection>
+                </SplitView.Transitions>
+            </SplitView>
+        </SplitView>
     </Grid>
 </Page>

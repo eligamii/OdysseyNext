@@ -12,7 +12,11 @@
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\icon.png" />
+    <None Remove="Controls\FWebView.xaml" />
+    <None Remove="Controls\SearchBar.xaml" />
     <None Remove="Views\MainView.xaml" />
+    <None Remove="Views\PaneView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,9 +45,34 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
+    <ProjectReference Include="..\Odyssey.Events\Odyssey.Events.csproj" />
+    <ProjectReference Include="..\Odyssey.Extensions\Odyssey.Extensions.csproj" />
+    <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />
+    <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
+    <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Assets\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\FWebView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\PaneView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\SearchBar.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

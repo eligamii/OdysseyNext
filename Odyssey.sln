@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.App", "Odyssey\Odyssey.App.csproj", "{E9DEDE61-A872-45E6-B6D7-AE3F4DC50F4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.App", "Odyssey\Odyssey.App.csproj", "{E9DEDE61-A872-45E6-B6D7-AE3F4DC50F4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.QuickActions", "Odyssey.QuickActions\Odyssey.QuickActions.csproj", "{5883CD0B-F29B-45F4-8733-4ACD7B995873}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.QuickActions", "Odyssey.QuickActions\Odyssey.QuickActions.csproj", "{5883CD0B-F29B-45F4-8733-4ACD7B995873}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.Extensions", "Odyssey.Extensions\Odyssey.Extensions.csproj", "{E33A92DD-9166-4C8A-A6E8-9A114283CB05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Extensions", "Odyssey.Extensions\Odyssey.Extensions.csproj", "{E33A92DD-9166-4C8A-A6E8-9A114283CB05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.Data", "Odyssey.Data\Odyssey.Data.csproj", "{647CD931-A684-4833-84FA-1415FEB0D252}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Data", "Odyssey.Data\Odyssey.Data.csproj", "{647CD931-A684-4833-84FA-1415FEB0D252}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.Events", "Odyssey.Events\Odyssey.Events.csproj", "{B75625DB-1F8B-44EF-9B07-4A08AF4DC497}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Events", "Odyssey.Events\Odyssey.Events.csproj", "{B75625DB-1F8B-44EF-9B07-4A08AF4DC497}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.Shared", "Odyssey.Shared\Odyssey.Shared.csproj", "{CADFD930-19DF-4B64-9D0B-2E572A3DD399}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Shared", "Odyssey.Shared\Odyssey.Shared.csproj", "{CADFD930-19DF-4B64-9D0B-2E572A3DD399}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.WebSearch", "Odyssey.WebSearch\Odyssey.WebSearch.csproj", "{43317869-153A-475D-85A1-EACF00B63135}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +133,22 @@ Global
 		{CADFD930-19DF-4B64-9D0B-2E572A3DD399}.Release|x64.Build.0 = Release|Any CPU
 		{CADFD930-19DF-4B64-9D0B-2E572A3DD399}.Release|x86.ActiveCfg = Release|Any CPU
 		{CADFD930-19DF-4B64-9D0B-2E572A3DD399}.Release|x86.Build.0 = Release|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Debug|x64.Build.0 = Debug|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Debug|x86.Build.0 = Debug|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Release|ARM64.Build.0 = Release|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Release|x64.ActiveCfg = Release|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Release|x64.Build.0 = Release|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Release|x86.ActiveCfg = Release|Any CPU
+		{43317869-153A-475D-85A1-EACF00B63135}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

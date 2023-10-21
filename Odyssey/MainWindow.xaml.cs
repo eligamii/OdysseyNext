@@ -20,6 +20,7 @@ namespace Odyssey
     /// </summary>
     public sealed partial class MainWindow : WindowEx
     {
+        public static new MainWindow Current { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +41,9 @@ namespace Odyssey
             rootFrame.Navigate(typeof(MainView), null, new SuppressNavigationTransitionInfo());
 
             Content = rootFrame;
+
+            // Make possible to access to MainWindow from anywhere
+            Current = this;
         }
     }
 }
