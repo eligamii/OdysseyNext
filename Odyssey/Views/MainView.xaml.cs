@@ -18,6 +18,7 @@ using Windows.Foundation.Collections;
 using WinRT.Interop;
 using Odyssey.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Odyssey.Dialogs;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,11 +35,24 @@ namespace Odyssey.Views
         {
             this.InitializeComponent();
 
+            Loaded += MainView_Loaded;
+
             AppTitleBar.Loaded += AppTitleBar_Loaded;
             AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
 
             SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
             Current = this;
+        }
+
+        private async void MainView_Loaded(object sender, RoutedEventArgs e)
+        {
+            QuickConfigurationDialog quickConfigurationDialog = new()
+            {
+                XamlRoot = MainWindow.Current.Content.XamlRoot
+            };
+
+            await quickConfigurationDialog.ShowAsync();
+
         }
 
         private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)

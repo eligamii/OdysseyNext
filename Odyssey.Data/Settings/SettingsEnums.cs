@@ -7,4 +7,15 @@
         Light,
         Dark
     }
+
+    public enum SearchEngines
+    {
+        Google,
+        Bing,
+        Yahoo,
+        DuckDuckGo,
+        Qwant,
+        YouDotCom, 
+        Startpage
+    }
 }

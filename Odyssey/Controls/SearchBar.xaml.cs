@@ -16,6 +16,7 @@ using Odyssey.Shared.DataTemplates.Data;
 using Odyssey.Data.Main;
 using Odyssey.Views;
 using Microsoft.Web.WebView2.Core;
+using Odyssey.Helpers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -50,22 +51,28 @@ namespace Odyssey.Controls
         {
             if(e.Key == Windows.System.VirtualKey.Enter)
             {
-                if(FWebView.CurrentlySelected == null)
+                string text = (sender as TextBox).Text;
+                string url = SearchUrlHelper.ToUrl(text);
+
+                if(url != string.Empty) // The request will be treated differently with commands and app uris
                 {
-                    Tab tab = new()
+                    if (FWebView.CurrentlySelected == null)
                     {
-                        Title = "Test",
-                        ToolTip = "Testing is something cool",
-                    };
+                        Tab tab = new()
+                        {
+                            Title = "Test",
+                            ToolTip = "Testing is something cool",
+                        };
 
-                    webView.Source = new Uri((sender as TextBox).Text);
+                        webView.Source = new Uri(url);
 
-                    tab.MainWebView = webView;
-                    Tabs.TabsList.Add(tab);
-                    PaneView.Current.TabsView.SelectedItem = tab;
+                        tab.MainWebView = webView;
+                        Tabs.TabsList.Add(tab);
+                        PaneView.Current.TabsView.SelectedItem = tab;
 
-                    MainView.Current.splitViewContentFrame.Content = webView;
-                    webViewUsed = true;
+                        MainView.Current.splitViewContentFrame.Content = webView;
+                        webViewUsed = true;
+                    }
                 }
 
                 Hide();
