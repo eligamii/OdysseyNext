@@ -13,7 +13,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\icon.png" />
-    <None Remove="Controls\FWebView.xaml" />
+    <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
     <None Remove="Controls\SearchBar.xaml" />
     <None Remove="Dialogs\QuickConfigurationDialog.xaml" />
     <None Remove="Views\MainView.xaml" />
@@ -53,6 +53,7 @@
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
     <ProjectReference Include="..\Odyssey.Events\Odyssey.Events.csproj" />
     <ProjectReference Include="..\Odyssey.Extensions\Odyssey.Extensions.csproj" />
+    <ProjectReference Include="..\Odyssey.FWebView\Odyssey.FWebView.csproj" />
     <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
     <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
@@ -61,11 +62,6 @@
     <Content Update="Assets\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Controls\FWebView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\PaneView.xaml">
@@ -84,6 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Dialogs\QuickConfigurationDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\ContextMenus\TabsContextMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

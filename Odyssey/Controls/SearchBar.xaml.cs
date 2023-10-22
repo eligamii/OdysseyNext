@@ -17,6 +17,7 @@ using Odyssey.Data.Main;
 using Odyssey.Views;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Helpers;
+using Odyssey.WebSearch.Helpers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,12 +26,10 @@ namespace Odyssey.Controls
 {
     public sealed partial class SearchBar : Flyout
     {
-        private FWebView webView;
-        private bool webViewUsed = false;
         public SearchBar()
         {
             this.InitializeComponent();
-            if(FWebView.CurrentlySelected == null) webView = FWebView.New();
+            
         }
 
         private void Flyout_Opened(object sender, object e)
@@ -40,11 +39,7 @@ namespace Odyssey.Controls
 
         private void Flyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
         {
-            if(!webViewUsed)
-            {
-                webView.Close();
-                webView = null;
-            }
+ 
         }
 
         private void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -56,22 +51,23 @@ namespace Odyssey.Controls
 
                 if(url != string.Empty) // The request will be treated differently with commands and app uris
                 {
-                    if (FWebView.CurrentlySelected == null)
+                    if (FWebView.WebView.CurrentlySelected == null)
                     {
+                        FWebView.WebView webView = FWebView.WebView.New(url);
+
                         Tab tab = new()
                         {
-                            Title = "Test",
-                            ToolTip = "Testing is something cool",
+                            Title = text,
+                            ToolTip = url,
                         };
 
-                        webView.Source = new Uri(url);
-
                         tab.MainWebView = webView;
-                        Tabs.TabsList.Add(tab);
+                        Tabs.Items.Add(tab);
                         PaneView.Current.TabsView.SelectedItem = tab;
 
+                        webView.LinkedTab = tab;
+
                         MainView.Current.splitViewContentFrame.Content = webView;
-                        webViewUsed = true;
                     }
                 }
 

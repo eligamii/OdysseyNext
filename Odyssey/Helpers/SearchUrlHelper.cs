@@ -18,8 +18,12 @@ namespace Odyssey.Helpers
 
             switch(kind)
             {
-                case StringKind.Url or StringKind.OdysseyUrl or StringKind.MathematicalExpression: return query; // do nothing
-                case StringKind.SearchKeywords: return SearchEngine.ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine).SearchUrl + WebUtility.UrlEncode(query); // url encode as "1+1" will be treated as "1 1"
+                case StringKind.Url or StringKind.OdysseyUrl:
+                    if (!query.Contains("://")) query = "https://" + query;
+                    return query;
+
+                case StringKind.SearchKeywords or StringKind.MathematicalExpression: return SearchEngine.ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine).SearchUrl + WebUtility.UrlEncode(query); // url encode as "1+1" will be treated as "1 1"
+
                 default: return string.Empty;
             }
         }

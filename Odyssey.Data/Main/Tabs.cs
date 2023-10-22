@@ -10,6 +10,6 @@ namespace Odyssey.Data.Main
 {
     public class Tabs
     {
-        public static ObservableCollection<Tab> TabsList { get; set; } = new();
+        public static ObservableCollection<Tab> Items { get; set; } = new();
     }
 }

@@ -16,6 +16,7 @@ using Odyssey.Data.Main;
 using Odyssey.Shared.DataTemplates.Data;
 using System.Threading.Tasks;
 using Odyssey.Controls;
+using Odyssey.Controls.ContextMenus;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -31,7 +32,8 @@ namespace Odyssey.Views
         public PaneView()
         {
             this.InitializeComponent();
-            TabsView.ItemsSource = Tabs.TabsList;
+            TabsView.ItemsSource = Tabs.Items;
+            PinsTabView.ItemsSource = Pins.Items;
 
             Current = this;
         }
@@ -64,25 +66,58 @@ namespace Odyssey.Views
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var pos = e.GetPosition(TabsView);
-            int index = (int)(pos.Y / 40); // Get tab index, idk if usable with more than 25 tabs
+            int index = (int)(pos.Y / 40); // Get tab index, idk if usable with more than 25 tabs (40 is approx.)
 
-            var tabToRemove = Tabs.TabsList.ElementAt(index);
+            var tabToRemove = Tabs.Items.ElementAt(index);
 
             // Remove the tab's WebViews
+            tabToRemove.MainWebView.Close();
+            if (tabToRemove.SplitViewWebView != null) tabToRemove.SplitViewWebView.Close();
             tabToRemove.MainWebView = tabToRemove.SplitViewWebView = null;
 
             // Remove the tab from the tabs listView
-            Tabs.TabsList.Remove(tabToRemove);
+            Tabs.Items.Remove(tabToRemove);
 
             // Changing the selected tab to another
             if (index > 0) TabsView.SelectedIndex = index - 1;
-            else if (Tabs.TabsList.Count > 0) TabsView.SelectedIndex = 0;
+            else if (Tabs.Items.Count > 0) TabsView.SelectedIndex = 0;
             else TabsView.SelectedIndex = -1;
         }
 
         private void TabsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MainView.Current.splitViewContentFrame.Content = (e.AddedItems[0] as Tab).MainWebView;
+            if(e.AddedItems.Count > 0) MainView.Current.splitViewContentFrame.Content = (e.AddedItems[0] as Tab).MainWebView;
+        }
+
+        private void TabsView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            
+
+            TabsContextMenu tabsContextMenu;
+
+            if ((sender as ListView) == PinsTabView)
+            {
+                var pos = e.GetPosition(PinsTabView);
+                int index = (int)(pos.Y / 40);
+
+                var rightClickedTab = Pins.Items.ElementAt(index);
+                tabsContextMenu = new(rightClickedTab);
+            }
+            else
+            {
+                var pos = e.GetPosition(TabsView);
+                int index = (int)(pos.Y / 40);
+
+                var rightClickedTab = Tabs.Items.ElementAt(index);
+                tabsContextMenu = new(rightClickedTab); 
+            }
+
+
+            FlyoutShowOptions flyoutShowOptions = new FlyoutShowOptions();
+            flyoutShowOptions.Position = e.GetPosition(this);
+
+            tabsContextMenu.ShowAt(this, flyoutShowOptions);
+            
         }
     }
 }
