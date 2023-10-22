@@ -28,7 +28,7 @@ namespace Odyssey.Dialogs
 
         private void ContentDialog_Closing(ContentDialog sender, ContentDialogClosingEventArgs args)
         {
-
+            Settings.FirstLaunch = false;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

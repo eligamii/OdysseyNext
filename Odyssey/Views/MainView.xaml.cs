@@ -19,6 +19,7 @@ using WinRT.Interop;
 using Odyssey.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Dialogs;
+using Odyssey.Data.Settings;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -46,13 +47,17 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
-            QuickConfigurationDialog quickConfigurationDialog = new()
+            if(Settings.FirstLaunch != false)
             {
-                XamlRoot = MainWindow.Current.Content.XamlRoot
-            };
+                QuickConfigurationDialog quickConfigurationDialog = new()
+                {
+                    XamlRoot = MainWindow.Current.Content.XamlRoot
+                };
 
-            await quickConfigurationDialog.ShowAsync();
+                await quickConfigurationDialog.ShowAsync();
+            }
 
+            FWebView.WebView.XamlRoot = this.XamlRoot;
         }
 
         private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -18,6 +18,8 @@ using Odyssey.Views;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Helpers;
 using Odyssey.WebSearch.Helpers;
+using static Odyssey.WebSearch.Helpers.WebUrlHelpers;
+using Odyssey.FWebView.Classes;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -69,6 +71,11 @@ namespace Odyssey.Controls
 
                         MainView.Current.splitViewContentFrame.Content = webView;
                     }
+                }
+                else
+                {
+                    StringKind kind = GetStringKind(text);
+                    if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
                 }
 
                 Hide();

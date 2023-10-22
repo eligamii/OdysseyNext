@@ -9,9 +9,9 @@ namespace Odyssey.WebSearch.Helpers
 {
     public class WebUrlHelpers
     {
-        private readonly static string urlRegex = @"(https?:\/\/)*(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
-        private readonly static string odysseyUrlRegex = @"(edge|chrome|odyssey)://[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
-        private readonly static string externalAppUriRegex = @"[-a-zA-Z0-9]{2,20}:.*";
+        private readonly static string urlRegex = @"^(https?:\/\/)*(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
+        private readonly static string odysseyUrlRegex = @"^(edge|chrome|odyssey)://[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
+        private readonly static string externalAppUriRegex = @"^[-a-zA-Z0-9]{2,20}:;*";
         private readonly static string mathematicalExpressionRegex = @"[0-9+-=x/*]{3,}";
 
         public enum StringKind

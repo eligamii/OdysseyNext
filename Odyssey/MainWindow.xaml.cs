@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Main;
+using Odyssey.Data.Settings;
 using Odyssey.Helpers;
 using Odyssey.Shared.DataTemplates.Data;
 using Odyssey.Views;
@@ -26,6 +27,9 @@ namespace Odyssey
         public MainWindow()
         {
             InitializeComponent();
+
+            // Load default settings for the first run
+            Settings.Init();
             Data.Main.Data.Init();
 
             // Use this instead of Systemackdrop = Micaackdrop(); to be able to control the color of the Window
