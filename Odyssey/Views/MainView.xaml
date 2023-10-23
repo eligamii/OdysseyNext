@@ -48,9 +48,9 @@
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,1,0,0">
                 <Button Click="HomeButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane}" x:Name="HomeButton" x:FieldModifier="public" Height="32" Content="&#xE10F;"  Margin="3,0,0,0"  FontFamily="Segoe Fluent Icons"/>
                 <AppBarSeparator/>
-                <Button ToolTipService.ToolTip="{helpers:ResourceString Name=GoBack}" Content="&#xE0A6;"/>
-                <Button ToolTipService.ToolTip="{helpers:ResourceString Name=GoForward}" Content="&#xE0AB;"/>
-                <Button ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh}" Content="&#xE149;"/>
+                <Button Click="BackButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=GoBack}" Content="&#xE0A6;"/>
+                <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=GoForward}" Content="&#xE0AB;"/>
+                <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh}" Content="&#xE149;"/>
                 <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb}" Content="&#xE11A;" FontSize="15"/>
                 <AppBarSeparator/>
                 <Button Padding="10,3" x:Name="infoButton">
@@ -129,5 +129,18 @@
                 </SplitView.Transitions>
             </SplitView>
         </SplitView>
+
+        <!-- Button to show the pane / navigate through tabs when full screen -->
+        <Button Grid.Row="1" 
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Left"
+                Margin="0"
+                CornerRadius="0"
+                Width="12"
+                Click="HomeButton_Click"
+                ToolTipService.ToolTip="Open the pane"
+                x:Name="showPaneButton"
+                Visibility="Collapsed"
+        />
     </Grid>
 </Page>

@@ -31,6 +31,7 @@ namespace Odyssey
             // Load default settings for the first run
             Settings.Init();
             Data.Main.Data.Init();
+            Aria2.Aria2.Init();
 
             // Use this instead of Systemackdrop = Micaackdrop(); to be able to control the color of the Window
             MicaBackdropHelper.TrySetMicaackdropTo(this);

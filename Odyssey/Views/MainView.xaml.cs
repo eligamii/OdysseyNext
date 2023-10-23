@@ -32,6 +32,10 @@ namespace Odyssey.Views
     public sealed partial class MainView : Page
     {
         public static MainView Current { get; set; }
+        public static FWebView.WebView CurrentlySelectedWebView
+        {
+            get { return Current.splitViewContentFrame.Content as FWebView.WebView; }
+        }
         public MainView()
         {
             this.InitializeComponent();
@@ -42,7 +46,7 @@ namespace Odyssey.Views
             AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
 
             SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
-            Current = this;
+            Current = this;     
         }
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
@@ -60,6 +64,8 @@ namespace Odyssey.Views
             FWebView.WebView.XamlRoot = this.XamlRoot;
         }
 
+
+        // Titlebar drag regions
         private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             SetDragRegionForCustomTitleBar(MainWindow.Current.AppWindow);
@@ -142,22 +148,51 @@ namespace Odyssey.Views
 
 
 
-
+        // Show pane button
         private void SplitView_PaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
         {
-
+            showPaneButton.Visibility = Visibility.Visible;
         }
 
         private void SplitView_PaneOpening(SplitView sender, object args)
         {
-
+            if(showPaneButton != null)
+            {
+                showPaneButton.Visibility = Visibility.Collapsed;
+            }
         }
 
+
+
+
+        // Titlear buttons
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             SplitView.IsPaneOpen ^= true;
         }
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(CurrentlySelectedWebView != null)
+            {
+                if(CurrentlySelectedWebView.CanGoBack) CurrentlySelectedWebView.GoBack();
+            }
+        }
 
+        private void ForwardButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentlySelectedWebView != null)
+            {
+                if (CurrentlySelectedWebView.CanGoForward) CurrentlySelectedWebView.GoForward();
+            }
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentlySelectedWebView != null)
+            {
+                CurrentlySelectedWebView.Reload();
+            }
+        }
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             SearchBar searchBar = new SearchBar();

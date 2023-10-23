@@ -25,7 +25,6 @@ namespace Odyssey.FWebView
 {
     public sealed partial class WebView : WebView2
     {
-        public static WebView CurrentlySelected { get; set; }
         public bool IsSelected { get; set; } = true;
         public Tab LinkedTab { get; set; }
         public Tab ParentTab { get; set; } = null; // used when a webView is assiociated to another (login, etc)

@@ -55,7 +55,7 @@ namespace Odyssey.Views
 
         private void AddTabButton_Click(object sender, RoutedEventArgs e)
         {
-            SearchBar searchBar = new SearchBar();
+            SearchBar searchBar = new SearchBar(true);
             FlyoutShowOptions options = new FlyoutShowOptions();
             options.Placement = FlyoutPlacementMode.Bottom;
             options.Position = new Point(MainView.Current.splitViewContentFrame.ActualWidth / 2, 100);

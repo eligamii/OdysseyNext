@@ -1,25 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using ABI.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Odyssey.Shared.DataTemplates.Data;
 using Odyssey.Data.Main;
-using Odyssey.Views;
-using Microsoft.Web.WebView2.Core;
-using Odyssey.Helpers;
-using Odyssey.WebSearch.Helpers;
-using static Odyssey.WebSearch.Helpers.WebUrlHelpers;
 using Odyssey.FWebView.Classes;
+using Odyssey.Helpers;
+using Odyssey.Shared.DataTemplates.Data;
+using Odyssey.Views;
+using Odyssey.WebSearch.Helpers;
+using System;
+using static Odyssey.WebSearch.Helpers.WebUrlHelpers;
+using Uri = System.Uri;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,10 +20,16 @@ namespace Odyssey.Controls
 {
     public sealed partial class SearchBar : Flyout
     {
-        public SearchBar()
+        private string mainIcon = string.Empty;
+        private bool newTab;
+
+        public SearchBar(bool newTab = false)
         {
             this.InitializeComponent();
-            
+            this.newTab = newTab;
+
+            mainIcon = newTab ? "\uF7ED" : "\uE11A";
+            searchBarIcon.Glyph = mainIcon;
         }
 
         private void Flyout_Opened(object sender, object e)
@@ -53,7 +51,7 @@ namespace Odyssey.Controls
 
                 if(url != string.Empty) // The request will be treated differently with commands and app uris
                 {
-                    if (FWebView.WebView.CurrentlySelected == null)
+                    if (MainView.CurrentlySelectedWebView == null || newTab)
                     {
                         FWebView.WebView webView = FWebView.WebView.New(url);
 
@@ -71,6 +69,10 @@ namespace Odyssey.Controls
 
                         MainView.Current.splitViewContentFrame.Content = webView;
                     }
+                    else
+                    {
+                        MainView.CurrentlySelectedWebView.CoreWebView2.Navigate(url);
+                    }
                 }
                 else
                 {
@@ -80,6 +82,38 @@ namespace Odyssey.Controls
 
                 Hide();
             }
+        }
+
+        private void IconRectangle_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            mainSearchBox.Focus(FocusState.Programmatic);
+        }
+
+        private void mainSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateIcon(mainSearchBox.Text);
+        }
+
+
+        private void UpdateIcon(string text)
+        {
+            StringKind kind = GetStringKind(text);
+
+            switch (kind)
+            {
+                case StringKind.SearchKeywords: searchBarIcon.Glyph = mainIcon; break;
+
+                case StringKind.Url: searchBarIcon.Glyph = "\uE128"; break;
+
+                case StringKind.MathematicalExpression: searchBarIcon.Glyph = "\uE1D0"; break;
+
+                case StringKind.ExternalAppUri: searchBarIcon.Glyph = "\uECAA"; break;
+
+                case StringKind.QuickActionCommand: searchBarIcon.Glyph = "\uE756"; break;
+
+                case StringKind.OdysseyUrl: searchBarIcon.Glyph = "\uE115"; break;
+            }
+             
         }
     }
 }

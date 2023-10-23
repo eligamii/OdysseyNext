@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Shared", "Odyssey.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.WebSearch", "Odyssey.WebSearch\Odyssey.WebSearch.csproj", "{43317869-153A-475D-85A1-EACF00B63135}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.FWebView", "Odyssey.FWebView\Odyssey.FWebView.csproj", "{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.FWebView", "Odyssey.FWebView\Odyssey.FWebView.csproj", "{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.Aria2", "Odyssey.Aria2\Odyssey.Aria2.csproj", "{5C27F468-3769-473B-B4EC-D48F44384DAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -167,6 +169,22 @@ Global
 		{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}.Release|x64.Build.0 = Release|Any CPU
 		{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}.Release|x86.ActiveCfg = Release|Any CPU
 		{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}.Release|x86.Build.0 = Release|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|x64.Build.0 = Debug|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|ARM64.Build.0 = Release|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|x64.ActiveCfg = Release|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|x64.Build.0 = Release|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
