@@ -69,9 +69,11 @@ namespace Odyssey.FWebView
 
             sender.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged; // Update the 'url' value of the Tab objects
 
-            sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+            sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting; 
 
-            sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
+            sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
+
+            sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect any download to aria2
 
             // Scroll events (Uppate dynamic theme)
             scrollTimer = new DispatcherTimer();
@@ -79,7 +81,13 @@ namespace Odyssey.FWebView
             scrollTimer.Tick += ScrollTimer_Tick;
         }
 
-        
+        private void CoreWebView2_DownloadStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2DownloadStartingEventArgs args)
+        {
+            Aria2.Aria2.Downlaod(args.DownloadOperation.Uri);
+            args.Cancel = true;
+        }
+
+
 
 
 
