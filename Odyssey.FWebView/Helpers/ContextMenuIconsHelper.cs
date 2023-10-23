@@ -109,8 +109,7 @@ namespace Odyssey.Helpers
             }
             else
             {
-             
-
+                ((MenuFlyoutItem)newItem).Icon = fontIcon;
             }
         }
     }

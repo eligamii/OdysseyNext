@@ -20,6 +20,7 @@ using Odyssey.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Dialogs;
 using Odyssey.Data.Settings;
+using Odyssey.Helpers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -62,6 +63,9 @@ namespace Odyssey.Views
             }
 
             FWebView.WebView.XamlRoot = this.XamlRoot;
+            FWebView.Classes.DynamicTheme.PageToUpdateTheme = this;
+            FWebView.Classes.DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
+            FWebView.Classes.DynamicTheme.UpdateTheme = true;
         }
 
 

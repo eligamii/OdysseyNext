@@ -20,9 +20,9 @@ namespace Odyssey.Data.Main
 
         internal static void Load()
         {
-            if (File.Exists(Data.PinsFilePath))
+            if (File.Exists(Data.LoginsFilePath))
             {
-                string jsonString = File.ReadAllText(Data.PinsFilePath);
+                string jsonString = File.ReadAllText(Data.LoginsFilePath);
 
                 LoginList = JsonSerializer.Deserialize<ObservableCollection<Login>>(jsonString);
             }

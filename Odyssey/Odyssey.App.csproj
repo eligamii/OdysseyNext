@@ -52,7 +52,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Odyssey.Aria2\Odyssey.Aria2.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
-    <ProjectReference Include="..\Odyssey.Events\Odyssey.Events.csproj" />
     <ProjectReference Include="..\Odyssey.Extensions\Odyssey.Extensions.csproj" />
     <ProjectReference Include="..\Odyssey.FWebView\Odyssey.FWebView.csproj" />
     <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />

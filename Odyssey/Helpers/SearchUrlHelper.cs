@@ -12,9 +12,9 @@ namespace Odyssey.Helpers
     public class SearchUrlHelper
     {
         // Get the corresponding url from a query (ex: "whats 1+1?" can return "https://www.google.com/search?q=whats+1%2B1%3F")
-        public static string ToUrl(string query)
+        public static async Task<string> ToUrl(string query)
         {
-            var kind = GetStringKind(query);
+            var kind = await GetStringKind(query);
 
             switch(kind)
             {

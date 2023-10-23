@@ -42,12 +42,12 @@ namespace Odyssey.Controls
  
         }
 
-        private void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        private async void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if(e.Key == Windows.System.VirtualKey.Enter)
             {
                 string text = (sender as TextBox).Text;
-                string url = SearchUrlHelper.ToUrl(text);
+                string url = await SearchUrlHelper.ToUrl(text);
 
                 if(url != string.Empty) // The request will be treated differently with commands and app uris
                 {
@@ -76,7 +76,7 @@ namespace Odyssey.Controls
                 }
                 else
                 {
-                    StringKind kind = GetStringKind(text);
+                    StringKind kind = await GetStringKind(text);
                     if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
                 }
 
@@ -95,9 +95,9 @@ namespace Odyssey.Controls
         }
 
 
-        private void UpdateIcon(string text)
+        private async void UpdateIcon(string text)
         {
-            StringKind kind = GetStringKind(text);
+            StringKind kind = await GetStringKind(text);
 
             switch (kind)
             {

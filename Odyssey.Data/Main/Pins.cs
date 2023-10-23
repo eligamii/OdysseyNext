@@ -38,8 +38,12 @@ namespace Odyssey.Data.Main
 
                 Items = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<Pin>>(jsonString);
             }
+            else
+            {
+                Items = new ObservableCollection<Pin>();
+            }
 
-            Items = new ObservableCollection<Pin>();
+            
 
             Items.CollectionChanged += (s, a) => Save();
         }

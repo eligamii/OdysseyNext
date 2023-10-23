@@ -5,12 +5,14 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Odyssey.Data.Settings;
 using Odyssey.FWebView.Classes;
 using Odyssey.FWebView.Controls;
 using Odyssey.Shared.DataTemplates.Data;
 using Odyssey.WebSearch.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -30,12 +32,28 @@ namespace Odyssey.FWebView
         public Tab ParentTab { get; set; } = null; // used when a webView is assiociated to another (login, etc)
         public Favorite LinkedFavorite { get; set; } = null;
         public static new XamlRoot XamlRoot { get; set; }
+
+
+        // Ojects to know if the user finished scrolling for 2s
+        private DispatcherTimer scrollTimer;
+        private bool isScrolling = false;
         public static WebView New(string url = "about:blank")
         {
             WebView newWebView = new();
             newWebView.Source = new Uri(url);
 
             return newWebView;
+        }
+
+        public bool IsVisible
+        {
+            get
+            {
+                var parent = VisualTreeHelper.GetParent(this);
+                parent = VisualTreeHelper.GetParent(parent);
+
+                return parent.GetType() == typeof(Frame);
+            }
         }
 
         public WebView()
@@ -46,15 +64,65 @@ namespace Odyssey.FWebView
 
         private void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
-            sender.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged;
-            sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
+            sender.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged; // Update the text of the tabs
+            sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
+
+            sender.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged; // Update the 'url' value of the Tab objects
 
             sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+
+            sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
+
+            // Scroll events (Uppate dynamic theme)
+            scrollTimer = new DispatcherTimer();
+            scrollTimer.Interval = TimeSpan.FromSeconds(2);
+            scrollTimer.Tick += ScrollTimer_Tick;
         }
 
-        private void CoreWebView2_NavigationStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs args)
+        
+
+
+
+        // Dynamic themes events
+        private void ScrollTimer_Tick(object sender, object e)
         {
-            if(GetStringKind(args.Uri) == StringKind.ExternalAppUri)
+            scrollTimer.Stop();
+
+            // Checking if the user has finished scrolling for 2 seconds
+            if (isScrolling && IsVisible)
+            {
+                DynamicTheme.UpdateDynamicTheme(this);
+                isScrolling = false;
+            }
+        }
+
+        private void WebView2_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (IsVisible)
+            {
+                DynamicTheme.UpdateDynamicTheme(this);
+            }
+        }
+
+
+
+
+        private void CoreWebView2_NavigationCompleted(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
+        {
+            if (IsVisible)
+            {
+                DynamicTheme.UpdateDynamicTheme(this);
+            }
+        }
+
+        private void CoreWebView2_SourceChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2SourceChangedEventArgs args)
+        {
+            LinkedTab.Url = sender.Source;
+        }
+
+        private async void CoreWebView2_NavigationStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs args)
+        {
+            if(await GetStringKind(args.Uri) == StringKind.ExternalAppUri)
             {
                 args.Cancel = true;
                 AppUriLaunch.Launch(new Uri(args.Uri));
@@ -71,5 +139,7 @@ namespace Odyssey.FWebView
         {
             LinkedTab.Title = sender.DocumentTitle;
         }
+
+        
     }
 }

@@ -98,7 +98,8 @@ namespace Odyssey.Controls.ContextMenus
             {
                 MainWebView = item.MainWebView,
                 Title = item.Title,
-                ImageSource = item.ImageSource
+                ImageSource = item.ImageSource,
+                Url = item.Url
             };
             ((FWebView.WebView)pin.MainWebView).LinkedTab = pin;
 

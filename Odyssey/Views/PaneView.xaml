@@ -62,7 +62,7 @@
                 <Grid>
                     <TextBlock Text="{helpers:ResourceString Name=Pinned}" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left" x:Name="pinsTextBlock" Visibility="Visible"/>
                 </Grid>
-                <ListView RightTapped="TabsView_RightTapped" IsRightTapEnabled="True" Margin="0,0,0,16" x:FieldModifier="public" Visibility="Visible" Loaded="PinsTabView_Loaded" x:Name="PinsTabView" CanDragItems="True" CanReorderItems="True" AllowDrop="True">
+                <ListView RightTapped="TabsView_RightTapped" SelectionChanged="TabsView_SelectionChanged" IsRightTapEnabled="True" Margin="0,0,0,16" x:FieldModifier="public" Visibility="Visible" Loaded="PinsTabView_Loaded" x:Name="PinsTabView" CanDragItems="True" CanReorderItems="True" AllowDrop="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch">

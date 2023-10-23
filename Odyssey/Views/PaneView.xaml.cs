@@ -17,6 +17,7 @@ using Odyssey.Shared.DataTemplates.Data;
 using System.Threading.Tasks;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
+using Odyssey.FWebView;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -50,7 +51,7 @@ namespace Odyssey.Views
 
         private void PinsTabView_Loaded(object sender, RoutedEventArgs e)
         {
-
+            PinsTabView.ItemsSource = Pins.Items;
         }
 
         private void AddTabButton_Click(object sender, RoutedEventArgs e)
@@ -84,15 +85,26 @@ namespace Odyssey.Views
             else TabsView.SelectedIndex = -1;
         }
 
-        private void TabsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void TabsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.AddedItems.Count > 0) MainView.Current.splitViewContentFrame.Content = (e.AddedItems[0] as Tab).MainWebView;
+            if(e.AddedItems.Count > 0)
+            {
+                var tab = e.AddedItems[0] as Tab;
+                if (tab.MainWebView == null)
+                {
+                    WebView webView = WebView.New(tab.Url);
+                    webView.LinkedTab = tab;
+                    await webView.EnsureCoreWebView2Async();
+                    tab.MainWebView = webView;
+                }
+
+                MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
+                UpdateTabSelection(sender);
+            }
         }
 
         private void TabsView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            
-
             TabsContextMenu tabsContextMenu;
 
             if ((sender as ListView) == PinsTabView)
@@ -117,7 +129,13 @@ namespace Odyssey.Views
             flyoutShowOptions.Position = e.GetPosition(this);
 
             tabsContextMenu.ShowAt(this, flyoutShowOptions);
-            
+        }
+
+        private void UpdateTabSelection(object selectedTabsView)
+        {
+            if ((ListView)selectedTabsView != TabsView) TabsView.SelectedIndex = -1;
+            if ((ListView)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1;
+            if ((ListView)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1;
         }
     }
 }
