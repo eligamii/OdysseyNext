@@ -5,10 +5,12 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Odyssey.Aria2.Objects;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Classes;
 using Odyssey.FWebView.Controls;
-using Odyssey.Shared.DataTemplates.Data;
+using Odyssey.FWebView.Controls.Flyouts;
+using Odyssey.Shared.ViewModels.Data;
 using Odyssey.WebSearch.Helpers;
 using System;
 using System.Collections.Generic;
@@ -18,7 +20,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using static Odyssey.WebSearch.Helpers.WebUrlHelpers;
+using Windows.System;
+using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -31,8 +34,12 @@ namespace Odyssey.FWebView
         public Tab LinkedTab { get; set; }
         public Tab ParentTab { get; set; } = null; // used when a webView is assiociated to another (login, etc)
         public Favorite LinkedFavorite { get; set; } = null;
+
+        public static FrameworkElement DownloadElement { get; set; } // The element used to show the DownloadsFlyout
         public static new XamlRoot XamlRoot { get; set; }
 
+
+        private static DownloadsFlyout downloadsFlyout = new();
 
         // Ojects to know if the user finished scrolling for 2s
         private DispatcherTimer scrollTimer;
@@ -54,6 +61,11 @@ namespace Odyssey.FWebView
 
                 return parent.GetType() == typeof(Frame);
             }
+        }
+
+        public static void OpenDownloadDialog()
+        {
+            downloadsFlyout.ShowAt(DownloadElement);
         }
 
         public WebView()
@@ -83,8 +95,11 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_DownloadStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2DownloadStartingEventArgs args)
         {
-            Aria2.Aria2.Downlaod(args.DownloadOperation.Uri);
+            Aria2Download aria2Download = new(args.DownloadOperation.Uri);
+            downloadsFlyout.DownloadItemsListView.Items.Add(aria2Download);
             args.Cancel = true;
+
+            downloadsFlyout.ShowAt(DownloadElement);
         }
 
 

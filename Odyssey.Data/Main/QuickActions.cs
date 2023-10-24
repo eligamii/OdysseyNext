@@ -1,4 +1,4 @@
-﻿using Odyssey.Shared.DataTemplates.Data;
+﻿using Odyssey.Shared.ViewModels.Data;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;

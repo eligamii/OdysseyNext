@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Security.Credentials;
 
-namespace Odyssey.Shared.DataTemplates.Data
+namespace Odyssey.Shared.ViewModels.Data
 {
     [DataContract]
     public class Tab : INotifyPropertyChanged

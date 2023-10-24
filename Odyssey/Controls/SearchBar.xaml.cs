@@ -6,11 +6,12 @@ using Microsoft.UI.Xaml.Input;
 using Odyssey.Data.Main;
 using Odyssey.FWebView.Classes;
 using Odyssey.Helpers;
-using Odyssey.Shared.DataTemplates.Data;
+using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
 using Odyssey.WebSearch.Helpers;
 using System;
-using static Odyssey.WebSearch.Helpers.WebUrlHelpers;
+using System.Linq;
+using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using Uri = System.Uri;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -26,9 +27,9 @@ namespace Odyssey.Controls
         public SearchBar(bool newTab = false)
         {
             this.InitializeComponent();
-            this.newTab = newTab;
+            this.newTab = newTab || MainView.CurrentlySelectedWebView == null;
 
-            mainIcon = newTab ? "\uF7ED" : "\uE11A";
+            mainIcon = this.newTab ? "\uEC6C" : "\uE11A";
             searchBarIcon.Glyph = mainIcon;
         }
 
@@ -39,7 +40,7 @@ namespace Odyssey.Controls
 
         private void Flyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
         {
- 
+
         }
 
         private async void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -89,9 +90,21 @@ namespace Odyssey.Controls
             mainSearchBox.Focus(FocusState.Programmatic);
         }
 
-        private void mainSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        private async void mainSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateIcon(mainSearchBox.Text);
+            if(mainSearchBox.Text != string.Empty)
+            {
+                var list = await WebSearch.Suggestions.Suggest(mainSearchBox.Text, 8);
+
+                suggestionListView.ItemsSource = list;
+
+                suggestionListView.Visibility = list.Where(p => p != null).ToList().Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+            else
+            {
+                suggestionListView.Visibility = Visibility.Collapsed;
+            }
         }
 
 
@@ -114,6 +127,11 @@ namespace Odyssey.Controls
                 case StringKind.OdysseyUrl: searchBarIcon.Glyph = "\uE115"; break;
             }
              
+        }
+
+        private void suggestionListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
         }
     }
 }

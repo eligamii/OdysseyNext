@@ -7,7 +7,7 @@ using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Helpers;
-using Odyssey.Shared.DataTemplates.Data;
+using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
 using System;
 using System.Threading.Tasks;

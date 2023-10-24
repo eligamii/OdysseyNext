@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Flyout
+    x:Class="Odyssey.FWebView.Controls.Flyouts.DownloadsFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Odyssey.FWebView.Controls.Flyouts"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:helpers="using:Odyssey.Helpers"
+    mc:Ignorable="d">
+
+    <Flyout.FlyoutPresenterStyle>
+        <Style TargetType="FlyoutPresenter"  BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="MaxHeight" Value="Infinity"/>
+            <Setter Property="MaxWidth" Value="Infinity"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
+        </Style>
+    </Flyout.FlyoutPresenterStyle>
+
+    <Grid Width="310" Height="510">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="42"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="12,4,5,0">
+            <TextBlock Grid.Row="0" FontSize="16"
+                   Style="{ThemeResource BodyStrongTextBlockStyle}"
+                   Text="{helpers:ResourceString Name=Downloads}"/>
+        </Grid>
+
+        <Grid Grid.Row="1" CornerRadius="3" Margin="6" 
+              Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" 
+              BorderBrush="#33808080" BorderThickness="1">
+            <ListView Margin="0,3,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" x:Name="DownloadItemsListView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="19"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid>
+                                <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0"/>
+                                <ProgressRing x:Name="progressRing" Value="{Binding Progress}" IsActive="{Binding IsProgressActive}" IsIndeterminate="{Binding IsProgressIntermeinate}" Width="19" Height="19"/>
+                            </Grid>
+
+                            <StackPanel Margin="10,-3,0,0" VerticalAlignment="Center" Grid.Column="1">
+                                <TextBlock Text="{Binding Title}" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
+                                <TextBlock Text="{Binding Description}" Margin="0,-2,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
+                            </StackPanel>
+
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+        </Grid>
+
+    </Grid>
+</Flyout>
+

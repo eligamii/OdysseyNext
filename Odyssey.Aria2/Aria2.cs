@@ -16,20 +16,20 @@ namespace Odyssey.Aria2
 {
     public static class Aria2
     {
-        private static string aria2cPath;
-        private static string dlFolderPath;
+        public static string Aria2cPath { get; set; }
+        public static string DlFolderPath { get; set; }
         public async static void Init()
         {
-            aria2cPath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Odyssey.Aria2", "Assets", "aria2c.exe");
+            Aria2cPath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Odyssey.Aria2", "Assets", "aria2c.exe");
 
             // Get the donwload folder path
             StorageFolder dlFolder = await (await (await DownloadsFolder.CreateFolderAsync(Guid.NewGuid().ToString())).GetParentAsync()).GetParentAsync();
-            dlFolderPath = dlFolder.Path;
+            DlFolderPath = dlFolder.Path;
 
             // Start aria2 to avoid erors
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
-                FileName = aria2cPath,
+                FileName = Aria2cPath,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
@@ -41,26 +41,25 @@ namespace Odyssey.Aria2
             process.Start();
         }
 
-        public static async void Downlaod(string url)
+        public static Process Downlaod(string url)
         {
             Process process = new();
 
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
-                FileName = aria2cPath,
-                ArgumentList = { "-d " + dlFolderPath, url },
+                FileName = Aria2cPath,
+                ArgumentList = { "-d " + DlFolderPath, url },
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
             };
 
-            process.OutputDataReceived += Process_OutputDataReceived;
 
             process.StartInfo = startInfo;
             process.Start();
             process.BeginOutputReadLine();
 
-            await process.WaitForExitAsync();
+            return process;
         }
 
         private static void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)

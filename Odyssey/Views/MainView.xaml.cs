@@ -47,7 +47,9 @@ namespace Odyssey.Views
             AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
 
             SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
-            Current = this;     
+            Current = this;
+
+            FWebView.WebView.DownloadElement = downloadButton;
         }
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
@@ -205,6 +207,11 @@ namespace Odyssey.Views
             options.Position = new Point(splitViewContentFrame.ActualWidth / 2, 100);
 
             searchBar.ShowAt(splitViewContentFrame, options);
+        }
+
+        private void DownloadsButton_Click(object sender, RoutedEventArgs e)
+        {
+            FWebView.WebView.OpenDownloadDialog();
         }
     }
 }

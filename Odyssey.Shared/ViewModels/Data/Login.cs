@@ -1,4 +1,4 @@
-﻿namespace Odyssey.Shared.DataTemplates.Data
+﻿namespace Odyssey.Shared.ViewModels.Data
 {
     public class Login
     {

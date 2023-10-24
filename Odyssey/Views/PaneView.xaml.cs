@@ -13,7 +13,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Main;
-using Odyssey.Shared.DataTemplates.Data;
+using Odyssey.Shared.ViewModels.Data;
 using System.Threading.Tasks;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;

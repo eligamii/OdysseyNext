@@ -1,4 +1,4 @@
-﻿using Odyssey.Shared.DataTemplates.Data;
+﻿using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

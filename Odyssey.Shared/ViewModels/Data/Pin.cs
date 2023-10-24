@@ -1,6 +1,6 @@
 ﻿using Odyssey.Shared.Enums;
 
-namespace Odyssey.Shared.DataTemplates.Data
+namespace Odyssey.Shared.ViewModels.Data
 {
     // The pin oject to be saved / shown on UI
     public class Pin : Tab

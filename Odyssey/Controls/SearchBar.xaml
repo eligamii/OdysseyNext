@@ -24,29 +24,53 @@
     </Flyout.FlyoutPresenterStyle>
     
 
-    <Grid >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <FontIcon HorizontalAlignment="Right" Margin="0" Grid.Column="0" FontSize="16" Name="searchBarIcon"/>
-        <Rectangle Fill="Transparent" Tapped="IconRectangle_Tapped"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <FontIcon HorizontalAlignment="Right" Margin="0" Grid.Column="0" FontSize="16" Name="searchBarIcon"/>
+            <Rectangle Fill="Transparent" Tapped="IconRectangle_Tapped" IsDoubleTapEnabled="False"/>
 
-        <TextBox Width="559" PlaceholderText="{helpers:ResourceString Name=SearchOnWeb}" Grid.Column="1" CornerRadius="8" x:Name="mainSearchBox" KeyDown="mainSearchBox_KeyDown" TextChanged="mainSearchBox_TextChanged">
-            <TextBox.Style>
-                <Style TargetType="TextBox">
-                    <Setter Property="Padding" Value="20"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                </Style>
-            </TextBox.Style>
+            <TextBox Width="559" PlaceholderText="{helpers:ResourceString Name=SearchOnWeb}" Grid.Column="1" CornerRadius="8" x:Name="mainSearchBox" KeyDown="mainSearchBox_KeyDown" TextChanged="mainSearchBox_TextChanged">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Padding" Value="20"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Style>
+                </TextBox.Style>
 
-            <TextBox.Resources>
-                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/>
+                <TextBox.Resources>
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/>
 
-                <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
-                <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent"/>
-            </TextBox.Resources>
-        </TextBox>
+                    <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent"/>
+                </TextBox.Resources>
+            </TextBox>
+        </Grid>
+
+        <ListView IsTabStop="False" Visibility="Collapsed" ItemContainerTransitions="{x:Null}" Transitions="{x:Null}" x:Name="suggestionListView" ItemClick="suggestionListView_ItemClick" IsItemClickEnabled="True" SelectionMode="Single" Grid.Row="1" Margin="0,0,0,3">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid HorizontalAlignment="Stretch" Height="{Binding Height}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="28"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <FontIcon Grid.Column="0" Glyph="{Binding Glyph}" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Segoe Fluent Icons" FontSize="14"/>
+                        <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center"/>
+
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Flyout>

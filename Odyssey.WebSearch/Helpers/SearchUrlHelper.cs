@@ -5,9 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using static Odyssey.WebSearch.Helpers.WebUrlHelpers;
+using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
-namespace Odyssey.Helpers
+namespace Odyssey.WebSearch.Helpers
 {
     public class SearchUrlHelper
     {

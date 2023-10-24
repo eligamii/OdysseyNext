@@ -1,7 +1,7 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using Odyssey.Shared.Enums;
 
-namespace Odyssey.Shared.DataTemplates.Data
+namespace Odyssey.Shared.ViewModels.Data
 {
     public class QuickAction
     {

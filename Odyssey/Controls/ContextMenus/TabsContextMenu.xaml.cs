@@ -7,7 +7,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Main;
-using Odyssey.Shared.DataTemplates.Data;
+using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
 using System;
 using System.Collections.Generic;
@@ -105,6 +105,8 @@ namespace Odyssey.Controls.ContextMenus
 
             Pins.Items.Add(pin);
             PaneView.Current.PinsTabView.ItemsSource = Pins.Items;
+            PaneView.Current.TabsView.SelectedItem = pin;
+
             Tabs.Items.Remove(item);
         }
 
@@ -123,6 +125,7 @@ namespace Odyssey.Controls.ContextMenus
             ((FWebView.WebView)tab.MainWebView).LinkedTab = tab;
 
             Tabs.Items.Add(tab);
+            PaneView.Current.TabsView.SelectedItem = tab;
         }
 
         private void CloseMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
