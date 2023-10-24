@@ -22,7 +22,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
                 string resString = res.ToString();
 
                 suggestion.Title = resString;
-                suggestion.Url = await SearchUrlHelper.ToUrl(resString);
+                suggestion.Url = await WebViewNavigateUrlHelper.ToUrl(resString);
                 suggestion.Kind = SuggestionKind.MathematicalExpression;
 
                 return suggestion;

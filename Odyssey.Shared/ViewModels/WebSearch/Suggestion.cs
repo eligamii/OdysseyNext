@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Shared.ViewModels.WebSearch
 {
-    public enum SuggestionKind
+    public enum SuggestionKind // aligned with the StringKind enum
     {
-        Search, // ex: "Hello world"
-        Url, 
-        MathematicalExpression,
-        Tab,
-        History
+        Search = 3, // ex: "Hello world"
+        Url = 0, 
+        MathematicalExpression = 5,
+        Tab = 6,
+        History = 7
 
     }
 

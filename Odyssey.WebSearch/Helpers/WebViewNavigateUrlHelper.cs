@@ -9,7 +9,7 @@ using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 namespace Odyssey.WebSearch.Helpers
 {
-    public class SearchUrlHelper
+    public class WebViewNavigateUrlHelper
     {
         // Get the corresponding url from a query (ex: "whats 1+1?" can return "https://www.google.com/search?q=whats+1%2B1%3F")
         public static async Task<string> ToUrl(string query)

@@ -7,7 +7,9 @@ using Odyssey.Data.Main;
 using Odyssey.FWebView.Classes;
 using Odyssey.Helpers;
 using Odyssey.Shared.ViewModels.Data;
+using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.Views;
+using Odyssey.WebSearch;
 using Odyssey.WebSearch.Helpers;
 using System;
 using System.Linq;
@@ -48,7 +50,7 @@ namespace Odyssey.Controls
             if(e.Key == Windows.System.VirtualKey.Enter)
             {
                 string text = (sender as TextBox).Text;
-                string url = await SearchUrlHelper.ToUrl(text);
+                string url = await WebViewNavigateUrlHelper.ToUrl(text);
 
                 if(url != string.Empty) // The request will be treated differently with commands and app uris
                 {
@@ -83,6 +85,60 @@ namespace Odyssey.Controls
 
                 Hide();
             }
+            else if (suggestionListView.Items.Count > 0)
+            {
+                bool navigated = false;
+
+                if (e.Key == Windows.System.VirtualKey.Up)
+                {
+                    if (suggestionListView.SelectedIndex > 0)
+                        suggestionListView.SelectedIndex--;
+
+                    navigated = true;
+                }
+                else if (e.Key == Windows.System.VirtualKey.Down)
+                {
+
+                    if (suggestionListView.SelectedIndex == -1)
+                        suggestionListView.SelectedIndex = 0;
+                    else if (suggestionListView.SelectedIndex != suggestionListView.Items.Count - 1)
+                        suggestionListView.SelectedIndex++;
+
+                    navigated = true;
+                }
+                else if (e.Key == Windows.System.VirtualKey.Tab)
+                {
+                    if (suggestionListView.SelectedIndex == -1)
+                        suggestionListView.SelectedIndex = 0;
+                    else if (suggestionListView.SelectedIndex != suggestionListView.Items.Count - 1)
+                        suggestionListView.SelectedIndex++;
+                    else
+                        suggestionListView.SelectedIndex = 0;
+
+                    navigated = true;
+                }
+
+                if (suggestionListView.SelectedIndex != -1 && navigated)
+                {
+                    var item = suggestionListView.SelectedItem as Suggestion;
+
+                    if (!string.IsNullOrEmpty(item.Url))
+                    {
+                        mainSearchBox.Text = item.Url;
+                    }
+                    else
+                    {
+                        mainSearchBox.Text = item.Title;
+                    }
+
+                    mainSearchBox.SelectionStart = mainSearchBox.Text.Length;
+                    mainSearchBox.Focus(FocusState.Programmatic);
+                }
+                else
+                {
+                    suggestionListView.SelectedIndex = -1;
+                }
+            }
         }
 
         private void IconRectangle_Tapped(object sender, TappedRoutedEventArgs e)
@@ -95,11 +151,18 @@ namespace Odyssey.Controls
             UpdateIcon(mainSearchBox.Text);
             if(mainSearchBox.Text != string.Empty)
             {
-                var list = await WebSearch.Suggestions.Suggest(mainSearchBox.Text, 8);
+                try
+                {
+                    var list = await WebSearch.Suggestions.Suggest(mainSearchBox.Text, 8);
 
-                suggestionListView.ItemsSource = list;
+                    Suggestion defaultSuggestion = new() { Kind = SuggestionKind.Search, Title = mainSearchBox.Text, Url = await WebViewNavigateUrlHelper.ToUrl(mainSearchBox.Text) };
+                    list.Add(defaultSuggestion);
 
-                suggestionListView.Visibility = list.Where(p => p != null).ToList().Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+                    suggestionListView.ItemsSource = list;
+
+                    suggestionListView.Visibility = list.Where(p => p != defaultSuggestion).ToList().Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+                }
+                catch { }
             }
             else
             {
@@ -131,7 +194,28 @@ namespace Odyssey.Controls
 
         private void suggestionListView_ItemClick(object sender, ItemClickEventArgs e)
         {
+            Suggestion suggestion = e.ClickedItem as Suggestion;
 
+            switch(suggestion.Kind)
+            {
+                case SuggestionKind.Search or SuggestionKind.MathematicalExpression or SuggestionKind.History or SuggestionKind.Url:
+                    MainView.CurrentlySelectedWebView.CoreWebView2.Navigate(suggestion.Url); break;
+
+                case SuggestionKind.Tab:
+                    var keyVauePairs = suggestion.Tab;
+                    switch(keyVauePairs.Key)
+                    {
+                        case TabLocation.Favorites: PaneView.Current.FavoriteGrid.SelectedItem = keyVauePairs.Value; break;
+
+                        case TabLocation.Tabs: PaneView.Current.TabsView.SelectedItem = keyVauePairs.Value; break;
+
+                        case TabLocation.Pins: PaneView.Current.PinsTabView.SelectedItem = keyVauePairs.Value; break;
+                    }
+                    break;
+
+            }
+
+            Hide();
         }
     }
 }
