@@ -98,6 +98,18 @@ namespace Odyssey.Views
                     tab.MainWebView = webView;
                 }
 
+
+                if((tab.MainWebView as WebView).IsPageLoading)
+                {
+                    MainView.Current.Favicon.Source = null;
+                    MainView.Current.progressRing.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MainView.Current.Favicon.Source = tab.ImageSource;
+                    MainView.Current.progressRing.Visibility = Visibility.Collapsed;
+                }
+
                 MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
                 UpdateTabSelection(sender);
             }

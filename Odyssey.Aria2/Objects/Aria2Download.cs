@@ -193,6 +193,9 @@ namespace Odyssey.Aria2.Objects
 
 
             }
+
+            IsProgressActive = false;
+            Description = "Open file";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

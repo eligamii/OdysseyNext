@@ -21,6 +21,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Dialogs;
 using Odyssey.Data.Settings;
 using Odyssey.Helpers;
+using Odyssey.Data.Main;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -49,7 +50,26 @@ namespace Odyssey.Views
             SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
             Current = this;
 
-            FWebView.WebView.DownloadElement = downloadButton;
+            // Require these to not crash
+            FWebView.WebView.MainDownloadElement = downloadButton;
+            FWebView.WebView.MainIconElement = Favicon;
+            FWebView.WebView.MainProgressElement = progressRing;
+
+            LoadData();
+
+           
+        }
+
+        private async void LoadData()
+        {
+            await Data.Main.Data.Init();
+
+            if (Settings.SuccessfullyClosed == false)
+            {
+                PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
+            }
+
+            Settings.SuccessfullyClosed = false;
         }
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)

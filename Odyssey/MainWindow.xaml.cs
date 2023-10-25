@@ -29,11 +29,15 @@ namespace Odyssey
         {
             InitializeComponent();
 
+            Init();
+        }
+
+        private void Init()
+        {
             // Load default settings for the first run
             Settings.Init();
 
-            // Load data
-            Data.Main.Data.Init();
+            // Load data          
             Aria2.Aria2.Init();
             AdBlocker.AdBlocker.Init();
 
@@ -45,7 +49,7 @@ namespace Odyssey
             MinWidth = MinHeight = 500;
 
             // Change the size of the window to match the UWP default window size
-            Width = 1040; 
+            Width = 1040;
             Height = 810;
 
             Frame rootFrame = new Frame();
@@ -55,6 +59,20 @@ namespace Odyssey
 
             // Make possible to access to MainWindow from anywhere
             Current = this;
+
+            AppWindow.Closing += AppWindow_Closing;
+        }
+
+        private bool _close = false;
+        private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
+        {
+            if(!_close)
+            {
+                Settings.SuccessfullyClosed = true;
+                _close = true;
+
+                Close();
+            }
         }
     }
 }

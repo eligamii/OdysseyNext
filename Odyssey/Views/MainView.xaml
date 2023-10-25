@@ -59,10 +59,10 @@
                         <Grid x:Name="iconGrid" >
                             <ProgressRing Width="15" Height="15"
                                     Foreground="{ThemeResource FocusStrokeColorOuterBrush}"
-                                    x:Name="progressRing" Visibility="Collapsed"
+                                    x:Name="progressRing" Visibility="Collapsed" x:FieldModifier="public"
                                     />
 
-                            <Image Height="15" x:Name="favicon">
+                            <Image Height="15" x:Name="Favicon" x:FieldModifier="public">
                                 <Image.Source>
                                     <BitmapImage UriSource="/Assets/icon.png"/>
                                 </Image.Source>

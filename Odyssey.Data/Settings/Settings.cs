@@ -15,6 +15,7 @@ namespace Odyssey.Data.Settings
                 Inititalized = true;
                 IsPaneLocked = true;
                 CancelAppUriLaunchConfirmationDialog = false;
+                SuccessfullyClosed = true;
             }
         }
 
@@ -30,10 +31,16 @@ namespace Odyssey.Data.Settings
             set { Values.Values["IsPaneLocked"] = value; }
         }
 
-        public static bool? FirstLaunch
+        public static bool FirstLaunch
         {
-            get { return (bool?)Values.Values["FirstLaunch"]; }
+            get { return (bool)Values.Values["FirstLaunch"]; }
             set { Values.Values["FirstLaunch"] = value; }
+        }
+
+        public static bool SuccessfullyClosed
+        {
+            get { return (bool)Values.Values["SuccessfullyClosed"]; }
+            set { Values.Values["SuccessfullyClosed"] = value; }
         }
 
         public static int SelectedSearchEngine
