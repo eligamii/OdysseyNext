@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
 using Odyssey.FWebView;
+using ABI.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,7 +37,36 @@ namespace Odyssey.Views
             TabsView.ItemsSource = Tabs.Items;
             PinsTabView.ItemsSource = Pins.Items;
 
+            Loaded += PaneView_Loaded;
+
             Current = this;
+        }
+
+        private void PaneView_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Restore tabs icons based on the Favicon Kit api
+
+            foreach (Tab tab in Tabs.Items)
+            {
+                if (tab.ImageSource == null && tab.Url != null)
+                {
+                    tab.ImageSource = new()
+                    {
+                        UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
+                    };
+                }
+            }
+
+            foreach (Tab tab in Pins.Items)
+            {
+                if (tab.ImageSource == null && tab.Url != null)
+                {
+                    tab.ImageSource = new()
+                    {
+                        UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
+                    };
+                }
+            }
         }
 
         private void FullScreenControlsPanel_Loaded(object sender, RoutedEventArgs e)
