@@ -19,6 +19,7 @@ using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
 using Odyssey.FWebView;
 using ABI.System;
+using Windows.ApplicationModel.DataTransfer;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -181,6 +182,96 @@ namespace Odyssey.Views
             if ((ListView)selectedTabsView != TabsView) TabsView.SelectedIndex = -1;
             if ((ListView)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1;
             if ((ListView)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1;
+        }
+
+
+
+        // Drag and drop system
+        Tab hoveredItem;
+        Tab draggedItem;
+        private void TabsView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+        {
+            draggedItem = hoveredItem;
+        }
+
+        
+        private void TabsView_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if(sender as ListView == PinsTabView)
+            {
+                var pos = e.GetCurrentPoint(PinsTabView);
+                int index = (int)(pos.Position.Y / 40);
+
+                hoveredItem = Pins.Items.ElementAt(index);
+            }
+            else
+            {
+                var pos = e.GetCurrentPoint(TabsView);
+                int index = (int)(pos.Position.Y / 40);
+
+                hoveredItem = Tabs.Items.ElementAt(index);
+            }
+        }
+
+        private void TabsView_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = draggedItem != null ? DataPackageOperation.Move : DataPackageOperation.None;
+        }
+
+        private void TabsView_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
+            draggedItem = null;
+        }
+
+
+
+        private void PinsTabView_Drop(object sender, DragEventArgs e)
+        {
+            if(draggedItem != null)
+            {
+                Pin pin = new()
+                {
+                    Url = draggedItem.Url,
+                    ImageSource = draggedItem.ImageSource,
+                    MainWebView = draggedItem.MainWebView,
+                    ToolTip = draggedItem.ToolTip,
+                    Title = draggedItem.Title
+                };
+
+                var pos = e.GetPosition(PinsTabView);
+                int index = (int)(pos.Y / 40);
+
+                Pins.Items.Insert(index, pin);
+                PinsTabView.ItemsSource = Pins.Items;
+
+                PinsTabView.SelectedItem = pin;
+
+                Tabs.Items.Remove(draggedItem);
+            }
+        }
+
+        private void TabsView_Drop(object sender, DragEventArgs e)
+        {
+            if (draggedItem != null)
+            {
+                Tab tab = new()
+                { 
+                    Url = draggedItem.Url,
+                    ImageSource = draggedItem.ImageSource,
+                    MainWebView = draggedItem.MainWebView,
+                    ToolTip = draggedItem.ToolTip,
+                    Title = draggedItem.Title
+                };
+
+                var pos = e.GetPosition(TabsView);
+                int index = (int)(pos.Y / 40);
+
+                Tabs.Items.Insert(index, tab);
+
+                TabsView.SelectedItem = tab;
+
+                Pins.Items.Remove(draggedItem as Pin);
+            }
         }
     }
 }

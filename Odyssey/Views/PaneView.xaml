@@ -62,7 +62,7 @@
                 <Grid>
                     <TextBlock Text="{helpers:ResourceString Name=Pinned}" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left" x:Name="pinsTextBlock" Visibility="Visible"/>
                 </Grid>
-                <ListView RightTapped="TabsView_RightTapped" SelectionChanged="TabsView_SelectionChanged" IsRightTapEnabled="True" Margin="0,0,0,16" x:FieldModifier="public" Visibility="Visible" Loaded="PinsTabView_Loaded" x:Name="PinsTabView" CanDragItems="True" CanReorderItems="True" AllowDrop="True">
+                <ListView RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" Drop="PinsTabView_Drop" DragOver="TabsView_DragOver" SelectionChanged="TabsView_SelectionChanged" IsRightTapEnabled="True" Margin="0,0,0,16" x:FieldModifier="public" Visibility="Visible" Loaded="PinsTabView_Loaded" x:Name="PinsTabView" CanDragItems="True" CanReorderItems="True" AllowDrop="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch">
@@ -92,7 +92,7 @@
                     <TextBlock Text="{helpers:ResourceString Name=Tabs}" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left"/>
                 </Grid>
 
-                <ListView x:FieldModifier="public" RightTapped="TabsView_RightTapped" IsRightTapEnabled="True" x:Name="TabsView" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionChanged="TabsView_SelectionChanged">
+                <ListView x:FieldModifier="public" RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsCompleted="TabsView_DragItemsCompleted" DragItemsStarting="TabsView_DragItemsStarting" Drop="TabsView_Drop" DragOver="TabsView_DragOver" IsRightTapEnabled="True" x:Name="TabsView" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionChanged="TabsView_SelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch">
