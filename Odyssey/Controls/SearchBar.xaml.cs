@@ -206,7 +206,7 @@ namespace Odyssey.Controls
 
         private async void mainSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
- 
+            Suggestions.CurrentQuery = mainSearchBox.Text;
             UpdateIcon(mainSearchBox.Text);
             if(!suggestionChosen)
             {

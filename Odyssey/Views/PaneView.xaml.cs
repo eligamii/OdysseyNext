@@ -143,6 +143,9 @@ namespace Odyssey.Views
                 MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
                 UpdateTabSelection(sender);
             }
+
+            if (e.AddedItems.Count != 0) // Save tabs as much as possible to avoid data loss after crash
+                Tabs.Save();
         }
 
         private void TabsView_RightTapped(object sender, RightTappedRoutedEventArgs e)

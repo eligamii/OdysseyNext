@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace Odyssey.WebSearch
 {
-    public class Suggestions
+    public static class Suggestions
     {
+        public static string CurrentQuery { get; set; }
         public async static Task<List<Suggestion>> Suggest(string query, int maxSuggestions)
         {
             List<Suggestion> suggestions = new();
@@ -24,7 +25,9 @@ namespace Odyssey.WebSearch
 
             suggestions = suggestions.Concat(TabsSuggestionsHelper.SearchForMatchingTabs(query)).ToList();
 
-            //suggestions = suggestions.Concat(await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).ToList();
+            var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
+
+            suggestions = suggestions.Concat(ddgSuggestions).ToList();
 
             return suggestions;
         }

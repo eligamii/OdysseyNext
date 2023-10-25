@@ -17,28 +17,27 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
             public string phrase { get; set; }
         }
 
+
+        private static HttpClient client = new HttpClient();
         public async static Task<List<Suggestion>> GetFromDuckDuckGoSuggestions(string query)
         {
             List<Suggestion> suggestions = new();
             string url = $"https://ac.duckduckgo.com/ac/?q={WebUtility.UrlEncode(query)}";
 
-            using (HttpClient client = new HttpClient())
+            string str = await client.GetStringAsync(url);
+            var ddgsuggestions = JsonSerializer.Deserialize<List<DDGSuggestion>>(str);
+
+            foreach (var ddgsuggestion in ddgsuggestions)
             {
-                string str = await client.GetStringAsync(url);
-                var ddgsuggestions = JsonSerializer.Deserialize<List<DDGSuggestion>>(str);
+                Suggestion suggestion = new();
+                suggestion.Title = ddgsuggestion.phrase;
+                suggestion.Url = await WebViewNavigateUrlHelper.ToUrl(ddgsuggestion.phrase);
+                suggestion.Kind = SuggestionKind.Search;
 
-                foreach (var ddgsuggestion in ddgsuggestions)
-                {
-                    Suggestion suggestion = new();
-                    suggestion.Title = ddgsuggestion.phrase;
-                    suggestion.Url = await WebViewNavigateUrlHelper.ToUrl(ddgsuggestion.phrase);
-                    suggestion.Kind = SuggestionKind.Search;
-
-                    suggestions.Add(suggestion);
-                }
+                suggestions.Add(suggestion);
             }
 
-            return null; //[TOREMOVE]
+            return suggestions;
         }
     }
 }

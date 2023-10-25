@@ -30,6 +30,7 @@ namespace Odyssey.Shared.ViewModels.WebSearch
         public string Title { get; set; }
         public string Url { get; set;}
         public KeyValuePair<TabLocation, Tab> Tab { get; set; }
+        public string Query { get; set; } // The query that correspond with the suggestion
         public string Glyph
         {
             get
