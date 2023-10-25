@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Main;
 using Odyssey.Shared.ViewModels.Data;
+using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.Views;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,16 @@ namespace Odyssey.Controls.ContextMenus
 
                         case "notmuted":
                             if (item.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                            break;
+
+                        case "pinnedtosearch":
+                            if (!SearchBarShortcuts.Items.Any(p => p.Url == item.MainWebView.Source.ToString()))
+                                shouldCollapse = true;
+                            break;
+
+                        case "notpinnedtosearch":
+                            if (SearchBarShortcuts.Items.Any(p => p.Url == item.MainWebView.Source.ToString()))
+                                shouldCollapse = true;
                             break;
                     }
                 }
@@ -198,6 +209,25 @@ namespace Odyssey.Controls.ContextMenus
         private void RefreshMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             item.MainWebView.Reload();
+        }
+
+        private void UnpinSearchBarMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            Suggestion suggestion = SearchBarShortcuts.Items.Where(p => p.Url == item.Url).ToList().ElementAt(0);
+
+            SearchBarShortcuts.Items.Remove(suggestion);
+        }
+
+        private void PinSearchBarMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            Suggestion suggestion = new()
+            {
+                Kind = SuggestionKind.Shortcut,
+                Title = item.Title,
+                Url = item.Url
+            };
+
+            SearchBarShortcuts.Items.Add(suggestion);
         }
     }
 }

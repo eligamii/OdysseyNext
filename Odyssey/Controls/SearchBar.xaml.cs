@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
 using Odyssey.FWebView.Classes;
 using Odyssey.Helpers;
@@ -33,6 +34,17 @@ namespace Odyssey.Controls
 
             mainIcon = this.newTab ? "\uEC6C" : "\uE11A";
             searchBarIcon.Glyph = mainIcon;
+
+            Opened += SearchBar_Opened;
+        }
+
+        private void SearchBar_Opened(object sender, object e)
+        {
+            if(SearchBarShortcuts.Items.Count > 0)
+            {
+                suggestionListView.Visibility = Visibility.Visible;
+                suggestionListView.ItemsSource = SearchBarShortcuts.Items;
+            }
         }
 
         private void Flyout_Opened(object sender, object e)
@@ -166,7 +178,15 @@ namespace Odyssey.Controls
             }
             else
             {
-                suggestionListView.Visibility = Visibility.Collapsed;
+                if(SearchBarShortcuts.Items.Count == 0)
+                {
+                    suggestionListView.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    suggestionListView.ItemsSource = SearchBarShortcuts.Items;
+                    suggestionListView.Visibility = Visibility.Visible;
+                }
             }
         }
 
@@ -198,7 +218,7 @@ namespace Odyssey.Controls
 
             switch(suggestion.Kind)
             {
-                case SuggestionKind.Search or SuggestionKind.MathematicalExpression or SuggestionKind.History or SuggestionKind.Url:
+                case SuggestionKind.Shortcut or SuggestionKind.Search or SuggestionKind.MathematicalExpression or SuggestionKind.History or SuggestionKind.Url:
                     MainView.CurrentlySelectedWebView.CoreWebView2.Navigate(suggestion.Url); break;
 
                 case SuggestionKind.Tab:
@@ -216,6 +236,33 @@ namespace Odyssey.Controls
             }
 
             Hide();
+        }
+
+        private void suggestionListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var pos = e.GetPosition(suggestionListView);
+            int index = (int)(pos.Y / 40);
+
+            Suggestion rightClickedSuggestion = suggestionListView.Items.ElementAt(index) as Suggestion;
+            
+            if(rightClickedSuggestion.Kind == SuggestionKind.Shortcut)
+            {
+                MenuFlyout menu = new MenuFlyout();
+                MenuFlyoutItem menuFlyoutItem = new()
+                {
+                    Icon = new SymbolIcon { Symbol = Symbol.UnPin },
+                    Text = "Unpin from the search bar"
+                };
+
+                menuFlyoutItem.Click += (s, a) => SearchBarShortcuts.Items.Remove(rightClickedSuggestion);
+
+                menu.Items.Add(menuFlyoutItem);
+
+                FlyoutShowOptions flyoutShowOptions = new FlyoutShowOptions();
+                flyoutShowOptions.Position = e.GetPosition(suggestionListView);
+
+                menu.ShowAt(suggestionListView, flyoutShowOptions);
+            }
         }
     }
 }

@@ -19,6 +19,16 @@
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE196;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
+        <MenuFlyoutItem Text="Unpin from the search bar" Tag="pinnedtosearch" Click="UnpinSearchBarMenuFlyoutItem_Click">
+            <MenuFlyoutItem.Icon>
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE196;" />
+            </MenuFlyoutItem.Icon>
+        </MenuFlyoutItem>
+        <MenuFlyoutItem Text="Pin to the searchh bar" Tag="notpinnedtosearch" Click="PinSearchBarMenuFlyoutItem_Click">
+            <MenuFlyoutItem.Icon>
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE141;" />
+            </MenuFlyoutItem.Icon>
+        </MenuFlyoutItem>
         <MenuFlyoutItem Text="Add to favorites" Tag="notfavorite">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" />
