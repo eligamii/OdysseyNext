@@ -219,6 +219,12 @@ namespace Odyssey.Controls
                         Suggestion defaultSuggestion = new() { Kind = SuggestionKind.Search, Title = mainSearchBox.Text, Url = await WebViewNavigateUrlHelper.ToUrl(mainSearchBox.Text) };
                         list.Add(defaultSuggestion);
 
+                        // prevent the list from being empty when the suggestions come after the searchbox text was deleted
+                        if(list.Where(p => p != defaultSuggestion).ToList().Count == 0 && mainSearchBox.Text == string.Empty)
+                        {
+                            list = SearchBarShortcuts.Items.ToList();
+                        }
+
                         suggestionListView.ItemsSource = list;
 
                         suggestionListView.Visibility = list.Where(p => p != defaultSuggestion).ToList().Count == 0 ? Visibility.Collapsed : Visibility.Visible;
