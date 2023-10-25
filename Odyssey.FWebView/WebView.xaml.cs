@@ -80,9 +80,7 @@ namespace Odyssey.FWebView
             sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
 
             sender.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged; // Update the 'url' value of the Tab objects
-
             sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting; 
-
             sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
 
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect any download to aria2
@@ -91,6 +89,9 @@ namespace Odyssey.FWebView
             scrollTimer = new DispatcherTimer();
             scrollTimer.Interval = TimeSpan.FromSeconds(2);
             scrollTimer.Tick += ScrollTimer_Tick;
+
+            // Add extensions
+            AdBlocker.AdBlocker blocker = new(sender.CoreWebView2);
         }
 
         private void CoreWebView2_DownloadStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2DownloadStartingEventArgs args)

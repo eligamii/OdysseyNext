@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.Web.WebView2.Core;
+using Odyssey.AdBlocker;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Helpers;
@@ -30,8 +31,11 @@ namespace Odyssey
 
             // Load default settings for the first run
             Settings.Init();
+
+            // Load data
             Data.Main.Data.Init();
             Aria2.Aria2.Init();
+            AdBlocker.AdBlocker.Init();
 
             // Use this instead of Systemackdrop = Micaackdrop(); to be able to control the color of the Window
             MicaBackdropHelper.TrySetMicaackdropTo(this);

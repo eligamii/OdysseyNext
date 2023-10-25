@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
     <ProjectReference Include="..\Odyssey.Aria2\Odyssey.Aria2.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
