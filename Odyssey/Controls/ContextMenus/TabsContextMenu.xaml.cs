@@ -229,5 +229,10 @@ namespace Odyssey.Controls.ContextMenus
 
             SearchBarShortcuts.Items.Add(suggestion);
         }
+
+        private void NewWindowMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+           
+        }
     }
 }

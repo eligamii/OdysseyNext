@@ -42,7 +42,7 @@
 
         <MenuFlyoutSeparator/>
 
-        <MenuFlyoutItem Text="Open in a new window" Tag="nologin" IsEnabled="False">
+        <MenuFlyoutItem Text="Open in a new window" Tag="nologin" Click="NewWindowMenuFlyoutItem_Click" IsEnabled="False">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE17C;" />
             </MenuFlyoutItem.Icon>

@@ -65,7 +65,9 @@ namespace Odyssey.Views
         {
             await Data.Main.Data.Init();
 
-            if (Settings.SuccessfullyClosed == false)
+            var instances = Microsoft.Windows.AppLifecycle.AppInstance.GetInstances();
+
+            if (Settings.SuccessfullyClosed == false && instances.Count == 1)
             {
                 PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
             }
