@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
 using Odyssey.FWebView;
-using ABI.System;
 using Windows.ApplicationModel.DataTransfer;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -47,27 +46,31 @@ namespace Odyssey.Views
         {
             // Restore tabs icons based on the Favicon Kit api
 
-            foreach (Tab tab in Tabs.Items)
+            try // Prevent crash on timing issues
             {
-                if (tab.ImageSource == null && tab.Url != null)
+                foreach (Tab tab in Tabs.Items)
                 {
-                    tab.ImageSource = new()
+                    if (tab.ImageSource == null && tab.Url != null)
                     {
-                        UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
-                    };
+                        tab.ImageSource = new()
+                        {
+                            UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
+                        };
+                    }
                 }
-            }
 
-            foreach (Tab tab in Pins.Items)
-            {
-                if (tab.ImageSource == null && tab.Url != null)
+                foreach (Tab tab in Pins.Items)
                 {
-                    tab.ImageSource = new()
+                    if (tab.ImageSource == null && tab.Url != null)
                     {
-                        UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
-                    };
+                        tab.ImageSource = new()
+                        {
+                            UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
+                        };
+                    }
                 }
             }
+            catch { }
         }
 
         private void FullScreenControlsPanel_Loaded(object sender, RoutedEventArgs e)
@@ -97,23 +100,48 @@ namespace Odyssey.Views
 
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var pos = e.GetPosition(TabsView);
-            int index = (int)(pos.Y / 40); // Get tab index, idk if usable with more than 25 tabs (40 is approx.)
+            if(sender as ListView == TabsView)
+            {
+                var pos = e.GetPosition(TabsView);
+                int index = (int)(pos.Y / 40); // Get tab index
 
-            var tabToRemove = Tabs.Items.ElementAt(index);
+                var tabToRemove = Tabs.Items.ElementAt(index);
 
-            // Remove the tab's WebViews
-            tabToRemove.MainWebView.Close();
-            if (tabToRemove.SplitViewWebView != null) tabToRemove.SplitViewWebView.Close();
-            tabToRemove.MainWebView = tabToRemove.SplitViewWebView = null;
+                // Remove the tab's WebViews
+                tabToRemove.MainWebView.Close();
+                if (tabToRemove.SplitViewWebView != null) tabToRemove.SplitViewWebView.Close();
+                tabToRemove.MainWebView = tabToRemove.SplitViewWebView = null;
 
-            // Remove the tab from the tabs listView
-            Tabs.Items.Remove(tabToRemove);
+                // Remove the tab from the tabs listView
+                Tabs.Items.Remove(tabToRemove);
 
-            // Changing the selected tab to another
-            if (index > 0) TabsView.SelectedIndex = index - 1;
-            else if (Tabs.Items.Count > 0) TabsView.SelectedIndex = 0;
-            else TabsView.SelectedIndex = -1;
+                // Changing the selected tab to another
+                if (index > 0) TabsView.SelectedIndex = index - 1;
+                else if (Tabs.Items.Count > 0) TabsView.SelectedIndex = 0;
+                else TabsView.SelectedIndex = -1;
+            }
+            else
+            {
+                var pos = e.GetPosition(PinsTabView);
+                int index = (int)(pos.Y / 40); // Get pin index
+
+                var pinToRemove = Pins.Items.ElementAt(index);
+
+                // Remove the pin's WebViews
+                if (pinToRemove.MainWebView != null)
+                {
+                    pinToRemove.MainWebView.Close();
+                    if (pinToRemove.SplitViewWebView != null) pinToRemove.SplitViewWebView.Close();
+                    pinToRemove.MainWebView = pinToRemove.SplitViewWebView = null;
+                }
+
+                // Remove the pin from the pins listView
+                Pins.Items.Remove(pinToRemove);
+
+                PinsTabView.SelectedIndex = -1;
+
+                PinsTabView.ItemsSource = Pins.Items;
+            }
         }
 
         private async void TabsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -216,6 +244,11 @@ namespace Odyssey.Views
         private void TabsView_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = draggedItem != null ? DataPackageOperation.Move : DataPackageOperation.None;
+            if(e.DataView.Contains(StandardDataFormats.Uri) || e.DataView.Contains(StandardDataFormats.Text))
+            {
+                e.AcceptedOperation = DataPackageOperation.Link;
+            }
+
         }
 
         private void TabsView_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
@@ -225,11 +258,13 @@ namespace Odyssey.Views
 
 
 
-        private void PinsTabView_Drop(object sender, DragEventArgs e)
+        private async void PinsTabView_Drop(object sender, DragEventArgs e)
         {
+            Pin pin;
+
             if(draggedItem != null)
             {
-                Pin pin = new()
+                pin = new()
                 {
                     Url = draggedItem.Url,
                     ImageSource = draggedItem.ImageSource,
@@ -238,24 +273,45 @@ namespace Odyssey.Views
                     Title = draggedItem.Title
                 };
 
-                var pos = e.GetPosition(PinsTabView);
-                int index = (int)(pos.Y / 40);
-
-                Pins.Items.Insert(index, pin);
-                PinsTabView.ItemsSource = Pins.Items;
-
-                PinsTabView.SelectedItem = pin;
-
                 Tabs.Items.Remove(draggedItem);
             }
+            else
+            {
+                string text = await e.DataView.GetTextAsync();
+
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+
+                pin = new()
+                {
+                    Url = url,
+                    ToolTip = url,
+                    Title = text
+                };
+
+                WebView webView = WebView.New(url);
+                webView.LinkedTab = pin;
+                pin.MainWebView = webView;
+            }
+
+            var pos = e.GetPosition(PinsTabView);
+            int index = (int)(pos.Y / 40);
+
+            Pins.Items.Insert(index, pin);
+            PinsTabView.ItemsSource = Pins.Items;
+
+            PinsTabView.SelectedItem = pin;
+
+            
         }
 
-        private void TabsView_Drop(object sender, DragEventArgs e)
+        private async void TabsView_Drop(object sender, DragEventArgs e)
         {
+            Tab tab;
+
             if (draggedItem != null)
             {
-                Tab tab = new()
-                { 
+                tab = new()
+                {
                     Url = draggedItem.Url,
                     ImageSource = draggedItem.ImageSource,
                     MainWebView = draggedItem.MainWebView,
@@ -263,15 +319,33 @@ namespace Odyssey.Views
                     Title = draggedItem.Title
                 };
 
-                var pos = e.GetPosition(TabsView);
-                int index = (int)(pos.Y / 40);
-
-                Tabs.Items.Insert(index, tab);
-
-                TabsView.SelectedItem = tab;
-
                 Pins.Items.Remove(draggedItem as Pin);
             }
+            else
+            {
+                string text = await e.DataView.GetTextAsync();
+
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+
+                tab = new()
+                {
+                    Url = url,
+                    ToolTip = url,
+                    Title = text
+                };
+
+                WebView webView = WebView.New(url);
+                webView.LinkedTab = tab;
+                tab.MainWebView = webView;
+            }
+
+            var pos = e.GetPosition(TabsView);
+            int index = (int)(pos.Y / 40);
+
+            Tabs.Items.Insert(index, tab);
+
+            TabsView.SelectedItem = tab;
+
         }
     }
 }

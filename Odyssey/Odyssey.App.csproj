@@ -50,6 +50,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Odyssey.2FA\Odyssey.2FA.csproj" />
     <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
     <ProjectReference Include="..\Odyssey.Aria2\Odyssey.Aria2.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />

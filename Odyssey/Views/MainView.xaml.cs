@@ -57,7 +57,8 @@ namespace Odyssey.Views
 
             LoadData();
 
-           
+            // Avoid lag when opening the first webview
+            WebView2 webView2 = new() { Source = new Uri("https://www.google.com") };
         }
 
         private async void LoadData()
@@ -87,6 +88,7 @@ namespace Odyssey.Views
             FWebView.WebView.XamlRoot = this.XamlRoot;
             FWebView.Classes.DynamicTheme.PageToUpdateTheme = this;
             FWebView.Classes.DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
+            FWebView.Classes.DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
             FWebView.Classes.DynamicTheme.UpdateTheme = true;
         }
 

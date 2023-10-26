@@ -1,3 +1,4 @@
+using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -42,20 +43,27 @@ namespace Odyssey
             AdBlocker.AdBlocker.Init();
 
             // Use this instead of Systemackdrop = Micaackdrop(); to be able to control the color of the Window
-            MicaBackdropHelper.TrySetMicaackdropTo(this);
+            MicaBackdropHelper.TrySetMicaBackdropTo(this);
 
             ExtendsContentIntoTitleBar = true;
 
             MinWidth = MinHeight = 500;
 
-            // Change the size of the window to match the UWP default window size
+            // Change the size of the window to match with the UWP default window size
             Width = 1040;
             Height = 810;
+
+            AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+
+            AppWindow.TitleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(100, 255, 255, 255);
+            AppWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            AppWindow.TitleBar.ButtonPressedBackgroundColor = Colors.Transparent;
 
             Frame rootFrame = new Frame();
             rootFrame.Navigate(typeof(MainView), null, new SuppressNavigationTransitionInfo());
 
             Content = rootFrame;
+            new Odyssey._2FA.Class1();
 
             // Make possible to access to MainWindow from anywhere
             Current = this;

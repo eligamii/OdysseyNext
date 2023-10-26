@@ -107,7 +107,7 @@ namespace Odyssey.FWebView.Helpers
             }
         }
 
-        internal static Color LightEquivalent(Color color, double amount)
+        internal static Color LightEquivalent(Windows.UI.Color color, double amount)
         {
             RGBtoHSL(color.R, color.G, color.B, out double H, out double S, out double L);
 

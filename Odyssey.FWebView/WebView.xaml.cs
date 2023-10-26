@@ -63,13 +63,16 @@ namespace Odyssey.FWebView
         {
             get
             {
-                try
+                var parent = VisualTreeHelper.GetParent(this);
+                if (parent != null)
                 {
-                    var parent = VisualTreeHelper.GetParent(this);
                     parent = VisualTreeHelper.GetParent(parent);
-
                     return parent.GetType() == typeof(Frame);
-                } catch { return false;}
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 

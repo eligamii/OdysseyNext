@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Composition.SystemBackdrops;
+﻿using Microsoft.UI;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -15,6 +17,7 @@ namespace Odyssey.FWebView.Classes
     {
         public static MicaController MicaController { get; set; }
         public static Page PageToUpdateTheme { get; set; }
+        public static AppWindowTitleBar AppWindowTitleBar { get; set; }
         public static bool UpdateTheme { get; set; } = true;
 
         public static async void UpdateDynamicTheme(WebView2 webView2)
@@ -24,12 +27,19 @@ namespace Odyssey.FWebView.Classes
             
             if(color != null)
             {
-                bool isColorDark = ColorsHelper.IsColorDark((Windows.UI.Color)color);
+                var nnColor = (Windows.UI.Color)color;
+                bool isColorDark = ColorsHelper.IsColorDark(nnColor);
 
                 if (UpdateTheme) PageToUpdateTheme.RequestedTheme = isColorDark ? ElementTheme.Dark : ElementTheme.Light;
 
-                MicaController.TintOpacity = ColorsHelper.IsColorGrayTint((Windows.UI.Color)color) ? 0.4f : 0.9f;
-                MicaController.TintColor = (Windows.UI.Color)color;
+                MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
+                MicaController.TintColor = nnColor;
+
+                AppWindowTitleBar.ButtonForegroundColor = AppWindowTitleBar.ButtonHoverForegroundColor = isColorDark ? Colors.White : Colors.Black;
+
+                var lightColor = ColorsHelper.LightEquivalent(nnColor, 0.2);
+
+                AppWindowTitleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(150, lightColor.R, lightColor.G, lightColor.B);
             }
         }
 

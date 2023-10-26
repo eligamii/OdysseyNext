@@ -14,14 +14,14 @@ namespace Odyssey.Helpers
     public class MicaBackdropHelper
     {
         static WindowsSystemDispatcherQueueHelper m_wsdqHelper; // See below for implementation.
-        public static MicaController BackdropController;
+        public static MicaController BackdropController { get; set; }
         static SystemBackdropConfiguration m_configurationSource;
 
         static Window this_window;
 
 
 
-        public static bool TrySetMicaackdropTo(Window window)
+        public static bool TrySetMicaBackdropTo(Window window)
         {
             if (MicaController.IsSupported())
             {
