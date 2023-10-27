@@ -23,7 +23,8 @@ namespace Odyssey.FWebView.Helpers
         /// <param name="webView">The webview</param>
         /// <param name="width">The width (>= 1) of the part to calculate</param>
         /// <param name="height">The height (>=1) of the part to calculate</param>
-        internal async static Task<Windows.UI.Color?> GetWebView2AverageColorsAsync(WebView2 webView, uint width = 600, uint height = 1)
+        /// <param name="step">(>=1) Greater value = less precision / better performance</param>
+        internal async static Task<Windows.UI.Color?> GetWebView2AverageColorsAsync(WebView2 webView, uint width = 600, uint height = 1, int step = 1)
         {
             try
             {
@@ -71,7 +72,7 @@ namespace Odyssey.FWebView.Helpers
                 byte[] pixels = pixelData.DetachPixelData();
                 int totalRed = 0, totalGreen = 0, totalBlue = 0;
 
-                for (int i = 0; i < pixels.Length; i += 4)
+                for (int i = 0; i < pixels.Length; i += step)
                 {
                     totalBlue += pixels[i];
                     totalGreen += pixels[i + 1];

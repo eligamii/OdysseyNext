@@ -207,6 +207,7 @@ namespace Odyssey.FWebView
             {
                 MainIconElement.Source = null; // will hide the element
                 MainProgressElement.Visibility = Visibility.Visible;
+                DynamicTheme.UpdateDynamicTheme(this);
             }
            
 

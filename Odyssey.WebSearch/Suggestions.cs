@@ -29,7 +29,7 @@ namespace Odyssey.WebSearch
 
             suggestions = suggestions.Concat(ddgSuggestions).ToList();
 
-            return suggestions;
+            return suggestions.Take(maxSuggestions).ToList();
         }
     }
 }

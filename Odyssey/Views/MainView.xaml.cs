@@ -65,8 +65,10 @@ namespace Odyssey.Views
         {
             await Data.Main.Data.Init();
 
+            // Get the instances of the app to prevent tabs from restoring on anther instances
+            // when an instance has opened tabs (so when Settings.SuccessfullyClosed == false with an instance opened)
             var instances = Microsoft.Windows.AppLifecycle.AppInstance.GetInstances();
-
+                                                
             if (Settings.SuccessfullyClosed == false && instances.Count == 1)
             {
                 PaneView.Current.TabsView.ItemsSource = Tabs.Restore();

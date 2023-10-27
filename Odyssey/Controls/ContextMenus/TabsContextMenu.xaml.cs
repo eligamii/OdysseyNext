@@ -80,20 +80,28 @@ namespace Odyssey.Controls.ContextMenus
                             break;
 
                         case "muted":
-                            if (!item.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                            if (item.MainWebView != null)
+                            {
+                                if (!item.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                            }
+                            else shouldCollapse = true;
                             break;
 
                         case "notmuted":
-                            if (item.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                            if (item.MainWebView != null)
+                            {
+                                if (item.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                            }
+                            else shouldCollapse = true;
                             break;
 
                         case "pinnedtosearch":
-                            if (!SearchBarShortcuts.Items.Any(p => p.Url == item.MainWebView.Source.ToString()))
+                            if (!SearchBarShortcuts.Items.Any(p => p.Url == item.Url))
                                 shouldCollapse = true;
                             break;
 
                         case "notpinnedtosearch":
-                            if (SearchBarShortcuts.Items.Any(p => p.Url == item.MainWebView.Source.ToString()))
+                            if (SearchBarShortcuts.Items.Any(p => p.Url == item.Url))
                                 shouldCollapse = true;
                             break;
                     }

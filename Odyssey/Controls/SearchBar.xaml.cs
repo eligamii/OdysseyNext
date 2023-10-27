@@ -13,6 +13,7 @@ using Odyssey.Views;
 using Odyssey.WebSearch;
 using Odyssey.WebSearch.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using static System.Net.Mime.MediaTypeNames;
@@ -214,10 +215,11 @@ namespace Odyssey.Controls
                 {
                     try
                     {
-                        var list = await WebSearch.Suggestions.Suggest(mainSearchBox.Text, 8);
-
+                        var list = new List<Suggestion>();
                         Suggestion defaultSuggestion = new() { Kind = SuggestionKind.Search, Title = mainSearchBox.Text, Url = await WebViewNavigateUrlHelper.ToUrl(mainSearchBox.Text) };
                         list.Add(defaultSuggestion);
+
+                        list = list.Concat(await Suggestions.Suggest(mainSearchBox.Text, 8)).ToList();
 
                         // prevent the list from being empty when the suggestions come after the searchbox text was deleted
                         if(list.Where(p => p != defaultSuggestion).ToList().Count == 0 && mainSearchBox.Text == string.Empty)

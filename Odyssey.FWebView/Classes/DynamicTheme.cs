@@ -22,8 +22,8 @@ namespace Odyssey.FWebView.Classes
 
         public static async void UpdateDynamicTheme(WebView2 webView2)
         {
-            // Get webView2 colors info
-            var color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2);
+            // Get webView2 average color
+            var color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 200, 200, 4);
             
             if(color != null)
             {

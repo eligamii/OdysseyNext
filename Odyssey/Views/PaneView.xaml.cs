@@ -169,6 +169,8 @@ namespace Odyssey.Views
                     MainView.Current.progressRing.Visibility = Visibility.Collapsed;
                 }
 
+                FWebView.Classes.DynamicTheme.UpdateDynamicTheme(tab.MainWebView);
+
                 MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
                 UpdateTabSelection(sender);
             }
