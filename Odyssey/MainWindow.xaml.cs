@@ -33,7 +33,7 @@ namespace Odyssey
             Init();
         }
 
-        private void Init()
+        private async void Init()
         {
             // Load default settings for the first run
             Settings.Init();
@@ -63,7 +63,10 @@ namespace Odyssey
             rootFrame.Navigate(typeof(MainView), null, new SuppressNavigationTransitionInfo());
 
             Content = rootFrame;
-            new Odyssey._2FA.Class1();
+            new _2FA.Class1(); // test
+
+            // Launch the CoreWebView2Environment
+            await CoreWebView2Environment.CreateAsync();
 
             // Make possible to access to MainWindow from anywhere
             Current = this;

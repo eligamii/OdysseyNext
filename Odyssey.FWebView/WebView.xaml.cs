@@ -45,6 +45,7 @@ namespace Odyssey.FWebView
         public static Image MainIconElement { get; set; } // The (titlebar) element which contain the favicon
         public static FrameworkElement MainProgressElement { get; set; } // Will have its Visiblity property set to Collapsed based on if the webview is loading
         public static ProgressRing MainProgressRing { get; set; }
+        public static Frame MainWebViewFrame { get; set; }
 
         private static DownloadsFlyout downloadsFlyout = new();
 
@@ -116,6 +117,9 @@ namespace Odyssey.FWebView
 
             // Add extensions
             AdBlocker.AdBlocker blocker = new(sender.CoreWebView2);
+
+            // Show native tooltips instead of Edge ones
+            WebViewNativeToolTips tips = new(this);
         }
 
         private async void CoreWebView2_FaviconChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)

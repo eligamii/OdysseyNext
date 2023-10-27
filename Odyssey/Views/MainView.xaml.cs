@@ -54,6 +54,7 @@ namespace Odyssey.Views
             FWebView.WebView.MainDownloadElement = downloadButton;
             FWebView.WebView.MainIconElement = Favicon;
             FWebView.WebView.MainProgressElement = progressRing;
+            FWebView.WebView.MainWebViewFrame = splitViewContentFrame;
 
             LoadData();
 
