@@ -23,6 +23,7 @@ using Odyssey.Data.Settings;
 using Odyssey.Helpers;
 using Odyssey.Data.Main;
 using Windows.Security.Credentials.UI;
+using Odyssey.TwoFactorsAuthentification;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -56,6 +57,7 @@ namespace Odyssey.Views
             FWebView.WebView.MainIconElement = Favicon;
             FWebView.WebView.MainProgressElement = progressRing;
             FWebView.WebView.MainWebViewFrame = splitViewContentFrame;
+
 
             LoadData();
 

@@ -6,6 +6,7 @@ using OtpNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Security.Credentials;
@@ -18,6 +19,8 @@ namespace Odyssey.TwoFactorsAuthentification
 {
     public static class TwoFactorsAuthentification
     {
+        public static XamlRoot XamlRoot { get; set; }
+
         private static DispatcherTimer loginTimer;
         private static bool userAuthenticifated = false;
 
@@ -78,17 +81,17 @@ namespace Odyssey.TwoFactorsAuthentification
             }
         }
 
-        public static void Add()
+        public static void Add(string name, string secret)
         {
-            // For testing purposes                        // Remplacement needed as the password property cannot be read
-            vault.Add(new PasswordCredential("Odyssey2FA", "Github/secret", "ihavenoideawhybutitdoesntwork"));
+                                           // Remplacement needed as the password property cannot be read
+            vault.Add(new PasswordCredential("Odyssey2FA", $"{name}/{secret}", "placeholder"));
 
             TwoFactAuth twoFactAuth = new()
             {
-                Name = "Github"
+                Name = name
             };
 
-            twoFactAuth.Start(Base32Encoding.ToBytes("secret"));
+            twoFactAuth.Start(Base32Encoding.ToBytes(secret));
 
             Data.TwoFactAuthData.Items.Add(twoFactAuth);
         }

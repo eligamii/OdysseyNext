@@ -5,11 +5,14 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Odyssey.TwoFactorsAuthentification.Dialogs;
+using Odyssey.TwoFactorsAuthentification.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -24,6 +27,24 @@ namespace Odyssey.TwoFactorsAuthentification.Controls
         {
             this.InitializeComponent();
             list.ItemsSource = Data.TwoFactAuthData.Items;
+        }
+
+        private void ListViewItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ListViewItem item = sender as ListViewItem;
+            TwoFactAuth twoFactAuth = item.DataContext as TwoFactAuth;
+
+            var package = new DataPackage();
+            package.SetText(twoFactAuth.Code);
+            Clipboard.SetContent(package);
+
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            AddDialog addDialog = new();
+            addDialog.XamlRoot = this.XamlRoot;
+            await addDialog.ShowAsync();
         }
     }
 }
