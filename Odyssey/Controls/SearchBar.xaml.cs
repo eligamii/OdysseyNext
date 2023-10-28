@@ -51,7 +51,7 @@ namespace Odyssey.Controls
                     }
                     else
                     {
-                        FWebView.WebView webView = FWebView.WebView.New(suggestion.Url);
+                        FWebView.WebView webView = FWebView.WebView.Create(suggestion.Url);
 
                         Tab tab = new()
                         {
@@ -118,7 +118,7 @@ namespace Odyssey.Controls
                     {
                         if (MainView.CurrentlySelectedWebView == null || newTab)
                         {
-                            FWebView.WebView webView = FWebView.WebView.New(url);
+                            FWebView.WebView webView = FWebView.WebView.Create(url);
 
                             Tab tab = new()
                             {

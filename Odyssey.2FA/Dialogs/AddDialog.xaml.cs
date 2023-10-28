@@ -34,7 +34,7 @@ namespace Odyssey.TwoFactorsAuthentification.Dialogs
             secretBox.Text = secretBox.Text.Replace(" ", "");
             secretBox.Text = secretBox.Text.Replace("-", "");
 
-            if(secretBox.Text.Length == 16)
+            if(secretBox.Text.Length >= 16)
             {
                 TwoFactorsAuthentification.Add(nameBox.Text, secretBox.Text);
             }
@@ -52,7 +52,7 @@ namespace Odyssey.TwoFactorsAuthentification.Dialogs
             secretBox.Text = secretBox.Text.Replace(" ", "");
             secretBox.Text = secretBox.Text.Replace("-", "");
 
-            if(secretBox.Text.Length == 16)
+            if(secretBox.Text.Length >= 16)
             {
                 Totp totp = new(Base32Encoding.ToBytes(secretBox.Text));
                 string code = totp.ComputeTotp();

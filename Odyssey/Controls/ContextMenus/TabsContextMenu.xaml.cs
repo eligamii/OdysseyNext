@@ -189,7 +189,7 @@ namespace Odyssey.Controls.ContextMenus
         {
             Tab tab = new()
             {
-                MainWebView = FWebView.WebView.New(item.MainWebView.Source.ToString()),
+                MainWebView = FWebView.WebView.Create(item.MainWebView.Source.ToString()),
                 Title = item.Title,
                 ToolTip = item.ToolTip,
                 ImageSource = item.ImageSource,

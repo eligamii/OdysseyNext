@@ -151,7 +151,7 @@ namespace Odyssey.Views
                 var tab = e.AddedItems[0] as Tab;
                 if (tab.MainWebView == null)
                 {
-                    WebView webView = WebView.New(tab.Url);
+                    WebView webView = WebView.Create(tab.Url);
                     webView.LinkedTab = tab;
                     await webView.EnsureCoreWebView2Async();
                     tab.MainWebView = webView;
@@ -290,7 +290,7 @@ namespace Odyssey.Views
                     Title = text
                 };
 
-                WebView webView = WebView.New(url);
+                WebView webView = WebView.Create(url);
                 webView.LinkedTab = pin;
                 pin.MainWebView = webView;
             }
@@ -336,7 +336,7 @@ namespace Odyssey.Views
                     Title = text
                 };
 
-                WebView webView = WebView.New(url);
+                WebView webView = WebView.Create(url);
                 webView.LinkedTab = tab;
                 tab.MainWebView = webView;
             }

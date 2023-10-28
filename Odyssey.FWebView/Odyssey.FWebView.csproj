@@ -8,7 +8,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\DownloadItem.xaml" />
-    <None Remove="Controls\Flyout\DownloadsFlyout.xaml" />
+    <None Remove="Controls\Flyouts\DownloadsFlyout.xaml" />
+    <None Remove="Controls\Flyouts\HistoryFlyout.xaml" />
     <None Remove="Controls\FWebViewContextMenu.xaml" />
     <None Remove="Dialogs\AppUriLaunchDialog.xaml" />
     <None Remove="WebView.xaml" />
@@ -25,6 +26,12 @@
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
     <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\HistoryFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

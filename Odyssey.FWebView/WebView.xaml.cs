@@ -44,15 +44,32 @@ namespace Odyssey.FWebView
         public static new XamlRoot XamlRoot { get; set; }
         public static Image MainIconElement { get; set; } // The (titlebar) element which contain the favicon
         public static FrameworkElement MainProgressElement { get; set; } // Will have its Visiblity property set to Collapsed based on if the webview is loading
-        public static ProgressRing MainProgressRing { get; set; }
+        public static ProgressRing MainProgressRing { get; set; } // idem
         public static Frame MainWebViewFrame { get; set; }
 
         private static DownloadsFlyout downloadsFlyout = new();
 
+        public static WebView SelectedWebView // Used for opening HistoryItems in the selected webview when available
+        {
+            get
+            {
+                if(MainWebViewFrame.Content != null)
+                {
+                    return MainWebViewFrame.Content as WebView;
+
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        } 
+
+
         // Ojects to know if the user finished scrolling for 2s
         private DispatcherTimer scrollTimer;
         private bool isScrolling = false;
-        public static WebView New(string url = "about:blank")
+        public static WebView Create(string url = "about:blank")
         {
             WebView newWebView = new();
             newWebView.Source = new Uri(url);
@@ -110,6 +127,8 @@ namespace Odyssey.FWebView
 
             sender.CoreWebView2.FaviconChanged += CoreWebView2_FaviconChanged; // Set the icon of the linked tab
 
+            sender.CoreWebView2.HistoryChanged += CoreWebView2_HistoryChanged; // Save history
+
             // Scroll events (Uppate dynamic theme)
             scrollTimer = new DispatcherTimer();
             scrollTimer.Interval = TimeSpan.FromSeconds(2);
@@ -120,6 +139,19 @@ namespace Odyssey.FWebView
 
             // Show native tooltips instead of Edge ones
             //WebViewNativeToolTips tips = new(this);
+        }
+
+        private void CoreWebView2_HistoryChanged(CoreWebView2 sender, object args)
+        {
+            // Save history
+            HistoryItem historyItem = new()
+            {
+                Title = sender.DocumentTitle,
+                Url = sender.Source,
+                Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds()
+            };
+
+            History.Items.Insert(0, historyItem);
         }
 
         private async void CoreWebView2_FaviconChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)

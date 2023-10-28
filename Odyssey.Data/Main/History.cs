@@ -8,13 +8,13 @@ namespace Odyssey.Data.Main
     public class History
     {
 
-        public static ObservableCollection<HistoryItem> HistoryList { get; set; }
+        public static ObservableCollection<HistoryItem> Items { get; set; }
 
         internal static void Save()
         {
             // If someone wants to mnually edit JSON save files
             var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(HistoryList, options);
+            string jsonString = JsonSerializer.Serialize(Items, options);
             File.WriteAllText(Data.HistoryFilePath, jsonString);
         }
 
@@ -23,12 +23,15 @@ namespace Odyssey.Data.Main
             if (File.Exists(Data.HistoryFilePath))
             {
                 string jsonString = File.ReadAllText(Data.HistoryFilePath);
-                HistoryList = JsonSerializer.Deserialize<ObservableCollection<HistoryItem>>(jsonString);
+                Items = JsonSerializer.Deserialize<ObservableCollection<HistoryItem>>(jsonString);
             }
+            else
+            {
+                Items = new ObservableCollection<HistoryItem>();
+            }
+            
 
-            HistoryList = new ObservableCollection<HistoryItem>();
-
-            HistoryList.CollectionChanged += (s, a) => Save();
+            Items.CollectionChanged += (s, a) => Save();
         }
     }
 }

@@ -250,5 +250,11 @@ namespace Odyssey.Views
             TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(sender as FrameworkElement);
              
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            FWebView.Controls.Flyouts.HistoryFlyout historyFlyout = new();
+            historyFlyout.ShowAt(sender as FrameworkElement);
+        }
     }
 }
