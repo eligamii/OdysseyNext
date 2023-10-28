@@ -17,7 +17,8 @@ namespace Odyssey.Data.Main
         internal static string LoginsFilePath { get; private set; } // %localappdata%\...\LocalState\Data\Logins.json
         internal static string PinsFilePath { get; private set; } // %localappdata%\...\LocalState\Data\Pins.json
         internal static string TabsFilePath { get; private set; }
-        
+        internal static string TotpFilePath { get; private set; }
+
 
 
         private static StorageFolder dataFolder;

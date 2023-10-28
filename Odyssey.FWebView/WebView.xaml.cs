@@ -119,7 +119,7 @@ namespace Odyssey.FWebView
             AdBlocker.AdBlocker blocker = new(sender.CoreWebView2);
 
             // Show native tooltips instead of Edge ones
-            WebViewNativeToolTips tips = new(this);
+            //WebViewNativeToolTips tips = new(this);
         }
 
         private async void CoreWebView2_FaviconChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)

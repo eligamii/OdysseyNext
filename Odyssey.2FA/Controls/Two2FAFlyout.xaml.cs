@@ -16,13 +16,14 @@ using Windows.Foundation.Collections;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace Odyssey._2FA.Controls
+namespace Odyssey.TwoFactorsAuthentification.Controls
 {
-    public sealed partial class _2FAFlyout : UserControl
+    public sealed partial class Two2FAFlyout : Flyout
     {
-        public _2FAFlyout()
+        public Two2FAFlyout()
         {
             this.InitializeComponent();
+            list.ItemsSource = Data.TwoFactAuthData.Items;
         }
     }
 }

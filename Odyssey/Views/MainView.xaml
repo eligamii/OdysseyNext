@@ -52,6 +52,7 @@
                 <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=GoForward}" Content="&#xE0AB;"/>
                 <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh}" Content="&#xE149;"/>
                 <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb}" Content="&#xE11A;" FontSize="15"/>
+                <Button Click="_2FAButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb}" Content="&#xE192;"/>
                 <Button x:Name="downloadButton" Click="DownloadsButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Downloads}" Content="&#xE118;" FontSize="15"/>
                 <AppBarSeparator/>
                 <Button Padding="10,3" x:Name="infoButton">

@@ -22,6 +22,7 @@ using Odyssey.Dialogs;
 using Odyssey.Data.Settings;
 using Odyssey.Helpers;
 using Odyssey.Data.Main;
+using Windows.Security.Credentials.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -239,6 +240,13 @@ namespace Odyssey.Views
         private void DownloadsButton_Click(object sender, RoutedEventArgs e)
         {
             FWebView.WebView.OpenDownloadDialog();
+        }
+
+        private void _2FAButton_Click(object sender, RoutedEventArgs e)
+        {
+            //TwoFactorsAuthentification.TwoFactorsAuthentification.Add();
+            TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(sender as FrameworkElement);
+             
         }
     }
 }

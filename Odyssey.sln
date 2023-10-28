@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Aria2", "Odyssey.Ar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.AdBlocker", "Odyssey.AdBlocker\Odyssey.AdBlocker.csproj", "{A31FABD3-0578-4C35-990A-6BD3FCA718EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odyssey.2FA", "Odyssey.2FA\Odyssey.2FA.csproj", "{156B92A8-4B93-42BF-9945-1983D8408ACB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.TwoFactorsAuthentification", "Odyssey.2FA\Odyssey.TwoFactorsAuthentification.csproj", "{156B92A8-4B93-42BF-9945-1983D8408ACB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

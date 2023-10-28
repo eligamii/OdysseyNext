@@ -63,8 +63,10 @@ namespace Odyssey
             rootFrame.Navigate(typeof(MainView), null, new SuppressNavigationTransitionInfo());
 
             Content = rootFrame;
-            new _2FA.Class1(); // test
 
+            // Start the 2FA service
+            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
+            
             // Launch the CoreWebView2Environment
             await CoreWebView2Environment.CreateAsync();
 
