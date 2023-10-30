@@ -45,7 +45,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Grid>
-                                <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0"/>
+                                <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0" Source="{Binding Icon}"/>
                                 <ProgressRing x:Name="progressRing" Value="{Binding Progress}" IsActive="{Binding IsProgressActive}" IsIndeterminate="{Binding IsProgressIntermeinate}" Width="19" Height="19"/>
                             </Grid>
 

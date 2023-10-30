@@ -1,11 +1,6 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions
 {
@@ -29,7 +24,7 @@ namespace Odyssey.QuickActions
                                    .Replace("<flyouturl>", QAFlyoutUrl)
                                    ;
 
-            foreach(var variable in UserVariables)
+            foreach (var variable in UserVariables)
             {
                 resultCommand = resultCommand.Replace($"<{variable.Key}>", variable.Value);
             }
@@ -51,20 +46,20 @@ namespace Odyssey.QuickActions
         //************* WebView **************
 
         // The right-clicked webview weblink (if one)
-        private static string LinkUrl 
+        private static string LinkUrl
         {
             get
             {
-                if(ContextMenuArgs != null)
+                if (ContextMenuArgs != null)
                 {
-                    if(ContextMenuArgs.ContextMenuTarget.HasLinkUri)
+                    if (ContextMenuArgs.ContextMenuTarget.HasLinkUri)
                     {
                         return ContextMenuArgs.ContextMenuTarget.LinkUri;
                     }
                 }
 
                 return string.Empty;
-            } 
+            }
         }
 
         private static string SelectionText

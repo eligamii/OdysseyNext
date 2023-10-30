@@ -3,13 +3,7 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Odyssey.FWebView.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.FWebView.Classes
 {
@@ -24,8 +18,8 @@ namespace Odyssey.FWebView.Classes
         {
             // Get webView2 average color
             var color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 200, 200, 4);
-            
-            if(color != null)
+
+            if (color != null)
             {
                 var nnColor = (Windows.UI.Color)color;
                 bool isColorDark = ColorsHelper.IsColorDark(nnColor);

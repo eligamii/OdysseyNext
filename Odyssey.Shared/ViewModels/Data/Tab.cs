@@ -1,15 +1,9 @@
-﻿using Microsoft.UI.Composition;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Security.Credentials;
 
 namespace Odyssey.Shared.ViewModels.Data
 {
@@ -22,11 +16,12 @@ namespace Odyssey.Shared.ViewModels.Data
         private string tip;
 
         [DataMember]
-        public string Url {
-            get { return url; } 
+        public string Url
+        {
+            get { return url; }
             set
             {
-                if(value != url)
+                if (value != url)
                 {
                     url = value;
                     NotifyPropertyChanged();
@@ -34,22 +29,24 @@ namespace Odyssey.Shared.ViewModels.Data
             }
         }
         [DataMember]
-        public string Title {
+        public string Title
+        {
             get { return title; }
             set
             {
-                if(value != title)
+                if (value != title)
                 {
                     title = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        public BitmapImage ImageSource {
+        public BitmapImage ImageSource
+        {
             get { return image; }
-            set 
+            set
             {
-                if(value != image)
+                if (value != image)
                 {
                     image = value;
                     NotifyPropertyChanged();
@@ -57,23 +54,26 @@ namespace Odyssey.Shared.ViewModels.Data
             }
         }
         [DataMember]
-        public string ToolTip {
+        public string ToolTip
+        {
             get { return tip; }
             set
             {
-                if(value != tip)
+                if (value != tip)
                 {
                     tip = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        public WebView2 MainWebView {
+        public WebView2 MainWebView
+        {
             get;
             set;
         }
-        public WebView2 SplitViewWebView {
-            get; 
+        public WebView2 SplitViewWebView
+        {
+            get;
             set;
         }
 

@@ -1,12 +1,9 @@
-using ABI.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
-using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
 using Odyssey.FWebView.Classes;
-using Odyssey.Helpers;
 using Odyssey.QuickActions;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Shared.ViewModels.WebSearch;
@@ -19,7 +16,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
-using static System.Net.Mime.MediaTypeNames;
 using Uri = System.Uri;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -120,7 +116,7 @@ namespace Odyssey.Controls
 
         private void SearchBar_Opened(object sender, object e)
         {
-            if(SearchBarShortcuts.Items.Count > 0)
+            if (SearchBarShortcuts.Items.Count > 0)
             {
                 suggestionListView.Visibility = Visibility.Visible;
                 suggestionListView.ItemsSource = SearchBarShortcuts.Items;
@@ -129,7 +125,7 @@ namespace Odyssey.Controls
 
         private void Flyout_Opened(object sender, object e)
         {
-            
+
         }
 
         private void Flyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
@@ -141,9 +137,9 @@ namespace Odyssey.Controls
 
         private async void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if(e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                if(suggestionListView.SelectedItem == null)
+                if (suggestionListView.SelectedItem == null)
                 {
                     string text = (sender as TextBox).Text;
                     string url = await WebViewNavigateUrlHelper.ToUrl(text);
@@ -180,7 +176,7 @@ namespace Odyssey.Controls
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
                         else if (kind == StringKind.QuickActionCommand)
                         {
-                            if(text.Contains("<ask>"))
+                            if (text.Contains("<ask>"))
                             {
                                 ask = true;
 
@@ -212,7 +208,7 @@ namespace Odyssey.Controls
                         }
                     }
 
-                    if(!ask) Hide();
+                    if (!ask) Hide();
                 }
                 else
                 {
@@ -276,7 +272,7 @@ namespace Odyssey.Controls
         {
             Suggestions.CurrentQuery = mainSearchBox.Text;
             UpdateIcon(mainSearchBox.Text);
-            if(!suggestionChosen)
+            if (!suggestionChosen)
             {
                 if (mainSearchBox.Text != string.Empty)
                 {
@@ -289,7 +285,7 @@ namespace Odyssey.Controls
                         list = list.Concat(await Suggestions.Suggest(mainSearchBox.Text, 8)).ToList();
 
                         // prevent the list from being empty when the suggestions come after the searchbox text was deleted
-                        if(list.Where(p => p != defaultSuggestion).ToList().Count == 0 && mainSearchBox.Text == string.Empty)
+                        if (list.Where(p => p != defaultSuggestion).ToList().Count == 0 && mainSearchBox.Text == string.Empty)
                         {
                             list = SearchBarShortcuts.Items.ToList();
                         }
@@ -336,7 +332,7 @@ namespace Odyssey.Controls
 
                 case StringKind.OdysseyUrl: searchBarIcon.Glyph = "\uE115"; break;
             }
-             
+
         }
 
         private void suggestionListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -354,8 +350,8 @@ namespace Odyssey.Controls
             int index = (int)(pos.Y / 40);
 
             Suggestion rightClickedSuggestion = suggestionListView.Items.ElementAt(index) as Suggestion;
-            
-            if(rightClickedSuggestion.Kind == SuggestionKind.Shortcut)
+
+            if (rightClickedSuggestion.Kind == SuggestionKind.Shortcut)
             {
                 MenuFlyout menu = new MenuFlyout();
                 MenuFlyoutItem menuFlyoutItem = new()

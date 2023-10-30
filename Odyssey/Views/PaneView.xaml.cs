@@ -1,24 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Odyssey.Data.Main;
-using Odyssey.Shared.ViewModels.Data;
-using System.Threading.Tasks;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
+using Odyssey.Data.Main;
 using Odyssey.FWebView;
+using Odyssey.Shared.ViewModels.Data;
+using System;
+using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -100,7 +92,7 @@ namespace Odyssey.Views
 
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if(sender as ListView == TabsView)
+            if (sender as ListView == TabsView)
             {
                 var pos = e.GetPosition(TabsView);
                 int index = (int)(pos.Y / 40); // Get tab index
@@ -146,7 +138,7 @@ namespace Odyssey.Views
 
         private async void TabsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.AddedItems.Count > 0)
+            if (e.AddedItems.Count > 0)
             {
                 var tab = e.AddedItems[0] as Tab;
                 if (tab.MainWebView == null)
@@ -158,7 +150,7 @@ namespace Odyssey.Views
                 }
 
 
-                if((tab.MainWebView as WebView).IsPageLoading)
+                if ((tab.MainWebView as WebView).IsPageLoading)
                 {
                     MainView.Current.Favicon.Source = null;
                     MainView.Current.progressRing.Visibility = Visibility.Visible;
@@ -197,7 +189,7 @@ namespace Odyssey.Views
                 int index = (int)(pos.Y / 40);
 
                 var rightClickedTab = Tabs.Items.ElementAt(index);
-                tabsContextMenu = new(rightClickedTab); 
+                tabsContextMenu = new(rightClickedTab);
             }
 
 
@@ -224,10 +216,10 @@ namespace Odyssey.Views
             draggedItem = hoveredItem;
         }
 
-        
+
         private void TabsView_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if(sender as ListView == PinsTabView)
+            if (sender as ListView == PinsTabView)
             {
                 var pos = e.GetCurrentPoint(PinsTabView);
                 int index = (int)(pos.Position.Y / 40);
@@ -246,7 +238,7 @@ namespace Odyssey.Views
         private void TabsView_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = draggedItem != null ? DataPackageOperation.Move : DataPackageOperation.None;
-            if(e.DataView.Contains(StandardDataFormats.Uri) || e.DataView.Contains(StandardDataFormats.Text))
+            if (e.DataView.Contains(StandardDataFormats.Uri) || e.DataView.Contains(StandardDataFormats.Text))
             {
                 e.AcceptedOperation = DataPackageOperation.Link;
             }
@@ -264,7 +256,7 @@ namespace Odyssey.Views
         {
             Pin pin;
 
-            if(draggedItem != null)
+            if (draggedItem != null)
             {
                 pin = new()
                 {
@@ -303,7 +295,7 @@ namespace Odyssey.Views
 
             PinsTabView.SelectedItem = pin;
 
-            
+
         }
 
         private async void TabsView_Drop(object sender, DragEventArgs e)

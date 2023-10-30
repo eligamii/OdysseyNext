@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Odyssey.Data.Settings
+﻿namespace Odyssey.Data.Settings
 {
     public class SearchEngine
     {
@@ -15,9 +9,9 @@ namespace Odyssey.Data.Settings
 
         public static SearchEngine ToSearchEngineObject(SearchEngines? searchEngineEnum)
         {
-            switch(searchEngineEnum)
-            {              
-                case SearchEngines.DuckDuckGo: return SearchEngine.DuckDuckGo;                
+            switch (searchEngineEnum)
+            {
+                case SearchEngines.DuckDuckGo: return SearchEngine.DuckDuckGo;
                 case SearchEngines.Startpage: return SearchEngine.Startpage;
                 case SearchEngines.YouDotCom: return SearchEngine.YouDotCom;
                 case SearchEngines.Google: return SearchEngine.Google;
@@ -25,7 +19,7 @@ namespace Odyssey.Data.Settings
                 case SearchEngines.Yahoo: return SearchEngine.Yahoo;
                 case SearchEngines.Bing: return SearchEngine.Bing;
                 default: return null;
-            }       
+            }
         }
 
         public static SearchEngines ToSearchEngineEnum(SearchEngine obj)
@@ -132,5 +126,5 @@ namespace Odyssey.Data.Settings
         }
     }
 
-    
+
 }

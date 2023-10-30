@@ -1,9 +1,5 @@
 ﻿using Microsoft.UI.Windowing;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -16,7 +12,7 @@ namespace Odyssey.QuickActions.Commands
                 ((OverlappedPresenter)QACommands.MainWindow.AppWindow.Presenter).Minimize();
                 return true;
             }
-            else return false; 
+            else return false;
         }
     }
 }

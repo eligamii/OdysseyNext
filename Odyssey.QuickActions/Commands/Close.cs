@@ -1,11 +1,5 @@
-﻿using Microsoft.UI.Windowing;
-using Odyssey.Data.Main;
-using System;
-using System.Collections.Generic;
+﻿using Odyssey.Data.Main;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Media.Devices;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -22,13 +16,14 @@ namespace Odyssey.QuickActions.Commands
             else if (options[0] == "tabs")
             {
                 // close every tab
-                foreach(var item in Data.Main.Tabs.Items)
+                foreach (var item in Data.Main.Tabs.Items)
                 {
                     // Close every tab's webview
-                    if(item.MainWebView != null) { item.MainWebView.Close(); }                    
+                    if (item.MainWebView != null) { item.MainWebView.Close(); }
                 }
 
                 Tabs.Items.Clear();
+                Tabs.Save(); // Prevent the tabs from being restored after crash
                 return true;
             }
             else

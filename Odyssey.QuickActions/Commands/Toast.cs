@@ -1,13 +1,7 @@
-﻿using Microsoft.Windows.AppNotifications.Builder;
-using Microsoft.Windows.AppNotifications;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -18,11 +12,11 @@ namespace Odyssey.QuickActions.Commands
         private static AppNotificationDuration duration = AppNotificationDuration.Default;
         internal static bool Exec(string[] options)
         {
-            if(options.Count() >= 1)
+            if (options.Count() >= 1)
             {
                 foreach (string option in options) SetOptions(option);
 
-                if(content != string.Empty)
+                if (content != string.Empty)
                 {
                     // Send toast notification
                     var toast = new AppNotificationBuilder()
@@ -43,7 +37,7 @@ namespace Odyssey.QuickActions.Commands
 
         private static void SetOptions(string option)
         {
-            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|""[-a-zA-Z0-9()@:%_\+.~#?&/\\=; ]*"")*";
+            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|"".*"")*";
 
             string optionName = Regex.Match(option, optionSeparatorRegex).Value;
             string optionValue = Regex.Matches(option, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
@@ -56,9 +50,9 @@ namespace Odyssey.QuickActions.Commands
             {
                 case "title": title = optionValue; break;
                 case "content": content = optionValue; break;
-                case "duration": 
-                    if (optionValue == "long")  { duration = AppNotificationDuration.Long; } 
-                    else { duration = AppNotificationDuration.Default; } 
+                case "duration":
+                    if (optionValue == "long") { duration = AppNotificationDuration.Long; }
+                    else { duration = AppNotificationDuration.Default; }
                     break;
             }
         }

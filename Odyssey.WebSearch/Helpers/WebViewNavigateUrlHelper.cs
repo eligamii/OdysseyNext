@@ -1,9 +1,5 @@
 ﻿using Odyssey.Data.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
@@ -16,7 +12,7 @@ namespace Odyssey.WebSearch.Helpers
         {
             var kind = await GetStringKind(query);
 
-            switch(kind)
+            switch (kind)
             {
                 case StringKind.Url or StringKind.OdysseyUrl:
                     if (!query.Contains("://")) query = "https://" + query;

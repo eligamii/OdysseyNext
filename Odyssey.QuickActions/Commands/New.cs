@@ -1,11 +1,8 @@
 ﻿using Odyssey.Data.Main;
 using Odyssey.Shared.ViewModels.Data;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -14,7 +11,7 @@ namespace Odyssey.QuickActions.Commands
         private static string url = string.Empty;
         internal static bool Exec(string[] options)
         {
-            if(options.Count() == 2)
+            if (options.Count() == 2)
             {
                 SetOptions(options[1]);
 
@@ -29,7 +26,7 @@ namespace Odyssey.QuickActions.Commands
                     return true;
                 }
             }
-            
+
             return false;
         }
 

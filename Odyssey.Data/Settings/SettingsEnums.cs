@@ -15,7 +15,7 @@
         Yahoo,
         DuckDuckGo,
         Qwant,
-        YouDotCom, 
+        YouDotCom,
         Startpage
     }
 }

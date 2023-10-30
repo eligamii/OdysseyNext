@@ -28,7 +28,7 @@ namespace Odyssey.QuickActions
 
             try
             {
-                // Get the command name (ex: flyout)
+                // Get the command var (ex: flyout)
                 commandName = Regex.Match(command, @"^[a-z]*").Value;
             }
             catch { return false; } // the entered command is in a $<non existant variable> pattern 
@@ -42,7 +42,7 @@ namespace Odyssey.QuickActions
             string[] options = Regex.Matches(commandWithoutCommandName, optionsRegex).Select(p => p.Value).Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
 
             // Execute the command
-            switch(commandName)
+            switch (commandName)
             {
                 case "flyout": return Flyout.Exec(options);
                 case "close": return Close.Exec(options);
@@ -50,8 +50,8 @@ namespace Odyssey.QuickActions
                 case "set": return Set.Exec(options);
                 case "toast": return Toast.Exec(options);
                 case "new": return New.Exec(options);
-   
-                default: return false; 
+
+                default: return false;
             }
         }
     }

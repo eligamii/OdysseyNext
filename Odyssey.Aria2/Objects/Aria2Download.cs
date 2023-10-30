@@ -1,14 +1,12 @@
-﻿using ABI.System;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
+using Odyssey.FWebView.Helpers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace Odyssey.Aria2.Objects
 {
@@ -23,6 +21,7 @@ namespace Odyssey.Aria2.Objects
         private string description = string.Empty;
         private bool isProgressIntermeinate = true;
         private bool isProgressActive = true;
+        private BitmapImage icon = new();
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -33,19 +32,19 @@ namespace Odyssey.Aria2.Objects
         /// <summary>
         /// The result path of the downloaded file. Returns an empry string if the file is not downloaded
         /// </summary>
-        public string ResultPath 
+        public string ResultPath
         {
             get { return resultPath; }
             set
             {
-                if(value != resultPath)
+                if (value != resultPath)
                 {
                     resultPath = value;
                     OnPropertyChanged();
                 }
             }
         }
-        public float Progress 
+        public float Progress
         {
             get { return progress; }
             set
@@ -58,7 +57,7 @@ namespace Odyssey.Aria2.Objects
             }
         }
         public string TotalFileSize // 2nd match of the "downloadInfoRegex" regex
-        { 
+        {
             get { return totalFileSize; }
             set
             {
@@ -68,7 +67,7 @@ namespace Odyssey.Aria2.Objects
                     OnPropertyChanged();
                 }
             }
-        } 
+        }
         public string TotalDownloadedDataSize // 1st match
         {
             get { return totalDownloadedDataSize; }
@@ -80,7 +79,7 @@ namespace Odyssey.Aria2.Objects
                     OnPropertyChanged();
                 }
             }
-        } 
+        }
         public string DownloadSpeed // 3rd match
         {
             get { return downloadSpeed; }
@@ -93,8 +92,7 @@ namespace Odyssey.Aria2.Objects
                 }
             }
         }
-
-        public string Title 
+        public string Title
         {
             get { return title; }
             set
@@ -106,8 +104,7 @@ namespace Odyssey.Aria2.Objects
                 }
             }
         }
-
-        public string Description 
+        public string Description
         {
             get { return description; }
             set
@@ -119,8 +116,6 @@ namespace Odyssey.Aria2.Objects
                 }
             }
         }
-
-
         public bool IsProgressActive
         {
             get
@@ -152,8 +147,23 @@ namespace Odyssey.Aria2.Objects
 
             }
         }
+        public BitmapImage Icon
+        {
+            get
+            {
+                return icon;
+            }
+            set
+            {
+                if(value != icon)
+                {
+                    icon = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-
+        public event PropertyChangedEventHandler PropertyChanged;
 
 
         public Aria2Download(string url)
@@ -176,7 +186,7 @@ namespace Odyssey.Aria2.Objects
 
             process.StartInfo = startInfo;
             process.Start();
-            
+
 
 
 
@@ -196,11 +206,20 @@ namespace Odyssey.Aria2.Objects
 
             IsProgressActive = false;
             Description = "Open file";
+
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(ResultPath);
+
+                // Get file icon
+                var fileIcon = await FileIconHelper.GetFileIcon(file);
+                var img = new BitmapImage();
+                img.SetSource(fileIcon);
+
+                Icon = img;
+            } catch { }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void UpdateValues(string data)
+        private async void UpdateValues(string data)
         {
 
             if (!string.IsNullOrEmpty(data))
@@ -233,15 +252,23 @@ namespace Odyssey.Aria2.Objects
                 }
                 else
                 {
-                    Regex pathRegex = new("[A-Z]:/.*"); // will match with the result file path if the the string is a "Download completed" string
+                    Regex pathRegex = new("[A-Z]:/.*[a-zA-Z]"); // will match with the result file path if the the string is a "Download completed" string
                     var path = pathRegex.Match(data);
                     if (path.Success)
                     {
-                        ResultPath = path.Value;
+                        ResultPath = path.Value.Replace("/", @"\");
                         isProgressActive = false;
 
-                        FileInfo file = new(ResultPath);
+                        StorageFile file = await StorageFile.GetFileFromPathAsync(ResultPath);
                         Title = file.Name;
+
+                        // Get file icon
+                        var fileIcon = await FileIconHelper.GetFileIcon(file);
+                        var img = new BitmapImage();
+                        img.SetSource(fileIcon);
+
+                        Icon = img;
+
                     }
                 }
             }

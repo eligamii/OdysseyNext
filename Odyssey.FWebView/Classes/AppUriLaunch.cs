@@ -1,11 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Odyssey.Data.Settings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Management.Deployment;
 using Windows.System;
 
 namespace Odyssey.FWebView.Classes
@@ -15,10 +10,10 @@ namespace Odyssey.FWebView.Classes
         public static async void Launch(Uri uri)
         {
             var res = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
-            
-            if(res == LaunchQuerySupportStatus.Available)
+
+            if (res == LaunchQuerySupportStatus.Available)
             {
-                if(!Settings.CancelAppUriLaunchConfirmationDialog)
+                if (!Settings.CancelAppUriLaunchConfirmationDialog)
                 {
                     // Create and show a confirmation dialog
                     ContentDialog contentDialog = new();
@@ -37,7 +32,7 @@ namespace Odyssey.FWebView.Classes
                     {
                         return;
                     }
-                    else if(dialogResult == ContentDialogResult.Secondary)
+                    else if (dialogResult == ContentDialogResult.Secondary)
                     {
                         Settings.CancelAppUriLaunchConfirmationDialog = true;
                     }

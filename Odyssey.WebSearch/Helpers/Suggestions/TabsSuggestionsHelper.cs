@@ -4,8 +4,6 @@ using Odyssey.Shared.ViewModels.WebSearch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.WebSearch.Helpers.Suggestions
 {
@@ -21,7 +19,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
 
             var list = tabs.Concat(pins).Concat(favorites).ToList();
 
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 Suggestion suggestion = new();
                 TabLocation tabLocation = new();

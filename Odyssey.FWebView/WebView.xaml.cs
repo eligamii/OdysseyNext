@@ -1,32 +1,18 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
-using Microsoft.Windows.AppNotifications.Builder;
-using Microsoft.Windows.AppNotifications;
 using Odyssey.Aria2.Objects;
 using Odyssey.Data.Main;
-using Odyssey.Data.Settings;
 using Odyssey.FWebView.Classes;
 using Odyssey.FWebView.Controls;
 using Odyssey.FWebView.Controls.Flyouts;
 using Odyssey.Shared.ViewModels.Data;
-using Odyssey.WebSearch.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.System;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -55,7 +41,7 @@ namespace Odyssey.FWebView
         {
             get
             {
-                if(MainWebViewFrame.Content != null)
+                if (MainWebViewFrame.Content != null)
                 {
                     return MainWebViewFrame.Content as WebView;
 
@@ -65,7 +51,7 @@ namespace Odyssey.FWebView
                     return null;
                 }
             }
-        } 
+        }
 
 
         // Ojects to know if the user finished scrolling for 2s
@@ -101,7 +87,7 @@ namespace Odyssey.FWebView
             downloadsFlyout.ShowAt(MainDownloadElement);
         }
 
-        private  async Task<BitmapImage> GetFaviconAsBitmapImageAsync()
+        private async Task<BitmapImage> GetFaviconAsBitmapImageAsync()
         {
             // Getting the favicon from the webView
             var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
@@ -122,7 +108,7 @@ namespace Odyssey.FWebView
             sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
 
             sender.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged; // Update the 'url' value of the Tab objects
-            sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting; 
+            sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
             sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
 
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect any download to aria2
@@ -147,7 +133,7 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_HistoryChanged(CoreWebView2 sender, object args)
         {
-            if(!string.IsNullOrWhiteSpace(sender.DocumentTitle) &&
+            if (!string.IsNullOrWhiteSpace(sender.DocumentTitle) &&
                History.Items.First().Url != sender.Source)
             {
                 // Save history
@@ -161,7 +147,7 @@ namespace Odyssey.FWebView
                 History.Items.Insert(0, historyItem);
             }
 
-            
+
         }
 
         private async void CoreWebView2_FaviconChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)
@@ -171,7 +157,7 @@ namespace Odyssey.FWebView
 
             LinkedTab.ImageSource = bitmapImage;
 
-            if(IsVisible && !IsPageLoading)
+            if (IsVisible && !IsPageLoading)
             {
                 MainIconElement.Source = bitmapImage;
             }
@@ -230,7 +216,7 @@ namespace Odyssey.FWebView
                 DynamicTheme.UpdateDynamicTheme(this);
             }
 
-            Tabs.Save(); 
+            Tabs.Save();
         }
 
         private void CoreWebView2_SourceChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2SourceChangedEventArgs args)
@@ -242,27 +228,27 @@ namespace Odyssey.FWebView
         {
             IsPageLoading = true;
 
-            if(await GetStringKind(args.Uri) == StringKind.ExternalAppUri)
+            if (await GetStringKind(args.Uri) == StringKind.ExternalAppUri)
             {
                 args.Cancel = true;
                 AppUriLaunch.Launch(new Uri(args.Uri));
             }
 
             Tabs.Save();
-            if(IsVisible)
+            if (IsVisible)
             {
                 MainIconElement.Source = null; // will hide the element
                 MainProgressElement.Visibility = Visibility.Visible;
                 DynamicTheme.UpdateDynamicTheme(this);
             }
-           
+
 
         }
 
         private void CoreWebView2_ContextMenuRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2ContextMenuRequestedEventArgs args)
         {
             QuickActions.Variables.ContextMenuArgs = args;
-                        
+
             FWebViewContextMenu fWebViewContextMenu = new();
             fWebViewContextMenu.Show(this, args);
         }
@@ -272,6 +258,6 @@ namespace Odyssey.FWebView
             LinkedTab.Title = sender.DocumentTitle;
         }
 
-        
+
     }
 }

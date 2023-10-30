@@ -1,13 +1,9 @@
-﻿using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI;
+﻿using Microsoft.UI;
+using Microsoft.UI.Composition;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Composition;
 
 namespace Odyssey.Helpers
 {

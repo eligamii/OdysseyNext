@@ -1,8 +1,4 @@
-﻿using ABI.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.System;
@@ -11,7 +7,7 @@ namespace Odyssey.WebSearch.Helpers
 {
     public class WebSearchStringKindHelpers
     {
-        private readonly static string urlRegex = @"^(https?:\/\/){0,1}(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
+        private readonly static string urlRegex = @"^(https?:\/\/){0,1}(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,12}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
         private readonly static string odysseyUrlRegex = @"^(edge|chrome|odyssey)://[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
         private readonly static string externalAppUriRegex = @"^[-a-zA-Z0-9]{2,20}:;*";
         private readonly static string mathematicalExpressionRegex = @"^[a-zA-Z0-9\(\)]+([-+/*^\(\),=][a-zA-Z0-9\(\)\=]+(\.[a-zA-Z0-9\(\)]+)?){1,}$"; // match also with functions (Pow(),...) but has false positive (ex: pow1,1)
@@ -38,7 +34,7 @@ namespace Odyssey.WebSearch.Helpers
                 try
                 {
                     LaunchQuerySupportStatus res = await Launcher.QueryUriSupportAsync(new System.Uri(str), LaunchQuerySupportType.Uri);
-                    if (res == LaunchQuerySupportStatus.Available)
+                    if (res == LaunchQuerySupportStatus.Available && !str.StartsWith("http")) // prevent some webpages from opening in both Odyssey and the default browser
                     {
                         return StringKind.ExternalAppUri;
                     }

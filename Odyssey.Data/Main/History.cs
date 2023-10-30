@@ -29,7 +29,7 @@ namespace Odyssey.Data.Main
             {
                 Items = new ObservableCollection<HistoryItem>();
             }
-            
+
 
             Items.CollectionChanged += (s, a) => Save();
         }

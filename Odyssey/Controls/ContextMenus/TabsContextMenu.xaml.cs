@@ -1,23 +1,12 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Main;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.Views;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,7 +22,7 @@ namespace Odyssey.Controls.ContextMenus
 
             Opening += TabsContextMenu_Opening;
             this.item = item;
-            
+
         }
 
         public TabsContextMenu(Tab item)
@@ -47,13 +36,13 @@ namespace Odyssey.Controls.ContextMenus
 
         private void TabsContextMenu_Opening(object sender, object e)
         {
-            foreach(var menuItem in this.Items.Where(p => p.Tag != null))
+            foreach (var menuItem in this.Items.Where(p => p.Tag != null))
             {
                 bool shouldCollapse = false;
 
-                foreach(string tag in menuItem.Tag.ToString().Split(","))
+                foreach (string tag in menuItem.Tag.ToString().Split(","))
                 {
-                    switch(tag)
+                    switch (tag)
                     {
                         case "favorite":
                             if (item.GetType() != typeof(Favorite)) shouldCollapse = true;
@@ -76,7 +65,7 @@ namespace Odyssey.Controls.ContextMenus
                             break;
 
                         case "multiple":
-                            if(Tabs.Items.Count < 2) shouldCollapse = true;  
+                            if (Tabs.Items.Count < 2) shouldCollapse = true;
                             break;
 
                         case "muted":
@@ -169,16 +158,16 @@ namespace Odyssey.Controls.ContextMenus
         private void CloseOtherTabsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             var itemsToRemove = new List<Tab>();
-            foreach(Tab tab in Tabs.Items.Where(p => p != item))
+            foreach (Tab tab in Tabs.Items.Where(p => p != item))
             {
-                tab.MainWebView.Close();
+                if (tab.MainWebView != null) tab.MainWebView.Close();
                 if (tab.SplitViewWebView != null) tab.SplitViewWebView.Close();
                 tab.MainWebView = tab.SplitViewWebView = null;
 
                 itemsToRemove.Add(tab);
             }
 
-            foreach(Tab tab in itemsToRemove)
+            foreach (Tab tab in itemsToRemove)
             {
                 Tabs.Items.Remove(tab);
             }
@@ -240,7 +229,7 @@ namespace Odyssey.Controls.ContextMenus
 
         private void NewWindowMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-           
+
         }
     }
 }

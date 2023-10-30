@@ -1,12 +1,8 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
+﻿using Microsoft.UI.Xaml.Controls.Primitives;
 using Odyssey.QuickActions.Controls;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -15,11 +11,11 @@ namespace Odyssey.QuickActions.Commands
         private static string content = "about:blank"; // should be an url
         private static string pos = "0;0";
         private static string buttoncommand = string.Empty;
-        internal static bool Exec(string[] options) 
+        internal static bool Exec(string[] options)
         {
             if (options.Count() >= 1) // option requires at least 1 option: content
             {
-                foreach(string option in options) { SetOptions(option); }
+                foreach (string option in options) { SetOptions(option); }
 
                 string[] position = pos.Split(";");
                 double x = double.Parse(position[0]);
@@ -48,7 +44,7 @@ namespace Odyssey.QuickActions.Commands
             string optionName = Regex.Match(option, optionSeparatorRegex).Value;
             string optionValue = Regex.Matches(option, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
 
-            if(optionValue.StartsWith("\""))
+            if (optionValue.StartsWith("\""))
                 optionValue = optionValue.Remove(0, 1).Remove(optionValue.Length - 2, 1);
 
 

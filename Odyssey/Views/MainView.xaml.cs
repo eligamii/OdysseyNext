@@ -1,30 +1,20 @@
-using Microsoft.UI.Windowing;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Media.Animation;
+using Odyssey.Controls;
+using Odyssey.Data.Main;
+using Odyssey.Data.Settings;
+using Odyssey.Dialogs;
+using Odyssey.Helpers;
+using Odyssey.QuickActions;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WinRT.Interop;
-using Odyssey.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using Odyssey.Dialogs;
-using Odyssey.Data.Settings;
-using Odyssey.Helpers;
-using Odyssey.Data.Main;
-using Windows.Security.Credentials.UI;
-using Odyssey.TwoFactorsAuthentification;
-using Odyssey.QuickActions;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -75,7 +65,7 @@ namespace Odyssey.Views
             // Get the instances of the app to prevent tabs from restoring on anther instances
             // when an instance has opened tabs (so when Settings.SuccessfullyClosed == false with an instance opened)
             var instances = Microsoft.Windows.AppLifecycle.AppInstance.GetInstances();
-                                                
+
             if (Settings.SuccessfullyClosed == false && instances.Count == 1)
             {
                 PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
@@ -86,7 +76,7 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
-            if(Settings.FirstLaunch != false)
+            if (Settings.FirstLaunch != false)
             {
                 QuickConfigurationDialog quickConfigurationDialog = new()
                 {
@@ -195,7 +185,7 @@ namespace Odyssey.Views
 
         private void SplitView_PaneOpening(SplitView sender, object args)
         {
-            if(showPaneButton != null)
+            if (showPaneButton != null)
             {
                 showPaneButton.Visibility = Visibility.Collapsed;
             }
@@ -211,9 +201,9 @@ namespace Odyssey.Views
         }
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if(CurrentlySelectedWebView != null)
+            if (CurrentlySelectedWebView != null)
             {
-                if(CurrentlySelectedWebView.CanGoBack) CurrentlySelectedWebView.GoBack();
+                if (CurrentlySelectedWebView.CanGoBack) CurrentlySelectedWebView.GoBack();
             }
         }
 
@@ -251,7 +241,7 @@ namespace Odyssey.Views
         {
             //TwoFactorsAuthentification.TwoFactorsAuthentification.Add();
             TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(sender as FrameworkElement);
-             
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
     internal static class Set
     {
         private static string value = string.Empty;
-        private static string name = string.Empty;
+        private static string var = string.Empty;
 
 
         /// <summary>
         /// Set an user variable
         /// </summary>
-        /// <param name="options">The options</param>
+        /// <param var="options">The options</param>
         /// <remarks>
         /// Available options :
-        /// - (required) name: name of the variable to set
+        /// - (required) var: var of the variable to set
         /// - (required) value: the new value of the variable
         /// </remarks>
         /// <returns></returns>
@@ -27,34 +24,34 @@ namespace Odyssey.QuickActions.Commands
         {
             if (options.Count() == 2)
             {
-                foreach(string option in options)
+                foreach (string option in options)
                 {
-                    SetOptions(option); // set the value and name variables
+                    SetOptions(option); // set the value and var variables
                 }
 
-                if(value != string.Empty && name != string.Empty)
+                if (value != string.Empty && var != string.Empty)
                 {
-                    // Save the variable as a KeyValuePair<name, value>
+                    // Save the variable as a KeyValuePair<var, value>
 
-                    // Delete any variable with the same name (prevent having two times the same variable)
-                    if (Variables.UserVariables.Any(p => p.Key == name))
+                    // Delete any variable with the same var (prevent having two times the same variable)
+                    if (Variables.UserVariables.Any(p => p.Key == var))
                     {
-                        var variable = Variables.UserVariables.Where(p => p.Key == name).ElementAt(0);
+                        var variable = Variables.UserVariables.Where(p => p.Key == var).ElementAt(0);
                         Variables.UserVariables.Remove(variable);
                     }
 
-                    Variables.UserVariables.Add(new KeyValuePair<string, string>(name, value));
+                    Variables.UserVariables.Add(new KeyValuePair<string, string>(var, $"\"{value}\""));
 
                     return true;
                 }
             }
 
-            return false; // this command requires at least two options: name and value
+            return false; // this command requires at least two options: var and value
         }
 
         private static void SetOptions(string option)
         {
-            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=]|""[-a-zA-Z0-9()@:%_\+.~#?&/\\= ]*"")*";
+            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|"".*"")*";
 
             string optionName = Regex.Match(option, optionSeparatorRegex).Value;
             string optionValue = Regex.Matches(option, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
@@ -66,7 +63,7 @@ namespace Odyssey.QuickActions.Commands
             switch (optionName)
             {
                 case "value": value = optionValue; break;
-                case "name": name = optionValue; break;
+                case "var": var = optionValue; break;
             }
         }
     }

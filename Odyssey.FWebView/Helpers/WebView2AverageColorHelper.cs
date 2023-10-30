@@ -1,17 +1,10 @@
-﻿using Microsoft.UI;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
-using Windows.Storage.Streams;
 using Windows.Storage;
-using Windows.UI.WebUI;
-using WinRT.Interop;
+using Windows.Storage.Streams;
 
 namespace Odyssey.FWebView.Helpers
 {

@@ -1,5 +1,4 @@
-﻿using Windows.Foundation.Collections;
-using Windows.Storage;
+﻿using Windows.Storage;
 
 namespace Odyssey.Data.Settings
 {
@@ -9,7 +8,7 @@ namespace Odyssey.Data.Settings
 
         public static void Init()
         {
-            if(Inititalized != true)
+            if (Inititalized != true)
             {
                 FirstLaunch = true;
                 Inititalized = true;
