@@ -70,6 +70,9 @@ namespace Odyssey
             // Launch the CoreWebView2Environment
             await CoreWebView2Environment.CreateAsync();
 
+            // Set the Quick actions command MainWindow to this window
+            QuickActions.QACommands.MainWindow = this;
+
             // Make possible to access to MainWindow from anywhere
             Current = this;
 

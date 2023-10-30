@@ -37,7 +37,7 @@
             </Grid.ColumnDefinitions>
             <FontIcon HorizontalAlignment="Right" Margin="0" Grid.Column="0" FontSize="16" Name="searchBarIcon"/>
 
-            <TextBox Width="559" PlaceholderText="{helpers:ResourceString Name=SearchOnWeb}" LosingFocus="mainSearchBox_LosingFocus" Grid.Column="1" CornerRadius="8" x:Name="mainSearchBox" KeyDown="mainSearchBox_KeyDown" TextChanged="mainSearchBox_TextChanged">
+            <TextBox IsSpellCheckEnabled="False" Width="559" PlaceholderText="{helpers:ResourceString Name=SearchOnWeb}" LosingFocus="mainSearchBox_LosingFocus" Grid.Column="1" CornerRadius="8" x:Name="mainSearchBox" KeyDown="mainSearchBox_KeyDown" TextChanged="mainSearchBox_TextChanged">
                 <TextBox.Style>
                     <Style TargetType="TextBox">
                         <Setter Property="Padding" Value="20"/>

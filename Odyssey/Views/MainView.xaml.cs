@@ -24,6 +24,7 @@ using Odyssey.Helpers;
 using Odyssey.Data.Main;
 using Windows.Security.Credentials.UI;
 using Odyssey.TwoFactorsAuthentification;
+using Odyssey.QuickActions;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -63,6 +64,8 @@ namespace Odyssey.Views
 
             // Avoid lag when opening the first webview
             WebView2 webView2 = new() { Source = new Uri("https://www.google.com") };
+
+            QACommands.Frame = splitViewContentFrame;
         }
 
         private async void LoadData()

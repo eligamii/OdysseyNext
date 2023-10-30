@@ -25,9 +25,9 @@ namespace Odyssey.WebSearch
 
             suggestions = suggestions.Concat(TabsSuggestionsHelper.SearchForMatchingTabs(query)).ToList();
 
-            var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
+            //var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
 
-            suggestions = suggestions.Concat(ddgSuggestions).ToList();
+            //suggestions = suggestions.Concat(ddgSuggestions).ToList();
 
             return suggestions.Take(maxSuggestions).ToList();
         }

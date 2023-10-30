@@ -7,6 +7,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
+using Microsoft.Windows.AppNotifications.Builder;
+using Microsoft.Windows.AppNotifications;
 using Odyssey.Aria2.Objects;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
@@ -139,19 +141,27 @@ namespace Odyssey.FWebView
 
             // Show native tooltips instead of Edge ones
             //WebViewNativeToolTips tips = new(this);
+
+
         }
 
         private void CoreWebView2_HistoryChanged(CoreWebView2 sender, object args)
         {
-            // Save history
-            HistoryItem historyItem = new()
+            if(!string.IsNullOrWhiteSpace(sender.DocumentTitle) &&
+               History.Items.First().Url != sender.Source)
             {
-                Title = sender.DocumentTitle,
-                Url = sender.Source,
-                Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds()
-            };
+                // Save history
+                HistoryItem historyItem = new()
+                {
+                    Title = sender.DocumentTitle,
+                    Url = sender.Source,
+                    Timestamp = DateTimeOffset.Now.ToUnixTimeSeconds()
+                };
 
-            History.Items.Insert(0, historyItem);
+                History.Items.Insert(0, historyItem);
+            }
+
+            
         }
 
         private async void CoreWebView2_FaviconChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)
@@ -251,6 +261,8 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_ContextMenuRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2ContextMenuRequestedEventArgs args)
         {
+            QuickActions.Variables.ContextMenuArgs = args;
+                        
             FWebViewContextMenu fWebViewContextMenu = new();
             fWebViewContextMenu.Show(this, args);
         }

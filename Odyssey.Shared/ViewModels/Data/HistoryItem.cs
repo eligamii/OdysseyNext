@@ -4,7 +4,7 @@
     {
         public string Description { get; set; }
         public long Timestamp { get; set; }
-        public string ImageSource { get; set; }
+        public string ImageSource { get { return $"https://muddy-jade-bear.faviconkit.com/{new System.Uri(Url).Host}/21"; } }
         public string Title { get; set; }
         public string Url { get; set; }
         public string Date { get; set; }

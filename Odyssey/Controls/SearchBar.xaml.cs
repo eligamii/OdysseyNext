@@ -7,6 +7,7 @@ using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
 using Odyssey.FWebView.Classes;
 using Odyssey.Helpers;
+using Odyssey.QuickActions;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.Views;
@@ -15,6 +16,8 @@ using Odyssey.WebSearch.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Windows.Foundation;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using static System.Net.Mime.MediaTypeNames;
 using Uri = System.Uri;
@@ -28,6 +31,7 @@ namespace Odyssey.Controls
     {
         private string mainIcon = string.Empty;
         private bool newTab;
+        private string command;
 
         public SearchBar(bool newTab = false)
         {
@@ -40,7 +44,37 @@ namespace Odyssey.Controls
             Opened += SearchBar_Opened;
         }
 
-        public void SumitSuggestion(Suggestion suggestion)
+        // For the <ask> static variable
+        public async Task<string> GetText()
+        {
+            FlyoutShowOptions options = new FlyoutShowOptions();
+            options.Placement = FlyoutPlacementMode.Bottom;
+            options.Position = new Point(MainView.Current.splitViewContentFrame.ActualWidth / 2, 100);
+
+            this.ShowAt(MainView.Current.splitViewContentFrame, options);
+
+            searchBarIcon.Glyph = "\uE11B";
+            mainSearchBox.TextChanged -= mainSearchBox_TextChanged;
+            mainSearchBox.KeyDown -= mainSearchBox_KeyDown;
+
+            suggestionListView.Visibility = Visibility.Collapsed;
+            bool keydown = false;
+
+            mainSearchBox.KeyDown += (s, a) =>
+            {
+                if (a.Key == Windows.System.VirtualKey.Enter)
+                {
+                    keydown = true;
+                }
+            };
+
+            // Wait the user to enter [Enter]
+            while (!keydown) await Task.Delay(100);
+
+            return mainSearchBox.Text;
+        }
+
+        public void SummitSuggestion(Suggestion suggestion)
         {
             switch (suggestion.Kind)
             {
@@ -113,6 +147,7 @@ namespace Odyssey.Controls
                 {
                     string text = (sender as TextBox).Text;
                     string url = await WebViewNavigateUrlHelper.ToUrl(text);
+                    bool ask = false;
 
                     if (url != string.Empty) // The request will be treated differently with commands and app uris
                     {
@@ -143,15 +178,47 @@ namespace Odyssey.Controls
                     {
                         StringKind kind = await GetStringKind(text);
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
+                        else if (kind == StringKind.QuickActionCommand)
+                        {
+                            if(text.Contains("<ask>"))
+                            {
+                                ask = true;
+
+                                mainSearchBox.Text = string.Empty;
+                                command = text;
+
+                                searchBarIcon.Glyph = "\uE11B";
+                                mainSearchBox.TextChanged -= mainSearchBox_TextChanged;
+                                mainSearchBox.KeyDown -= mainSearchBox_KeyDown;
+                                mainSearchBox.PlaceholderText = string.Empty;
+
+                                suggestionListView.Visibility = Visibility.Collapsed;
+
+                                mainSearchBox.KeyDown += (s, a) =>
+                                {
+                                    if (a.Key == Windows.System.VirtualKey.Enter)
+                                    {
+                                        Variables.AskText = mainSearchBox.Text;
+                                        QACommands.Execute(command);
+
+                                        Hide();
+                                    }
+                                };
+                            }
+                            else
+                            {
+                                QACommands.Execute(text);
+                            }
+                        }
                     }
 
-                    Hide();
+                    if(!ask) Hide();
                 }
                 else
                 {
                     Suggestion suggestion = suggestionListView.SelectedItem as Suggestion;
 
-                    SumitSuggestion(suggestion);
+                    SummitSuggestion(suggestion);
 
                     Hide();
                 }
@@ -276,7 +343,7 @@ namespace Odyssey.Controls
         {
             Suggestion suggestion = e.ClickedItem as Suggestion;
 
-            SumitSuggestion(suggestion);
+            SummitSuggestion(suggestion);
 
             Hide();
         }
