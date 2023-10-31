@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.WebSearch", "Odysse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.FWebView", "Odyssey.FWebView\Odyssey.FWebView.csproj", "{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Aria2", "Odyssey.Aria2\Odyssey.Aria2.csproj", "{5C27F468-3769-473B-B4EC-D48F44384DAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Downloads", "Odyssey.Aria2\Odyssey.Downloads.csproj", "{5C27F468-3769-473B-B4EC-D48F44384DAC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.AdBlocker", "Odyssey.AdBlocker\Odyssey.AdBlocker.csproj", "{A31FABD3-0578-4C35-990A-6BD3FCA718EF}"
 EndProject

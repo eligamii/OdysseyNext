@@ -13,8 +13,6 @@ namespace Odyssey.FWebView.Classes
         private List<string[]> elements = new();
 
         private List<ToolTip> toolTips = new();
-
-        private int i = 0; private int j = 1;
         public WebViewNativeToolTips(WebView webView)
         {
             this.webView = webView;

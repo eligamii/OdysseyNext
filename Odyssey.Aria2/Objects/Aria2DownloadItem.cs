@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using Windows.Storage;
 using System.Threading.Tasks;
 
-namespace Odyssey.Aria2.Objects
+namespace Odyssey.Downloads.Objects
 {
     public class DownloadItem : INotifyPropertyChanged
     {
@@ -172,7 +172,7 @@ namespace Odyssey.Aria2.Objects
 
 
 
-        // ************** Aria2 Downloads
+        // ************** Downloads Downloads
 
         public DownloadItem(string url)
         {

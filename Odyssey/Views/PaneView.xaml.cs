@@ -29,6 +29,8 @@ namespace Odyssey.Views
             TabsView.ItemsSource = Tabs.Items;
             PinsTabView.ItemsSource = Pins.Items;
 
+            WebView.TabsView = TabsView;
+
             Loaded += PaneView_Loaded;
 
             Current = this;
@@ -92,36 +94,19 @@ namespace Odyssey.Views
 
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (sender as ListView == TabsView)
-            {
-                var pos = e.GetPosition(TabsView);
-                int index = (int)(pos.Y / 40); // Get tab index
-
-                var tabToRemove = Tabs.Items.ElementAt(index);
-
-                // Remove the tab's WebViews
-                tabToRemove.MainWebView.Close();
-                if (tabToRemove.SplitViewWebView != null) tabToRemove.SplitViewWebView.Close();
-                tabToRemove.MainWebView = tabToRemove.SplitViewWebView = null;
-
-                // Remove the tab from the tabs listView
-                Tabs.Items.Remove(tabToRemove);
-
-                // Changing the selected tab to another
-                if (index > 0) TabsView.SelectedIndex = index - 1;
-                else if (Tabs.Items.Count > 0) TabsView.SelectedIndex = 0;
-                else TabsView.SelectedIndex = -1;
-            }
-            else
+            if (sender as ListView == PinsTabView)
             {
                 var pos = e.GetPosition(PinsTabView);
                 int index = (int)(pos.Y / 40); // Get pin index
 
                 var pinToRemove = Pins.Items.ElementAt(index);
+                Tab parentTab = null;
 
                 // Remove the pin's WebViews
                 if (pinToRemove.MainWebView != null)
                 {
+                    parentTab = ((WebView)pinToRemove.MainWebView).ParentTab;
+
                     pinToRemove.MainWebView.Close();
                     if (pinToRemove.SplitViewWebView != null) pinToRemove.SplitViewWebView.Close();
                     pinToRemove.MainWebView = pinToRemove.SplitViewWebView = null;
@@ -130,9 +115,64 @@ namespace Odyssey.Views
                 // Remove the pin from the pins listView
                 Pins.Items.Remove(pinToRemove);
 
-                PinsTabView.SelectedIndex = -1;
+                if(parentTab != null)
+                {
+                    if(parentTab.GetType() == typeof(Pin))
+                    {
+                        if(Pins.Items.Contains(parentTab as Pin))
+                            PinsTabView.SelectedItem = parentTab as Pin;
+                    }
+                    else
+                    {
+                        if (Tabs.Items.Contains(parentTab))
+                            TabsView.SelectedItem = parentTab;
+                    }
+                }
 
                 PinsTabView.ItemsSource = Pins.Items;
+            }
+            else
+            {
+                var pos = e.GetPosition(TabsView);
+                int index = (int)(pos.Y / 40); // Get tab index
+
+                var tabToRemove = Tabs.Items.ElementAt(index);
+                Tab parentTab = null;
+
+                if(tabToRemove.MainWebView != null) // Prevent crashes when the tab was restored and with no webview
+                {
+                    parentTab = ((WebView)tabToRemove.MainWebView).ParentTab; // getting the paent tab if one
+
+                    // Remove the tab's WebViews
+                    tabToRemove.MainWebView.Close();
+                    if (tabToRemove.SplitViewWebView != null) tabToRemove.SplitViewWebView.Close();
+                    tabToRemove.MainWebView = tabToRemove.SplitViewWebView = null;
+                }
+
+                // Remove the tab from the tabs listView
+                Tabs.Items.Remove(tabToRemove);
+
+                // Changing the selected tab to another
+                if (parentTab != null)
+                {
+                    // Select the parent tab if one 
+                    if (parentTab.GetType() == typeof(Pin))
+                    {
+                        if (Pins.Items.Contains(parentTab as Pin))
+                            PinsTabView.SelectedItem = parentTab as Pin;
+                    }
+                    else
+                    {
+                        if (Tabs.Items.Contains(parentTab))
+                            TabsView.SelectedItem = parentTab;
+                    }
+                }
+                else
+                {
+                    if (index > 0) TabsView.SelectedIndex = index - 1;
+                    else if (Tabs.Items.Count > 0) TabsView.SelectedIndex = 0;
+                    else TabsView.SelectedIndex = -1;
+                }
             }
         }
 

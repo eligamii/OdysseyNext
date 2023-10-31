@@ -4,9 +4,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Windows.Storage;
 
-// All creadit comes to the Aria2 creators. See https://github.com/aria2/aria2 and https://aria2.github.io/
+// All creadit comes to the Downloads creators. See https://github.com/aria2/aria2 and https://aria2.github.io/
 
-namespace Odyssey.Aria2
+namespace Odyssey.Downloads
 {
     public static class Aria2
     {
@@ -14,7 +14,7 @@ namespace Odyssey.Aria2
         public static string DlFolderPath { get; set; }
         public async static void Init()
         {
-            Aria2cPath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Odyssey.Aria2", "Assets", "aria2c.exe");
+            Aria2cPath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Odyssey.Downloads", "Assets", "aria2c.exe");
 
             // Get the donwload folder path
             StorageFolder dlFolder = await (await (await DownloadsFolder.CreateFolderAsync(Guid.NewGuid().ToString())).GetParentAsync()).GetParentAsync();

@@ -4,8 +4,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
-using Odyssey.Aria2.Data;
-using Odyssey.Aria2.Objects;
+using Odyssey.Downloads.Data;
+using Odyssey.Downloads.Objects;
 using Odyssey.Data.Main;
 using Odyssey.FWebView.Classes;
 using Odyssey.FWebView.Controls;
@@ -15,6 +15,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,13 +32,16 @@ namespace Odyssey.FWebView
         public bool IsPageLoading { get; private set; } = true;
 
         public static FrameworkElement MainDownloadElement { get; set; } // The element used to show the DownloadsFlyout
+        public static FrameworkElement MainHistoryElement { get; set; }
         public static new XamlRoot XamlRoot { get; set; }
-        public static Image MainIconElement { get; set; } // The (titlebar) element which contain the favicon
+        public static Microsoft.UI.Xaml.Controls.Image MainIconElement { get; set; } // The (titlebar) element which contain the favicon
         public static FrameworkElement MainProgressElement { get; set; } // Will have its Visiblity property set to Collapsed based on if the webview is loading
         public static ProgressRing MainProgressRing { get; set; } // idem
         public static Frame MainWebViewFrame { get; set; }
+        public static ListView TabsView { get; set; }
 
         private static DownloadsFlyout downloadsFlyout = new();
+        private static HistoryFlyout historyFlyout = new();
 
         public static WebView SelectedWebView // Used for opening HistoryItems in the selected webview when available
         {
@@ -66,6 +71,7 @@ namespace Odyssey.FWebView
             return newWebView;
         }
 
+
         public bool IsVisible
         {
             get
@@ -86,6 +92,11 @@ namespace Odyssey.FWebView
         public static void OpenDownloadDialog()
         {
             downloadsFlyout.ShowAt(MainDownloadElement);
+        }
+
+        public static void OpenHistoryDialog()
+        {
+            historyFlyout.ShowAt(MainHistoryElement);
         }
 
         private async Task<BitmapImage> GetFaviconAsBitmapImageAsync()
@@ -118,6 +129,8 @@ namespace Odyssey.FWebView
 
             sender.CoreWebView2.HistoryChanged += CoreWebView2_HistoryChanged; // Save history
 
+            sender.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+
             // Scroll events (Uppate dynamic theme)
             scrollTimer = new DispatcherTimer();
             scrollTimer.Interval = TimeSpan.FromSeconds(2);
@@ -130,6 +143,32 @@ namespace Odyssey.FWebView
             //WebViewNativeToolTips tips = new(this);
 
 
+        }
+
+        private async void CoreWebView2_NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
+        {
+            var deferral = args.GetDeferral();
+
+            WebView webView = new();
+            await webView.EnsureCoreWebView2Async();
+
+            webView.ParentTab = LinkedTab;
+            args.NewWindow = webView.CoreWebView2;
+
+            Tab tab = new()
+            {
+                MainWebView = webView,
+                Title = webView.CoreWebView2.Source,
+                Url = webView.CoreWebView2.Source,
+                ToolTip = webView.CoreWebView2.Source
+            };
+
+            webView.LinkedTab = tab;
+
+            Tabs.Items.Add(tab);
+            TabsView.SelectedItem = tab;
+
+            deferral.Complete();
         }
 
         private void CoreWebView2_HistoryChanged(CoreWebView2 sender, object args)
@@ -168,14 +207,14 @@ namespace Odyssey.FWebView
         {
             if(!args.DownloadOperation.Uri.StartsWith("blob"))
             {
-                Aria2.Objects.DownloadItem aria2Download = new(args.DownloadOperation.Uri);
-                Downloads.Items.Insert(0, aria2Download);
+                Downloads.Objects.DownloadItem aria2Download = new(args.DownloadOperation.Uri);
+                Downloads.Data.Downloads.Items.Insert(0, aria2Download);
                 args.Cancel = true;
             }
             else // The file was downloaded in another location before (mega.nz downloads)
             {
-                Aria2.Objects.DownloadItem aria2Download = new(args.DownloadOperation);
-                Downloads.Items.Insert(0, aria2Download);
+                Downloads.Objects.DownloadItem aria2Download = new(args.DownloadOperation);
+                Downloads.Data.Downloads.Items.Insert(0, aria2Download);
             }
 
             downloadsFlyout.ShowAt(MainDownloadElement);
@@ -236,11 +275,24 @@ namespace Odyssey.FWebView
         private async void CoreWebView2_NavigationStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs args)
         {
             IsPageLoading = true;
-
-            if (await GetStringKind(args.Uri) == StringKind.ExternalAppUri)
+            var kind = await GetStringKind(args.Uri);
+            if (kind == StringKind.ExternalAppUri)
             {
                 args.Cancel = true;
                 AppUriLaunch.Launch(new Uri(args.Uri));
+            }
+            else if (kind == StringKind.OdysseyUrl)
+            {
+                if (Regex.IsMatch(args.Uri, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
+                {
+                    OpenDownloadDialog();
+                    args.Cancel = true;
+                }
+                else if (Regex.IsMatch(args.Uri, ".*/history/{0,1}.*", RegexOptions.IgnoreCase))
+                {
+                    OpenHistoryDialog();
+                    args.Cancel = true;
+                }
             }
 
             Tabs.Save();

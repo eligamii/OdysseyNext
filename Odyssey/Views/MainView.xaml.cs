@@ -8,6 +8,7 @@ using Odyssey.Controls;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Dialogs;
+using Odyssey.FWebView;
 using Odyssey.Helpers;
 using Odyssey.QuickActions;
 using System;
@@ -45,6 +46,7 @@ namespace Odyssey.Views
 
             // Require these to not crash
             FWebView.WebView.MainDownloadElement = downloadButton;
+            FWebView.WebView.MainHistoryElement = historyButton;
             FWebView.WebView.MainIconElement = Favicon;
             FWebView.WebView.MainProgressElement = progressRing;
             FWebView.WebView.MainWebViewFrame = splitViewContentFrame;
@@ -246,8 +248,7 @@ namespace Odyssey.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FWebView.Controls.Flyouts.HistoryFlyout historyFlyout = new();
-            historyFlyout.ShowAt(sender as FrameworkElement);
+            WebView.OpenHistoryDialog();
         }
     }
 }

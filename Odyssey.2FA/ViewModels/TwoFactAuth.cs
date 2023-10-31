@@ -71,7 +71,7 @@ namespace Odyssey.TwoFactorsAuthentification.ViewModels
             int sec = totp.RemainingSeconds();
             while (totp.RemainingSeconds() == sec)
             {
-                await Task.Delay(100);
+                await Task.Delay(10);
             }
 
             Code = totp.ComputeTotp();

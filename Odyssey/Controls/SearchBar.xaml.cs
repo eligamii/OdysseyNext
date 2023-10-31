@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Odyssey.Data.Main;
+using Odyssey.FWebView;
 using Odyssey.FWebView.Classes;
 using Odyssey.QuickActions;
 using Odyssey.Shared.ViewModels.Data;
@@ -13,6 +14,7 @@ using Odyssey.WebSearch.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
@@ -174,6 +176,17 @@ namespace Odyssey.Controls
                     {
                         StringKind kind = await GetStringKind(text);
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
+                        else if(kind == StringKind.OdysseyUrl)
+                        {
+                            if(Regex.IsMatch(text, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
+                            {
+                                WebView.OpenDownloadDialog();
+                            }
+                            else if(Regex.IsMatch(text, ".*/history/{0,1}.*", RegexOptions.IgnoreCase))
+                            {
+                                WebView.OpenHistoryDialog();
+                            }
+                        }
                         else if (kind == StringKind.QuickActionCommand)
                         {
                             if (text.Contains("<ask>"))

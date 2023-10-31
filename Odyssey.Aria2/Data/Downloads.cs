@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Odyssey.Aria2.Objects;
+using Odyssey.Downloads.Objects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Windows.Storage;
 
-namespace Odyssey.Aria2.Data
+namespace Odyssey.Downloads.Data
 {
     public class Downloads
     {
