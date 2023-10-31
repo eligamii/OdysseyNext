@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
+using Odyssey.Aria2.Data;
 using Odyssey.Aria2.Objects;
 using Odyssey.Data.Main;
 using Odyssey.FWebView.Classes;
@@ -111,7 +112,7 @@ namespace Odyssey.FWebView
             sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
             sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
 
-            sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect any download to aria2
+            sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect the downloads to aria2
 
             sender.CoreWebView2.FaviconChanged += CoreWebView2_FaviconChanged; // Set the icon of the linked tab
 
@@ -165,9 +166,17 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_DownloadStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2DownloadStartingEventArgs args)
         {
-            Aria2Download aria2Download = new(args.DownloadOperation.Uri);
-            downloadsFlyout.DownloadItemsListView.Items.Add(aria2Download);
-            args.Cancel = true;
+            if(!args.DownloadOperation.Uri.StartsWith("blob"))
+            {
+                Aria2.Objects.DownloadItem aria2Download = new(args.DownloadOperation.Uri);
+                Downloads.Items.Insert(0, aria2Download);
+                args.Cancel = true;
+            }
+            else // The file was downloaded in another location before (mega.nz downloads)
+            {
+                Aria2.Objects.DownloadItem aria2Download = new(args.DownloadOperation);
+                Downloads.Items.Insert(0, aria2Download);
+            }
 
             downloadsFlyout.ShowAt(MainDownloadElement);
         }

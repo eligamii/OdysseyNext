@@ -35,7 +35,7 @@
         <Grid Grid.Row="1" CornerRadius="3" Margin="6" 
               Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" 
               BorderBrush="#33808080" BorderThickness="1">
-            <ListView Margin="0,3,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" x:Name="DownloadItemsListView">
+            <ListView Margin="0,3,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" Loaded="DownloadItemsListView_Loaded" x:Name="DownloadItemsListView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>

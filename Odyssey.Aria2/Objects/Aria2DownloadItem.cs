@@ -1,4 +1,7 @@
-﻿using Microsoft.UI.Xaml.Media.Imaging;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.Web.WebView2.Core;
 using Odyssey.FWebView.Helpers;
 using System;
 using System.ComponentModel;
@@ -7,10 +10,11 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Windows.Storage;
+using System.Threading.Tasks;
 
 namespace Odyssey.Aria2.Objects
 {
-    public class Aria2Download : INotifyPropertyChanged
+    public class DownloadItem : INotifyPropertyChanged
     {
         private string resultPath = string.Empty;
         private float progress = 0;
@@ -166,11 +170,14 @@ namespace Odyssey.Aria2.Objects
         public event PropertyChangedEventHandler PropertyChanged;
 
 
-        public Aria2Download(string url)
+
+
+        // ************** Aria2 Downloads
+
+        public DownloadItem(string url)
         {
             Download(url);
         }
-
         private async void Download(string url)
         {
             Process process = new();
@@ -209,6 +216,7 @@ namespace Odyssey.Aria2.Objects
 
             try
             {
+                await Task.Delay(100);
                 StorageFile file = await StorageFile.GetFileFromPathAsync(ResultPath);
 
                 // Get file icon
@@ -252,7 +260,7 @@ namespace Odyssey.Aria2.Objects
                 }
                 else
                 {
-                    Regex pathRegex = new("[A-Z]:/.*[a-zA-Z]"); // will match with the result file path if the the string is a "Download completed" string
+                    Regex pathRegex = new("[A-Z]:/.*[a-zA-Z]"); // will match with the result file path if the the string is a "DownloadItem completed" string
                     var path = pathRegex.Match(data);
                     if (path.Success)
                     {
@@ -272,6 +280,93 @@ namespace Odyssey.Aria2.Objects
                     }
                 }
             }
+        }
+
+
+
+
+        // ************** WebView2 Downloads
+
+        private CoreWebView2DownloadOperation _downloadOperation;
+        public DownloadItem(CoreWebView2DownloadOperation downloadOperation)
+        {
+            _downloadOperation = downloadOperation;
+            ResultPath = _downloadOperation.ResultFilePath;
+
+            _downloadOperation.BytesReceivedChanged += _downloadOperation_BytesReceivedChanged;
+            _downloadOperation.StateChanged += _downloadOperation_StateChanged;
+            _downloadOperation.EstimatedEndTimeChanged += _downloadOperation_EstimatedEndTimeChanged;
+
+            Title = new FileInfo(ResultPath).Name;
+        }
+        private void _downloadOperation_EstimatedEndTimeChanged(CoreWebView2DownloadOperation sender, object args)
+        {
+            Description = sender.EstimatedEndTime;
+        }
+        private async void _downloadOperation_StateChanged(CoreWebView2DownloadOperation sender, object args)
+        {
+            switch (sender.State)
+            {
+                case CoreWebView2DownloadState.Completed:
+                    IsProgressActive = false;
+                    Description = "Open file";
+
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(ResultPath);
+
+                    // Get file icon
+                    var fileIcon = await FileIconHelper.GetFileIcon(file);
+                    var img = new BitmapImage();
+                    img.SetSource(fileIcon);
+
+                    Icon = img;
+                    break;
+
+                case CoreWebView2DownloadState.Interrupted: //[TODO] 
+                    break;
+
+                case CoreWebView2DownloadState.InProgress:
+                    break;
+
+
+
+            }
+        }
+        private void _downloadOperation_BytesReceivedChanged(CoreWebView2DownloadOperation sender, object args)
+        {
+            try
+            {
+                long progress = 100 * sender.BytesReceived / sender.TotalBytesToReceive;
+                Description = sender.EstimatedEndTime;
+                Progress = progress;
+            }
+            catch { }
+        }
+
+
+
+
+        public DownloadItem()
+        {
+            SetIcon();
+            IsProgressActive = false;
+        }
+
+        private async void SetIcon()
+        {
+            while (string.IsNullOrEmpty(ResultPath)) { await Task.Delay(100); } // Need a remplacement
+
+            StorageFile file = await StorageFile.GetFileFromPathAsync(ResultPath);
+
+            try
+            {
+                // Get file icon
+                var fileIcon = await FileIconHelper.GetFileIcon(file);
+                var img = new BitmapImage();
+                img.SetSource(fileIcon);
+
+                Icon = img;
+            }
+            catch { }
         }
     }
 }

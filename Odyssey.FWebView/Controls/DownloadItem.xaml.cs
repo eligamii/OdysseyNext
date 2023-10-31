@@ -123,7 +123,7 @@ namespace Odyssey.FWebView.Controls
             {
                 downloadData.Title = "Downloading...";
             });
-            Aria2Download progress = Aria2Download.ToAria2DownloadProgress(e.Data);
+            DownloadItem progress = DownloadItem.ToAria2DownloadProgress(e.Data);
             
             if(progress.ResultPath == string.Empty)
             {
