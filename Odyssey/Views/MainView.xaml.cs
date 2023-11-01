@@ -3,6 +3,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Controls;
 using Odyssey.Data.Main;
@@ -14,6 +15,7 @@ using Odyssey.QuickActions;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using WinRT.Interop;
 
@@ -104,6 +106,27 @@ namespace Odyssey.Views
 
             // Set the Quick actions command MainWindow to this window
             QACommands.MainWindow = MainWindow.Current;
+
+            // Check the internet connection every second for UI things
+            CheckNetworkConnectionState();
+        }
+
+        private async void CheckNetworkConnectionState()
+        {
+            while(true)
+            {
+                await Task.Delay(1000);
+
+                bool isInternetAvailable = Shared.Helpers.NetworkHelper.IsInternetConnectionAvailable();
+                if(isInternetAvailable)
+                {
+                    progressRing.Foreground = Application.Current.Resources["FocusStrokeColorOuterBrush"] as Brush;
+                } 
+                else
+                {
+                    progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;
+                }
+            }
         }
 
 

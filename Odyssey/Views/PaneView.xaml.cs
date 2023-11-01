@@ -553,10 +553,10 @@ namespace Odyssey.Views
             int columnIndex = (int)(pos.X / (itemWidth * scaleAjustement));
             int rowIndex = Favorites.Items.Count <= 4 ? 0 : (int)(pos.Y / 60);
 
-            int index = columnIndex + 4 * rowIndex + 1;
+            int index = columnIndex + 4 * rowIndex;
 
             if(index < Favorites.Items.Count)
-                Favorites.Items.Insert(index + 1, favorite);
+                Favorites.Items.Insert(index, favorite);
             else
                 Favorites.Items.Insert(Favorites.Items.Count, favorite);
 
