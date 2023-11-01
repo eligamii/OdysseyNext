@@ -111,20 +111,26 @@ namespace Odyssey.Views
             CheckNetworkConnectionState();
         }
 
+        private bool lastConnectionState;
         private async void CheckNetworkConnectionState()
         {
             while(true)
             {
-                await Task.Delay(1000);
+                await Task.Delay(250);
 
                 bool isInternetAvailable = Shared.Helpers.NetworkHelper.IsInternetConnectionAvailable();
-                if(isInternetAvailable)
+                if(lastConnectionState != isInternetAvailable)
                 {
-                    progressRing.Foreground = Application.Current.Resources["FocusStrokeColorOuterBrush"] as Brush;
-                } 
-                else
-                {
-                    progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;
+                    if (!isInternetAvailable)
+                    {
+                        progressRing.Foreground = Application.Current.Resources["FocusStrokeColorOuterBrush"] as Brush;
+                    }
+                    else
+                    {
+                        progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;                     
+                    }
+
+                    lastConnectionState = isInternetAvailable;
                 }
             }
         }
@@ -275,14 +281,13 @@ namespace Odyssey.Views
 
         private void _2FAButton_Click(object sender, RoutedEventArgs e)
         {
-            //TwoFactorsAuthentification.TwoFactorsAuthentification.Add();
             TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(sender as FrameworkElement);
 
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            WebView.OpenHistoryDialog();
+            WebView.OpenHistoryDialog(sender as FrameworkElement);
         }
     }
 }

@@ -91,14 +91,16 @@ namespace Odyssey.FWebView
             }
         }
 
-        public static void OpenDownloadDialog()
+        public static void OpenDownloadDialog(FrameworkElement element = null)
         {
-            downloadsFlyout.ShowAt(MainDownloadElement);
+            FrameworkElement fElement = element == null ? MainDownloadElement : element;
+            downloadsFlyout.ShowAt(fElement);
         }
 
-        public static void OpenHistoryDialog()
+        public static void OpenHistoryDialog(FrameworkElement element = null)
         {
-            historyFlyout.ShowAt(MainHistoryElement);
+            FrameworkElement fElement = element == null ? MainHistoryElement : element;
+            historyFlyout.ShowAt(fElement);
         }
 
         private async Task<BitmapImage> GetFaviconAsBitmapImageAsync()

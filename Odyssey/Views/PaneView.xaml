@@ -53,7 +53,28 @@
             </StackPanel>
 
         </StackPanel>
-        <Button x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+        <Button x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right" Margin="0,0,5,0">
+            <Button.Flyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Historique" Click="HistoryMenuFlyoutItem_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE81C;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Téléchargements" Click="DownloadsMenuFlyoutItem_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE118;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="Authentification a deux facteurs" Click="_2FAMenuFlyoutItem_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE192;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
 
         <GridView Drop="FavoriteGrid_Drop" DragOver="TabsView_DragOver" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" PointerMoved="FavoriteGrid_PointerMoved" SelectionChanged="TabsView_SelectionChanged" Grid.Row="1" AllowDrop="True" CanReorderItems="True" CanDragItems="True" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="12.5,0,8,6" x:Name="FavoriteGrid" x:FieldModifier="public" Loaded="FavoriteGrid_Loaded">
             <GridView.ItemTemplate>
@@ -101,7 +122,7 @@
 
                 </ListView>
                 <Grid>
-                    <TextBlock Text="{helpers:ResourceString Name=Tabs}" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{helpers:ResourceString Name=Tabs}" x:Name="tabsTextBlock" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left"/>
                 </Grid>
 
                 <ListView x:FieldModifier="public" Loaded="TabsView_Loaded" RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsCompleted="TabsView_DragItemsCompleted" DragItemsStarting="TabsView_DragItemsStarting" Drop="TabsView_Drop" DragOver="TabsView_DragOver" IsRightTapEnabled="True" x:Name="TabsView" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionChanged="TabsView_SelectionChanged">
@@ -131,8 +152,8 @@
                 </ListView>
                 
                 <StackPanel>
-                    <Rectangle Visibility="Collapsed" x:Name="newTabButtonSeparator" Fill="#33808080" Height="1" Margin="10,5,10,10"/>
-                    <Button HorizontalAlignment="Stretch" Margin="5,0,5,0" Click="AddTabButton_Click">
+                    <Rectangle Visibility="Collapsed" x:Name="newTabButtonSeparator" Fill="#33808080" Height="1" Margin="10,5,10,7"/>
+                    <Button x:Name="newTabButton" HorizontalAlignment="Stretch" Margin="4,0,4,0" Click="AddTabButton_Click" Height="38">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" Margin="-104,0,-104,0">
                                 <FontIcon Glyph="&#xE109;" FontSize="16"/>

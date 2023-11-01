@@ -1,3 +1,4 @@
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -126,9 +127,6 @@ namespace Odyssey.Views
                 webView.LinkedTab = item;
 
                 item.MainWebView = webView;
-
-                // Make the favorites' webviews slower to save performances
-                await Task.Delay(500); 
             }
         }
 
@@ -139,17 +137,20 @@ namespace Odyssey.Views
 
             Pins.Items.CollectionChanged += (s, a) =>
             {
-                pinsTextBlock.Visibility = a.NewItems == null ? Visibility.Collapsed : Visibility.Visible;
+                pinsTextBlock.Visibility = Pins.Items.Count() == 0 ? Visibility.Collapsed : Visibility.Visible;
             };
         }
 
         private void TabsView_Loaded(object sender, RoutedEventArgs e)
         {
-            newTabButtonSeparator.Visibility = Tabs.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            newTabButtonSeparator.Visibility = tabsTextBlock.Visibility = Tabs.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            newTabButton.Background = Tabs.Items.Count == 0 ? Application.Current.Resources["ControlFillColorDefaultBrush"] as Brush : new SolidColorBrush(Colors.Transparent);
 
             Tabs.Items.CollectionChanged += (s, a) =>
             {
-                newTabButtonSeparator.Visibility = a.NewItems == null ? Visibility.Collapsed : Visibility.Visible;
+                newTabButtonSeparator.Visibility = tabsTextBlock.Visibility = Tabs.Items.Count() == 0 ? Visibility.Collapsed : Visibility.Visible;
+                newTabButton.Background = Tabs.Items.Count() == 0 ? Application.Current.Resources["ControlFillColorDefaultBrush"] as Brush : new SolidColorBrush(Colors.Transparent);
+
             };
         }
 
@@ -563,6 +564,21 @@ namespace Odyssey.Views
 
 
             FavoriteGrid.SelectedItem = favorite;
+        }
+
+        private void HistoryMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            WebView.OpenHistoryDialog(moreButton);
+        }
+
+        private void DownloadsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            WebView.OpenDownloadDialog(moreButton);
+        }
+
+        private void _2FAMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(moreButton);
         }
     }
 }
