@@ -40,27 +40,11 @@ namespace Odyssey.Views
 
             AppTitleBar.Loaded += AppTitleBar_Loaded;
             AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
-
-            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
+            
             Current = this;
-
-            // Require these to not crash
-            FWebView.WebView.MainDownloadElement = downloadButton;
-            FWebView.WebView.MainHistoryElement = historyButton;
-            FWebView.WebView.MainIconElement = Favicon;
-            FWebView.WebView.MainProgressElement = progressRing;
-            FWebView.WebView.MainWebViewFrame = splitViewContentFrame;
-
-
-            LoadData();
-
-            // Avoid lag when opening the first webview
-            WebView2 webView2 = new() { Source = new Uri("https://www.google.com") };
-
-            QACommands.Frame = splitViewContentFrame;
         }
 
-        private async void LoadData()
+        private async void RestoreTabs()
         {
             await Data.Main.Data.Init();
 
@@ -88,11 +72,38 @@ namespace Odyssey.Views
                 await quickConfigurationDialog.ShowAsync();
             }
 
-            FWebView.WebView.XamlRoot = this.XamlRoot;
+            // Use this instead of Systemackdrop = MicaBackdrop(); to be able to control the color of the Window
+            MicaBackdropHelper.TrySetMicaBackdropTo(MainWindow.Current);
+
+            WebView.XamlRoot = XamlRoot;
             FWebView.Classes.DynamicTheme.PageToUpdateTheme = this;
             FWebView.Classes.DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
             FWebView.Classes.DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
             FWebView.Classes.DynamicTheme.UpdateTheme = true;
+
+            // Start the 2FA service
+            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
+
+            // Load data          
+            Downloads.Aria2.Init();
+            AdBlocker.AdBlocker.Init();
+
+            // Restore tabs after crash
+            RestoreTabs();
+
+            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
+
+            // Require these to not crash
+            WebView.MainDownloadElement = downloadButton;
+            WebView.MainHistoryElement = historyButton;
+            WebView.MainIconElement = Favicon;
+            WebView.MainProgressElement = progressRing;
+            WebView.MainWebViewFrame = splitViewContentFrame;
+
+            QACommands.Frame = splitViewContentFrame;
+
+            // Set the Quick actions command MainWindow to this window
+            QACommands.MainWindow = MainWindow.Current;
         }
 
 
@@ -169,7 +180,7 @@ namespace Odyssey.Views
                     dragRectR.Width = (int)(RightDragColumn.ActualWidth * scaleAdjustment);
                     dragRectsList.Add(dragRectR);
 
-                    Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
+                     Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
 
                     appWindow.TitleBar.SetDragRectangles(dragRects);
                 }

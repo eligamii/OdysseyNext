@@ -2,13 +2,16 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
+using Odyssey.Data.Settings;
 using Odyssey.FWebView;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 
@@ -28,6 +31,7 @@ namespace Odyssey.Views
             this.InitializeComponent();
             TabsView.ItemsSource = Tabs.Items;
             PinsTabView.ItemsSource = Pins.Items;
+            FavoriteGrid.ItemsSource = Favorites.Items;
 
             WebView.TabsView = TabsView;
 
@@ -38,7 +42,7 @@ namespace Odyssey.Views
 
         private void PaneView_Loaded(object sender, RoutedEventArgs e)
         {
-            // Restore tabs icons based on the Favicon Kit api
+            // Restore tabs icons with the the Favicon Kit api
 
             try // Prevent crash on timing issues
             {
@@ -72,14 +76,81 @@ namespace Odyssey.Views
 
         }
 
-        private void FavoriteGrid_Loaded(object sender, RoutedEventArgs e)
+        private void RefreshFavoriteItemsWidth()
         {
+            switch (FavoriteGrid.Items.Count)
+            {
+                case 1:
+                    SetFavWidth(204);
+                    break;
 
+                case 2:
+                    SetFavWidth(100);
+                    break;
+
+                case 3:
+                    SetFavWidth(65);
+                    break;
+
+                case 4:
+                    SetFavWidth(48);
+                    break;
+            }
+
+        }
+
+        private void SetFavWidth(int width)
+        {
+            foreach (Favorite item in Favorites.Items)
+            {
+                item.Width = width;
+            }
+        }
+
+        private async void FavoriteGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            FavoriteGrid.ItemsSource = Favorites.Items;
+            FavoriteGrid.Visibility = Favorites.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+
+            RefreshFavoriteItemsWidth();
+
+            Favorites.Items.CollectionChanged += (s, a) =>
+            {
+                FavoriteGrid.Visibility = Favorites.Items.Count() == 0 ? Visibility.Collapsed : Visibility.Visible;
+                RefreshFavoriteItemsWidth();
+            };
+
+            foreach(var item in Favorites.Items)
+            {
+                WebView webView = WebView.Create(item.Url);
+                webView.LinkedTab = item;
+
+                item.MainWebView = webView;
+
+                // Make the favorites' webviews slower to save performances
+                await Task.Delay(500); 
+            }
         }
 
         private void PinsTabView_Loaded(object sender, RoutedEventArgs e)
         {
             PinsTabView.ItemsSource = Pins.Items;
+            pinsTextBlock.Visibility = Pins.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+
+            Pins.Items.CollectionChanged += (s, a) =>
+            {
+                pinsTextBlock.Visibility = a.NewItems == null ? Visibility.Collapsed : Visibility.Visible;
+            };
+        }
+
+        private void TabsView_Loaded(object sender, RoutedEventArgs e)
+        {
+            newTabButtonSeparator.Visibility = Tabs.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+
+            Tabs.Items.CollectionChanged += (s, a) =>
+            {
+                newTabButtonSeparator.Visibility = a.NewItems == null ? Visibility.Collapsed : Visibility.Visible;
+            };
         }
 
         private void AddTabButton_Click(object sender, RoutedEventArgs e)
@@ -122,6 +193,11 @@ namespace Odyssey.Views
                         if(Pins.Items.Contains(parentTab as Pin))
                             PinsTabView.SelectedItem = parentTab as Pin;
                     }
+                    else if(parentTab.GetType() == typeof(Favorite))
+                    {
+                        if (Favorites.Items.Contains(parentTab))
+                            FavoriteGrid.SelectedItem = parentTab;
+                    }
                     else
                     {
                         if (Tabs.Items.Contains(parentTab))
@@ -134,32 +210,37 @@ namespace Odyssey.Views
             else
             {
                 var pos = e.GetPosition(TabsView);
-                int index = (int)(pos.Y / 40); // Get tab index
+                int index = (int)(pos.Y / 40); // Get favorite index
 
                 var tabToRemove = Tabs.Items.ElementAt(index);
                 Tab parentTab = null;
 
-                if(tabToRemove.MainWebView != null) // Prevent crashes when the tab was restored and with no webview
+                if(tabToRemove.MainWebView != null) // Prevent crashes when the favorite was restored and with no webview
                 {
-                    parentTab = ((WebView)tabToRemove.MainWebView).ParentTab; // getting the paent tab if one
+                    parentTab = ((WebView)tabToRemove.MainWebView).ParentTab; // getting the paent favorite if one
 
-                    // Remove the tab's WebViews
+                    // Remove the favorite's WebViews
                     tabToRemove.MainWebView.Close();
                     if (tabToRemove.SplitViewWebView != null) tabToRemove.SplitViewWebView.Close();
                     tabToRemove.MainWebView = tabToRemove.SplitViewWebView = null;
                 }
 
-                // Remove the tab from the tabs listView
+                // Remove the favorite from the tabs listView
                 Tabs.Items.Remove(tabToRemove);
 
-                // Changing the selected tab to another
+                // Changing the selected favorite to another
                 if (parentTab != null)
                 {
-                    // Select the parent tab if one 
+                    // Select the parent favorite if one 
                     if (parentTab.GetType() == typeof(Pin))
                     {
                         if (Pins.Items.Contains(parentTab as Pin))
                             PinsTabView.SelectedItem = parentTab as Pin;
+                    }
+                    else if (parentTab.GetType() == typeof(Favorite))
+                    {
+                        if (Favorites.Items.Contains(parentTab))
+                            FavoriteGrid.SelectedItem = parentTab;
                     }
                     else
                     {
@@ -183,10 +264,20 @@ namespace Odyssey.Views
                 var tab = e.AddedItems[0] as Tab;
                 if (tab.MainWebView == null)
                 {
-                    WebView webView = WebView.Create(tab.Url);
-                    webView.LinkedTab = tab;
-                    await webView.EnsureCoreWebView2Async();
-                    tab.MainWebView = webView;
+                    if (tab.Url != null)
+                    {
+                        WebView webView = WebView.Create(tab.Url);
+                        webView.LinkedTab = tab;
+                        await webView.EnsureCoreWebView2Async();
+                        tab.MainWebView = webView;
+                    }
+                    else
+                    {
+                        WebView webView = WebView.Create(SearchEngine.ToSearchEngineObject(((SearchEngines)Settings.SelectedSearchEngine)).Url);
+                        webView.LinkedTab = tab;
+                        await webView.EnsureCoreWebView2Async();
+                        tab.MainWebView = webView;
+                    }
                 }
 
 
@@ -210,6 +301,21 @@ namespace Odyssey.Views
             if (e.AddedItems.Count != 0) // Save tabs as much as possible to avoid data loss after crash
                 Tabs.Save();
         }
+        private void FavoriteGridItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var parent = VisualTreeHelper.GetParent((DependencyObject)sender);
+            parent = VisualTreeHelper.GetParent((DependencyObject)parent);
+
+            Favorite favorite = ((GridViewItem)parent).Content as Favorite;
+
+            TabsContextMenu tabsContextMenu = new(favorite);
+
+            FlyoutShowOptions flyoutShowOptions = new FlyoutShowOptions();
+            flyoutShowOptions.Position = e.GetPosition(this);
+
+            tabsContextMenu.ShowAt(this, flyoutShowOptions);
+        }
+
 
         private void TabsView_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -241,9 +347,9 @@ namespace Odyssey.Views
 
         private void UpdateTabSelection(object selectedTabsView)
         {
-            if ((ListView)selectedTabsView != TabsView) TabsView.SelectedIndex = -1;
-            if ((ListView)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1;
-            if ((ListView)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1;
+            if (selectedTabsView != TabsView) TabsView.SelectedIndex = -1;
+            if (selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1;
+            if (selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1;
         }
 
 
@@ -307,7 +413,8 @@ namespace Odyssey.Views
                     Title = draggedItem.Title
                 };
 
-                Tabs.Items.Remove(draggedItem);
+                if (Favorites.Items.Contains(draggedItem)) Favorites.Items.Remove(draggedItem as Favorite);
+                else Tabs.Items.Remove(draggedItem);
             }
             else
             {
@@ -353,7 +460,8 @@ namespace Odyssey.Views
                     Title = draggedItem.Title
                 };
 
-                Pins.Items.Remove(draggedItem as Pin);
+                if (Pins.Items.Contains(draggedItem)) Pins.Items.Remove(draggedItem as Pin);
+                else Favorites.Items.Remove(draggedItem as Favorite);
             }
             else
             {
@@ -380,6 +488,81 @@ namespace Odyssey.Views
 
             TabsView.SelectedItem = tab;
 
+        }
+
+        private void FavoriteGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            // Calculate the index of the hovered item
+            var pos = e.GetCurrentPoint(FavoriteGrid);
+
+            int itemWidth = Favorites.Items.First().Width; // Same width for every FavoriteItems
+            float scaleAjustement = 1.2f;
+
+            int columnIndex = (int)(pos.Position.X / (itemWidth * scaleAjustement));
+            int rowIndex = Favorites.Items.Count <= 4 ? 0 : (int)(pos.Position.Y / 60);
+
+            int index = columnIndex + 4 * rowIndex;
+
+            // Set the hoveredItem to null if no item was hovered
+            hoveredItem = index < Favorites.Items.Count ? Favorites.Items.ElementAt(index) : null;
+        }
+
+        private async void FavoriteGrid_Drop(object sender, DragEventArgs e)
+        {
+            Favorite favorite;
+
+            if (draggedItem != null)
+            {
+                favorite = new()
+                {
+                    Url = draggedItem.Url,
+                    ImageSource = draggedItem.ImageSource,
+                    MainWebView = draggedItem.MainWebView,
+                    ToolTip = draggedItem.ToolTip,
+                    Title = draggedItem.Title
+                };
+
+                if (Pins.Items.Contains(draggedItem)) Pins.Items.Remove(draggedItem as Pin);
+                else Tabs.Items.Remove(draggedItem);
+            }
+            else
+            {
+                string text = await e.DataView.GetTextAsync();
+
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+
+                favorite = new()
+                {
+                    Url = url,
+                    ToolTip = url,
+                    Title = text
+                };
+
+                WebView webView = WebView.Create(url);
+                webView.LinkedTab = favorite;
+                favorite.MainWebView = webView;
+            }
+
+
+
+            var pos = e.GetPosition(FavoriteGrid);
+
+            int itemWidth = Favorites.Items.First().Width; 
+            float scaleAjustement = 1.2f;
+
+            int columnIndex = (int)(pos.X / (itemWidth * scaleAjustement));
+            int rowIndex = Favorites.Items.Count <= 4 ? 0 : (int)(pos.Y / 60);
+
+            int index = columnIndex + 4 * rowIndex + 1;
+
+            if(index < Favorites.Items.Count)
+                Favorites.Items.Insert(index + 1, favorite);
+            else
+                Favorites.Items.Insert(Favorites.Items.Count, favorite);
+
+
+
+            FavoriteGrid.SelectedItem = favorite;
         }
     }
 }

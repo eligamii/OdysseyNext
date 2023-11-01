@@ -26,17 +26,10 @@ namespace Odyssey
             Init();
         }
 
-        private async void Init()
+        private void Init()
         {
             // Load default settings for the first run
             Settings.Init();
-
-            // Load data          
-            Downloads.Aria2.Init();
-            AdBlocker.AdBlocker.Init();
-
-            // Use this instead of Systemackdrop = Micaackdrop(); to be able to control the color of the Window
-            MicaBackdropHelper.TrySetMicaBackdropTo(this);
 
             ExtendsContentIntoTitleBar = true;
 
@@ -56,15 +49,6 @@ namespace Odyssey
             rootFrame.Navigate(typeof(MainView), null, new SuppressNavigationTransitionInfo());
 
             Content = rootFrame;
-
-            // Start the 2FA service
-            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
-
-            // Launch the CoreWebView2Environment
-            await CoreWebView2Environment.CreateAsync();
-
-            // Set the Quick actions command MainWindow to this window
-            QuickActions.QACommands.MainWindow = this;
 
             // Make possible to access to MainWindow from anywhere
             Current = this;

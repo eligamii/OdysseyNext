@@ -77,11 +77,16 @@ namespace Odyssey.Shared.ViewModels.Data
             set;
         }
 
+        public bool IsInPrivateMode
+        {
+            get;
+            set;
+        }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        internal void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

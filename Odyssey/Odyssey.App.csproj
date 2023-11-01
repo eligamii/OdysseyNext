@@ -16,6 +16,8 @@
     <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
     <None Remove="Controls\SearchBar.xaml" />
     <None Remove="Dialogs\QuickConfigurationDialog.xaml" />
+    <None Remove="OtherWindows\LittleWebWindow.xaml" />
+    <None Remove="Views\LittleWebView.xaml" />
     <None Remove="Views\MainView.xaml" />
     <None Remove="Views\PaneView.xaml" />
   </ItemGroup>
@@ -65,6 +67,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\LittleWebView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\PaneView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -86,6 +93,16 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\ContextMenus\TabsContextMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Windows\LittleWebWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="OtherWindows\LittleWebWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

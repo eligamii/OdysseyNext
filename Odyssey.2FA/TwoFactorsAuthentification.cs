@@ -37,12 +37,29 @@ namespace Odyssey.TwoFactorsAuthentification
         {
             if (!dataInitialized)
             {
+                // If the 2FA.json file was removed
+                bool shouldRestore = Data.TwoFactAuthData.Items.Count == 0;
+
                 var credencials = Helpers.CredencialsHelper.GetCredentialsFromLocker("Odyssey2FA");
                 foreach (var item in credencials)
                 {
-                    TwoFactAuth twoFactAuth = Data.TwoFactAuthData.Items.Where(p => p.Name == item.UserName.Split("/").ElementAt(0)).ToList().First();
+                    if(shouldRestore)
+                    {
+                        // Create the items
+                        TwoFactAuth twoFactAuth = new()
+                        {
+                            Name = item.UserName.Split("/").ElementAt(0)
+                        };
 
-                    twoFactAuth.Start(Base32Encoding.ToBytes(item.UserName.Split("/").ElementAt(1)));
+                        twoFactAuth.Start(Base32Encoding.ToBytes(item.UserName.Split("/").ElementAt(1)));
+                        Data.TwoFactAuthData.Items.Add(twoFactAuth);
+                    }
+                    else
+                    {
+                        TwoFactAuth twoFactAuth = Data.TwoFactAuthData.Items.Where(p => p.Name == item.UserName.Split("/").ElementAt(0)).ToList().First();
+
+                        twoFactAuth.Start(Base32Encoding.ToBytes(item.UserName.Split("/").ElementAt(1)));
+                    }
                     //vault.Remove(item);
                 }
             }

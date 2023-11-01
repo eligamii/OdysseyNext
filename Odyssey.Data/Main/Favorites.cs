@@ -1,4 +1,5 @@
-﻿using Odyssey.Shared.ViewModels.Data;
+﻿using Newtonsoft.Json;
+using Odyssey.Shared.ViewModels.Data;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
@@ -10,12 +11,19 @@ namespace Odyssey.Data.Main
 
         public static ObservableCollection<Favorite> Items { get; set; }
 
-        internal static void SaveFavorites()
+        internal static void Save()
         {
-            // If someone wants to mnually edit JSON save files
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(Items, options);
-            File.WriteAllText(Data.FavoritesFilePath, jsonString);
+            string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
+            {
+                ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver
+                {
+                    IgnoreSerializableAttribute = true,
+                    IgnoreSerializableInterface = true,
+                    IgnoreShouldSerializeMembers = true,
+                },
+                Formatting = Newtonsoft.Json.Formatting.Indented,
+            });
+            File.WriteAllText(Data.FavoritesFilePath, serializedObject);
         }
 
         internal static void Load()
@@ -24,12 +32,14 @@ namespace Odyssey.Data.Main
             {
                 string jsonString = File.ReadAllText(Data.FavoritesFilePath);
 
-                Items = JsonSerializer.Deserialize<ObservableCollection<Favorite>>(jsonString);
+                Items = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<Favorite>>(jsonString);
+            }
+            else
+            {
+                Items = new ObservableCollection<Favorite>();
             }
 
-            Items = new ObservableCollection<Favorite>();
-
-            Items.CollectionChanged += (s, a) => SaveFavorites();
+            Items.CollectionChanged += (s, a) => Save();
         }
     }
 }

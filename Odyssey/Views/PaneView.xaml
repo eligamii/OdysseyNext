@@ -55,7 +55,19 @@
         </StackPanel>
         <Button x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right" Margin="0,0,5,0"/>
 
-        <GridView Grid.Row="1" AllowDrop="True" CanReorderItems="True" CanDragItems="True" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="12.5,0,8,6" x:Name="FavoriteGrid" x:FieldModifier="public" Loaded="FavoriteGrid_Loaded" />
+        <GridView Drop="FavoriteGrid_Drop" DragOver="TabsView_DragOver" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" PointerMoved="FavoriteGrid_PointerMoved" SelectionChanged="TabsView_SelectionChanged" Grid.Row="1" AllowDrop="True" CanReorderItems="True" CanDragItems="True" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="12.5,0,8,6" x:Name="FavoriteGrid" x:FieldModifier="public" Loaded="FavoriteGrid_Loaded">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid RightTapped="FavoriteGridItem_RightTapped" Height="48" Width="{Binding Width}" 
+                          BorderBrush="#33808080" 
+                          BorderThickness="1"
+                          CornerRadius="5"
+                          Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                        <Image HorizontalAlignment="Center" Height="21" VerticalAlignment="Center" Source="{Binding ImageSource}"/>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
 
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <StackPanel>
@@ -92,7 +104,7 @@
                     <TextBlock Text="{helpers:ResourceString Name=Tabs}" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left"/>
                 </Grid>
 
-                <ListView x:FieldModifier="public" RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsCompleted="TabsView_DragItemsCompleted" DragItemsStarting="TabsView_DragItemsStarting" Drop="TabsView_Drop" DragOver="TabsView_DragOver" IsRightTapEnabled="True" x:Name="TabsView" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionChanged="TabsView_SelectionChanged">
+                <ListView x:FieldModifier="public" Loaded="TabsView_Loaded" RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsCompleted="TabsView_DragItemsCompleted" DragItemsStarting="TabsView_DragItemsStarting" Drop="TabsView_Drop" DragOver="TabsView_DragOver" IsRightTapEnabled="True" x:Name="TabsView" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionChanged="TabsView_SelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch">

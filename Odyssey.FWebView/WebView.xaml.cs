@@ -26,10 +26,12 @@ namespace Odyssey.FWebView
     public sealed partial class WebView : WebView2
     {
         public bool IsSelected { get; set; } = true; // For splitview
-        public Tab LinkedTab { get; set; }
+        public Tab LinkedTab { get; set; } = new(); // Initialize to prevent issues with LittleWeb
         public Tab ParentTab { get; set; } = null; // used when a webView is assiociated to another (login, etc)
         public Favorite LinkedFavorite { get; set; } = null;
         public bool IsPageLoading { get; private set; } = true;
+        public bool IsLittleWeb { get; set; } = false;
+        public bool IsPrivateModeEnabled { get; set; } = false;
 
         public static FrameworkElement MainDownloadElement { get; set; } // The element used to show the DownloadsFlyout
         public static FrameworkElement MainHistoryElement { get; set; }
@@ -116,25 +118,24 @@ namespace Odyssey.FWebView
 
         private void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
-            sender.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged; // Update the text of the tabs
-            sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
+            if(!IsLittleWeb)
+            {
+                sender.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged; // Update the text of the tabs
 
-            sender.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged; // Update the 'url' value of the Tab objects
-            sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
-            sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
+                sender.CoreWebView2.SourceChanged += CoreWebView2_SourceChanged; // Update the 'url' value of the Tab objects
+                sender.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+                sender.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
+                sender.CoreWebView2.FaviconChanged += CoreWebView2_FaviconChanged; // Set the icon of the linked tab
+                sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
+
+                // Scroll events (Uppate dynamic theme)
+                scrollTimer = new DispatcherTimer();
+                scrollTimer.Interval = TimeSpan.FromSeconds(2);
+                scrollTimer.Tick += ScrollTimer_Tick;
+            }
 
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect the downloads to aria2
-
-            sender.CoreWebView2.FaviconChanged += CoreWebView2_FaviconChanged; // Set the icon of the linked tab
-
-            sender.CoreWebView2.HistoryChanged += CoreWebView2_HistoryChanged; // Save history
-
-            sender.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
-
-            // Scroll events (Uppate dynamic theme)
-            scrollTimer = new DispatcherTimer();
-            scrollTimer.Interval = TimeSpan.FromSeconds(2);
-            scrollTimer.Tick += ScrollTimer_Tick;
+            sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
 
             // Add extensions
             AdBlocker.AdBlocker blocker = new(sender.CoreWebView2);
@@ -142,7 +143,18 @@ namespace Odyssey.FWebView
             // Show native tooltips instead of Edge ones
             //WebViewNativeToolTips tips = new(this);
 
+            // Disable default keyboard accelerators keys to add custom find,... dialogs
+            sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
 
+            // Save things only when private mode is disabled
+            if(!IsPrivateModeEnabled)
+            {
+                sender.CoreWebView2.HistoryChanged += CoreWebView2_HistoryChanged; // Save history
+            }
+            else
+            {
+                // [TODO]
+            }
         }
 
         private async void CoreWebView2_NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
@@ -173,8 +185,11 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_HistoryChanged(CoreWebView2 sender, object args)
         {
+            string lastItem = string.Empty;
+            if (History.Items.Count != 0) lastItem = History.Items.First().Url;
+
             if (!string.IsNullOrWhiteSpace(sender.DocumentTitle) &&
-               History.Items.First().Url != sender.Source)
+               lastItem != sender.Source)
             {
                 // Save history
                 HistoryItem historyItem = new()
@@ -239,7 +254,7 @@ namespace Odyssey.FWebView
 
         private void WebView2_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (IsVisible)
+            if (IsVisible && !IsLittleWeb)
             {
                 DynamicTheme.UpdateDynamicTheme(this);
             }
