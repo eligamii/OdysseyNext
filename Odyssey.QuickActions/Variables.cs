@@ -10,9 +10,10 @@ namespace Odyssey.QuickActions
         public static string AskText { get; set; }
         internal static string QAFlyoutUrl { get; set; } = string.Empty;
         internal static List<KeyValuePair<string, string>> UserVariables { get; set; } = new();
+        internal static List<KeyValuePair<string, string>> SessionUserVariables { get; set; } = new();
 
 
-        internal static string VariablesToValues(string command) // ex: $command option:<pos> to $command option:"172;537"
+        internal static string VariablesToValues(string command) // ex: $command option:<pos> => $command option:"172;537"
         {
             string resultCommand = string.Empty;
 
@@ -25,6 +26,11 @@ namespace Odyssey.QuickActions
                                    ;
 
             foreach (var variable in UserVariables)
+            {
+                resultCommand = resultCommand.Replace($"<{variable.Key}>", variable.Value);
+            }
+
+            foreach (var variable in SessionUserVariables)
             {
                 resultCommand = resultCommand.Replace($"<{variable.Key}>", variable.Value);
             }
