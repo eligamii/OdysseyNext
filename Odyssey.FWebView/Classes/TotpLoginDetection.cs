@@ -27,6 +27,8 @@ namespace Odyssey.FWebView.Classes
 
         internal event TotpLoginDetectedEventHandler TotpLoginDetected;
 
+
+
         private WebView webView;
         public TotpLoginDetection(WebView webView)
         {

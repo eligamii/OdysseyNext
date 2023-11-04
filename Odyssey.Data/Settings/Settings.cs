@@ -15,6 +15,7 @@ namespace Odyssey.Data.Settings
                 IsPaneLocked = true;
                 CancelAppUriLaunchConfirmationDialog = false;
                 SuccessfullyClosed = true;
+                IsDarkReaderEnabled = true;
             }
         }
 
@@ -28,6 +29,12 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool)Values.Values["IsPaneLocked"]; }
             set { Values.Values["IsPaneLocked"] = value; }
+        }
+
+        public static bool IsDarkReaderEnabled
+        {
+            get { return (bool)Values.Values["IsDarkReaderEnabled"]; }
+            set { Values.Values["IsDarkReaderEnabled"] = value; }
         }
 
         public static bool FirstLaunch

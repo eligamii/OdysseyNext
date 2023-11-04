@@ -18,6 +18,7 @@ using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text.RegularExpressions;
 using Odyssey.FWebView.Helpers;
+using Odyssey.Data.Settings;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -173,6 +174,16 @@ namespace Odyssey.FWebView
 
             TotpLoginDetection = new(this);
             TotpLoginDetection.TotpLoginDetected += (s, a) => TotpLoginDetectedAction();
+
+            Settings.IsDarkReaderEnabled = true;
+            if (Settings.IsDarkReaderEnabled != false) // == null or true
+            {
+                // Enable DarkReader
+                DarkReader darkReader = new(this);
+                darkReader.Auto(true);
+            }
+
+           
 
             // Not working in WinUI3
             //sender.CoreWebView2.Settings.IsPasswordAutosaveEnabled = true;
