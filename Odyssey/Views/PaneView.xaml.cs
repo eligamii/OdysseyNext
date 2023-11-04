@@ -1,3 +1,4 @@
+using CommunityToolkit.WinUI.Converters;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -21,12 +22,14 @@ using Windows.Foundation;
 
 namespace Odyssey.Views
 {
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class PaneView : Page
     {
         public static PaneView Current { get; set; }
+        
         public PaneView()
         {
             this.InitializeComponent();
@@ -258,7 +261,7 @@ namespace Odyssey.Views
             }
         }
 
-        private async void TabsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
@@ -299,8 +302,12 @@ namespace Odyssey.Views
                 UpdateTabSelection(sender);
             }
 
+
+
             if (e.AddedItems.Count != 0) // Save tabs as much as possible to avoid data loss after crash
                 Tabs.Save();
+
+            MainView.Current.SetTotpButtonVisibility();
         }
         private void FavoriteGridItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -579,6 +586,11 @@ namespace Odyssey.Views
         private void _2FAMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(moreButton);
+        }
+
+        private void ViewportBehavior_EnteredViewport(object sender, EventArgs e)
+        {
+            secondNewTabButton.Visibility = ViewportBehavior.IsFullyInViewport ? Visibility.Collapsed : Visibility.Visible;
         }
     }
 }

@@ -7,7 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helpers="using:Odyssey.Helpers"
     mc:Ignorable="d"
-    >
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity" xmlns:converters="using:CommunityToolkit.WinUI.Converters">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -27,6 +28,7 @@
                     </Button>
                 </Grid>
             </DataTemplate>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -76,7 +78,7 @@
             </Button.Flyout>
         </Button>
 
-        <GridView Drop="FavoriteGrid_Drop" DragOver="TabsView_DragOver" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" PointerMoved="FavoriteGrid_PointerMoved" SelectionChanged="TabsView_SelectionChanged" Grid.Row="1" AllowDrop="True" CanReorderItems="True" CanDragItems="True" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="12.5,0,8,6" x:Name="FavoriteGrid" x:FieldModifier="public" Loaded="FavoriteGrid_Loaded">
+        <GridView Drop="FavoriteGrid_Drop" DragOver="TabsView_DragOver" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" PointerMoved="FavoriteGrid_PointerMoved" SelectionChanged="ItemsViews_SelectionChanged" Grid.Row="1" AllowDrop="True" CanReorderItems="True" CanDragItems="True" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="12.5,0,8,6" x:Name="FavoriteGrid" x:FieldModifier="public" Loaded="FavoriteGrid_Loaded">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Grid RightTapped="FavoriteGridItem_RightTapped" Height="48" Width="{Binding Width}" 
@@ -90,12 +92,12 @@
             </GridView.ItemTemplate>
         </GridView>
 
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+        <ScrollView x:Name="scrollView" Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <Grid>
                     <TextBlock Text="{helpers:ResourceString Name=Pinned}" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left" x:Name="pinsTextBlock" Visibility="Visible"/>
                 </Grid>
-                <ListView RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" Drop="PinsTabView_Drop" DragOver="TabsView_DragOver" SelectionChanged="TabsView_SelectionChanged" IsRightTapEnabled="True" Margin="0,0,0,16" x:FieldModifier="public" Visibility="Visible" Loaded="PinsTabView_Loaded" x:Name="PinsTabView" CanDragItems="True" CanReorderItems="True" AllowDrop="True">
+                <ListView RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" Drop="PinsTabView_Drop" DragOver="TabsView_DragOver" SelectionChanged="ItemsViews_SelectionChanged" IsRightTapEnabled="True" Margin="0,0,0,16" x:FieldModifier="public" Visibility="Visible" Loaded="PinsTabView_Loaded" x:Name="PinsTabView" CanDragItems="True" CanReorderItems="True" AllowDrop="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch">
@@ -123,9 +125,10 @@
                 </ListView>
                 <Grid>
                     <TextBlock Text="{helpers:ResourceString Name=Tabs}" x:Name="tabsTextBlock" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left"/>
+                    <Button x:Name="secondNewTabButton" Content="&#xE109;" HorizontalAlignment="Right" Click="AddTabButton_Click" Margin="0,-6,3,0"/>
                 </Grid>
 
-                <ListView x:FieldModifier="public" Loaded="TabsView_Loaded" RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsCompleted="TabsView_DragItemsCompleted" DragItemsStarting="TabsView_DragItemsStarting" Drop="TabsView_Drop" DragOver="TabsView_DragOver" IsRightTapEnabled="True" x:Name="TabsView" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionChanged="TabsView_SelectionChanged">
+                <ListView x:FieldModifier="public" Loaded="TabsView_Loaded" RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsCompleted="TabsView_DragItemsCompleted" DragItemsStarting="TabsView_DragItemsStarting" Drop="TabsView_Drop" DragOver="TabsView_DragOver" IsRightTapEnabled="True" x:Name="TabsView" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionChanged="ItemsViews_SelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch">
@@ -160,7 +163,10 @@
                                 <TextBlock Margin="11,0,0,0" Text="{helpers:ResourceString Name=NewTab}" FontFamily="Segoe UI"/>
                             </StackPanel>
                         </Button.Content>
-
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:ViewportBehavior x:Name="ViewportBehavior"
+                                                    IsAlwaysOn="True" EnteredViewport="ViewportBehavior_EnteredViewport" ExitedViewport="ViewportBehavior_EnteredViewport"/>
+                        </interactivity:Interaction.Behaviors>
 
                     </Button>
                     <StackPanel.Transitions>
@@ -170,6 +176,6 @@
                     </StackPanel.Transitions>
                 </StackPanel>
             </StackPanel>
-        </ScrollViewer>
+        </ScrollView>
     </Grid>
 </Page>

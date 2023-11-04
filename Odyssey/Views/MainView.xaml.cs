@@ -107,11 +107,19 @@ namespace Odyssey.Views
             // Set the Quick actions command MainWindow to this window
             QACommands.MainWindow = MainWindow.Current;
 
+            WebView.TotpLoginDetectedAction += () => SetTotpButtonVisibility();
+
             // Check the internet connection every second for UI things
             CheckNetworkConnectionState();
         }
 
         private bool lastConnectionState;
+
+        public void SetTotpButtonVisibility()
+        { 
+            _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed; 
+        }
+
         private async void CheckNetworkConnectionState()
         {
             while(true)

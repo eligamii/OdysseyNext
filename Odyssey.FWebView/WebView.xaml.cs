@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using static System.Net.Mime.MediaTypeNames;
 using System.Text.RegularExpressions;
+using Odyssey.FWebView.Helpers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,6 +26,10 @@ namespace Odyssey.FWebView
 {
     public sealed partial class WebView : WebView2
     {
+        public TotpLoginDetection TotpLoginDetection { get; private set; }
+        public static Action TotpLoginDetectedAction { get; set; }
+
+        public bool IsTotpDetected { get; set; } = false;
         public bool IsSelected { get; set; } = true; // For splitview
         public Tab LinkedTab { get; set; } = new(); // Initialize to prevent issues with LittleWeb
         public Tab ParentTab { get; set; } = null; // used when a webView is assiociated to another (login, etc)
@@ -44,6 +49,8 @@ namespace Odyssey.FWebView
 
         private static DownloadsFlyout downloadsFlyout = new();
         private static HistoryFlyout historyFlyout = new();
+
+        private FindFlyout findFlyout;
 
         public static WebView SelectedWebView // Used for opening HistoryItems in the selected webview when available
         {
@@ -142,7 +149,7 @@ namespace Odyssey.FWebView
             // Add extensions
             AdBlocker.AdBlocker blocker = new(sender.CoreWebView2);
 
-            // Show native tooltips instead of Edge ones
+            // Show native tooltips instead of Edge ones (disabled for now)
             //WebViewNativeToolTips tips = new(this);
 
             // Disable default keyboard accelerators keys to add custom find,... dialogs
@@ -156,6 +163,34 @@ namespace Odyssey.FWebView
             else
             {
                 // [TODO]
+            }
+
+            findFlyout = new(this);
+
+            // Using a custom KeyDown event as the default one doesnt work
+            WebView2KeyDownHelpers.KeyDownListener listener = new(this);
+            listener.KeyDown += WebView_KeyDown;
+
+            TotpLoginDetection = new(this);
+            TotpLoginDetection.TotpLoginDetected += (s, a) => TotpLoginDetectedAction();
+
+            // Not working in WinUI3
+            //sender.CoreWebView2.Settings.IsPasswordAutosaveEnabled = true;
+        }
+
+        private void WebView_KeyDown(object sender, WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs args)
+        {
+            if(args.IsControlKeyPressed)
+            {
+                switch(args.PressedKey)
+                {
+                    case Windows.System.VirtualKey.F:
+                        FindFlyout findFlyout = new(this);
+                        findFlyout.PreferredPlacement = TeachingTipPlacementMode.Top;
+                        findFlyout.XamlRoot = XamlRoot;
+                        findFlyout.IsOpen = true;
+                        break;
+                }
             }
         }
 

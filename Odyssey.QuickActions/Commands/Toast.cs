@@ -37,7 +37,7 @@ namespace Odyssey.QuickActions.Commands
 
         private static void SetOptions(string option)
         {
-            if(!Regex.IsMatch(option, ".*:.{1,}"))
+            if(Regex.IsMatch(option, ".*:.{1,}"))
             {
                 string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|"".*"")*";
 
