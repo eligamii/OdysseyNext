@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Odyssey.QuickActions.Objects;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -34,13 +35,13 @@ namespace Odyssey.QuickActions.Commands
                     // Save the variable as a KeyValuePair<var, value>
 
                     // Delete any variable with the same var (prevent having two times the same variable)
-                    if (Variables.UserVariables.Any(p => p.Key == var))
+                    if (Data.UserVariables.Items.Any(p => p.Key == var))
                     {
-                        var variable = Variables.UserVariables.Where(p => p.Key == var).ElementAt(0);
-                        Variables.UserVariables.Remove(variable);
+                        var variable = Data.UserVariables.Items.Where(p => p.Key == var).ElementAt(0);
+                        Data.UserVariables.Items.Remove(variable);
                     }
 
-                    Variables.UserVariables.Add(new KeyValuePair<string, string>(var, $"\"{value}\""));
+                    Data.UserVariables.Items.Add(new KeyValuePair<string, string>(var, $"\"{value}\""));
 
                     return true;
                 }
@@ -51,19 +52,15 @@ namespace Odyssey.QuickActions.Commands
 
         private static void SetOptions(string option)
         {
-            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|"".*"")*";
-
-            string optionName = Regex.Match(option, optionSeparatorRegex).Value;
-            string optionValue = Regex.Matches(option, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
-
-            if (optionValue.StartsWith("\""))
-                optionValue = optionValue.Remove(0, 1).Remove(optionValue.Length - 2, 1);
-
-
-            switch (optionName)
+            if (Option.IsAValidOptionString(option))
             {
-                case "value": value = optionValue; break;
-                case "var": var = optionValue; break;
+                Option opt = new(option);
+
+                switch (opt.Name)
+                {
+                    case "value": value = opt.Value; break;
+                    case "var": var = opt.Value; break;
+                }
             }
         }
     }

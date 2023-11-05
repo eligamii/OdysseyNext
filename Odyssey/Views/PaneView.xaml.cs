@@ -111,7 +111,7 @@ namespace Odyssey.Views
             }
         }
 
-        private async void FavoriteGrid_Loaded(object sender, RoutedEventArgs e)
+        private void FavoriteGrid_Loaded(object sender, RoutedEventArgs e)
         {
             FavoriteGrid.ItemsSource = Favorites.Items;
             FavoriteGrid.Visibility = Favorites.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
@@ -355,9 +355,9 @@ namespace Odyssey.Views
 
         private void UpdateTabSelection(object selectedTabsView)
         {
-            if (selectedTabsView != TabsView) TabsView.SelectedIndex = -1;
-            if (selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1;
-            if (selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1;
+            if ((ListViewBase)selectedTabsView != TabsView) TabsView.SelectedIndex = -1;
+            if ((ListViewBase)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1;
+            if ((ListViewBase)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1;
         }
 
 

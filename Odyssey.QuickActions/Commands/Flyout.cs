@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls.Primitives;
 using Odyssey.QuickActions.Controls;
+using Odyssey.QuickActions.Objects;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -39,20 +40,16 @@ namespace Odyssey.QuickActions.Commands
 
         private static void SetOptions(string option)
         {
-            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|""[-a-zA-Z0-9()@:%_\+.~#?&/\\=; ]*"")*";
-
-            string optionName = Regex.Match(option, optionSeparatorRegex).Value;
-            string optionValue = Regex.Matches(option, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
-
-            if (optionValue.StartsWith("\""))
-                optionValue = optionValue.Remove(0, 1).Remove(optionValue.Length - 2, 1);
-
-
-            switch (optionName)
+            if (Option.IsAValidOptionString(option))
             {
-                case "content": content = optionValue; break;
-                case "pos": pos = optionValue; break;
-                case "buttoncommand": buttoncommand = optionValue; break;
+                Option opt = new(option);
+
+                switch (opt.Name)
+                {
+                    case "content": content = opt.Value; break;
+                    case "pos": pos = opt.Value; break;
+                    case "buttoncommand": buttoncommand = opt.Value; break;
+                }
             }
         }
 

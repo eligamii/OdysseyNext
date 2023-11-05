@@ -4,6 +4,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Odyssey.QuickActions.Commands;
+using Odyssey.QuickActions.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Flyout = Odyssey.QuickActions.Commands.Flyout;
@@ -35,7 +36,7 @@ namespace Odyssey.QuickActions
 
 
             // The string used by the commands
-            string optionsRegex = @"([-a-zA-Z0-9()@:%_\+.~#?&/\\=;]|""[-a-zA-Z0-9()@:%_\+.~#?&/\\=; ]*"")*";
+            string optionsRegex = @"([-a-zA-Z0-9()@:%_\+.~#?&/\\=;,]|"".*"")*";
             string commandWithoutCommandName = command.Replace(commandName, "");
 
             // Sepatate every option

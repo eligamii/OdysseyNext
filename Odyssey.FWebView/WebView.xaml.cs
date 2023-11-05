@@ -327,7 +327,13 @@ namespace Odyssey.FWebView
                 DynamicTheme.UpdateDynamicTheme(this);
             }
 
+            
             Tabs.Save();
+            
+            if(sender.Source.StartsWith("edge://flags"))
+            {
+                // TODO
+            }
         }
 
         private void CoreWebView2_SourceChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2SourceChangedEventArgs args)

@@ -1,4 +1,5 @@
 ﻿using Odyssey.Data.Main;
+using Odyssey.QuickActions.Objects;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Linq;
@@ -57,17 +58,14 @@ namespace Odyssey.QuickActions.Commands
 
         private static void SetOptions(string option)
         {
-            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|""[-a-zA-Z0-9()@:%_\+.~#?&/\\=; ]*"")*";
-
-            string optionName = Regex.Match(option, optionSeparatorRegex).Value;
-            string optionValue = Regex.Matches(option, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
-
-            if (optionValue.StartsWith("\""))
-                optionValue = optionValue.Remove(0, 1).Remove(optionValue.Length - 2, 1);
-
-            switch (optionName)
+            if(Option.IsAValidOptionString(option))
             {
-                case "url": url = optionValue; break;
+                Option opt = new(option);
+
+                switch (opt.Name)
+                {
+                    case "url": url = opt.Value; break;
+                }
             }
         }
     }

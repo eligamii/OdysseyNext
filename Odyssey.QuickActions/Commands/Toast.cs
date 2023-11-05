@@ -1,7 +1,9 @@
 ﻿using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
+using Odyssey.QuickActions.Objects;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Windows.Devices.HumanInterfaceDevice;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -37,23 +39,16 @@ namespace Odyssey.QuickActions.Commands
 
         private static void SetOptions(string option)
         {
-            if(Regex.IsMatch(option, ".*:.{1,}"))
+            if (Option.IsAValidOptionString(option))
             {
-                string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|"".*"")*";
+                Option opt = new(option);
 
-                string optionName = Regex.Match(option, optionSeparatorRegex).Value;
-                string optionValue = Regex.Matches(option, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
-
-                if (optionValue.StartsWith("\""))
-                    optionValue = optionValue.Remove(0, 1).Remove(optionValue.Length - 2, 1);
-
-
-                switch (optionName)
+                switch (opt.Name)
                 {
-                    case "title": title = optionValue; break;
-                    case "content": content = optionValue; break;
+                    case "title": title = opt.Value; break;
+                    case "content": content = opt.Value; break;
                     case "duration":
-                        if (optionValue == "long") { duration = AppNotificationDuration.Long; }
+                        if (opt.Value == "long") { duration = AppNotificationDuration.Long; }
                         else { duration = AppNotificationDuration.Default; }
                         break;
                 }

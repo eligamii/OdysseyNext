@@ -1,4 +1,5 @@
 ﻿using Odyssey.Data.Main;
+using Odyssey.QuickActions.Objects;
 using Odyssey.Shared.ViewModels.Data;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Odyssey.QuickActions.Commands
             else if (options[0] == "all")
             {
                 // close every tab
-                foreach (var item in Data.Main.Tabs.Items)
+                foreach (var item in Tabs.Items)
                 {
                     // Close every tab's webview
                     if (item.MainWebView != null) { item.MainWebView.Close(); }
@@ -33,7 +34,7 @@ namespace Odyssey.QuickActions.Commands
             {
                 try
                 {
-                    var list = GetTabs(options[0]);
+                    var list = new TabList(options[0]).Items;
 
                     if (options[0].Contains("0;"))
                     {
@@ -68,70 +69,7 @@ namespace Odyssey.QuickActions.Commands
             }
         }
 
-        private static List<Tab> GetTabs(string option)
-        {
-            List<Tab> tabs = new();
-            string[] tabIndex = option.Split(";");
-
-            Tab[] list = null;
-
-            switch(tabIndex[0])
-            {
-                case "0":
-                    list = Favorites.Items.ToArray();
-                    break;
-                    
-                case "1":
-                    list = Pins.Items.ToArray();
-                    break;
-
-                case "2":
-                    list = Tabs.Items.ToArray() ;
-                    break;
-            }
-
-            int test = 0;
-
-            if (tabIndex[1].Contains(","))
-            {
-                string[] indexes = tabIndex[1].Split(",");
-                foreach (string index in indexes)
-                {
-                    int i = int.Parse(index);
-                    try
-                    {
-                        tabs.Add(list[i]);
-                    }
-                    catch { }
-                }
-            }
-            else if (tabIndex[1].Contains("-"))
-            {
-                string[] min = tabIndex[1].Split("-");
-                for (int i = int.Parse(min[0]); i != int.Parse(min[1]); i++)
-                {
-                    try
-                    {
-                        tabs.Add(list[i]);
-                    }
-                    catch { }
-                }
-            }
-            else
-            {
-                try
-                {
-                    tabs.Add(list[int.Parse(tabIndex[1])]);
-                }
-                catch 
-                {
-                    tabs = list.ToList().Where(p => p.Title.Contains(tabIndex[1].Replace("\"", ""))).ToList();
-                }
-                
-            }
-
-            return tabs;
-        }
+        
 
     }
 }

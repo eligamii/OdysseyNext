@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
+using Odyssey.QuickActions.Data;
 using System.Collections.Generic;
 
 namespace Odyssey.QuickActions
@@ -9,7 +10,6 @@ namespace Odyssey.QuickActions
         public static CoreWebView2ContextMenuRequestedEventArgs ContextMenuArgs { internal get; set; } // for the <linkurl>, <selectionurl>,... variables
         public static string AskText { get; set; }
         internal static string QAFlyoutUrl { get; set; } = string.Empty;
-        internal static List<KeyValuePair<string, string>> UserVariables { get; set; } = new();
         internal static List<KeyValuePair<string, string>> SessionUserVariables { get; set; } = new();
 
 
@@ -25,7 +25,7 @@ namespace Odyssey.QuickActions
                                    .Replace("<flyouturl>", QAFlyoutUrl)
                                    ;
 
-            foreach (var variable in UserVariables)
+            foreach (var variable in UserVariables.Items)
             {
                 resultCommand = resultCommand.Replace($"<{variable.Key}>", variable.Value);
             }

@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
 using Odyssey.Helpers;
+using Odyssey.QuickActions.Data;
 using Odyssey.Views;
 using System;
 using WinUIEx;
@@ -30,6 +31,7 @@ namespace Odyssey
         {
             // Load default settings for the first run
             Settings.Init();
+            UserVariables.Load();
 
             ExtendsContentIntoTitleBar = true;
 
@@ -62,6 +64,7 @@ namespace Odyssey
             if (!_close)
             {
                 Settings.SuccessfullyClosed = true;
+                QuickActions.Data.UserVariables.Save();
                 _close = true;
 
                 Close();
