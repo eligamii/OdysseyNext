@@ -13,10 +13,10 @@ namespace Odyssey.QuickActions.Objects
 
         internal Option(string optionString)
         {
-            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|"".*"")*";
+            string optionSeparatorRegex = @"([-a-zA-Z0-9()@%_\+.~#?&/\\=;]|(\*|%){0,1}"".*"")*";
 
-            string Name = Regex.Match(optionString, optionSeparatorRegex).Value;
-            string Value = Regex.Matches(optionString, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
+            Name = Regex.Match(optionString, optionSeparatorRegex).Value;
+            Value = Regex.Matches(optionString, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
 
             // Simple filter
             if (Value.EndsWith("\""))
@@ -38,7 +38,7 @@ namespace Odyssey.QuickActions.Objects
                             break;
 
                         case '*':
-                            var expression = new NCalc.Expression(valueWithoutSpecial);
+                            var expression = new NCalc.Expression(valueWithoutSpecial.Replace("\"", ""));
                             if (expression.HasErrors()) Value = "Syntax error";
                             else Value = expression.Evaluate().ToString();
                             break;

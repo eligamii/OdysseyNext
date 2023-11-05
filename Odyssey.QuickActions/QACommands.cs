@@ -35,7 +35,7 @@ namespace Odyssey.QuickActions
 
 
             // The string used by the commands
-            string optionsRegex = @"([-a-zA-Z0-9()@:%_\+.~#?&/\\=;,]|"".*"")*";
+            string optionsRegex = @"([-a-zA-Z0-9()@:%_\+.~#?&/\\=;,]|(\*|%){0,1}"".*"")*";
             string commandWithoutCommandName = command.Replace(commandName, "");
 
             // Sepatate every option

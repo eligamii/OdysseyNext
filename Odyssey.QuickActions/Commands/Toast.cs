@@ -28,6 +28,7 @@ namespace Odyssey.QuickActions.Commands
                     AppNotificationManager.Default.Show(toast);
 
                     title = "Toast"; // set default title
+                    content = string.Empty;
                     return true;
                 }
             }
