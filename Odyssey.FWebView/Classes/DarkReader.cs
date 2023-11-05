@@ -107,15 +107,18 @@ namespace Odyssey.FWebView.Classes
             string code = $"DarkReader.enable({{ brightness: {Brightness}, contrast: {Contrast}, sepia:  {Sepia}}});";
             await _webView.EnsureCoreWebView2Async();
 
-            await _webView.CoreWebView2.ExecuteScriptAsync(code);
+            await _webView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(code);
         }
 
         public async void Disable()
         {
             string code = "DarkReader.disable();";
+            string enableCode = $"DarkReader.enable({{ brightness: {Brightness}, contrast: {Contrast}, sepia:  {Sepia}}});";
+
             await _webView.EnsureCoreWebView2Async();
 
-            await _webView.CoreWebView2.ExecuteScriptAsync(code);
+            await _webView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync(code);
+            _webView.CoreWebView2.RemoveScriptToExecuteOnDocumentCreated(enableCode);
         }
     }
 }

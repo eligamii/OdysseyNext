@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="Odyssey.Dialogs.SettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Odyssey.Dialogs"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+    CornerRadius="8">
+
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <x:Double x:Key="ContentDialogMaxWidth">1000</x:Double>
+            <x:Double x:Key="ContentDialogMaxHeight">1000</x:Double>
+            <Thickness x:Key="ContentDialogPadding">0</Thickness>
+            <SolidColorBrush x:Key="ContentDialogTopOverlay" Color="Transparent" />
+            <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
+        </ResourceDictionary>
+    </ContentDialog.Resources>
+
+    <Grid Height="600" Width="700">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="56"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{StaticResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{StaticResource ControlStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal">
+                <Button Click="backButton_Click"
+                    x:Name="backButton"
+                    Visibility="Collapsed"
+                    ToolTipService.ToolTip="Close"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    Margin="6,0,0,0"
+                    BorderThickness="0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right" 
+                    Height="36" Width="36" 
+                    FontFamily="Segoe Fluent Icons"
+                    FontSize="12" Content="&#xE0A6;"/>
+                
+                <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Options" Margin="14,0" VerticalAlignment="Center">
+                    <TextBlock.Transitions>
+                        <TransitionCollection>
+                            <RepositionThemeTransition />
+                        </TransitionCollection>
+                    </TextBlock.Transitions>
+                </TextBlock>
+            </StackPanel>
+
+            <Grid  VerticalAlignment="Center" HorizontalAlignment="Center">
+                <controls:Segmented SelectedIndex="0">
+                    <controls:SegmentedItem Content="General" />
+                    <controls:SegmentedItem Content="Apparence" IsEnabled="False"/>
+                    <controls:SegmentedItem Content="Features" IsEnabled="False"/>
+                    <controls:SegmentedItem Content="Misc" IsEnabled="False"/>
+                </controls:Segmented>
+            </Grid>
+
+            <Button Click="closeButton_Click"
+                    ToolTipService.ToolTip="Close"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Margin="6,0"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right" 
+                    Height="36" Width="36" 
+                    FontFamily="Segoe Fluent Icons"
+                    FontSize="10" Content="&#xE8BB;"/>
+        </Grid>
+
+        
+
+        <Frame Grid.Row="1" x:FieldModifier="public" x:Name="OptionsViewFrame" Navigated="OptionsViewFrame_Navigated"/>
+    </Grid>
+</ContentDialog>

@@ -16,9 +16,11 @@
     <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
     <None Remove="Controls\SearchBar.xaml" />
     <None Remove="Dialogs\QuickConfigurationDialog.xaml" />
+    <None Remove="Dialogs\SettingsDialog.xaml" />
     <None Remove="OtherWindows\LittleWebWindow.xaml" />
     <None Remove="Views\LittleWebView.xaml" />
     <None Remove="Views\MainView.xaml" />
+    <None Remove="Views\Options\GeneralPage.xaml" />
     <None Remove="Views\PaneView.xaml" />
   </ItemGroup>
 
@@ -35,6 +37,7 @@
     <PackageReference Include="CommunityToolkit.Common" Version="8.2.2" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.230907" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.230907" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.230907" />
     <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.230907" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
@@ -68,6 +71,11 @@
     <Content Update="Assets\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Dialogs\SettingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\LittleWebView.xaml">
@@ -106,6 +114,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="OtherWindows\LittleWebWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Options\GeneralPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

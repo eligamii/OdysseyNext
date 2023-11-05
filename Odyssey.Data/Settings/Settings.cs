@@ -16,6 +16,7 @@ namespace Odyssey.Data.Settings
                 CancelAppUriLaunchConfirmationDialog = false;
                 SuccessfullyClosed = true;
                 IsDarkReaderEnabled = true;
+                ForceDarkReader = false;
             }
         }
 
@@ -35,6 +36,11 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool)Values.Values["IsDarkReaderEnabled"]; }
             set { Values.Values["IsDarkReaderEnabled"] = value; }
+        }
+        public static bool ForceDarkReader
+        {
+            get { return (bool)Values.Values["ForceDarkReader"]; }
+            set { Values.Values["ForceDarkReader"] = value; }
         }
 
         public static bool FirstLaunch

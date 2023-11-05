@@ -38,6 +38,7 @@ namespace Odyssey.FWebView
         public bool IsPageLoading { get; private set; } = true;
         public bool IsLittleWeb { get; set; } = false;
         public bool IsPrivateModeEnabled { get; set; } = false;
+        public DarkReader DarkReader { get; set; }
 
         public static FrameworkElement MainDownloadElement { get; set; } // The element used to show the DownloadsFlyout
         public static FrameworkElement MainHistoryElement { get; set; }
@@ -175,12 +176,15 @@ namespace Odyssey.FWebView
             TotpLoginDetection = new(this);
             TotpLoginDetection.TotpLoginDetected += (s, a) => TotpLoginDetectedAction();
 
-            Settings.IsDarkReaderEnabled = true;
+            DarkReader darkReader = new(this);
             if (Settings.IsDarkReaderEnabled != false) // == null or true
-            {
-                // Enable DarkReader
-                DarkReader darkReader = new(this);
+            {   
                 darkReader.Auto(true);
+
+                if(Settings.ForceDarkReader != false)
+                {
+                    darkReader.Enable();
+                }
             }
 
            
@@ -332,7 +336,7 @@ namespace Odyssey.FWebView
             
             if(sender.Source.StartsWith("edge://flags"))
             {
-                // TODO
+                // TODO: restart every webview when restart button clicked
             }
         }
 

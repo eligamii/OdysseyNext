@@ -9,6 +9,7 @@ using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
+using Odyssey.Dialogs;
 using Odyssey.FWebView;
 using Odyssey.Shared.ViewModels.Data;
 using System;
@@ -591,6 +592,16 @@ namespace Odyssey.Views
         private void ViewportBehavior_EnteredViewport(object sender, EventArgs e)
         {
             secondNewTabButton.Visibility = ViewportBehavior.IsFullyInViewport ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private async void SettingsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog settingsDialog = new()
+            {
+                XamlRoot = this.XamlRoot
+            };
+
+            await settingsDialog.ShowAsync();
         }
     }
 }
