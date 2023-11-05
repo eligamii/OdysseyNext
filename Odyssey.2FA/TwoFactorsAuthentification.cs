@@ -43,7 +43,7 @@ namespace Odyssey.TwoFactorsAuthentification
                 var credencials = Helpers.CredencialsHelper.GetCredentialsFromLocker("Odyssey2FA");
                 foreach (var item in credencials)
                 {
-                    if(shouldRestore)
+                    if (shouldRestore)
                     {
                         // Create the items
                         TwoFactAuth twoFactAuth = new()

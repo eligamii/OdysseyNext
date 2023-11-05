@@ -176,13 +176,13 @@ namespace Odyssey.Controls
                     {
                         StringKind kind = await GetStringKind(text);
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
-                        else if(kind == StringKind.OdysseyUrl)
+                        else if (kind == StringKind.OdysseyUrl)
                         {
-                            if(Regex.IsMatch(text, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
+                            if (Regex.IsMatch(text, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
                             {
                                 WebView.OpenDownloadDialog();
                             }
-                            else if(Regex.IsMatch(text, ".*/history/{0,1}.*", RegexOptions.IgnoreCase))
+                            else if (Regex.IsMatch(text, ".*/history/{0,1}.*", RegexOptions.IgnoreCase))
                             {
                                 WebView.OpenHistoryDialog();
                             }

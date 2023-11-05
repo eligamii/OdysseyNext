@@ -1,6 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Imaging;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.FWebView.Helpers;
 using System;
@@ -9,8 +7,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using Windows.Storage;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace Odyssey.Downloads.Objects
 {
@@ -159,7 +157,7 @@ namespace Odyssey.Downloads.Objects
             }
             set
             {
-                if(value != icon)
+                if (value != icon)
                 {
                     icon = value;
                     OnPropertyChanged();
@@ -225,7 +223,8 @@ namespace Odyssey.Downloads.Objects
                 img.SetSource(fileIcon);
 
                 Icon = img;
-            } catch { }
+            }
+            catch { }
         }
         private async void UpdateValues(string data)
         {

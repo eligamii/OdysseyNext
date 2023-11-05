@@ -1,12 +1,6 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Objects
 {
@@ -25,11 +19,11 @@ namespace Odyssey.QuickActions.Objects
             string Value = Regex.Matches(optionString, optionSeparatorRegex).Select(p => p.Value).ElementAt(2); // every two value is empty
 
             // Simple filter
-            if(Value.EndsWith("\""))
+            if (Value.EndsWith("\""))
             {
                 string valueWithoutQuote = Value.Remove(Value.IndexOf("\""), 1).Remove(Value.Length - 2, 1);
 
-                if(Value.StartsWith("\""))
+                if (Value.StartsWith("\""))
                 {
                     Value = valueWithoutQuote;
                 }
@@ -52,7 +46,7 @@ namespace Odyssey.QuickActions.Objects
                 }
             }
 
-            
+
         }
         internal string Name { get; private set; }
         internal string Value { get; private set; }

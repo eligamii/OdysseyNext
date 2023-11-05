@@ -4,21 +4,18 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
-using Odyssey.Downloads.Data;
-using Odyssey.Downloads.Objects;
 using Odyssey.Data.Main;
+using Odyssey.Data.Settings;
 using Odyssey.FWebView.Classes;
 using Odyssey.FWebView.Controls;
 using Odyssey.FWebView.Controls.Flyouts;
+using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text.RegularExpressions;
-using Odyssey.FWebView.Helpers;
-using Odyssey.Data.Settings;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -129,7 +126,7 @@ namespace Odyssey.FWebView
 
         private void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
-            if(!IsLittleWeb)
+            if (!IsLittleWeb)
             {
                 sender.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged; // Update the text of the tabs
 
@@ -158,7 +155,7 @@ namespace Odyssey.FWebView
             sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
 
             // Save things only when private mode is disabled
-            if(!IsPrivateModeEnabled)
+            if (!IsPrivateModeEnabled)
             {
                 sender.CoreWebView2.HistoryChanged += CoreWebView2_HistoryChanged; // Save history
             }
@@ -178,16 +175,16 @@ namespace Odyssey.FWebView
 
             DarkReader darkReader = new(this);
             if (Settings.IsDarkReaderEnabled != false) // == null or true
-            {   
+            {
                 darkReader.Auto(true);
 
-                if(Settings.ForceDarkReader != false)
+                if (Settings.ForceDarkReader != false)
                 {
                     darkReader.Enable();
                 }
             }
 
-           
+
 
             // Not working in WinUI3
             //sender.CoreWebView2.Settings.IsPasswordAutosaveEnabled = true;
@@ -195,9 +192,9 @@ namespace Odyssey.FWebView
 
         private void WebView_KeyDown(object sender, WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs args)
         {
-            if(args.IsControlKeyPressed)
+            if (args.IsControlKeyPressed)
             {
-                switch(args.PressedKey)
+                switch (args.PressedKey)
                 {
                     case Windows.System.VirtualKey.F:
                         FindFlyout findFlyout = new(this);
@@ -272,7 +269,7 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_DownloadStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2DownloadStartingEventArgs args)
         {
-            if(!args.DownloadOperation.Uri.StartsWith("blob"))
+            if (!args.DownloadOperation.Uri.StartsWith("blob"))
             {
                 Downloads.Objects.DownloadItem aria2Download = new(args.DownloadOperation.Uri);
                 Downloads.Data.Downloads.Items.Insert(0, aria2Download);
@@ -331,10 +328,10 @@ namespace Odyssey.FWebView
                 DynamicTheme.UpdateDynamicTheme(this);
             }
 
-            
+
             Tabs.Save();
-            
-            if(sender.Source.StartsWith("edge://flags"))
+
+            if (sender.Source.StartsWith("edge://flags"))
             {
                 // TODO: restart every webview when restart button clicked
             }

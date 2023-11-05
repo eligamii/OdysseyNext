@@ -1,11 +1,7 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using Odyssey.Data.Main;
+﻿using Odyssey.Data.Main;
 using Odyssey.Shared.ViewModels.Data;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Objects
 {
@@ -38,7 +34,7 @@ namespace Odyssey.QuickActions.Objects
             }
 
 
-           
+
             if (tabIndex[1].Contains(","))
             {
                 List<string> tabIndexString = tabIndex[1].Split(",").ToList();
@@ -57,7 +53,7 @@ namespace Odyssey.QuickActions.Objects
                     {
                         indexes.Add(int.Parse(index));
                     }
-                }    
+                }
             }
             else
             {

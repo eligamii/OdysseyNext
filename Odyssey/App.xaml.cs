@@ -34,7 +34,7 @@ namespace Odyssey
 
             if (protocolArgs != null)
             {
-                if(protocolArgs.Uri.ToString().StartsWith("http"))
+                if (protocolArgs.Uri.ToString().StartsWith("http"))
                 {
                     m_window = new LittleWebWindow(protocolArgs.Uri.ToString());
                     m_window.Activate();

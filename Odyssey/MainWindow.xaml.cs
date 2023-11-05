@@ -1,9 +1,7 @@
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
-using Odyssey.Helpers;
 using Odyssey.QuickActions.Data;
 using Odyssey.Views;
 using System;
@@ -27,11 +25,10 @@ namespace Odyssey
             Init();
         }
 
-        private void Init()
+        private async void Init()
         {
             // Load default settings for the first run
             Settings.Init();
-            UserVariables.Load();
 
             ExtendsContentIntoTitleBar = true;
 
@@ -54,6 +51,8 @@ namespace Odyssey
 
             // Make possible to access to MainWindow from anywhere
             Current = this;
+
+            UserVariables.Load();
 
             AppWindow.Closing += AppWindow_Closing;
         }

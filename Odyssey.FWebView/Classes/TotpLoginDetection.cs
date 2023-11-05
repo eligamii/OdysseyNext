@@ -1,12 +1,6 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.System;
-using Windows.UI.WebUI;
 
 namespace Odyssey.FWebView.Classes
 {
@@ -65,23 +59,23 @@ namespace Odyssey.FWebView.Classes
             // Test if the testInput JS variable = null
             string hasTelInput = await webView.ExecuteScriptAsync("testInput != null");
 
-            if(bool.Parse(hasTelInput))
+            if (bool.Parse(hasTelInput))
             {
                 // Test if the autocomplete is turned off
                 string autocompleteOff = await webView.ExecuteScriptAsync("testInput.autocomplete == \"off\"");
 
-                if(bool.Parse(autocompleteOff))
+                if (bool.Parse(autocompleteOff))
                 {
                     this.webView.IsTotpDetected = true;
                     TotpLoginDetected(webView, new TotpLoginDetectedEventArgs(webView.Source, true));
-                    
+
                     return;
                 }
             }
 
             this.webView.IsTotpDetected = false;
             TotpLoginDetected(webView, new TotpLoginDetectedEventArgs(webView.Source, false));
-           
+
         }
     }
 }

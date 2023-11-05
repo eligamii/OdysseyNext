@@ -1,23 +1,9 @@
 using Microsoft.UI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Settings;
 using Odyssey.Helpers;
 using Odyssey.Views;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,7 +16,7 @@ namespace Odyssey.OtherWindows
     /// </summary>
     public sealed partial class LittleWebWindow : WindowEx
     {
-        public static new LittleWebWindow Current { get; private set; } 
+        public static new LittleWebWindow Current { get; private set; }
         public LittleWebWindow(string url)
         {
             this.InitializeComponent();

@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -31,9 +28,9 @@ namespace Odyssey.QuickActions.Data
             File.WriteAllText(dataPath, serializedObject);
         }
 
-        public static async Task Load()
+        public static async void Load()
         {
-            if(Items == null)
+            if (Items == null)
             {
                 var dataFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Data", CreationCollisionOption.OpenIfExists);
                 string path = dataFolder.Path;

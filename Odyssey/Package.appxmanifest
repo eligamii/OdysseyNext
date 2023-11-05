@@ -15,7 +15,7 @@
   <mp:PhoneIdentity PhoneProductId="8169cc92-c75f-4f1f-8ce7-df9f19398883" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Odyssey</DisplayName>
+    <DisplayName>Odyssey Preview</DisplayName>
     <PublisherDisplayName>eliga</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -41,6 +41,9 @@
         Square44x44Logo="Assets\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="landscapeFlipped"/></uap:InitialRotationPreference>
       </uap:VisualElements>
 		<Extensions>
 			<uap:Extension Category="windows.protocol">

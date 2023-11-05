@@ -3,7 +3,6 @@ using Odyssey.QuickActions.Controls;
 using Odyssey.QuickActions.Objects;
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Odyssey.QuickActions.Commands
 {

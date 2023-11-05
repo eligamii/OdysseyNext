@@ -109,7 +109,7 @@ namespace Odyssey.Controls.ContextMenus
                 ImageSource = clickedItem.ImageSource,
                 Url = clickedItem.Url
             };
-            if(pin.MainWebView is not null) ((FWebView.WebView)pin.MainWebView).LinkedTab = pin;
+            if (pin.MainWebView is not null) ((FWebView.WebView)pin.MainWebView).LinkedTab = pin;
 
             Pins.Items.Add(pin);
             PaneView.Current.PinsTabView.ItemsSource = Pins.Items;
@@ -240,7 +240,7 @@ namespace Odyssey.Controls.ContextMenus
                 ImageSource = clickedItem.ImageSource
             };
 
-            if(clickedItem.MainWebView != null)
+            if (clickedItem.MainWebView != null)
             {
                 favorite.MainWebView = clickedItem.MainWebView;
             }

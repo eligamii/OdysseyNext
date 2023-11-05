@@ -3,7 +3,6 @@ using Odyssey.QuickActions.Objects;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -58,7 +57,7 @@ namespace Odyssey.QuickActions.Commands
 
         private static void SetOptions(string option)
         {
-            if(Option.IsAValidOptionString(option))
+            if (Option.IsAValidOptionString(option))
             {
                 Option opt = new(option);
 

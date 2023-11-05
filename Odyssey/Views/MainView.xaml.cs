@@ -42,7 +42,7 @@ namespace Odyssey.Views
 
             AppTitleBar.Loaded += AppTitleBar_Loaded;
             AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
-            
+
             Current = this;
         }
 
@@ -116,18 +116,18 @@ namespace Odyssey.Views
         private bool lastConnectionState;
 
         public void SetTotpButtonVisibility()
-        { 
-            _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed; 
+        {
+            _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private async void CheckNetworkConnectionState()
         {
-            while(true)
+            while (true)
             {
                 await Task.Delay(250);
 
                 bool isInternetAvailable = Shared.Helpers.NetworkHelper.IsInternetConnectionAvailable();
-                if(lastConnectionState != isInternetAvailable)
+                if (lastConnectionState != isInternetAvailable)
                 {
                     if (!isInternetAvailable)
                     {
@@ -135,7 +135,7 @@ namespace Odyssey.Views
                     }
                     else
                     {
-                        progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;                     
+                        progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;
                     }
 
                     lastConnectionState = isInternetAvailable;
@@ -217,7 +217,7 @@ namespace Odyssey.Views
                     dragRectR.Width = (int)(RightDragColumn.ActualWidth * scaleAdjustment);
                     dragRectsList.Add(dragRectR);
 
-                     Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
+                    Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
 
                     appWindow.TitleBar.SetDragRectangles(dragRects);
                 }

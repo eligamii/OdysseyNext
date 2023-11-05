@@ -1,9 +1,7 @@
 ﻿using Odyssey.Data.Main;
 using Odyssey.QuickActions.Objects;
 using Odyssey.Shared.ViewModels.Data;
-using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Schema;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -61,7 +59,7 @@ namespace Odyssey.QuickActions.Commands
                     return true;
                 }
                 catch { return false; }
-                
+
             }
             else
             {
@@ -69,7 +67,7 @@ namespace Odyssey.QuickActions.Commands
             }
         }
 
-        
+
 
     }
 }

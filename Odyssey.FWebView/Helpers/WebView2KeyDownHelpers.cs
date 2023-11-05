@@ -1,9 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.System;
 
 namespace Odyssey.FWebView.Helpers
@@ -14,7 +10,7 @@ namespace Odyssey.FWebView.Helpers
         {
             internal class KeyDownPressedEventArgs
             {
-                internal KeyDownPressedEventArgs(bool isControlKeyPressed, bool isAltKeyPressed, VirtualKey pressedKey) 
+                internal KeyDownPressedEventArgs(bool isControlKeyPressed, bool isAltKeyPressed, VirtualKey pressedKey)
                 {
                     IsControlKeyPressed = isControlKeyPressed;
                     IsAltKeyPressed = isAltKeyPressed;
@@ -33,7 +29,7 @@ namespace Odyssey.FWebView.Helpers
 
 
             private WebView2 sender;
-            internal KeyDownListener(WebView2 webView) 
+            internal KeyDownListener(WebView2 webView)
             {
                 sender = webView;
                 Init(webView);
@@ -53,7 +49,7 @@ namespace Odyssey.FWebView.Helpers
                 string message = args.WebMessageAsJson.Replace("\"", "");
 
                 // Ensure that the message is sent because of a keypress event
-                if(message.StartsWith("[KEYPRESS]"))
+                if (message.StartsWith("[KEYPRESS]"))
                 {
                     message = message.Replace("[KEYPRESS]", "");
                     string[] keys = message.Split(' '); // 0 = key code, 1 = ctrl (bool), 2 = alt (bool)

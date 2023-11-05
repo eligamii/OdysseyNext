@@ -1,4 +1,3 @@
-using CommunityToolkit.WinUI.Converters;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -14,7 +13,6 @@ using Odyssey.FWebView;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 
@@ -30,7 +28,7 @@ namespace Odyssey.Views
     public sealed partial class PaneView : Page
     {
         public static PaneView Current { get; set; }
-        
+
         public PaneView()
         {
             this.InitializeComponent();
@@ -125,7 +123,7 @@ namespace Odyssey.Views
                 RefreshFavoriteItemsWidth();
             };
 
-            foreach(var item in Favorites.Items)
+            foreach (var item in Favorites.Items)
             {
                 WebView webView = WebView.Create(item.Url);
                 webView.LinkedTab = item;
@@ -191,14 +189,14 @@ namespace Odyssey.Views
                 // Remove the pin from the pins listView
                 Pins.Items.Remove(pinToRemove);
 
-                if(parentTab != null)
+                if (parentTab != null)
                 {
-                    if(parentTab.GetType() == typeof(Pin))
+                    if (parentTab.GetType() == typeof(Pin))
                     {
-                        if(Pins.Items.Contains(parentTab as Pin))
+                        if (Pins.Items.Contains(parentTab as Pin))
                             PinsTabView.SelectedItem = parentTab as Pin;
                     }
-                    else if(parentTab.GetType() == typeof(Favorite))
+                    else if (parentTab.GetType() == typeof(Favorite))
                     {
                         if (Favorites.Items.Contains(parentTab))
                             FavoriteGrid.SelectedItem = parentTab;
@@ -220,7 +218,7 @@ namespace Odyssey.Views
                 var tabToRemove = Tabs.Items.ElementAt(index);
                 Tab parentTab = null;
 
-                if(tabToRemove.MainWebView != null) // Prevent crashes when the favorite was restored and with no webview
+                if (tabToRemove.MainWebView != null) // Prevent crashes when the favorite was restored and with no webview
                 {
                     parentTab = ((WebView)tabToRemove.MainWebView).ParentTab; // getting the paent favorite if one
 
@@ -556,7 +554,7 @@ namespace Odyssey.Views
 
             var pos = e.GetPosition(FavoriteGrid);
 
-            int itemWidth = Favorites.Items.First().Width; 
+            int itemWidth = Favorites.Items.First().Width;
             float scaleAjustement = 1.2f;
 
             int columnIndex = (int)(pos.X / (itemWidth * scaleAjustement));
@@ -564,7 +562,7 @@ namespace Odyssey.Views
 
             int index = columnIndex + 4 * rowIndex;
 
-            if(index < Favorites.Items.Count)
+            if (index < Favorites.Items.Count)
                 Favorites.Items.Insert(index, favorite);
             else
                 Favorites.Items.Insert(Favorites.Items.Count, favorite);

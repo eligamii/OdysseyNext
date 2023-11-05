@@ -4,7 +4,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Odyssey.QuickActions.Commands;
-using Odyssey.QuickActions.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Flyout = Odyssey.QuickActions.Commands.Flyout;

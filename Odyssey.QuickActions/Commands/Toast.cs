@@ -2,8 +2,6 @@
 using Microsoft.Windows.AppNotifications.Builder;
 using Odyssey.QuickActions.Objects;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Windows.Devices.HumanInterfaceDevice;
 
 namespace Odyssey.QuickActions.Commands
 {

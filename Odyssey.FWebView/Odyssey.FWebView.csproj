@@ -15,10 +15,13 @@
     <None Remove="Dialogs\AppUriLaunchDialog.xaml" />
     <None Remove="WebView.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
 
   <ItemGroup>
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
-      <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
+      <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
   </ItemGroup>
 
   <ItemGroup>
