@@ -262,6 +262,27 @@ namespace Odyssey.Views
 
         private async void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Enable picture in picture
+            if(Settings.AutoPictureInPicture != false)
+            {
+                if(e.RemovedItems.Count > 0)
+                {
+                    Tab item = e.RemovedItems[0] as Tab;
+                    if(item.MainWebView != null)
+                    {
+                        await item.MainWebView.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
+                    }
+                }
+                if(e.AddedItems.Count > 0)
+                {
+                    Tab addedItem = e.AddedItems[0] as Tab;
+                    if(addedItem.MainWebView != null)
+                    {
+                        await addedItem.MainWebView.ExecuteScriptAsync("document.exitPictureInPicture();");
+                    }
+                }
+            }
+
             if (e.AddedItems.Count > 0)
             {
                 var tab = e.AddedItems[0] as Tab;

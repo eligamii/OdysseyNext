@@ -17,6 +17,13 @@ namespace Odyssey.Data.Settings
                 SuccessfullyClosed = true;
                 IsDarkReaderEnabled = true;
                 ForceDarkReader = false;
+                AutoPictureInPicture = true;
+                PlaySoundsOnOnlyOneTab = false;
+                OpenTabOnStartup = false;
+                AreExperimentalFeaturesEnabled = false;
+                ThemeMode = 2; // System / Dynamic theme change
+                DynamicThemeEnabled = true;
+                IsDynamicThemeModeChangeEnabled = true; // if false, the color will be converted to a darker/lighter one
             }
         }
 
@@ -26,10 +33,58 @@ namespace Odyssey.Data.Settings
             set { Values.Values["Inititalized"] = value; }
         }
 
+        public static bool AutoPictureInPicture // using document.querySelector("video").requestPictureInPicture(); and  document.exitPictureInPicture();
+        {
+            get { return (bool)Values.Values["AutoPictureInPicture"]; }
+            set { Values.Values["AutoPictureInPicture"] = value; }
+        }
+
+        public static bool PlaySoundsOnOnlyOneTab
+        {
+            get { return (bool)Values.Values["PlaySoundsOnOnlyOneTab"]; }
+            set { Values.Values["PlaySoundsOnOnlyOneTab "] = value; }
+        }
+
         public static bool IsPaneLocked
         {
             get { return (bool)Values.Values["IsPaneLocked"]; }
             set { Values.Values["IsPaneLocked"] = value; }
+        }
+
+        public static bool OpenTabOnStartup
+        {
+            get { return (bool)Values.Values["OpenTabOnStartup"]; }
+            set { Values.Values["OpenTabOnStartup"] = value; }
+        }
+
+        public static bool AreExperimentalFeaturesEnabled // Native tips, find popup...
+        {
+            get { return (bool)Values.Values["AreExperimentalFeaturesEnabled"]; }
+            set { Values.Values["AreExperimentalFeaturesEnabled"] = value; }
+        }
+
+        public static string ThemeColors // #ffffff format (hex)
+        {
+            get { return (string)Values.Values["ThemeColors"]; }
+            set { Values.Values["ThemeColors"] = value; }
+        }
+
+        public static int ThemeMode // 0 = light, 1 = dark, 2 = system
+        {
+            get { return (int)Values.Values["ThemeMode"]; }
+            set { Values.Values["ThemeMode"] = value; }
+        }
+
+        public static bool DynamicThemeEnabled
+        {
+            get { return (bool)Values.Values["DynamicThemeEnabled"]; }
+            set { Values.Values["DynamicThemeEnabled"] = value; }
+        }
+
+        public static bool IsDynamicThemeModeChangeEnabled // Dark mode when the dynamic theme is dark and vice versa
+        {
+            get { return (bool)Values.Values["IsDynamicThemeModeChangeEnabled"]; }
+            set { Values.Values["IsDynamicThemeModeChangeEnabled"] = value; }
         }
 
         public static bool IsDarkReaderEnabled

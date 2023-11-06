@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Helpers;
 using System.Collections.Generic;
+using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -106,8 +107,14 @@ namespace Odyssey.FWebView.Controls
                 CoreWebView2ContextMenuItem current = menuList[i];
                 if (current.Kind == CoreWebView2ContextMenuItemKind.Separator)
                 {
-                    MenuFlyoutSeparator sep = new MenuFlyoutSeparator();
-                    itemList.Add(sep);
+                    if(menuList.Count > 0)
+                    {
+                        if(menuList.Last().GetType() != typeof(MenuFlyoutSeparator))
+                        {
+                            MenuFlyoutSeparator sep = new MenuFlyoutSeparator();
+                            itemList.Add(sep);
+                        }
+                    }
                     continue;
                 }
 
@@ -168,7 +175,7 @@ namespace Odyssey.FWebView.Controls
 
                 if (current.Name == "inspectElement" && moreFlyout.Items.Count != 0)
                 {
-                    itemList.Insert(itemList.Count - 2, moreFlyout);
+                    itemList.Insert(itemList.Count - 1, moreFlyout);
                 }
 
                 if (menuFlyout.GetType() == typeof(FWebViewContextMenu))

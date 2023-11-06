@@ -40,7 +40,7 @@ namespace Odyssey.FWebView
         public static FrameworkElement MainDownloadElement { get; set; } // The element used to show the DownloadsFlyout
         public static FrameworkElement MainHistoryElement { get; set; }
         public static new XamlRoot XamlRoot { get; set; }
-        public static Microsoft.UI.Xaml.Controls.Image MainIconElement { get; set; } // The (titlebar) element which contain the favicon
+        public static Image MainIconElement { get; set; } // The (titlebar) element which contain the favicon
         public static FrameworkElement MainProgressElement { get; set; } // Will have its Visiblity property set to Collapsed based on if the webview is loading
         public static ProgressRing MainProgressRing { get; set; } // idem
         public static Frame MainWebViewFrame { get; set; }

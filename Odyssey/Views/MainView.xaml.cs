@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.Web.WebView2.Core;
 using Odyssey.Controls;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
@@ -117,7 +118,10 @@ namespace Odyssey.Views
 
         public void SetTotpButtonVisibility()
         {
-            _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed;
+            if (CurrentlySelectedWebView != null)
+                _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed;
+            else
+                _2faButton.Visibility = Visibility.Collapsed;
         }
 
         private async void CheckNetworkConnectionState()
