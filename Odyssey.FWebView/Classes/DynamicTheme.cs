@@ -56,7 +56,8 @@ namespace Odyssey.FWebView.Classes
                 }
                 else
                 {
-                    if(PageToUpdateTheme.ActualTheme == ElementTheme.Light)
+                    isColorDark = ColorsHelper.IsColorDark(nnColor, 0.52);
+                    if (PageToUpdateTheme.ActualTheme == ElementTheme.Light)
                     {
                         if (isColorDark)
                         {

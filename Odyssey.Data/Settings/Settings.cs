@@ -8,7 +8,7 @@ namespace Odyssey.Data.Settings
 
         public static void Init()
         {
-            if (true)
+            if (Inititalized != true)
             {
                 FirstLaunch = true;
                 Inititalized = true;
