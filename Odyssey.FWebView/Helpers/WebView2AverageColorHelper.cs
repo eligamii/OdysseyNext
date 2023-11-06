@@ -67,9 +67,12 @@ namespace Odyssey.FWebView.Helpers
 
                 for (int i = 0; i < pixels.Length; i += step)
                 {
-                    totalBlue += pixels[i];
-                    totalGreen += pixels[i + 1];
-                    totalRed += pixels[i + 2];
+                    try
+                    {
+                        totalBlue += pixels[i];
+                        totalGreen += pixels[i + 1];
+                        totalRed += pixels[i + 2];
+                    } catch (IndexOutOfRangeException) { }
                 }
 
                 int pixelCount = pixels.Length / 4;  // Each pixel has 4 bytes (RGBA)

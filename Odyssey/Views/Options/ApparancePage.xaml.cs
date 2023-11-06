@@ -44,7 +44,7 @@ namespace Odyssey.Views.Options
 
         private void dynamicThemePerfComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            Settings.ThemePerformanceMode = dynamicThemePerfComboBox.SelectedIndex;
         }
     }
 }

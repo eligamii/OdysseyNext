@@ -25,14 +25,14 @@ namespace Odyssey.FWebView.Classes
             {
                 switch (Settings.ThemePerformanceMode)
                 {
-                    case 0: // 8000 pixels, default mode
+                    case 0: // 40000 pixels, quality mode
+                        color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 400, 400, 4); break;
+
+                    case 1: // 8000 pixels, default mode
                         color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 400, 80, 4); break;
 
-                    case 1: // 2500 pixels, performace mode
-                        color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 50, 50, 1); break;
-
-                    case 2: // 40000 pixels, quality mode
-                        color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 400, 400, 4); break;
+                    case 2: // 2500 pixels, performace mode
+                        color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 50, 50, 1); break;  
                 }
             }
 

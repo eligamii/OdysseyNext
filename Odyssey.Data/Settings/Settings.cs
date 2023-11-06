@@ -24,7 +24,7 @@ namespace Odyssey.Data.Settings
                 ThemeMode = 2; // System / Dynamic theme change
                 DynamicThemeEnabled = true;
                 IsDynamicThemeModeChangeEnabled = true; // if false, the color will be converted to a darker/lighter one
-                ThemePerformanceMode = 0;
+                ThemePerformanceMode = 1;
             }
         }
 
@@ -34,7 +34,7 @@ namespace Odyssey.Data.Settings
             set { Values.Values["Inititalized"] = value; }
         }
 
-        public static bool AutoPictureInPicture // using document.querySelector("video").requestPictureInPicture(); and  document.exitPictureInPicture();
+        public static bool AutoPictureInPicture 
         {
             get { return (bool)Values.Values["AutoPictureInPicture"]; }
             set { Values.Values["AutoPictureInPicture"] = value; }
@@ -76,7 +76,7 @@ namespace Odyssey.Data.Settings
             set { Values.Values["ThemeMode"] = value; }
         }
 
-        public static int ThemePerformanceMode // 0 = default, 1 = performance, 2 = quality
+        public static int ThemePerformanceMode //  2 = performance, 1 = default, 0 = quality
         {
             get { return (int)Values.Values["ThemePerformanceMode"]; }
             set { Values.Values["ThemePerformanceMode"] = value; }
