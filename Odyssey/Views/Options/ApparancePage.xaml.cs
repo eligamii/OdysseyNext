@@ -34,7 +34,7 @@ namespace Odyssey.Views.Options
 
         private void dynamicThemeComboBox_Toggled(object sender, RoutedEventArgs e)
         {
-
+            Settings.DynamicThemeEnabled = dynamicThemeComboBox.IsOn;
         }
 
         private void dynamicThemeModeComboBox_Toggled(object sender, RoutedEventArgs e)
