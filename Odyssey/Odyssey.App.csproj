@@ -21,6 +21,7 @@
     <None Remove="OtherWindows\LittleWebWindow.xaml" />
     <None Remove="Views\LittleWebView.xaml" />
     <None Remove="Views\MainView.xaml" />
+    <None Remove="Views\Options\ApparancePage.xaml" />
     <None Remove="Views\Options\GeneralPage.xaml" />
     <None Remove="Views\PaneView.xaml" />
   </ItemGroup>
@@ -72,6 +73,11 @@
     <Content Update="Assets\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Options\ApparancePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Dialogs\SettingsDialog.xaml">

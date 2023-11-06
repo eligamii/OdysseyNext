@@ -51,10 +51,10 @@
                 </TextBlock>
             </StackPanel>
 
-            <Grid  VerticalAlignment="Center" HorizontalAlignment="Center">
-                <controls:Segmented SelectedIndex="0">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                <controls:Segmented SelectedIndex="0" x:Name="segmented">
                     <controls:SegmentedItem Content="General" />
-                    <controls:SegmentedItem Content="Apparence" IsEnabled="False"/>
+                    <controls:SegmentedItem Content="Apparence"/>
                     <controls:SegmentedItem Content="Features" IsEnabled="False"/>
                     <controls:SegmentedItem Content="Misc" IsEnabled="False"/>
                 </controls:Segmented>

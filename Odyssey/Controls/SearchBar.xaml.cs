@@ -161,7 +161,12 @@ namespace Odyssey.Controls
 
                             tab.MainWebView = webView;
                             Tabs.Items.Add(tab);
-                            PaneView.Current.TabsView.SelectedItem = tab;
+                            try
+                            {
+                                await Task.Delay(100);
+                                PaneView.Current.TabsView.SelectedItem = tab;
+                            }
+                            catch { }
 
                             webView.LinkedTab = tab;
 

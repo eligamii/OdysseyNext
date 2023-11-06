@@ -1,7 +1,9 @@
+using CommunityToolkit.WinUI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views.Options;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -18,6 +20,7 @@ namespace Odyssey.Dialogs
             Current = this;
 
             OptionsViewFrame.Loaded += (s, a) => OptionsViewFrame.Navigate(typeof(GeneralPage), null, new SuppressNavigationTransitionInfo());
+            segmented.SelectionChanged += PageSelectionChanged;
         }
 
         private void backButton_Click(object sender, RoutedEventArgs e)
@@ -33,6 +36,26 @@ namespace Odyssey.Dialogs
         private void closeButton_Click(object sender, RoutedEventArgs e)
         {
             Hide();
+        }
+
+        private void PageSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Segmented segmented = sender as Segmented;
+            int oldIndex = segmented.Items.IndexOf(e.RemovedItems[0]);
+            int newIndex = segmented.Items.IndexOf(e.AddedItems[0]);
+
+            SlideNavigationTransitionEffect effect = oldIndex > newIndex ? SlideNavigationTransitionEffect.FromLeft : SlideNavigationTransitionEffect.FromRight;
+            var animation = new SlideNavigationTransitionInfo() { Effect = effect };
+
+            switch (newIndex)
+            {
+                case 0:
+                    OptionsViewFrame.Navigate(typeof(GeneralPage), null, animation); break;
+                case 1:
+                    OptionsViewFrame.Navigate(typeof(ApparanceView), null, animation); break;
+
+
+            }
         }
     }
 }

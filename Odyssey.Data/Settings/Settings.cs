@@ -8,7 +8,7 @@ namespace Odyssey.Data.Settings
 
         public static void Init()
         {
-            if (Inititalized != true)
+            if (true)
             {
                 FirstLaunch = true;
                 Inititalized = true;
@@ -24,6 +24,7 @@ namespace Odyssey.Data.Settings
                 ThemeMode = 2; // System / Dynamic theme change
                 DynamicThemeEnabled = true;
                 IsDynamicThemeModeChangeEnabled = true; // if false, the color will be converted to a darker/lighter one
+                ThemePerformanceMode = 0;
             }
         }
 
@@ -73,6 +74,12 @@ namespace Odyssey.Data.Settings
         {
             get { return (int)Values.Values["ThemeMode"]; }
             set { Values.Values["ThemeMode"] = value; }
+        }
+
+        public static int ThemePerformanceMode // 0 = default, 1 = performance, 2 = quality
+        {
+            get { return (int)Values.Values["ThemePerformanceMode"]; }
+            set { Values.Values["ThemePerformanceMode"] = value; }
         }
 
         public static bool DynamicThemeEnabled

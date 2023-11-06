@@ -3,7 +3,9 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Odyssey.Data.Settings;
 using Odyssey.FWebView.Helpers;
+using Windows.UI;
 
 namespace Odyssey.FWebView.Classes
 {
@@ -17,23 +19,69 @@ namespace Odyssey.FWebView.Classes
         public static async void UpdateDynamicTheme(WebView2 webView2)
         {
             // Get webView2 average color
-            var color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 400, 80, 4);
+            Color? color = null;
+
+            if(Settings.DynamicThemeEnabled)
+            {
+                switch (Settings.ThemePerformanceMode)
+                {
+                    case 0: // 8000 pixels, default mode
+                        color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 400, 80, 4); break;
+
+                    case 1: // 2500 pixels, performace mode
+                        color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 50, 50, 1); break;
+
+                    case 2: // 40000 pixels, quality mode
+                        color = await WebView2AverageColorHelper.GetWebView2AverageColorsAsync(webView2, 400, 400, 4); break;
+                }
+            }
 
             if (color != null)
             {
-                var nnColor = (Windows.UI.Color)color;
+                var nnColor = (Color)color;
                 bool isColorDark = ColorsHelper.IsColorDark(nnColor);
 
-                if (UpdateTheme) PageToUpdateTheme.RequestedTheme = isColorDark ? ElementTheme.Dark : ElementTheme.Light;
+                if (Settings.IsDynamicThemeModeChangeEnabled)
+                {
+                    PageToUpdateTheme.RequestedTheme = isColorDark ? ElementTheme.Dark : ElementTheme.Light;
 
-                MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
-                MicaController.TintColor = nnColor;
+                    MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
+                    MicaController.TintColor = nnColor;
 
-                AppWindowTitleBar.ButtonForegroundColor = AppWindowTitleBar.ButtonHoverForegroundColor = isColorDark ? Colors.White : Colors.Black;
+                    AppWindowTitleBar.ButtonForegroundColor = AppWindowTitleBar.ButtonHoverForegroundColor = isColorDark ? Colors.White : Colors.Black;
 
-                var lightColor = ColorsHelper.LightEquivalent(nnColor, 0.2);
+                    var lightColor = ColorsHelper.LightEquivalent(nnColor, 0.2);
 
-                AppWindowTitleBar.ButtonHoverBackgroundColor = Windows.UI.Color.FromArgb(150, lightColor.R, lightColor.G, lightColor.B);
+                    AppWindowTitleBar.ButtonHoverBackgroundColor = Color.FromArgb(150, lightColor.R, lightColor.G, lightColor.B);
+                }
+                else
+                {
+                    if(PageToUpdateTheme.ActualTheme == ElementTheme.Light)
+                    {
+                        if (isColorDark)
+                        {
+                            var c = ColorsHelper.LightEquivalent(nnColor, 0.5);
+                            nnColor = Color.FromArgb(255, c.R, c.G, c.B);
+                        }
+                    }
+                    else
+                    {
+                        if (!isColorDark)
+                        {
+                            var c = ColorsHelper.LightEquivalent(nnColor, 0.5);
+                            nnColor = Color.FromArgb(255, c.R, c.G, c.B);
+                        }
+                    }
+
+                    MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
+                    MicaController.TintColor = nnColor;
+
+                    AppWindowTitleBar.ButtonForegroundColor = AppWindowTitleBar.ButtonHoverForegroundColor = PageToUpdateTheme.ActualTheme == ElementTheme.Dark ? Colors.White : Colors.Black;
+
+                    var lightColor = ColorsHelper.LightEquivalent(nnColor, 0.2);
+
+                    AppWindowTitleBar.ButtonHoverBackgroundColor = Color.FromArgb(150, lightColor.R, lightColor.G, lightColor.B);
+                }
             }
         }
 
