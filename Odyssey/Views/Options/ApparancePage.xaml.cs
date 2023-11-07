@@ -39,12 +39,13 @@ namespace Odyssey.Views.Options
         private void dynamicThemeComboBox_Toggled(object sender, RoutedEventArgs e)
         {
             Settings.DynamicThemeEnabled = dynamicThemeComboBox.IsOn;
+            customThemeExpander.IsEnabled = !dynamicThemeComboBox.IsOn;
         }
 
         private void dynamicThemeModeComboBox_Toggled(object sender, RoutedEventArgs e)
         {
             Settings.IsDynamicThemeModeChangeEnabled = dynamicThemeModeComboBox.IsOn;
-            customThemeExpander.IsEnabled = !dynamicThemeComboBox.IsOn;
+            
         }
 
         private void dynamicThemePerfComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
