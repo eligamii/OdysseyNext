@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Helpers;
+using Odyssey.Shared.Helpers;
 using Windows.UI;
 
 namespace Odyssey.FWebView.Classes
@@ -61,7 +62,7 @@ namespace Odyssey.FWebView.Classes
                     {
                         if (isColorDark)
                         {
-                            var c = ColorsHelper.LightEquivalent(nnColor, 0.5);
+                            var c = ColorsHelper.Lighten(nnColor, 0.7);
                             nnColor = Color.FromArgb(255, c.R, c.G, c.B);
                         }
                     }
@@ -69,7 +70,7 @@ namespace Odyssey.FWebView.Classes
                     {
                         if (!isColorDark)
                         {
-                            var c = ColorsHelper.LightEquivalent(nnColor, 0.5);
+                            var c = ColorsHelper.Darken(nnColor, 0.3);
                             nnColor = Color.FromArgb(255, c.R, c.G, c.B);
                         }
                     }

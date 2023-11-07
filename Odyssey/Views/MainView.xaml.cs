@@ -1,3 +1,4 @@
+using CommunityToolkit.WinUI.UI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -46,6 +47,7 @@ namespace Odyssey.Views
 
             Current = this;
         }
+
 
         private async void RestoreTabs()
         {

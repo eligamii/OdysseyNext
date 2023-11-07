@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Odyssey.FWebView.Helpers
+namespace Odyssey.Shared.Helpers
 {
-    internal class ColorsHelper
+    public class ColorsHelper
     {
         /// <summary>
         /// Returns true if a color is considered as dark
@@ -11,18 +11,18 @@ namespace Odyssey.FWebView.Helpers
         /// <param name="color">The color</param>
         /// <param name="maxLightValue">The maximum light value for the color to be considered as dark (between 0 and 1)</param>
         /// <returns></returns>
-        internal static bool IsColorDark(Windows.UI.Color color, double maxLightValue = 0.6)
+        public static bool IsColorDark(Windows.UI.Color color, double maxLightValue = 0.6)
         {
             RGBtoHSL(color.R, color.G, color.B, out double H, out double S, out double L);
             return L < maxLightValue;
         }
 
-        internal static bool IsColorGrayTint(Windows.UI.Color color)
+        public static bool IsColorGrayTint(Windows.UI.Color color)
         {
             return color.R == color.G && color.G == color.B;
         }
 
-        internal static double HueToRGB(double v1, double v2, double vH)
+        public static double HueToRGB(double v1, double v2, double vH)
         {
             if (vH < 0) vH += 1;
             if (vH > 1) vH -= 1;
@@ -32,7 +32,7 @@ namespace Odyssey.FWebView.Helpers
             return v1;
         }
 
-        internal static void RGBtoHSL(int R, int G, int B, out double H, out double S, out double L)
+        public static void RGBtoHSL(int R, int G, int B, out double H, out double S, out double L)
         {
             double r = R / 255.0;
             double g = G / 255.0;
@@ -75,13 +75,13 @@ namespace Odyssey.FWebView.Helpers
             L = Math.Round(L, 2);
         }
 
-        internal static void HSLtoRGB(double H, double S, double L, out int R, out int G, out int B)
+        public static void HSLtoRGB(double H, double S, double L, out byte R, out byte G, out byte B)
         {
             if (S == 0)
             {
-                R = (int)(L * 255);
-                G = (int)(L * 255);
-                B = (int)(L * 255);
+                R = (byte)(L * 255);
+                G = (byte)(L * 255);
+                B = (byte)(L * 255);
             }
             else
             {
@@ -97,13 +97,13 @@ namespace Odyssey.FWebView.Helpers
                 temp1 = 2 * L - temp2;
                 temp3 = H / 360;
 
-                R = (int)(255 * HueToRGB(temp1, temp2, temp3 + 1 / 3.0));
-                G = (int)(255 * HueToRGB(temp1, temp2, temp3));
-                B = (int)(255 * HueToRGB(temp1, temp2, temp3 - 1 / 3.0));
+                R = (byte)(255 * HueToRGB(temp1, temp2, temp3 + 1 / 3.0));
+                G = (byte)(255 * HueToRGB(temp1, temp2, temp3));
+                B = (byte)(255 * HueToRGB(temp1, temp2, temp3 - 1 / 3.0));
             }
         }
 
-        internal static Color LightEquivalent(Windows.UI.Color color, double amount)
+        public static Windows.UI.Color LightEquivalent(Windows.UI.Color color, double amount)
         {
             RGBtoHSL(color.R, color.G, color.B, out double H, out double S, out double L);
 
@@ -114,7 +114,39 @@ namespace Odyssey.FWebView.Helpers
             else i = amount;
 
             L = Math.Min(1.0, L + i);
-            int R, G, B;
+            byte R, G, B;
+            HSLtoRGB(H, S, L, out R, out G, out B);
+            return Windows.UI.Color.FromArgb(color.A, R, G, B);
+        }
+
+        public static Color Lighten(Windows.UI.Color color, double minAmount) 
+        {
+            RGBtoHSL(color.R, color.G, color.B, out double H, out double S, out double L);
+
+            double newL;
+
+            if (L > minAmount)
+                newL = L;
+            else newL = minAmount;
+
+            L = Math.Min(1.0, newL);
+            byte R, G, B;
+            HSLtoRGB(H, S, L, out R, out G, out B);
+            return Color.FromArgb(color.A, R, G, B);
+        }
+
+        public static Color Darken(Windows.UI.Color color, double minAmount)
+        {
+            RGBtoHSL(color.R, color.G, color.B, out double H, out double S, out double L);
+
+            double newL;
+
+            if (L < minAmount)
+                newL = L;
+            else newL = minAmount;
+
+            L = Math.Min(1.0, newL);
+            byte R, G, B;
             HSLtoRGB(H, S, L, out R, out G, out B);
             return Color.FromArgb(color.A, R, G, B);
         }
