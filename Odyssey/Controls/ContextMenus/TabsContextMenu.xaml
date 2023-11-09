@@ -20,7 +20,7 @@
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
         <MenuFlyoutItem Text="Unpin from the search bar" Tag="pinnedtosearch" Click="UnpinSearchBarMenuFlyoutItem_Click">
-            <MenuFlyoutItem.Icon>
+            <MenuFlyoutItem.Icon>       
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE196;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>

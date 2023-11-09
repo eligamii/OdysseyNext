@@ -18,10 +18,19 @@ namespace Odyssey.Classes
         internal static void UpdateThemeWith(string color)
         {
             var sdc = System.Drawing.ColorTranslator.FromHtml(color);
-            var nnColor = Color.FromArgb(255, sdc.R, sdc.G, sdc.B) ;
-            bool isColorDark = ColorsHelper.IsColorDark(nnColor, 0.5);
+            var nnColor = Color.FromArgb(140, sdc.R, sdc.G, sdc.B) ;
 
-            nnColor = ColorsHelper.LightEquivalent(nnColor, 0.5);
+            bool isColorDark = ColorsHelper.IsColorDark(nnColor, 0.52);
+            if (MainView.Current.ActualTheme == ElementTheme.Light)
+            {
+                var c = ColorsHelper.Lighten(nnColor, 0.9);
+                nnColor = Color.FromArgb(240, c.R, c.G, c.B);
+            }
+            else
+            {
+                var c = ColorsHelper.Darken(nnColor, 0.3);
+                nnColor = Color.FromArgb(240, c.R, c.G, c.B);
+            }
 
             FWebView.Classes.DynamicTheme.MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
             FWebView.Classes.DynamicTheme.MicaController.TintColor = nnColor;

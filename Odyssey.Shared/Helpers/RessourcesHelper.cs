@@ -1,7 +1,9 @@
 ﻿using Microsoft.UI.Xaml.Markup;
 using Windows.ApplicationModel.Resources;
 
-namespace Odyssey.Helpers
+// This entire code is from https://github.com/files-community/Files/blob/main/src/Files.App/Helpers/ResourceHelpers.cs
+
+namespace Odyssey.Shared.Helpers
 {
     [MarkupExtensionReturnType(ReturnType = typeof(string))]
     public sealed class ResourceString : MarkupExtension
@@ -15,7 +17,7 @@ namespace Odyssey.Helpers
         {
             resourceLoader = new(Filename);
             return resourceLoader.GetString(Name);
-         
+
         }
     }
 }

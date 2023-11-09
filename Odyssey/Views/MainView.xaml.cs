@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.Web.WebView2.Core;
+using Odyssey.Classes;
 using Odyssey.Controls;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
@@ -14,12 +15,16 @@ using Odyssey.Dialogs;
 using Odyssey.FWebView;
 using Odyssey.Helpers;
 using Odyssey.QuickActions;
+using Odyssey.Views.Pages;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using WinRT.Interop;
+using static System.Net.Mime.MediaTypeNames;
+using Application = Microsoft.UI.Xaml.Application;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -114,9 +119,30 @@ namespace Odyssey.Views
 
             // Check the internet connection every second for UI things
             CheckNetworkConnectionState();
+
+            // Set the custom theme if dynamic theme is not enabled
+            SetCustomTheme();
+
+            this.ActualThemeChanged += (s, a) => SetCustomTheme();
+            splitViewContentFrame.Navigate(typeof(HomePage));
         }
 
         private bool lastConnectionState;
+
+        private void SetCustomTheme()
+        {
+            if (!Settings.DynamicThemeEnabled)
+            {
+                string color = Settings.CustomThemeColors;
+                if(color != null)
+                {
+                    if (Regex.IsMatch(color, @"#[0-9A-Z]{6}")) // To remove
+                    {
+                        UpdateTheme.UpdateThemeWith(color);
+                    }
+                }
+            }
+        }
 
         public void SetTotpButtonVisibility()
         {

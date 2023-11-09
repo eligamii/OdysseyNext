@@ -6,7 +6,7 @@
     xmlns:local="using:Odyssey.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:helpers="using:Odyssey.Helpers"
+    xmlns:helpers="using:Odyssey.Shared.Helpers"
     mc:Ignorable="d"
     >
 
@@ -46,15 +46,15 @@
 
             <!-- Controls region -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,1,0,0">
-                <Button Click="HomeButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane}" x:Name="HomeButton" x:FieldModifier="public" Height="32" Content="&#xE10F;"  Margin="3,0,0,0"  FontFamily="Segoe Fluent Icons"/>
+                <Button Click="HomeButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane, Filename=Main}" x:Name="HomeButton" x:FieldModifier="public" Height="32" Content="&#xE10F;"  Margin="3,0,0,0"  FontFamily="Segoe Fluent Icons"/>
                 <AppBarSeparator/>
-                <Button Click="BackButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=GoBack}" Content="&#xE0A6;"/>
-                <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=GoForward}" Content="&#xE0AB;"/>
-                <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh}" Content="&#xE149;"/>
-                <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb}" Content="&#xE11A;" FontSize="15"/>
-                <Button x:Name="_2faButton" Visibility="Collapsed" Click="_2FAButton_Click" ToolTipService.ToolTip="2FA" Content="&#xE192;"/>
-                <Button Visibility="Collapsed" Click="Button_Click" x:Name="historyButton" ToolTipService.ToolTip="History" Content="&#xE81C;"/>
-                <Button Visibility="Collapsed" x:Name="downloadButton"  Click="DownloadsButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Downloads}" Content="&#xE118;" FontSize="15"/>
+                <Button Click="BackButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Back, Filename=Main}" Content="&#xE0A6;"/>
+                <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Forward, Filename=Main}" Content="&#xE0AB;"/>
+                <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh, Filename=Main}" Content="&#xE149;"/>
+                <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
+                <Button x:Name="_2faButton" Visibility="Collapsed" Click="_2FAButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=TwoFactAuth,Filename=ContextMenus}" Content="&#xE192;"/>
+                <Button Visibility="Collapsed" Click="Button_Click" x:Name="historyButton" ToolTipService.ToolTip="{helpers:ResourceString Filename=ContextMenus,Name=History}" Content="&#xE81C;"/>
+                <Button Visibility="Collapsed" x:Name="downloadButton"  Click="DownloadsButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Downloads,Filename=ContextMenus}" Content="&#xE118;" FontSize="15"/>
                 <AppBarSeparator/>
                 <Button Padding="10,3" x:Name="infoButton">
                     <Button.Content>
@@ -83,7 +83,7 @@
 
             <!-- Info region -->
             <StackPanel Margin="0,0,0,0" Grid.Column="2" Orientation="Horizontal">
-                <TextBlock x:FieldModifier="public" x:Name="documentTitle" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey}"/>
+                <TextBlock x:FieldModifier="public" x:Name="documentTitle" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
 
                 <StackPanel.Transitions>
                     <TransitionCollection>
@@ -146,7 +146,7 @@
                 CornerRadius="0"
                 Width="12"
                 Click="HomeButton_Click"
-                ToolTipService.ToolTip="Open the pane"
+                ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane,Filename=Main}"
                 x:Name="showPaneButton"
                 Visibility="Collapsed"
         />

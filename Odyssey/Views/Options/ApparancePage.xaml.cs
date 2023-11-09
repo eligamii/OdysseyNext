@@ -57,9 +57,10 @@ namespace Odyssey.Views.Options
         {
             string text = ((TextBox)sender).Text;
 
-            if(e.Key == Windows.System.VirtualKey.Enter && text.Length == 7)
+            if(text.Length == 7)
             {
                 UpdateTheme.UpdateThemeWith(text);
+                Settings.CustomThemeColors = text;
             }
         }
 
@@ -74,7 +75,7 @@ namespace Odyssey.Views.Options
                 sender.Text =  sender.Text.Truncate(7);
             }
 
-            if (sender.Text.ToUpper().All(c => (char.IsDigit(c) || hexChars.Contains(c)) && sender.Text.Count() >= 6))
+            if (sender.Text.ToUpper().All(c => (char.IsDigit(c) || hexChars.Contains(c)) && sender.Text.Count() == 6))
             {
                 sender.Text = "#" + sender.Text.Truncate(6);
             }
@@ -83,6 +84,17 @@ namespace Odyssey.Views.Options
             sender.Text = new string(sender.Text.ToUpper().Where(c => char.IsDigit(c) || hexChars.Contains(c) || c == '#').ToArray());
 
             sender.SelectionStart = selection;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string text = customThemeTextBox.Text;
+
+            if (text.Length == 7)
+            {
+                UpdateTheme.UpdateThemeWith(text);
+                Settings.CustomThemeColors = text;
+            }
         }
     }
 }

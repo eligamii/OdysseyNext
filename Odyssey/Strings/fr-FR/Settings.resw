@@ -117,139 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutThisSite" xml:space="preserve">
-    <value>A propos de cette page</value>
+  <data name="Appearance" xml:space="preserve">
+    <value>Apparence</value>
   </data>
-  <data name="AddFavorite" xml:space="preserve">
-    <value>Ajouter au favoris</value>
+  <data name="Apply" xml:space="preserve">
+    <value>Appliquer</value>
   </data>
-  <data name="AppDisplayName" xml:space="preserve">
-    <value>Odyssey (Prévension)</value>
+  <data name="CustomTheme" xml:space="preserve">
+    <value>Thème personnalisé</value>
   </data>
-  <data name="ClearTabs" xml:space="preserve">
-    <value>Fermer tous les onglets</value>
+  <data name="DarkMode" xml:space="preserve">
+    <value>Mode sombre</value>
   </data>
-  <data name="Console" xml:space="preserve">
-    <value>Console</value>
-    <comment>-- Items des options du panneau</comment>
+  <data name="DynamicTheme" xml:space="preserve">
+    <value>Thème dynamique</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Supprimer</value>
+  <data name="Features" xml:space="preserve">
+    <value>Fonctionnalités</value>
   </data>
-  <data name="Downloads" xml:space="preserve">
-    <value>Téléchargements</value>
+  <data name="General" xml:space="preserve">
+    <value>Général</value>
   </data>
-  <data name="Duplicate" xml:space="preserve">
-    <value>Dupliquer</value>
+  <data name="Misc" xml:space="preserve">
+    <value>Avancé</value>
   </data>
-  <data name="EnableDevMode" xml:space="preserve">
-    <value>Activer le mode développeur</value>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
   </data>
-  <data name="Execute" xml:space="preserve">
-    <value>Exécuter</value>
+  <data name="PerfMode" xml:space="preserve">
+    <value>Mode de performance</value>
   </data>
-  <data name="Files" xml:space="preserve">
-    <value>Fichiers</value>
+  <data name="SearchEngine" xml:space="preserve">
+    <value>Moteur de recherches</value>
   </data>
-  <data name="FullScreen" xml:space="preserve">
-    <value>Plein écran</value>
-  </data>
-  <data name="GoBack" xml:space="preserve">
-    <value>Retour</value>
-  </data>
-  <data name="GoForward" xml:space="preserve">
-    <value>Avancer</value>
-  </data>
-  <data name="GoMainWebsite" xml:space="preserve">
-    <value>Retour au favori</value>
-    <comment>-- Context menu des favoris</comment>
-  </data>
-  <data name="History" xml:space="preserve">
-    <value>Historique</value>
-  </data>
-  <data name="JavascriptConsole" xml:space="preserve">
-    <value>Console Javascript</value>
-  </data>
-  <data name="LockPane" xml:space="preserve">
-    <value>Verrouiller le panneau</value>
-  </data>
-  <data name="More" xml:space="preserve">
-    <value>Plus</value>
-  </data>
-  <data name="MorePages" xml:space="preserve">
-    <value>et {x} page.s. supplémentaire</value>
-    <comment>-- Supprimer tout le texte entre les deux points si une seule page de plus / Remplacer {x} par le num</comment>
-  </data>
-  <data name="NewTab" xml:space="preserve">
-    <value>Nouvel onglet</value>
-  </data>
-  <data name="Odyssey" xml:space="preserve">
-    <value>Aperçu d'Odyssey</value>
-    <comment>-- Supprimer "Aperçu" dans les builds "stables"</comment>
-  </data>
-  <data name="OpenFile" xml:space="preserve">
-    <value>Ouvrir ce fichier</value>
-  </data>
-  <data name="OpenInAnotherTab" xml:space="preserve">
-    <value>Ouvrir la page actuelle dans un nouvel onglet</value>
-  </data>
-  <data name="OpenInNormalWindow" xml:space="preserve">
-    <value>Ouvrir dans une fenêtre normale</value>
-  </data>
-  <data name="OutputShownHere" xml:space="preserve">
-    <value>Les messages de sortie seront affiches ici</value>
-  </data>
-  <data name="Pin" xml:space="preserve">
-    <value>Épingler</value>
-    <comment>-- Context menu des onglets</comment>
-  </data>
-  <data name="Pinned" xml:space="preserve">
-    <value>Épinglé</value>
-    <comment>-- Texte du panneau</comment>
-  </data>
-  <data name="Preview" xml:space="preserve">
-    <value>Aperçu</value>
-  </data>
-  <data name="QuickSearch" xml:space="preserve">
-    <value>Recherche rapide</value>
-  </data>
-  <data name="Refresh" xml:space="preserve">
-    <value>Rafraîchir la page</value>
-  </data>
-  <data name="RemoveFavorite" xml:space="preserve">
-    <value>Supprimer le favori</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Rechercher</value>
-  </data>
-  <data name="SearchOnWeb" xml:space="preserve">
-    <value>Rechercher sur le web</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Paramètres</value>
-  </data>
-  <data name="ShowInFolder" xml:space="preserve">
-    <value>Afficher dans le répertoire</value>
-  </data>
-  <data name="ShowMoreOptions" xml:space="preserve">
-    <value>Afficher plus d'options</value>
-    <comment>-- Menu contextuel</comment>
-  </data>
-  <data name="ShowPane" xml:space="preserve">
-    <value>Ouvrir le panneau</value>
-    <comment>-- Barre du haut</comment>
-  </data>
-  <data name="SwitchTheme" xml:space="preserve">
-    <value>Changer de thème</value>
-  </data>
-  <data name="Tabs" xml:space="preserve">
-    <value>Onglets ouverts</value>
-  </data>
-  <data name="ToggleAdBlock" xml:space="preserve">
-    <value>(Dés)activer l'AdBlocker</value>
-    <comment>-- Items du bouton "plus"</comment>
-  </data>
-  <data name="Translate" xml:space="preserve">
-    <value>Traduire</value>
+  <data name="ThemeMode" xml:space="preserve">
+    <value>Changer le thème en se basant sur la luminosité de la couleur du theme dynamique</value>
   </data>
 </root>

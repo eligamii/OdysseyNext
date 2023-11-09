@@ -64,10 +64,10 @@ namespace Odyssey.Data.Settings
             set { Values.Values["AreExperimentalFeaturesEnabled"] = value; }
         }
 
-        public static string ThemeColors // #ffffff format (hex)
+        public static string CustomThemeColors // #ffffff format (hex)
         {
-            get { return (string)Values.Values["ThemeColors"]; }
-            set { Values.Values["ThemeColors"] = value; }
+            get { return (string)Values.Values["CustomThemeColors"]; }
+            set { Values.Values["CustomThemeColors"] = value; }
         }
 
         public static int ThemeMode // 0 = light, 1 = dark, 2 = system

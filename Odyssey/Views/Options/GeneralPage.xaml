@@ -6,12 +6,12 @@
     xmlns:local="using:Odyssey.Views.Options"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls" xmlns:helpers="using:Odyssey.Shared.Helpers"
     mc:Ignorable="d"
     >
 
     <StackPanel Margin="20,20,20,0" Spacing="4">
-        <controls:SettingsCard Header="Search engine" Description="Select the site that will be used on Odyssey as search engine and home page">
+        <controls:SettingsCard Header="{helpers:ResourceString Name=SearchEngine, Filename=Settings}" Description="{helpers:ResourceString Name=SearchEngine, Filename=SettingsDescriptions}">
             <controls:SettingsCard.HeaderIcon>
                 <FontIcon Glyph="&#xE11A;"/>
             </controls:SettingsCard.HeaderIcon>
@@ -26,13 +26,13 @@
             </ComboBox>
         </controls:SettingsCard>
 
-        <controls:SettingsExpander Header="Dark mode" Description="Automatically enable dark mode on every websites">
+        <controls:SettingsExpander Header="{helpers:ResourceString Name=DarkMode, Filename=Settings}" Description="{helpers:ResourceString Name=DarkMode, Filename=SettingsDescriptions}">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon Glyph="&#xE7A1;"/>
             </controls:SettingsExpander.HeaderIcon>
             <ToggleSwitch x:Name="darkModeToggleSwitch" Toggled="darkModeToggleSwitch_Toggled"/>
             <controls:SettingsExpander.ItemsHeader>
-                <InfoBar Title="Powered by DarkReader"
+                <InfoBar Title="{helpers:ResourceString Name=PoweredDarkReader, Filename=SettingsDescriptions}"
                               BorderThickness="0"
                               CornerRadius="0"
                               IsIconVisible="False"
@@ -46,7 +46,7 @@
             </controls:SettingsExpander.ItemsHeader>
             <controls:SettingsExpander.Items>
                 <controls:SettingsCard ContentAlignment="Left">
-                    <CheckBox x:Name="forceDarkModeCheckBox" Click="ForceDarkModeCheckBox_Click" Content="Force enable dark mode when Windows theme is in light mode"/>
+                    <CheckBox x:Name="forceDarkModeCheckBox" Click="ForceDarkModeCheckBox_Click" Content="{helpers:ResourceString Name=ForceEnableDarkMode, Filename=SettingsDescriptions}"/>
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>

@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Odyssey.Dialogs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.Controls" xmlns:helpers="using:Odyssey.Shared.Helpers"
     mc:Ignorable="d"
     Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
     CornerRadius="8">
@@ -53,10 +53,10 @@
 
             <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                 <controls:Segmented SelectedIndex="0" x:Name="segmented">
-                    <controls:SegmentedItem Content="General" />
-                    <controls:SegmentedItem Content="Apparence"/>
-                    <controls:SegmentedItem Content="Features" IsEnabled="False"/>
-                    <controls:SegmentedItem Content="Misc" IsEnabled="False"/>
+                    <controls:SegmentedItem Content="{helpers:ResourceString Name=General, Filename=Settings}" />
+                    <controls:SegmentedItem Content="{helpers:ResourceString Name=Appearance, Filename=Settings}"/>
+                    <controls:SegmentedItem Content="{helpers:ResourceString Name=Features, Filename=Settings}" IsEnabled="False"/>
+                    <controls:SegmentedItem Content="{helpers:ResourceString Name=Misc, Filename=Settings}" IsEnabled="False"/>
                 </controls:Segmented>
             </Grid>
 
