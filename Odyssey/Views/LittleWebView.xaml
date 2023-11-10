@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Odyssey.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helpers="using:Odyssey.Helpers" xmlns:fwebview="using:Odyssey.FWebView"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:fwebview="using:Odyssey.FWebView"
     mc:Ignorable="d"
     >
 
@@ -42,7 +42,7 @@
 
             <!-- Control region -->
             <StackPanel Orientation="Horizontal" Grid.Column="1">
-                <Button Click="OpenInRegularOdysseyButton_Click" Content="&#xE8A7;" Height="32" ToolTipService.ToolTip="{helpers:ResourceString Name=OpenInNormalWindow}" Margin="3,1,0,0"/>
+                <Button Click="OpenInRegularOdysseyButton_Click" Content="&#xE8A7;" Height="32" ToolTipService.ToolTip="Tranlate this" Margin="3,1,0,0"/>
                 <Button Content="&#xE10C;" Height="32" Margin="0,1,0,0"/>
             </StackPanel>
             <!-- Info region -->

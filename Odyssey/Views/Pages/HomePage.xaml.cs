@@ -23,7 +23,8 @@ using Odyssey.Data.Main;
 namespace Odyssey.Views.Pages
 {
     // This home page will be shown only on startup by purpose
-    // This is also a way to load a CoreWebView2 Environnement without the user noticing the lag
+    // This is also a way to load a CoreWebView2 Environnement without the user noticing the lag caused by its creation
+
     public sealed partial class HomePage : Page
     {
         WebView webView = WebView.Create("about:blank");

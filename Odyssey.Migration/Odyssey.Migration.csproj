@@ -2,28 +2,21 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>Odyssey.QuickActions</RootNamespace>
+    <RootNamespace>Odyssey.Migration</RootNamespace>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Controls\QAFlyout.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="CoreCLR-NCalc" Version="2.2.113" />
+      <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="7.0.13" />
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+      <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+      <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.6" />
+      <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
-    <ProjectReference Include="..\Odyssey.Migration\Odyssey.Migration.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Controls\QAFlyout.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
   </ItemGroup>
 </Project>

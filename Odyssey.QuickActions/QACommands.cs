@@ -50,6 +50,7 @@ namespace Odyssey.QuickActions
                 case "set": return Set.Exec(options);
                 case "toast": return Toast.Exec(options);
                 case "new": return New.Exec(options);
+                case "test": return Test.Exec(options);
 
                 default: return false;
             }

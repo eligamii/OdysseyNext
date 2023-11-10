@@ -1,5 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Markup;
+using System.Diagnostics;
 using Windows.ApplicationModel.Resources;
+using Windows.Services.Maps;
 
 // This entire code is from https://github.com/files-community/Files/blob/main/src/Files.App/Helpers/ResourceHelpers.cs
 
@@ -12,6 +14,12 @@ namespace Odyssey.Shared.Helpers
 
         public string Name { get; set; } = string.Empty;
         public string Filename { get; set; } = string.Empty;
+
+        public static string GetString(string name, string filename)
+        {
+            resourceLoader = new(filename);
+            return resourceLoader.GetString(name);
+        }
 
         protected override object ProvideValue()
         {

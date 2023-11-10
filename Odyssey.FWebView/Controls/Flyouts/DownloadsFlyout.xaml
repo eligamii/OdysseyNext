@@ -6,7 +6,7 @@
     xmlns:local="using:Odyssey.FWebView.Controls.Flyouts"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:helpers="using:Odyssey.Helpers"
+    xmlns:helpers="using:Odyssey.Shared.Helpers"
     mc:Ignorable="d">
 
     <Flyout.FlyoutPresenterStyle>
@@ -29,7 +29,7 @@
         <Grid Grid.Row="0" VerticalAlignment="Center" Margin="12,4,5,0">
             <TextBlock Grid.Row="0" FontSize="16"
                    Style="{ThemeResource BodyStrongTextBlockStyle}"
-                   Text="{helpers:ResourceString Name=Downloads}"/>
+                   Text="{helpers:ResourceString Name=Downloads,Filename=ContextMenus}"/>
         </Grid>
 
         <Grid Grid.Row="1" CornerRadius="3" Margin="6" 

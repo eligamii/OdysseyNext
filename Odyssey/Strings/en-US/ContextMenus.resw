@@ -129,6 +129,9 @@
   <data name="CopyLink" xml:space="preserve">
     <value>Copy link</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
   <data name="Downloads" xml:space="preserve">
     <value>Downloads</value>
   </data>
@@ -158,6 +161,9 @@
   </data>
   <data name="RemoveFromFaorites" xml:space="preserve">
     <value>Remove from favorites</value>
+  </data>
+  <data name="ShowInFolder" xml:space="preserve">
+    <value>Show in file explorer</value>
   </data>
   <data name="TwoFactAuth" xml:space="preserve">
     <value>Two factors authentification</value>

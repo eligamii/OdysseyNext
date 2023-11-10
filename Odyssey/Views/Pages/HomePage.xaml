@@ -17,7 +17,7 @@
 
 
         <Grid BorderBrush="#33808080" BorderThickness="1" VerticalAlignment="Top" CornerRadius="8" Height="60" Margin="100,100,100,0" MaxWidth="600" Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}">
-            <TextBox IsSpellCheckEnabled="False" x:Name="searchBox" KeyDown="TextBox_KeyDown" Width="559" PlaceholderText="Rechercher sur le Web" LosingFocus="TextBox_LosingFocus" >
+            <TextBox IsSpellCheckEnabled="False" x:Name="searchBox" KeyDown="TextBox_KeyDown" Width="559" PlaceholderText="Il fait beau... non ?" LosingFocus="TextBox_LosingFocus" >
                 <TextBox.Style>
                     <Style TargetType="TextBox">
                         <Setter Property="Padding" Value="19"/>

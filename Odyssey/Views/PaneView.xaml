@@ -101,7 +101,7 @@
         <ScrollView x:Name="scrollView" Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <Grid>
-                    <TextBlock Text="{helpers:ResourceString Name=Pinned}" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left" x:Name="pinsTextBlock" Visibility="Visible"/>
+                    <TextBlock Text="{helpers:ResourceString Name=Pinned,Filename=Main}" FontWeight="Medium" FontSize="14" Margin="11,0,11,5" HorizontalAlignment="Left" x:Name="pinsTextBlock" Visibility="Visible"/>
                 </Grid>
                 <ListView RightTapped="TabsView_RightTapped" PointerMoved="TabsView_PointerMoved" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" Drop="PinsTabView_Drop" DragOver="TabsView_DragOver" SelectionChanged="ItemsViews_SelectionChanged" IsRightTapEnabled="True" Margin="0,0,0,16" x:FieldModifier="public" Visibility="Visible" Loaded="PinsTabView_Loaded" x:Name="PinsTabView" CanDragItems="True" CanReorderItems="True" AllowDrop="True">
                     <ListView.ItemTemplate>
@@ -166,7 +166,7 @@
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" Margin="-104,0,-104,0">
                                 <FontIcon Glyph="&#xE109;" FontSize="16"/>
-                                <TextBlock Margin="11,0,0,0" Text="{helpers:ResourceString Name=NewTab}" FontFamily="Segoe UI"/>
+                                <TextBlock Margin="11,0,0,0" Text="{helpers:ResourceString Name=NewTab,Filename=Main}" FontFamily="Segoe UI"/>
                             </StackPanel>
                         </Button.Content>
                         <interactivity:Interaction.Behaviors>

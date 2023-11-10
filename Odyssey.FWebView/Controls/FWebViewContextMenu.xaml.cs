@@ -20,7 +20,6 @@ namespace Odyssey.FWebView.Controls
 
         };
 
-        Microsoft.Windows.ApplicationModel.Resources.ResourceLoader resourceLoader = new();
 
         MenuFlyoutSubItem moreFlyout = new MenuFlyoutSubItem();
 
@@ -44,6 +43,17 @@ namespace Odyssey.FWebView.Controls
             this.Closed += (s, ex) => deferral.Complete();
             PopulateContextMenu(args, menuList, this);
             //GetQuickActionItems(webView, args);
+
+            // Fix the two separators at the same place issue, temporary
+            int sepCount = 0;
+            foreach(var item in this.Items)
+            {
+                if (item.GetType() == typeof(MenuFlyoutSeparator)) sepCount++;
+                else sepCount = 0;
+
+                if (sepCount == 2) this.Items.Remove(item);
+
+            }
 
             var options = new FlyoutShowOptions() { Position = args.Location };
 
@@ -95,7 +105,9 @@ namespace Odyssey.FWebView.Controls
         {
             if (menuFlyout.GetType() == typeof(FWebViewContextMenu))
             {
-                moreFlyout = new MenuFlyoutSubItem() { Text = resourceLoader.GetString("ShowMoreOptions"), Icon = new FontIcon { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"), Glyph = "\uE10C" } };
+                string text = Shared.Helpers.ResourceString.GetString("More", "ContextMenus");
+
+                moreFlyout = new MenuFlyoutSubItem() { Text = text, Icon = new FontIcon { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"), Glyph = "\uE10C" } };
             }
 
             IList<MenuFlyoutItemBase> itemList = new List<MenuFlyoutItemBase>();
