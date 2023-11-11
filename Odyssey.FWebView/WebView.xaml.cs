@@ -191,12 +191,17 @@ namespace Odyssey.FWebView
             // Add CDP event to get certificate info
             try // it seems to has some chances to fail and idk why
             {
+
                 sender.CoreWebView2.Settings.AreDevToolsEnabled = true;
                 await sender.CoreWebView2.CallDevToolsProtocolMethodAsync("Network.enable", "{}");
                 await sender.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.enable", "{}");
 
                 var res = sender.CoreWebView2.GetDevToolsProtocolEventReceiver("Security.visibleSecurityStateChanged");
-                res.DevToolsProtocolEventReceived += (s, args) => SecurityInformation = JsonConvert.DeserializeObject<SecurityInformation>(args.ParameterObjectAsJson);
+                res.DevToolsProtocolEventReceived += (s, args) =>
+                {
+                    string json = args.ParameterObjectAsJson;
+                    SecurityInformation = JsonConvert.DeserializeObject<SecurityInformation>(json);
+                };
             }
             catch { }
         }
