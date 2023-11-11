@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="Controls\Two2FAFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccessTo2FA" xml:space="preserve">
-    <value>To have access to your two factors authentication keys</value>
+    <value>Enter your Windows password to have access to your two factors authentification keys</value>
   </data>
   <data name="CopyCode" xml:space="preserve">
     <value>Copy generated code</value>

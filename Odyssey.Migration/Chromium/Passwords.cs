@@ -31,11 +31,11 @@ namespace Odyssey.Migration.Chromium
             public os_crypt os_crypt { get; set; }
         }
 
-        private static List<Login> Get()
+        public static List<Login> Get(string path)
         {
             List<Login> logins = new();
 
-            string path = @"C:\Users\eliga\AppData\Local\Microsoft\Edge\User Data\Default\Login Data";
+            path = Path.Combine(path, "Default", "Login Data"); 
 
             using (SqliteConnection connection = new SqliteConnection($"Filename={path}"))
             {
@@ -53,11 +53,11 @@ namespace Odyssey.Migration.Chromium
                     };
 
                     var pass = (byte[])query[2];
-                    var key = DataDecryptionHelpers.GetKey(GetKeyString());
+                    var key = ChromiumDataDecryptionHelpers.GetKey(GetKeyString(path));
 
                     byte[] nonce, ciphertextTag;
-                    DataDecryptionHelpers.Prepare(pass, out nonce, out ciphertextTag);
-                    string passString = DataDecryptionHelpers.Decrypt(ciphertextTag, key, nonce);
+                    ChromiumDataDecryptionHelpers.Prepare(pass, out nonce, out ciphertextTag);
+                    string passString = ChromiumDataDecryptionHelpers.Decrypt(ciphertextTag, key, nonce);
 
                     login.Password = passString;
                     logins.Add(login);
@@ -67,10 +67,11 @@ namespace Odyssey.Migration.Chromium
             return logins;
         }
 
-        private static string GetKeyString()
+        private static string GetKeyString(string path)
         {
+            path = Path.Combine(path, "Local State");
             // Get decryption key stored in the browser's 'Local State' json file
-            string localState = File.ReadAllText("C:\\Users\\eliga\\AppData\\Local\\Microsoft\\Edge\\User Data\\Local State");
+            string localState = File.ReadAllText(path);
 
             var obj = JsonSerializer.Deserialize<Key>(localState);
 

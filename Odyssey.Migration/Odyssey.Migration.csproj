@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
   </ItemGroup>
 </Project>

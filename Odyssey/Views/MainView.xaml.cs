@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Classes;
 using Odyssey.Controls;
+using Odyssey.Controls.Tips;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Dialogs;
@@ -328,6 +329,14 @@ namespace Odyssey.Views
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             WebView.OpenHistoryDialog(sender as FrameworkElement);
+        }
+
+        private void infoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(CurrentlySelectedWebView != null)
+            {
+                pageInfoTip.Open(CurrentlySelectedWebView);
+            }
         }
     }
 }

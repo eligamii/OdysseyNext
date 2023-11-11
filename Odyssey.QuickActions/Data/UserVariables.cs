@@ -14,7 +14,7 @@ namespace Odyssey.QuickActions.Data
 
         public static void Save()
         {
-            // If someone wants to mnually edit JSON save files
+            
             string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
             {
                 ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver

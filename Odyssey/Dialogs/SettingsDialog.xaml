@@ -56,7 +56,7 @@
                     <controls:SegmentedItem Content="{helpers:ResourceString Name=General, Filename=Settings}" />
                     <controls:SegmentedItem Content="{helpers:ResourceString Name=Appearance, Filename=Settings}"/>
                     <controls:SegmentedItem Content="{helpers:ResourceString Name=Features, Filename=Settings}" IsEnabled="False"/>
-                    <controls:SegmentedItem Content="{helpers:ResourceString Name=Misc, Filename=Settings}" IsEnabled="False"/>
+                    <controls:SegmentedItem Content="{helpers:ResourceString Name=Misc, Filename=Settings}"/>
                 </controls:Segmented>
             </Grid>
 

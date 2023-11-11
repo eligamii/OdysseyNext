@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Classes;
@@ -36,6 +37,7 @@ namespace Odyssey.FWebView
         public bool IsLittleWeb { get; set; } = false;
         public bool IsPrivateModeEnabled { get; set; } = false;
         public DarkReader DarkReader { get; set; }
+        public SecurityInformation SecurityInformation { get; set; } = null;
 
         public static FrameworkElement MainDownloadElement { get; set; } // The element used to show the DownloadsFlyout
         public static FrameworkElement MainHistoryElement { get; set; }
@@ -124,7 +126,7 @@ namespace Odyssey.FWebView
             this.InitializeComponent();
         }
 
-        private void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
+        private async void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
             if (!IsLittleWeb)
             {
@@ -141,6 +143,8 @@ namespace Odyssey.FWebView
                 scrollTimer.Interval = TimeSpan.FromSeconds(2);
                 scrollTimer.Tick += ScrollTimer_Tick;
             }
+
+            sender.CoreWebView2.PermissionRequested += CoreWebView2_PermissionRequested;
 
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect the downloads to aria2
             sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
@@ -184,10 +188,22 @@ namespace Odyssey.FWebView
                 }
             }
 
+            // Add CDP event to get certificate info
+            try // it seems to has some chances to fail and idk why
+            {
+                sender.CoreWebView2.Settings.AreDevToolsEnabled = true;
+                await sender.CoreWebView2.CallDevToolsProtocolMethodAsync("Network.enable", "{}");
+                await sender.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.enable", "{}");
 
+                var res = sender.CoreWebView2.GetDevToolsProtocolEventReceiver("Security.visibleSecurityStateChanged");
+                res.DevToolsProtocolEventReceived += (s, args) => SecurityInformation = JsonConvert.DeserializeObject<SecurityInformation>(args.ParameterObjectAsJson);
+            }
+            catch { }
+        }
 
-            // Not working in WinUI3
-            //sender.CoreWebView2.Settings.IsPasswordAutosaveEnabled = true;
+        private void CoreWebView2_PermissionRequested(CoreWebView2 sender, CoreWebView2PermissionRequestedEventArgs args)
+        {
+            // TODO
         }
 
         private void WebView_KeyDown(object sender, WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs args)

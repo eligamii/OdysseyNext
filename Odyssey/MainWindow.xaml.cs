@@ -1,6 +1,7 @@
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.QuickActions.Data;
 using Odyssey.Views;
@@ -60,13 +61,24 @@ namespace Odyssey
         private bool _close = false;
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
-            if (!_close)
-            {
-                Settings.SuccessfullyClosed = true;
-                QuickActions.Data.UserVariables.Save();
-                _close = true;
+            args.Cancel = Settings.IsSingleInstanceEnabled;
+            Settings.SuccessfullyClosed = true;
+            QuickActions.Data.UserVariables.Save();
 
+            if (!Settings.IsSingleInstanceEnabled)
+            {
                 Close();
+            }
+            else
+            {
+                foreach (var tab in Tabs.Items)
+                {
+                    if (tab.MainWebView != null) tab.MainWebView.Close();
+                }
+
+                Tabs.Items.Clear();
+
+                AppWindow.Hide();
             }
         }
     }

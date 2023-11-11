@@ -6,12 +6,16 @@
     xmlns:local="using:Odyssey.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:helpers="using:Odyssey.Shared.Helpers"
+    xmlns:helpers="using:Odyssey.Shared.Helpers" 
+    xmlns:controls="using:Odyssey.Controls.Tips"
     mc:Ignorable="d"
     >
 
     <Page.Resources>
         <ResourceDictionary>
+            <!--InfoTip-->
+            <controls:InformationTip x:Name="pageInfoTip" Target="{x:Bind infoButton}"/>
+            
             <!-- Transpatant button style -->
             <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
                 <Setter Property="Background" Value="Transparent"/>
@@ -56,7 +60,7 @@
                 <Button Visibility="Collapsed" Click="Button_Click" x:Name="historyButton" ToolTipService.ToolTip="{helpers:ResourceString Filename=ContextMenus,Name=History}" Content="&#xE81C;"/>
                 <Button Visibility="Collapsed" x:Name="downloadButton"  Click="DownloadsButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Downloads,Filename=ContextMenus}" Content="&#xE118;" FontSize="15"/>
                 <AppBarSeparator/>
-                <Button Padding="10,3" x:Name="infoButton">
+                <Button Padding="10,3" x:Name="infoButton" Click="infoButton_Click">
                     <Button.Content>
                         <Grid x:Name="iconGrid" >
                             <ProgressRing Width="15" Height="15"

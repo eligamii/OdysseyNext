@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.Migration.Helpers
 {
-    public class DataDecryptionHelpers 
+    public class ChromiumDataDecryptionHelpers 
     {
         public static byte[] GetKey(string key)
         {

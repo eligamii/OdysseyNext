@@ -25,6 +25,8 @@ namespace Odyssey.Data.Settings
                 DynamicThemeEnabled = true;
                 IsDynamicThemeModeChangeEnabled = true; // if false, the color will be converted to a darker/lighter one
                 ThemePerformanceMode = 1;
+                IsSingleInstanceEnabled = false;
+                IsHisoryEncryptionEnabled = false;
             }
         }
 
@@ -34,7 +36,13 @@ namespace Odyssey.Data.Settings
             set { Values.Values["Inititalized"] = value; }
         }
 
-        public static bool AutoPictureInPicture 
+        public static bool IsHisoryEncryptionEnabled 
+        {
+            get { return (bool)Values.Values["IsHisoryEncryptionEnabled"]; }
+            set { Values.Values["IsHisoryEncryptionEnabled"] = value; }
+        }
+
+        public static bool AutoPictureInPicture
         {
             get { return (bool)Values.Values["AutoPictureInPicture"]; }
             set { Values.Values["AutoPictureInPicture"] = value; }
@@ -50,6 +58,12 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool)Values.Values["IsPaneLocked"]; }
             set { Values.Values["IsPaneLocked"] = value; }
+        }
+
+        public static bool IsSingleInstanceEnabled
+        {
+            get { return (bool)Values.Values["IsSingleInstanceEnabled"]; }
+            set { Values.Values["IsSingleInstanceEnabled"] = value; }
         }
 
         public static bool OpenTabOnStartup
@@ -116,6 +130,7 @@ namespace Odyssey.Data.Settings
             get { return (bool)Values.Values["SuccessfullyClosed"]; }
             set { Values.Values["SuccessfullyClosed"] = value; }
         }
+
 
         public static int SelectedSearchEngine
         {

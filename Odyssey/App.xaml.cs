@@ -1,5 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
+using Odyssey.Data.Settings;
 using Odyssey.OtherWindows;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 
@@ -27,19 +29,29 @@ namespace Odyssey
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            var evt = AppInstance.GetActivatedEventArgs();
-            ProtocolActivatedEventArgs protocolArgs = evt as ProtocolActivatedEventArgs;
 
-            if (protocolArgs != null)
+            Settings.Init();
+
+            if(Settings.IsSingleInstanceEnabled)
             {
-                if (protocolArgs.Uri.ToString().StartsWith("http"))
-                {
-                    m_window = new LittleWebWindow(protocolArgs.Uri.ToString());
-                    m_window.Activate();
+                var appArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
+                var mainInstance = Microsoft.Windows.AppLifecycle.AppInstance.FindOrRegisterForKey("main");
 
-                    return;
+                // If the main instance isn't this current instance
+                if (!mainInstance.IsCurrent)
+                {
+                    // Redirect activation to that instance
+                    await mainInstance.RedirectActivationToAsync(appArgs);
+
+                    // And exit our instance and stop
+                    System.Diagnostics.Process.GetCurrentProcess().Kill();
+                }
+                else
+                {
+                    // Otherwise, register for activation redirection
+                    Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().Activated += App_Activated;
                 }
             }
 
@@ -48,6 +60,19 @@ namespace Odyssey
             m_window.Activate();
 
         }
+
+        private void App_Activated(object sender, Microsoft.Windows.AppLifecycle.AppActivationArguments e)
+        {
+            // Bring the window to the foreground... first get the window handle...
+            var hwnd = (Windows.Win32.Foundation.HWND)WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+
+            // Restore window if minimized... requires Microsoft.Windows.CsWin32 NuGet package and a NativeMethods.txt file with ShowWindow method
+            Windows.Win32.PInvoke.ShowWindow(hwnd, Windows.Win32.UI.WindowsAndMessaging.SHOW_WINDOW_CMD.SW_RESTORE);
+
+            // And call SetForegroundWindow... requires Microsoft.Windows.CsWin32 NuGet package and a NativeMethods.txt file with SetForegroundWindow method
+            Windows.Win32.PInvoke.SetForegroundWindow(hwnd);
+        }
+
 
         private Window m_window;
     }

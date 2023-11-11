@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Odyssey.Migration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Odyssey.QuickActions.Commands
     {
         internal static bool Exec(string[] options)
         {
-            Odyssey.Migration.Chromium.Passwords.Get();
+            Odyssey.Migration.Migration.Migrate(Browser.Edge);
             return true;
         }
     }

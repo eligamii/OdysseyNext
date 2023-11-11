@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml;
+using Odyssey.Shared.Helpers;
 using Odyssey.TwoFactorsAuthentification.Controls;
 using Odyssey.TwoFactorsAuthentification.ViewModels;
 using OtpNet;
@@ -69,7 +70,7 @@ namespace Odyssey.TwoFactorsAuthentification
         {
             if (!userAuthenticifated)
             {
-                UserConsentVerificationResult consentResult = await UserConsentVerifier.RequestVerificationAsync("To have access to your 2FA login");
+                UserConsentVerificationResult consentResult = await UserConsentVerifier.RequestVerificationAsync(ResourceString.GetString("AccessTo2FA", "Dialogs"));
                 if (consentResult.Equals(UserConsentVerificationResult.Verified))
                 {
                     userAuthenticifated = true;
