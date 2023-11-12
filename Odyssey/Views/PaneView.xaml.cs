@@ -10,6 +10,7 @@ using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Dialogs;
 using Odyssey.FWebView;
+using Odyssey.OtherWindows;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Linq;
@@ -624,6 +625,12 @@ namespace Odyssey.Views
             };
 
             await settingsDialog.ShowAsync();
+        }
+
+        private void DevToolsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            DevToolsWindow devToolsWindow = new();
+            devToolsWindow.Activate();
         }
     }
 }

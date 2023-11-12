@@ -80,6 +80,12 @@
                             <FontIcon Glyph="&#xE192;"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
+                    <MenuFlyoutSeparator/>
+                    <MenuFlyoutItem Text="DevTools" Click="DevToolsMenuFlyoutItem_Click">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon Glyph="&#xE192;"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                 </MenuFlyout>
             </Button.Flyout>
         </Button>
@@ -171,7 +177,7 @@
                         </Button.Content>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:ViewportBehavior x:Name="ViewportBehavior"
-                                                    IsAlwaysOn="True" EnteredViewport="ViewportBehavior_EnteredViewport" ExitedViewport="ViewportBehavior_EnteredViewport"/>
+                                                        IsAlwaysOn="True" EnteredViewport="ViewportBehavior_EnteredViewport" ExitedViewport="ViewportBehavior_EnteredViewport"/>
                         </interactivity:Interaction.Behaviors>
 
                     </Button>

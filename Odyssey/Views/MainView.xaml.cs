@@ -40,9 +40,9 @@ namespace Odyssey.Views
     public sealed partial class MainView : Page
     {
         public static MainView Current { get; set; }
-        public static FWebView.WebView CurrentlySelectedWebView
+        public static WebView CurrentlySelectedWebView
         {
-            get { return Current.splitViewContentFrame.Content as FWebView.WebView; }
+            get { return Current.splitViewContentFrame.Content as WebView; }
         }
         public MainView()
         {
@@ -89,10 +89,10 @@ namespace Odyssey.Views
             MicaBackdropHelper.TrySetMicaBackdropTo(MainWindow.Current);
 
             WebView.XamlRoot = XamlRoot;
-            FWebView.Classes.DynamicTheme.PageToUpdateTheme = this;
-            FWebView.Classes.DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
-            FWebView.Classes.DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
-            FWebView.Classes.DynamicTheme.UpdateTheme = true;
+            DynamicTheme.PageToUpdateTheme = this;
+            DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
+            DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
+            DynamicTheme.UpdateTheme = true;
 
             // Start the 2FA service
             TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
