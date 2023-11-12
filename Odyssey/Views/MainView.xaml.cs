@@ -14,11 +14,13 @@ using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Dialogs;
 using Odyssey.FWebView;
+using Odyssey.FWebView.Classes;
 using Odyssey.Helpers;
 using Odyssey.QuickActions;
 using Odyssey.Views.Pages;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -117,6 +119,7 @@ namespace Odyssey.Views
             QACommands.MainWindow = MainWindow.Current;
 
             WebView.TotpLoginDetectedAction += () => SetTotpButtonVisibility();
+            WebView.LoginPageDetectedAction += () => LoginDetectedChanged();
 
             // Check the internet connection every second for UI things
             CheckNetworkConnectionState();
@@ -151,6 +154,26 @@ namespace Odyssey.Views
                 _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed;
             else
                 _2faButton.Visibility = Visibility.Collapsed;
+        }
+
+        public void LoginDetectedChanged()
+        {
+            loginButton.Visibility = CurrentlySelectedWebView.IsLoginPageDetected ? Visibility.Visible : Visibility.Collapsed;
+
+            if(CurrentlySelectedWebView.IsLoginPageDetected)
+            {
+                MenuFlyout menu = new();
+                foreach (var item in CurrentlySelectedWebView.AvailableLoginsForPage)
+                {
+                    MenuFlyoutItem menuFlyoutItem = new();
+                    menuFlyoutItem.Text = item.Username;
+
+                    menuFlyoutItem.Click += (s, a) => CurrentlySelectedWebView.LoginAutoFill.Autofill(item);
+                    menu.Items.Add(menuFlyoutItem);
+                }
+
+                loginButton.Flyout = menu;
+            }
         }
 
         private async void CheckNetworkConnectionState()

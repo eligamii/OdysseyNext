@@ -132,8 +132,18 @@
             <!-- Sidebar and WebView frame -->
             <SplitView x:FieldModifier="public" x:Name="sidebar" PaneBackground="Transparent" BorderBrush="#33808080" BorderThickness="1,0,0,0" Grid.Row="1" DisplayMode="Inline" IsPaneOpen="False" PanePlacement="Right">
 
-                <Frame x:Name="splitViewContentFrame" BorderBrush="#33808080" x:FieldModifier="public" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
-
+                <Grid>
+                    <Frame x:Name="splitViewContentFrame" BorderBrush="#33808080" x:FieldModifier="public" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
+                    <Button Style="{ThemeResource AccentButtonStyle}"
+                            Grid.Row="1" 
+                            VerticalAlignment="Top" HorizontalAlignment="Left"
+                            Margin="12"
+                            Content="Logins"
+                            x:Name="loginButton"
+                            Padding="12"
+                            Visibility="Collapsed"
+                            />         
+                </Grid>
                 <SplitView.Transitions>
                     <TransitionCollection>
                         <RepositionThemeTransition />
@@ -154,5 +164,7 @@
                 x:Name="showPaneButton"
                 Visibility="Collapsed"
         />
+
+        
     </Grid>
 </Page>

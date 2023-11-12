@@ -4,32 +4,32 @@ using Windows.System;
 
 namespace Odyssey.FWebView.Helpers
 {
-    internal class WebView2KeyDownHelpers
+    public class WebView2KeyDownHelpers
     {
-        internal class KeyDownListener // disabling accelerators key is required to capture Ctrl F for ex
+        public class KeyDownListener // disabling accelerators key is required to capture Ctrl F for ex
         {
-            internal class KeyDownPressedEventArgs
+            public class KeyDownPressedEventArgs
             {
-                internal KeyDownPressedEventArgs(bool isControlKeyPressed, bool isAltKeyPressed, VirtualKey pressedKey)
+                public KeyDownPressedEventArgs(bool isControlKeyPressed, bool isAltKeyPressed, VirtualKey pressedKey)
                 {
                     IsControlKeyPressed = isControlKeyPressed;
                     IsAltKeyPressed = isAltKeyPressed;
                     PressedKey = pressedKey;
                 }
 
-                internal bool IsControlKeyPressed { get; set; }
-                internal bool IsAltKeyPressed { get; set; }
-                internal VirtualKey PressedKey { get; set; }
+                public bool IsControlKeyPressed { get; set; }
+                public bool IsAltKeyPressed { get; set; }
+                public VirtualKey PressedKey { get; set; }
             }
 
-            internal delegate void KeyDownPressedEventHandler(object sender, KeyDownPressedEventArgs args);
+            public delegate void KeyDownPressedEventHandler(object sender, KeyDownPressedEventArgs args);
 
-            internal event KeyDownPressedEventHandler KeyDown;
+            public event KeyDownPressedEventHandler KeyDown;
 
 
 
             private WebView2 sender;
-            internal KeyDownListener(WebView2 webView)
+            public KeyDownListener(WebView2 webView)
             {
                 sender = webView;
                 Init(webView);

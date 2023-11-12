@@ -13,6 +13,7 @@ using Odyssey.FWebView.Controls.Flyouts;
 using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -26,8 +27,13 @@ namespace Odyssey.FWebView
     public sealed partial class WebView : WebView2
     {
         public TotpLoginDetection TotpLoginDetection { get; private set; }
-        public static Action TotpLoginDetectedAction { get; set; }
 
+        // To remove
+        public static Action TotpLoginDetectedAction { get; set; }
+        public static Action LoginPageDetectedAction { get; set; }
+
+        public bool IsLoginPageDetected { get; set; }
+        public List<Login> AvailableLoginsForPage { get; set; }
         public bool IsTotpDetected { get; set; } = false;
         public bool IsSelected { get; set; } = true; // For splitview
         public Tab LinkedTab { get; set; } = new(); // Initialize to prevent issues with LittleWeb
@@ -38,6 +44,8 @@ namespace Odyssey.FWebView
         public bool IsPrivateModeEnabled { get; set; } = false;
         public DarkReader DarkReader { get; set; }
         public SecurityInformation SecurityInformation { get; set; } = null;
+        public WebView2KeyDownHelpers.KeyDownListener KeyDownListener { get; set; }
+        public LoginAutoFill LoginAutoFill { get; set; }
 
         public static FrameworkElement MainDownloadElement { get; set; } // The element used to show the DownloadsFlyout
         public static FrameworkElement MainHistoryElement { get; set; }
@@ -171,11 +179,16 @@ namespace Odyssey.FWebView
             findFlyout = new(this);
 
             // Using a custom KeyDown event as the default one doesnt work
-            WebView2KeyDownHelpers.KeyDownListener listener = new(this);
-            listener.KeyDown += WebView_KeyDown;
+            KeyDownListener = new(this);
+            KeyDownListener.KeyDown += WebView_KeyDown;
 
             TotpLoginDetection = new(this);
             TotpLoginDetection.TotpLoginDetected += (s, a) => TotpLoginDetectedAction();
+
+            LoginAutoFill = new(this);
+            LoginAutoFill.LoginPageDetectedChanged += (s, a) => LoginPageDetectedAction();
+
+
 
             DarkReader darkReader = new(this);
             if (Settings.IsDarkReaderEnabled != false) // == null or true
@@ -203,6 +216,8 @@ namespace Odyssey.FWebView
             }
             catch { }
         }
+
+
 
         private void DevToolsProtocolEventReceived(CoreWebView2 sender, CoreWebView2DevToolsProtocolEventReceivedEventArgs args)
         {
