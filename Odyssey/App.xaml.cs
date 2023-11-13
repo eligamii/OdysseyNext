@@ -1,5 +1,7 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.Extensions.Hosting;
+using Microsoft.UI.Xaml;
 using Odyssey.Data.Settings;
+using Odyssey.Helpers;
 using Odyssey.OtherWindows;
 using System;
 using Windows.ApplicationModel;
@@ -24,7 +26,6 @@ namespace Odyssey
             this.InitializeComponent();
         }
 
-
         /// <summary>
         /// Invoked when the application is launched.
         /// </summary>
@@ -34,7 +35,9 @@ namespace Odyssey
 
             Settings.Init();
 
-            if(Settings.IsSingleInstanceEnabled)
+          
+
+            if (Settings.IsSingleInstanceEnabled)
             {
                 var appArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
                 var mainInstance = Microsoft.Windows.AppLifecycle.AppInstance.FindOrRegisterForKey("main");
