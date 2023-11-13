@@ -117,147 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutThisSite" xml:space="preserve">
-    <value>About this page</value>
+  <data name="Appearance" xml:space="preserve">
+    <value>Apparence</value>
   </data>
-<<<<<<< Updated upstream:Odyssey/Strings/en-US/Resources.resw
-  <data name="AddFavorite" xml:space="preserve">
-    <value>Add to favorites</value>
+  <data name="Apply" xml:space="preserve">
+    <value>Appliquer</value>
   </data>
-  <data name="AppDisplayName" xml:space="preserve">
-    <value>Odyssey (Preview)</value>
+  <data name="CustomTheme" xml:space="preserve">
+    <value>Thème personnalisé</value>
   </data>
-  <data name="ClearTabs" xml:space="preserve">
-    <value>Clear all tabs</value>
+  <data name="DarkMode" xml:space="preserve">
+    <value>Mode sombre</value>
   </data>
-  <data name="Console" xml:space="preserve">
-    <value>Console</value>
-    <comment>-- Pane options items</comment>
+  <data name="DynamicTheme" xml:space="preserve">
+    <value>Thème dynamique</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+  <data name="Features" xml:space="preserve">
+    <value>Fonctionnalités</value>
   </data>
-  <data name="Downloads" xml:space="preserve">
-    <value>Downloads</value>
+  <data name="General" xml:space="preserve">
+    <value>Général</value>
   </data>
-  <data name="Duplicate" xml:space="preserve">
-    <value>Dublicate</value>
+  <data name="Misc" xml:space="preserve">
+    <value>Avancé</value>
   </data>
-  <data name="EnableDevMode" xml:space="preserve">
-    <value>Enable developper mode</value>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
   </data>
-  <data name="Execute" xml:space="preserve">
-    <value>Execute</value>
+  <data name="PerfMode" xml:space="preserve">
+    <value>Mode de performance</value>
   </data>
-  <data name="Files" xml:space="preserve">
-    <value>Files</value>
+  <data name="SearchEngine" xml:space="preserve">
+    <value>Moteur de recherches</value>
   </data>
-  <data name="FullScreen" xml:space="preserve">
-    <value>Full screen</value>
-  </data>
-  <data name="GoBack" xml:space="preserve">
-    <value>Go back</value>
-  </data>
-  <data name="GoForward" xml:space="preserve">
-    <value>Go forward</value>
-  </data>
-  <data name="GoMainWebsite" xml:space="preserve">
-    <value>Go back to the main website</value>
-    <comment>-- Favorites context menu</comment>
-  </data>
-  <data name="History" xml:space="preserve">
-    <value>History</value>
-  </data>
-  <data name="JavascriptConsole" xml:space="preserve">
-    <value>Javascript console</value>
-  </data>
-  <data name="LockPane" xml:space="preserve">
-    <value>Lock pane</value>
-  </data>
-  <data name="More" xml:space="preserve">
-    <value>More</value>
-  </data>
-  <data name="MorePages" xml:space="preserve">
-    <value>and {x} more page.s.</value>
-    <comment>-- Remove all tsxt between the '.' when only one more page / Replace {x} with the num</comment>
-  </data>
-  <data name="NewTab" xml:space="preserve">
-    <value>New tab</value>
-  </data>
-  <data name="Odyssey" xml:space="preserve">
-    <value>Odyssey Preview</value>
-    <comment>-- Remove preview in stable releases</comment>
-  </data>
-  <data name="OpenFile" xml:space="preserve">
-    <value>Open this file</value>
-  </data>
-  <data name="OpenInAnotherTab" xml:space="preserve">
-    <value>Open current website in a new tab</value>
-  </data>
-  <data name="OpenInNormalWindow" xml:space="preserve">
-    <value>Open in normal window</value>
-  </data>
-  <data name="OutputShownHere" xml:space="preserve">
-    <value>All outputs will be shown here</value>
-  </data>
-  <data name="Pin" xml:space="preserve">
-    <value>Pin</value>
-    <comment>-- Tabs context menu</comment>
-  </data>
-  <data name="Pinned" xml:space="preserve">
-    <value>Pinned</value>
-    <comment>-- Pane text</comment>
-  </data>
-  <data name="Preview" xml:space="preserve">
-    <value>Preview</value>
-  </data>
-  <data name="QuickSearch" xml:space="preserve">
-    <value>Quick search</value>
-  </data>
-  <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
-  </data>
-  <data name="RemoveFavorite" xml:space="preserve">
-    <value>Remove from favorites</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="SearchOnWeb" xml:space="preserve">
-    <value>Search on the web</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="ShowInFolder" xml:space="preserve">
-    <value>Show in the directory</value>
-  </data>
-  <data name="ShowMoreOptions" xml:space="preserve">
-    <value>Show more options</value>
-    <comment>-- Context menu</comment>
-  </data>
-  <data name="ShowPane" xml:space="preserve">
-    <value>Show pane</value>
-    <comment>-- Top bar</comment>
-  </data>
-  <data name="SwitchTheme" xml:space="preserve">
-    <value>Switch theme</value>
-  </data>
-  <data name="Tabs" xml:space="preserve">
-    <value>Tabs</value>
-  </data>
-  <data name="ToggleAdBlock" xml:space="preserve">
-    <value>Toggle ad-blocker</value>
-    <comment>-- More button items</comment>
-  </data>
-  <data name="Translate" xml:space="preserve">
-    <value>Translate</value>
-=======
-  <data name="fr-FR" xml:space="preserve">
-    <value>Français</value>
-  </data>
-  <data name="nl-NL" xml:space="preserve">
-    <value>Dutch</value>
->>>>>>> Stashed changes:Odyssey/Strings/LanguageList.resw
+  <data name="ThemeMode" xml:space="preserve">
+    <value>Changer le thème en se basant sur la luminosité de la couleur du theme dynamique</value>
   </data>
 </root>

@@ -26,7 +26,13 @@
   </Dependencies>
 
   <Resources>
+<<<<<<< Updated upstream
     <Resource Language="x-generate"/>
+=======
+    <Resource Language="en-US"/>
+	<Resource Language="fr-FR"/>
+    <Resource Language="nl-NL"/>
+>>>>>>> Stashed changes
   </Resources>
 
   <Applications>

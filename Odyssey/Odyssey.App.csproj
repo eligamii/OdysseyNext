@@ -16,6 +16,15 @@
     <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
     <None Remove="Controls\SearchBar.xaml" />
     <None Remove="Dialogs\QuickConfigurationDialog.xaml" />
+<<<<<<< Updated upstream
+=======
+    <None Remove="Dialogs\SettingsDialog.xaml" />
+    <None Remove="MultilingualResources\Odyssey.App.nl.xlf" />
+    <None Remove="OtherWindows\DevToolsWindow.xaml" />
+    <None Remove="OtherWindows\LittleWebWindow.xaml" />
+    <None Remove="Views\AdditionalDevTools\JavascriptConsolePage.xaml" />
+    <None Remove="Views\LittleWebView.xaml" />
+>>>>>>> Stashed changes
     <None Remove="Views\MainView.xaml" />
     <None Remove="Views\PaneView.xaml" />
   </ItemGroup>
@@ -98,4 +107,22 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
+<<<<<<< Updated upstream
 </Project>
+=======
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.PriResources.targets" Label="MultilingualAppToolkit" Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\v$(MultilingualAppToolkitVersion)\Microsoft.Multilingual.PriResources.targets')" />
+  <Target Name="MATPrerequisite" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.PriResources.targets')" Label="MultilingualAppToolkit">
+    <Warning Text="$(MSBuildProjectFile) is Multilingual build enabled, but the Multilingual App Toolkit is unavailable during the build. If building with Visual Studio, please check to ensure that toolkit is properly installed." />
+  </Target>
+  <ItemGroup>
+    <PRIResource Update="Strings\LanguageList.resw">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </PRIResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\AdditionalDevTools\JavascriptConsolePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>
+>>>>>>> Stashed changes

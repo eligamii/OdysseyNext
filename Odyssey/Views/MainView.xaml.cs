@@ -93,11 +93,129 @@ namespace Odyssey.Views
                 await quickConfigurationDialog.ShowAsync();
             }
 
+<<<<<<< Updated upstream
             FWebView.WebView.XamlRoot = this.XamlRoot;
             FWebView.Classes.DynamicTheme.PageToUpdateTheme = this;
             FWebView.Classes.DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
             FWebView.Classes.DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
             FWebView.Classes.DynamicTheme.UpdateTheme = true;
+=======
+            // Use this instead of Systemackdrop = MicaBackdrop(); to be able to control the color of the Window
+            MicaBackdropHelper.TrySetMicaBackdropTo(MainWindow.Current);
+
+            WebView.XamlRoot = XamlRoot;
+            DynamicTheme.PageToUpdateTheme = this;
+            DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
+            DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
+            DynamicTheme.UpdateTheme = true;
+
+            // Start the 2FA service
+            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
+
+            // Load data          
+            Downloads.Aria2.Init();
+            AdBlocker.AdBlocker.Init();
+
+            // Restore tabs after crash
+            RestoreTabs();
+
+            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
+
+            // Require these to not crash
+            WebView.MainDownloadElement = downloadButton;
+            WebView.MainHistoryElement = historyButton;
+            WebView.MainIconElement = Favicon;
+            WebView.MainProgressElement = progressRing;
+            WebView.MainWebViewFrame = splitViewContentFrame;
+
+            QACommands.Frame = splitViewContentFrame;
+
+            // Set the Quick actions command MainWindow to this window
+            QACommands.MainWindow = MainWindow.Current;
+
+            WebView.TotpLoginDetectedAction += () => SetTotpButtonVisibility();
+            WebView.LoginPageDetectedAction += () => LoginDetectedChanged();
+
+            // Check the internet connection every second for UI things
+            CheckNetworkConnectionState();
+
+            // Set the custom theme if dynamic theme is not enabled
+            SetCustomTheme();
+
+            this.ActualThemeChanged += (s, a) => SetCustomTheme();
+            splitViewContentFrame.Navigate(typeof(HomePage));
+        }
+
+        private bool lastConnectionState;
+
+        private void SetCustomTheme()
+        {
+            if (!Settings.DynamicThemeEnabled)
+            {
+                string color = Settings.CustomThemeColors;
+                if(color != null)
+                {
+                    if (Regex.IsMatch(color, @"#[0-9A-Z]{6}")) // To remove
+                    {
+                        UpdateTheme.UpdateThemeWith(color);
+                    }
+                }
+            }
+        }
+
+        public void SetTotpButtonVisibility()
+        {
+            if (CurrentlySelectedWebView != null)
+                _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed;
+            else
+                _2faButton.Visibility = Visibility.Collapsed;
+        }
+
+        public void LoginDetectedChanged()
+        {
+            if(CurrentlySelectedWebView != null)
+            {
+                loginButton.Visibility = CurrentlySelectedWebView.IsLoginPageDetected ? Visibility.Visible : Visibility.Collapsed;
+
+                if (CurrentlySelectedWebView.IsLoginPageDetected)
+                {
+                    MenuFlyout menu = new();
+                    foreach (var item in CurrentlySelectedWebView.AvailableLoginsForPage)
+                    {
+                        MenuFlyoutItem menuFlyoutItem = new();
+                        menuFlyoutItem.Text = item.Username;
+
+                        menuFlyoutItem.Click += (s, a) => CurrentlySelectedWebView.LoginAutoFill.Autofill(item);
+                        menu.Items.Add(menuFlyoutItem);
+                    }
+
+                    loginButton.Flyout = menu;
+                }
+            }
+        }
+
+        private async void CheckNetworkConnectionState()
+        {
+            while (true)
+            {
+                await Task.Delay(250);
+
+                bool isInternetAvailable = Shared.Helpers.NetworkHelper.IsInternetConnectionAvailable();
+                if (lastConnectionState != isInternetAvailable)
+                {
+                    if (!isInternetAvailable)
+                    {
+                        progressRing.Foreground = Application.Current.Resources["FocusStrokeColorOuterBrush"] as Brush;
+                    }
+                    else
+                    {
+                        progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;
+                    }
+
+                    lastConnectionState = isInternetAvailable;
+                }
+            }
+>>>>>>> Stashed changes
         }
 
 
