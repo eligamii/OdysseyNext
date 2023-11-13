@@ -120,9 +120,6 @@
   <data name="en-US" xml:space="preserve">
     <value>English</value>
   </data>
-  <data name="fr-FR" xml:space="preserve">
-    <value>France</value>
-  </data>
   <data name="nl-NL" xml:space="preserve">
     <value>Dutch</value>
   </data>
