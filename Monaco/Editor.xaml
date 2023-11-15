@@ -8,5 +8,5 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <WebView2 x:Name="webView"/>
+    <WebView2 x:Name="webView" Opacity="0"/>
 </UserControl>

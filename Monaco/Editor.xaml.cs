@@ -67,6 +67,9 @@ namespace Monaco
                 {
                     await s.ExecuteScriptAsync("editor.getModel().onDidChangeContent((event) => {\r\n  console.log(\"TEXTCHANGED\")\r\n});");
                     RefreshTheme();
+
+                    // Make the initial flash less visible
+                    webView.Opacity = 1;
                     Loaded(this, null);
                 };
 
