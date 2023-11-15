@@ -32,5 +32,11 @@ namespace Odyssey.OtherWindows
             this.SetTitleBar(appTitleBar);
 
         }
+
+        private async void NavigationViewItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            editor.SetLanguage(Monaco.Language.HTML);
+           
+        }
     }
 }

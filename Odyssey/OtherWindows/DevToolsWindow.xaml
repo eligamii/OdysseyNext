@@ -20,12 +20,12 @@
 
         <NavigationView PaneDisplayMode="Top" Grid.Row="1" IsBackButtonVisible="Collapsed">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="HTTP Request"/>
+                <NavigationViewItem Content="HTTP Request" Tapped="NavigationViewItem_Tapped"/>
                 <NavigationViewItem Content="Javascript console"/>
                 <NavigationViewItem Content="Edit HTML"/>
                 <NavigationViewItem Content="Network monitor"/>
             </NavigationView.MenuItems>
-            <monaco:MonacoEditor/>
+            <monaco:Editor x:Name="editor"/>
         </NavigationView>
     </Grid>
 </winuiex:WindowEx>

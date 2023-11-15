@@ -158,21 +158,24 @@ namespace Odyssey.Views
 
         public void LoginDetectedChanged()
         {
-            loginButton.Visibility = CurrentlySelectedWebView.IsLoginPageDetected ? Visibility.Visible : Visibility.Collapsed;
-
-            if(CurrentlySelectedWebView.IsLoginPageDetected)
+            if(CurrentlySelectedWebView != null)
             {
-                MenuFlyout menu = new();
-                foreach (var item in CurrentlySelectedWebView.AvailableLoginsForPage)
+                loginButton.Visibility = CurrentlySelectedWebView.IsLoginPageDetected ? Visibility.Visible : Visibility.Collapsed;
+
+                if (CurrentlySelectedWebView.IsLoginPageDetected)
                 {
-                    MenuFlyoutItem menuFlyoutItem = new();
-                    menuFlyoutItem.Text = item.Username;
+                    MenuFlyout menu = new();
+                    foreach (var item in CurrentlySelectedWebView.AvailableLoginsForPage)
+                    {
+                        MenuFlyoutItem menuFlyoutItem = new();
+                        menuFlyoutItem.Text = item.Username;
 
-                    menuFlyoutItem.Click += (s, a) => CurrentlySelectedWebView.LoginAutoFill.Autofill(item);
-                    menu.Items.Add(menuFlyoutItem);
+                        menuFlyoutItem.Click += (s, a) => CurrentlySelectedWebView.LoginAutoFill.Autofill(item);
+                        menu.Items.Add(menuFlyoutItem);
+                    }
+
+                    loginButton.Flyout = menu;
                 }
-
-                loginButton.Flyout = menu;
             }
         }
 
