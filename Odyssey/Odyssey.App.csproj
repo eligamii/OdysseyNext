@@ -81,7 +81,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Monaco\Monaco.csproj" />
+    <ProjectReference Include="..\..\Monaco\MonacoEditorWinUI\Monaco.csproj" />
     <ProjectReference Include="..\Monaco\Monaco.csproj" />
     <ProjectReference Include="..\Odyssey.2FA\Odyssey.TwoFactorsAuthentification.csproj" />
     <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
