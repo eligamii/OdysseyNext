@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Odyssey.Views.AdditionalDevTools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,12 +32,11 @@ namespace Odyssey.OtherWindows
             this.ExtendsContentIntoTitleBar = true;
             this.SetTitleBar(appTitleBar);
 
-        }
+            contentFrame.Loaded += (s, a) =>
+            {
+                contentFrame.Navigate(typeof(JavascriptConsolePage));
+            };
 
-        private async void NavigationViewItem_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            editor.SetLanguage(Monaco.Language.HTML);
-           
         }
     }
 }

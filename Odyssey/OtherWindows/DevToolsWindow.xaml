@@ -18,14 +18,11 @@
             <TextBlock Text="Developper Tools" VerticalAlignment="Center" Margin="16,0"/>
         </Grid>
 
-        <NavigationView PaneDisplayMode="Top" Grid.Row="1" IsBackButtonVisible="Collapsed">
+        <NavigationView PaneDisplayMode="LeftCompact" Grid.Row="1" IsBackButtonVisible="Collapsed">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="HTTP Request" Tapped="NavigationViewItem_Tapped"/>
-                <NavigationViewItem Content="Javascript console"/>
-                <NavigationViewItem Content="Edit HTML"/>
-                <NavigationViewItem Content="Network monitor"/>
+                <NavigationViewItem Icon="Repair" Content="Javascript console" IsSelected="True"/>
             </NavigationView.MenuItems>
-            <monaco:Editor x:Name="editor"/>
+            <Frame x:Name="contentFrame"/>
         </NavigationView>
     </Grid>
 </winuiex:WindowEx>

@@ -169,7 +169,10 @@ namespace Odyssey.Views
 
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (sender as ListView == PinsTabView)
+
+            
+          
+            if ((sender as Button).Tag.ToString() == "pins")
             {
                 var pos = e.GetPosition(PinsTabView);
                 int index = (int)(pos.Y / 40); // Get pin index

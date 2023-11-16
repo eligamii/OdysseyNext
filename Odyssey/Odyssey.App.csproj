@@ -34,6 +34,7 @@
     <None Remove="MultilingualResources\Odyssey.App.nl.xlf" />
     <None Remove="OtherWindows\DevToolsWindow.xaml" />
     <None Remove="OtherWindows\LittleWebWindow.xaml" />
+    <None Remove="Views\AdditionalDevTools\JavascriptConsolePage.xaml" />
     <None Remove="Views\LittleWebView.xaml" />
     <None Remove="Views\MainView.xaml" />
     <None Remove="Views\Options\ApparancePage.xaml" />
@@ -230,5 +231,10 @@
     <PRIResource Update="Strings\LanguageList.resw">
       <Generator>ResXFileCodeGenerator</Generator>
     </PRIResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\AdditionalDevTools\JavascriptConsolePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>
