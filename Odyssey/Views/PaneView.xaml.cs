@@ -169,9 +169,6 @@ namespace Odyssey.Views
 
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-
-            
-          
             if ((sender as Button).Tag.ToString() == "pins")
             {
                 var pos = e.GetPosition(PinsTabView);
