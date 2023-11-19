@@ -21,7 +21,7 @@ namespace Odyssey.Data.Main
                         IgnoreSerializableInterface = true,
                         IgnoreShouldSerializeMembers = true,
                     },
-                    Formatting = Newtonsoft.Json.Formatting.Indented,
+                    Formatting = Formatting.Indented,
                 });
                 File.WriteAllText(Data.TabsFilePath, serializedObject);
             }
