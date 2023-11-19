@@ -46,13 +46,13 @@ namespace Odyssey.FWebView
         public SecurityInformation SecurityInformation { get; set; } = null;
         public WebView2KeyDownHelpers.KeyDownListener KeyDownListener { get; set; }
         public LoginAutoFill LoginAutoFill { get; set; }
-
+        public static TextBlock DocumentTextBlock { get; set; }
         public static FrameworkElement MainDownloadElement { get; set; } // The element used to show the DownloadsFlyout
         public static FrameworkElement MainHistoryElement { get; set; }
         public static new XamlRoot XamlRoot { get; set; }
         public static Image MainIconElement { get; set; } // The (titlebar) element which contain the favicon
         public static FrameworkElement MainProgressElement { get; set; } // Will have its Visiblity property set to Collapsed based on if the webview is loading
-        public static ProgressRing MainProgressRing { get; set; } // idem
+        public static ProgressBar MainProgressBar { get; set; } // idem
         public static Frame MainWebViewFrame { get; set; }
         public static ListView TabsView { get; set; }
 
@@ -150,6 +150,15 @@ namespace Odyssey.FWebView
                 scrollTimer = new DispatcherTimer();
                 scrollTimer.Interval = TimeSpan.FromSeconds(2);
                 scrollTimer.Tick += ScrollTimer_Tick;
+
+
+                // Loading cycle
+                sender.CoreWebView2.NavigationStarting += (s, a) => { if (IsVisible) MainProgressBar.Value = 0; };
+                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible) MainProgressBar.Value = 1f/6f * 100f; };
+                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible) MainProgressBar.Value = 1f/3f * 100f; };
+                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible) MainProgressBar.Value = 1f/2f * 100f; };
+                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible) MainProgressBar.Value = 7f/8f * 100f; };
+                sender.CoreWebView2.NavigationCompleted += async (s, a) => { if (IsVisible) { MainProgressBar.Value = 100; await Task.Delay(1000); MainProgressBar.Value = 0; } };
             }
 
             sender.CoreWebView2.PermissionRequested += CoreWebView2_PermissionRequested;
@@ -430,6 +439,10 @@ namespace Odyssey.FWebView
         private void CoreWebView2_DocumentTitleChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)
         {
             LinkedTab.Title = sender.DocumentTitle;
+            if(IsVisible)
+            {
+                DocumentTextBlock.Text = sender.DocumentTitle;
+            }
         }
 
 

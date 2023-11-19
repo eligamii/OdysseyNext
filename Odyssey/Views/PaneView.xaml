@@ -34,7 +34,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="0"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
             <RowDefinition Height="0"/>
@@ -46,16 +46,8 @@
                 <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
             </Style>
         </Grid.Resources>
-        <StackPanel Margin="5,0" Orientation="Horizontal">
-            <StackPanel Orientation="Horizontal" Visibility="Collapsed" x:Name="FullScreenControlsPanel" Loaded="FullScreenControlsPanel_Loaded" x:FieldModifier="public">
-                <Button Content="&#xE0A6;" x:Name="backButton"/>
-                <Button Content="&#xE0AB;" x:Name="forwardButton"/>
-                <Button Content="&#xE149;" x:Name="refreshButton"/>
-                <Button Content="&#xE11A;" x:Name="searchButton" FontSize="15"/>
-            </StackPanel>
-
-        </StackPanel>
-        <Button x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right" Margin="0,0,5,0">
+       
+        <Button Visibility="Collapsed" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right" Margin="0,0,5,0">
             <Button.Flyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="{helpers:ResourceString Name=History, Filename=ContextMenus}" Click="HistoryMenuFlyoutItem_Click">

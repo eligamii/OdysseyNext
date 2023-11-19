@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Shapes;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Classes;
 using Odyssey.Controls;
@@ -20,6 +21,7 @@ using Odyssey.QuickActions;
 using Odyssey.Views.Pages;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
@@ -40,6 +42,7 @@ namespace Odyssey.Views
     public sealed partial class MainView : Page
     {
         public static MainView Current { get; set; }
+        public TitleBarDragRegions titleBarDragRegions;
         public static WebView CurrentlySelectedWebView
         {
             get { return Current.splitViewContentFrame.Content as WebView; }
@@ -50,8 +53,7 @@ namespace Odyssey.Views
 
             Loaded += MainView_Loaded;
 
-            AppTitleBar.Loaded += AppTitleBar_Loaded;
-            AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
+            
 
             Current = this;
         }
@@ -75,6 +77,13 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
+            titleBarDragRegions = new TitleBarDragRegions(
+                new List<Grid>() { AppTitleBar, secondTitleBar },
+                MainWindow.Current,
+                new List<Type>() { typeof(TextBlock), typeof(Grid), typeof(Microsoft.UI.Xaml.Shapes.Rectangle), typeof(Frame)},
+                MainWindow.Current.Content as FrameworkElement,
+                42);
+
             if (Settings.FirstLaunch != false)
             {
                 QuickConfigurationDialog quickConfigurationDialog = new()
@@ -92,6 +101,7 @@ namespace Odyssey.Views
             DynamicTheme.PageToUpdateTheme = this;
             DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
             DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
+            DynamicTheme.TitleBar = AppTitleBar;
             DynamicTheme.UpdateTheme = true;
 
             // Start the 2FA service
@@ -107,11 +117,13 @@ namespace Odyssey.Views
             SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
 
             // Require these to not crash
-            WebView.MainDownloadElement = downloadButton;
-            WebView.MainHistoryElement = historyButton;
-            WebView.MainIconElement = Favicon;
-            WebView.MainProgressElement = progressRing;
+            WebView.MainDownloadElement = new Button();
+            WebView.MainHistoryElement = new Button();
+            WebView.MainIconElement = new Microsoft.UI.Xaml.Controls.Image();
+            WebView.MainProgressBar = progressBar;
+            WebView.MainProgressElement = new ProgressBar();
             WebView.MainWebViewFrame = splitViewContentFrame;
+            WebView.DocumentTextBlock = documentTitle;
 
             QACommands.Frame = splitViewContentFrame;
 
@@ -150,10 +162,11 @@ namespace Odyssey.Views
 
         public void SetTotpButtonVisibility()
         {
+            /*
             if (CurrentlySelectedWebView != null)
                 _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed;
             else
-                _2faButton.Visibility = Visibility.Collapsed;
+                _2faButton.Visibility = Visibility.Collapsed;*/
         }
 
         public void LoginDetectedChanged()
@@ -190,98 +203,16 @@ namespace Odyssey.Views
                 {
                     if (!isInternetAvailable)
                     {
-                        progressRing.Foreground = Application.Current.Resources["FocusStrokeColorOuterBrush"] as Brush;
+                        //progressRing.Foreground = Application.Current.Resources["FocusStrokeColorOuterBrush"] as Brush;
                     }
                     else
                     {
-                        progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;
+                        //progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;
                     }
 
                     lastConnectionState = isInternetAvailable;
                 }
             }
-        }
-
-
-        // Titlebar drag regions
-        private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            SetDragRegionForCustomTitleBar(MainWindow.Current.AppWindow);
-        }
-
-        private void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
-        {
-            SetDragRegionForCustomTitleBar(MainWindow.Current.AppWindow);
-        }
-
-
-        [DllImport("Shcore.dll", SetLastError = true)]
-        internal static extern int GetDpiForMonitor(IntPtr hmonitor, Monitor_DPI_Type dpiType, out uint dpiX, out uint dpiY);
-
-        internal enum Monitor_DPI_Type : int
-        {
-            MDT_Effective_DPI = 0,
-            MDT_Angular_DPI = 1,
-            MDT_Raw_DPI = 2,
-            MDT_Default = MDT_Effective_DPI
-        }
-
-        private double GetScaleAdjustment()
-        {
-            IntPtr hWnd = WindowNative.GetWindowHandle(MainWindow.Current);
-            WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-            DisplayArea displayArea = DisplayArea.GetFromWindowId(wndId, DisplayAreaFallback.Primary);
-            IntPtr hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
-
-            // Get DPI.
-            int result = GetDpiForMonitor(hMonitor, Monitor_DPI_Type.MDT_Default, out uint dpiX, out uint _);
-            if (result != 0)
-            {
-                throw new System.Exception("Could not get DPI for monitor.");
-            }
-
-            uint scaleFactorPercent = (uint)(((long)dpiX * 100 + (96 >> 1)) / 96);
-            return scaleFactorPercent / 100.0;
-        }
-
-        private void SetDragRegionForCustomTitleBar(AppWindow appWindow)
-        {
-            try
-            {
-                // Check to see if customization is supported.
-                // The method returns true on Windows 10 since Windows App SDK 1.2, and on all versions of
-                // Windows App SDK on Windows 11.
-                if (AppWindowTitleBar.IsCustomizationSupported()
-                    && appWindow.TitleBar.ExtendsContentIntoTitleBar)
-                {
-                    double scaleAdjustment = GetScaleAdjustment();
-
-                    RightPaddingColumn.Width = new GridLength(appWindow.TitleBar.RightInset / scaleAdjustment);
-                    LeftPaddingColumn.Width = new GridLength(appWindow.TitleBar.LeftInset / scaleAdjustment);
-
-                    List<Windows.Graphics.RectInt32> dragRectsList = new();
-
-                    Windows.Graphics.RectInt32 dragRectL;
-                    dragRectL.X = (int)((LeftPaddingColumn.ActualWidth) * scaleAdjustment);
-                    dragRectL.Y = 0;
-                    dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                    dragRectL.Width = (int)((0) * scaleAdjustment);
-                    dragRectsList.Add(dragRectL);
-
-                    Windows.Graphics.RectInt32 dragRectR;
-                    dragRectR.X = (int)((LeftPaddingColumn.ActualWidth
-                                        + ControlsColumn.ActualWidth) * scaleAdjustment);
-                    dragRectR.Y = 0;
-                    dragRectR.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                    dragRectR.Width = (int)(RightDragColumn.ActualWidth * scaleAdjustment);
-                    dragRectsList.Add(dragRectR);
-
-                    Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
-
-                    appWindow.TitleBar.SetDragRectangles(dragRects);
-                }
-            }
-            catch { }
         }
 
 
@@ -297,6 +228,7 @@ namespace Odyssey.Views
             if (showPaneButton != null)
             {
                 showPaneButton.Visibility = Visibility.Collapsed;
+
             }
         }
 
@@ -336,7 +268,7 @@ namespace Odyssey.Views
             SearchBar searchBar = new SearchBar();
             FlyoutShowOptions options = new FlyoutShowOptions();
             options.Placement = FlyoutPlacementMode.Bottom;
-            options.Position = new Point(splitViewContentFrame.ActualWidth / 2, 100);
+            options.Position = new Windows.Foundation.Point(splitViewContentFrame.ActualWidth / 2, 100);
 
             searchBar.ShowAt(splitViewContentFrame, options);
         }
@@ -361,8 +293,35 @@ namespace Odyssey.Views
         {
             if(CurrentlySelectedWebView != null)
             {
-                pageInfoTip.Open(CurrentlySelectedWebView);
+                //pageInfoTip.Open(CurrentlySelectedWebView);
             }
+        }
+
+        private void SplitView_PaneClosed(SplitView sender, object args)
+        {
+            if (titleBarDragRegions != null)
+            {
+                titleBarDragRegions.SetDragRegionForTitleBars();
+            }
+        }
+
+        private void documentTitle_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            SearchBar searchBar = new SearchBar(false);
+            FlyoutShowOptions options = new FlyoutShowOptions();
+            options.Placement = FlyoutPlacementMode.Bottom;
+            options.Position = new Windows.Foundation.Point(splitViewContentFrame.ActualWidth / 2, 100);
+
+            searchBar.ShowAt(splitViewContentFrame, options);
+        }
+    }
+
+    public class Object
+    {
+        public Object obj = new();
+        public Object()
+        {
+
         }
     }
 }

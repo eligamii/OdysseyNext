@@ -311,14 +311,16 @@ namespace Odyssey.Views
 
                 if ((tab.MainWebView as WebView).IsPageLoading)
                 {
-                    MainView.Current.Favicon.Source = null;
-                    MainView.Current.progressRing.Visibility = Visibility.Visible;
+                    //MainView.Current.Favicon.Source = null;
+                    //MainView.Current.progressRing.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    MainView.Current.Favicon.Source = tab.ImageSource;
-                    MainView.Current.progressRing.Visibility = Visibility.Collapsed;
+                    //MainView.Current.Favicon.Source = tab.ImageSource;
+                    //MainView.Current.progressRing.Visibility = Visibility.Collapsed;
                 }
+
+                MainView.Current.documentTitle.Text = tab.Title;
 
                 FWebView.Classes.DynamicTheme.UpdateDynamicTheme(tab.MainWebView);
 

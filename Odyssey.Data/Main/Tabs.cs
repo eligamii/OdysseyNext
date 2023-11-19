@@ -11,17 +11,21 @@ namespace Odyssey.Data.Main
 
         public static void Save()
         {
-            string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
+            try
             {
-                ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver
+                string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
                 {
-                    IgnoreSerializableAttribute = true,
-                    IgnoreSerializableInterface = true,
-                    IgnoreShouldSerializeMembers = true,
-                },
-                Formatting = Newtonsoft.Json.Formatting.Indented,
-            });
-            File.WriteAllText(Data.TabsFilePath, serializedObject);
+                    ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver
+                    {
+                        IgnoreSerializableAttribute = true,
+                        IgnoreSerializableInterface = true,
+                        IgnoreShouldSerializeMembers = true,
+                    },
+                    Formatting = Newtonsoft.Json.Formatting.Indented,
+                });
+                File.WriteAllText(Data.TabsFilePath, serializedObject);
+            }
+            catch { }
         }
 
         internal static void Load()
