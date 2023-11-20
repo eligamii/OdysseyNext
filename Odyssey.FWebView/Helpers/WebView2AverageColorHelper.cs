@@ -127,6 +127,8 @@ namespace Odyssey.FWebView.Helpers
                                   x  y  w  h  idk
                 clip = Viewport ({0, 0, 1, 1, 1})
                 optimizeForSpeed = true
+
+                https://chromedevtools.github.io/devtools-protocol/tot/Autofill/
                 returns a Base64 image*/
                 
             }
