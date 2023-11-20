@@ -52,23 +52,17 @@ namespace Odyssey.Helpers
             try
             {
                 var parent = VisualTreeHelper.GetParent(element);
-
                 int tests = 0;
-                while (parent.GetType() != typeof(SplitView) && tests < 10)
-                {
+                while (parent.GetType() != typeof(SplitView) && tests < 10) {
                     tests++;
                     parent = VisualTreeHelper.GetParent(parent);
                 }
 
-                if (parent.GetType() == typeof(SplitView))
-                {
+                if (parent.GetType() == typeof(SplitView)) {
                     SplitView splitView = (SplitView)parent;
                     return splitView.IsPaneOpen;
                 }
-                else
-                {
-                    return true;
-                }
+                else return true;
             }
             catch { return true; }
         }
@@ -81,10 +75,6 @@ namespace Odyssey.Helpers
         private FrameworkElement _titleBarParent; // this should be Window.Content in most cases
         private int _height;
 
-
-        /// <remarks>
-        /// Will always throw an error when one of the titleBars has no control inside of it
-        /// </remarks>
         /// <summary>
         /// Object that automatically create titleBar drag regions according to various parameters.
         /// </summary>
@@ -107,6 +97,9 @@ namespace Odyssey.Helpers
             }
         }
 
+
+
+        
         private Windows.Graphics.RectInt32 GetFirstOrLastDragRegionForTitleBar(Grid titleBar, bool first = true)
         {
             var children = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
@@ -155,46 +148,62 @@ namespace Odyssey.Helpers
             }
         }
 
+
+
+        
         public void SetDragRegionForTitleBars()
         {
             List<Windows.Graphics.RectInt32> dragRectsList = new();
 
             foreach (var titleBar in _titleBars)
             {
-                // Set the first drag region (between the start of the titlebar and the first control)
-                dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar));
-
-                var transformTitleBar = titleBar.TransformToVisual(_titleBarParent);
-                Point titleBarPosition = transformTitleBar.TransformPoint(new Point(0, 0));
-
                 var children = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
-                for (int i = 0; i < children.Count - 1; i++)
+                if(children.Count > 0)
                 {
-                    // Get the two element which in between the drag region will be setted
-                    UIElement element1 = children[i];
-                    UIElement element2 = children[i + 1];
-
-                    // Get the position of the two element relative to the titlebar
-                    var transform = element1.TransformToVisual(titleBar);
-                    var transform2 = element2.TransformToVisual(titleBar);
-
-                    // Convert to point
-                    Point element1Position = transform.TransformPoint(new Point(0, 0));
-                    Point element2Position = transform2.TransformPoint(new Point(0, 0));
-
-                    double scaleAdjustment = GetScaleAdjustment();
-
-                    // Create the actual drag region based on the elements 1 and 2 and the titleBar position
+                    // Set the first drag region (between the start of the titlebar and the first control)
+                    dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar));
+    
+                    var transformTitleBar = titleBar.TransformToVisual(_titleBarParent);
+                    Point titleBarPosition = transformTitleBar.TransformPoint(new Point(0, 0));
+    
+                    for (int i = 0; i < children.Count - 1; i++)
+                    {
+                        // Get the two element which in between the drag region will be setted
+                        UIElement element1 = children[i];
+                        UIElement element2 = children[i + 1];
+    
+                        // Get the position of the two element relative to the titlebar
+                        var transform = element1.TransformToVisual(titleBar);
+                        var transform2 = element2.TransformToVisual(titleBar);
+    
+                        // Convert to point
+                        Point element1Position = transform.TransformPoint(new Point(0, 0));
+                        Point element2Position = transform2.TransformPoint(new Point(0, 0));
+    
+                        double scaleAdjustment = GetScaleAdjustment();
+    
+                        // Create the actual drag region based on the elements 1 and 2 and the titleBar position
+                        Windows.Graphics.RectInt32 dragRect;
+                        dragRect.X = (int)((element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment);
+                        dragRect.Y = 0;
+                        dragRect.Height = (int)(_height * scaleAdjustment);
+                        dragRect.Width = (int)((element2Position.X - (element1Position.X + element1.ActualSize.X)) * scaleAdjustment);
+                        dragRectsList.Add(dragRect);
+                    }
+    
+                    // Set the last titleBar (between the last control and the end of the titlebar)
+                    dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar, false));
+                }
+                else // When no element should be manipulated by the user
+                {
+                    // Create a drag region for the entire titlebar
                     Windows.Graphics.RectInt32 dragRect;
-                    dragRect.X = (int)((element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment);
+                    dragRect.X = (int)(titleBarPosition.X * scaleAdjustment);
                     dragRect.Y = 0;
                     dragRect.Height = (int)(_height * scaleAdjustment);
-                    dragRect.Width = (int)((element2Position.X - (element1Position.X + element1.ActualSize.X)) * scaleAdjustment);
+                    dragRect.Width = (int)(titleBar.ActualWidth * scaleAdjustment);
                     dragRectsList.Add(dragRect);
                 }
-
-                // Set the last titleBar (between the last control and the end of the titlebar)
-                dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar, false));
             }
 
             Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
