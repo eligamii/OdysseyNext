@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.UI;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -226,6 +227,7 @@ namespace Odyssey.FWebView
             UpdateThemeWithColorChange();
         }
 
+        Color? lastPixel = null; 
         private async void UpdateThemeWithColorChange()
         {
             while(true)
@@ -233,7 +235,16 @@ namespace Odyssey.FWebView
                 await Task.Delay(1500);
                 if(IsVisible)
                 {
-                    DynamicTheme.UpdateDynamicTheme(this);
+                    Color pixel = await WebView2AverageColorHelper.GetFirstPixelColor(this);
+                    if(pixel != lastPixel)
+                    {
+                        DynamicTheme.UpdateDynamicTheme(this);
+                    }
+                    else
+                    {
+                        lastPixel = pixel;
+                    }
+
                 }
             }
         }

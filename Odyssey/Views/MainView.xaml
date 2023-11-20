@@ -52,13 +52,13 @@
                 <!-- Main pane content -->
                 <Grid x:Name="secondTitleBar" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="42"/>
+                        <RowDefinition Height="45"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <Rectangle Grid.Row="0" Grid.RowSpan="2" Fill="{ThemeResource LayerFillColorDefaultBrush}" x:Name="LayerBackground" x:FieldModifier="public" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
-                    <StackPanel Margin="5,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <StackPanel Margin="5,2,0,2" Orientation="Horizontal" HorizontalAlignment="Left">
                         <Button Click="BackButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Back, Filename=Main}" Content="&#xE0A6;"/>
                         <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Forward, Filename=Main}" Content="&#xE0AB;"/>
                         <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh, Filename=Main}" Content="&#xE149;"/>

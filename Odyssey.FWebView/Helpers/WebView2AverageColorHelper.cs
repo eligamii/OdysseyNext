@@ -60,7 +60,7 @@ namespace Odyssey.FWebView.Helpers
         }
 
 
-        public static async Task<Windows.UI.Color> GetFirstPixel(WebView2 webView)
+        public static async Task<Windows.UI.Color> GetFirstPixelColor(WebView2 webView)
         {
             var bmp = await GetBitmap(webView, 1, 1);
             System.Drawing.Color clr = bmp.GetPixel(0, 0);
