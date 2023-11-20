@@ -103,5 +103,76 @@ namespace Odyssey.FWebView.Helpers
 
             return null;
         }
+
+        internal static Color? GetWebView2UpperLeftCornerPixelColorAsync(WebView2 webView)
+        {
+            try
+            {
+                await webView.EnsureCoreWebView2Async();
+
+                // Capture the webview2 content
+                await webView.EnsureCoreWebView2Async();
+
+                // Capture the WebView content
+                var captureStream = new InMemoryRandomAccessStream();
+                await webView.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, captureStream);
+
+                Bitmap bmp = new(captureStream);
+
+                return bmp.GetPixel(0, 0);  
+                /*
+                Page.getNavigationHistory // cdp get history
+                https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot Page.CaptureScreenshot
+                with quality = 0
+                                  x  y  w  h  idk
+                clip = Viewport ({0, 0, 1, 1, 1})
+                optimizeForSpeed = true
+                returns a Base64 image*/
+                
+            }
+        }
+
+        internal static Color? GetWebView2AverageColorAsync(WebView2 webView, uint width = 600, uint height = 600, int step = 1)
+        {
+            try
+            {
+                await webView.EnsureCoreWebView2Async();
+
+                // Capture the webview2 content
+                await webView.EnsureCoreWebView2Async();
+
+                // Capture the WebView content
+                var captureStream = new InMemoryRandomAccessStream();
+                await webView.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, captureStream);
+
+                Bitmap bmp = new(captureStream);
+                
+                int r = 0;
+                int g = 0;
+                int b = 0;
+            
+                int total = 0; // The total number of pixel with the color calculated
+            
+                for (int x = 0; x < width; x += step)
+                {
+                     for (int y = 0; y < heigth; y++)
+                     {
+                          Color clr = bmp.GetPixel(x, y);    
+                          r += clr.R;
+                          g += clr.G;
+                          b += clr.B;    
+                          total++;
+                     }
+                }
+            
+                //Calculate the average color
+                r /= total;
+                g /= total;
+                b /= total;
+            
+                return Color.FromArgb(r, g, b);
+            }
+            catch { return null; }
+        }
     }
 }
