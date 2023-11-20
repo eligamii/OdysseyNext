@@ -85,7 +85,11 @@
                                 BorderBrush="#FF2E2E2E"
                                 BorderThickness="0,0,0,1"
                                 x:FieldModifier="public"
-                                Background="Black">
+                                Background="Transparent">
+                            <Grid.BackgroundTransition>
+                                <BrushTransition />
+                            </Grid.BackgroundTransition>
+
                             <ProgressBar Background="Transparent" CornerRadius="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" x:Name="progressBar"/>
 
 

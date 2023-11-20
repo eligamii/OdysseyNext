@@ -1,16 +1,72 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json.Linq;
 using Odyssey.Shared.Helpers;
 using System;
+using System.Drawing;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI;
 
 namespace Odyssey.FWebView.Helpers
 {
     public class WebView2AverageColorHelper
     {
+        public class DeserializerClass
+        {
+            public string data { get; set; }
+        }
+
+        public static Bitmap Base64StringToBitmap(string base64String)
+        {
+            byte[] byteBuffer = Convert.FromBase64String(base64String);
+            MemoryStream memoryStream = new(byteBuffer);
+            memoryStream.Position = 0;
+
+            Bitmap bmpReturn = (Bitmap)Bitmap.FromStream(memoryStream);
+
+            memoryStream.Close();
+            return bmpReturn;
+        }
+
+        private static async Task<Bitmap> GetBitmap(WebView2 webView, int width, int height)
+        {
+            dynamic clip = new JObject();
+            clip.x = 0;
+            clip.y = 0;
+            clip.width = width;
+            clip.height = height;
+            clip.scale = 1;
+
+            dynamic settings = new JObject();
+            settings.format = "jpeg";
+            settings.clip = clip;
+            settings.quality = 1;
+            settings.optimizeForSpeed = true;
+            settings.fromSurface = false;
+            settings.captureBeyondViewport = false;
+
+
+            string p = settings.ToString(Newtonsoft.Json.Formatting.None);
+            string data = await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.captureScreenshot", p);
+            var deserializedData = JsonSerializer.Deserialize<DeserializerClass>(data);
+
+            var bmp = Base64StringToBitmap(deserializedData.data);
+            return bmp;
+        }
+
+
+        public static async Task<Windows.UI.Color> GetFirstPixel(WebView2 webView)
+        {
+            var bmp = await GetBitmap(webView, 1, 1);
+            System.Drawing.Color clr = bmp.GetPixel(0, 0);
+            return Windows.UI.Color.FromArgb(255, clr.R, clr.R, clr.B);
+        }
+
         /// <summary>
         /// Get the average color of a part of a webview with the coordinate (0;0) the upper left corner of the webView
         /// </summary>
@@ -18,163 +74,40 @@ namespace Odyssey.FWebView.Helpers
         /// <param name="width">The width (>= 1) of the part to calculate</param>
         /// <param name="height">The height (>=1) of the part to calculate</param>
         /// <param name="step">(>=1) Greater value = less precision / better performance</param>
-        internal async static Task<Windows.UI.Color?> GetWebView2AverageColorsAsync(WebView2 webView, uint width = 600, uint height = 1, int step = 1)
+        public static async Task<Windows.UI.Color> GetAverageColorFrom(WebView2 webView, int width, int height, int step = 1)
         {
-            try
+            // Capture an image
+            var bmp = await GetBitmap(webView, width, height);
+
+            int r = 0;
+            int g = 0;
+            int b = 0;
+
+            int total = 0; // The total number of pixel with the color calculated
+
+            for (int x = 0; x < width; x += step)
             {
-                await webView.EnsureCoreWebView2Async();
-
-                // Capture the WebView content
-                var captureStream = new InMemoryRandomAccessStream();
-                await webView.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, captureStream);
-
-                // Create a BitmapDecoder and get the captured image as a SoftwareBitmap
-                var decoder = await BitmapDecoder.CreateAsync(captureStream);
-
-                var softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-
-                // Save the bitmap to a file (only way i found to convert this into a stream)
-                var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync("captured_image.png", CreationCollisionOption.GenerateUniqueName);
-
-                using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                for (int y = 0; y < height; y++)
                 {
-                    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                    encoder.SetSoftwareBitmap(softwareBitmap);
-                    await encoder.FlushAsync();
+                    System.Drawing.Color clr = bmp.GetPixel(x, y);
+                    r += clr.R;
+                    g += clr.G;
+                    b += clr.B;
+                    total++;
                 }
-
-
-                var transform = new BitmapTransform
-                {
-                    Bounds = new BitmapBounds
-                    {
-                        X = 0,
-                        Y = 0,
-                        Width = width,
-                        Height = height
-                    }
-                };
-
-                var pixelData = await decoder.GetPixelDataAsync(
-                    BitmapPixelFormat.Bgra8,
-                    BitmapAlphaMode.Premultiplied,
-                    transform,
-                    ExifOrientationMode.RespectExifOrientation,
-                    ColorManagementMode.ColorManageToSRgb
-                );
-
-                byte[] pixels = pixelData.DetachPixelData();
-                int totalRed = 0, totalGreen = 0, totalBlue = 0;
-
-                for (int i = 0; i < pixels.Length; i += step)
-                {
-                    try
-                    {
-                        totalBlue += pixels[i];
-                        totalGreen += pixels[i + 1];
-                        totalRed += pixels[i + 2];
-                    } catch (IndexOutOfRangeException) { }
-                }
-
-                int pixelCount = pixels.Length / 4;  // Each pixel has 4 bytes (RGBA)
-
-                byte averageRed = (byte)(totalRed / pixelCount);
-                byte averageGreen = (byte)(totalGreen / pixelCount);
-                byte averageBlue = (byte)(totalBlue / pixelCount);
-
-                Windows.UI.Color averageColor = Windows.UI.Color.FromArgb(255, averageRed, averageGreen, averageBlue);
-
-                ColorsHelper.RGBtoHSL(averageColor.R, averageColor.G, averageColor.B, out double H, out double S, out double L);
-
-                await file.DeleteAsync();
-
-                if (averageColor == Windows.UI.Color.FromArgb(255, 0, 0, 0))
-                {
-                    averageColor = Windows.UI.Color.FromArgb(255, 32, 32, 32);
-                }
-                else if (averageColor == Windows.UI.Color.FromArgb(255, 255, 255, 255))
-                {
-                    averageColor = Windows.UI.Color.FromArgb(255, 243, 243, 243);
-                }
-
-                return averageColor;
             }
-            catch { }
 
-            return null;
+            //Calculate the average color
+            r /= total;
+            g /= total;
+            b /= total;
+
+            return Windows.UI.Color.FromArgb(255, (byte)r, (byte)g, (byte)b);
+
         }
 
-        internal static Color? GetWebView2UpperLeftCornerPixelColorAsync(WebView2 webView)
-        {
-            try
-            {
-                await webView.EnsureCoreWebView2Async();
-
-                // Capture the webview2 content
-                await webView.EnsureCoreWebView2Async();
-
-                // Capture the WebView content
-                var captureStream = new InMemoryRandomAccessStream();
-                await webView.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, captureStream);
-
-                Bitmap bmp = new(captureStream);
-
-                return bmp.GetPixel(0, 0);  
-                /*
-                Page.getNavigationHistory // cdp get history
-                https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-captureScreenshot Page.CaptureScreenshot
-                with quality = 0
-                                  x  y  w  h  idk
-                clip = Viewport ({0, 0, 1, 1, 1})
-                optimizeForSpeed = true
-
-                https://chromedevtools.github.io/devtools-protocol/tot/Autofill/
-                returns a Base64 image*/
-                
-            }
-        }
-
-        internal static Color? GetWebView2AverageColorAsync(WebView2 webView, uint width = 600, uint height = 600, int step = 1)
-        {
-            try
-            {
-                await webView.EnsureCoreWebView2Async();
-
-                // Capture the webview2 content
-                await webView.EnsureCoreWebView2Async();
-
-                // Capture the WebView content
-                var captureStream = new InMemoryRandomAccessStream();
-                await webView.CoreWebView2.CapturePreviewAsync(CoreWebView2CapturePreviewImageFormat.Png, captureStream);
-
-                Bitmap bmp = new(captureStream);
-                
-                int r = 0;
-                int g = 0;
-                int b = 0;
-            
-                int total = 0; // The total number of pixel with the color calculated
-            
-                for (int x = 0; x < width; x += step)
-                {
-                     for (int y = 0; y < heigth; y++)
-                     {
-                          Color clr = bmp.GetPixel(x, y);    
-                          r += clr.R;
-                          g += clr.G;
-                          b += clr.B;    
-                          total++;
-                     }
-                }
-            
-                //Calculate the average color
-                r /= total;
-                g /= total;
-                b /= total;
-            
-                return Color.FromArgb(r, g, b);
-            }
-            catch { return null; }
-        }
+        
+        
     }
+
 }

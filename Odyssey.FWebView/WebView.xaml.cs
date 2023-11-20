@@ -197,8 +197,6 @@ namespace Odyssey.FWebView
             LoginAutoFill = new(this);
             LoginAutoFill.LoginPageDetectedChanged += (s, a) => LoginPageDetectedAction();
 
-
-
             DarkReader darkReader = new(this);
             if (Settings.IsDarkReaderEnabled != false) // == null or true
             {
@@ -209,13 +207,13 @@ namespace Odyssey.FWebView
                     darkReader.Enable();
                 }
             }
-
+            sender.CoreWebView2.Settings.AreDevToolsEnabled = true;
             // Add CDP event to get certificate info
             try // it seems to has some chances to fail and idk why
             {
                 // It makes the app very unstable 
                 /*
-                sender.CoreWebView2.Settings.AreDevToolsEnabled = true;
+                
                 await sender.CoreWebView2.CallDevToolsProtocolMethodAsync("Network.enable", "{}");
                 await sender.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.enable", "{}");
 
@@ -224,9 +222,21 @@ namespace Odyssey.FWebView
                 */
             }
             catch { }
+
+            UpdateThemeWithColorChange();
         }
 
-
+        private async void UpdateThemeWithColorChange()
+        {
+            while(true)
+            {
+                await Task.Delay(1500);
+                if(IsVisible)
+                {
+                    DynamicTheme.UpdateDynamicTheme(this);
+                }
+            }
+        }
 
         private void DevToolsProtocolEventReceived(CoreWebView2 sender, CoreWebView2DevToolsProtocolEventReceivedEventArgs args)
         {

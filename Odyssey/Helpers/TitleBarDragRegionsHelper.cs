@@ -157,14 +157,16 @@ namespace Odyssey.Helpers
 
             foreach (var titleBar in _titleBars)
             {
+                var transformTitleBar = titleBar.TransformToVisual(_titleBarParent);
+                Point titleBarPosition = transformTitleBar.TransformPoint(new Point(0, 0));
+
+                double scaleAdjustment = GetScaleAdjustment();
+
                 var children = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
                 if(children.Count > 0)
                 {
                     // Set the first drag region (between the start of the titlebar and the first control)
                     dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar));
-    
-                    var transformTitleBar = titleBar.TransformToVisual(_titleBarParent);
-                    Point titleBarPosition = transformTitleBar.TransformPoint(new Point(0, 0));
     
                     for (int i = 0; i < children.Count - 1; i++)
                     {
@@ -179,8 +181,6 @@ namespace Odyssey.Helpers
                         // Convert to point
                         Point element1Position = transform.TransformPoint(new Point(0, 0));
                         Point element2Position = transform2.TransformPoint(new Point(0, 0));
-    
-                        double scaleAdjustment = GetScaleAdjustment();
     
                         // Create the actual drag region based on the elements 1 and 2 and the titleBar position
                         Windows.Graphics.RectInt32 dragRect;
