@@ -75,6 +75,9 @@ namespace Odyssey.Helpers
         private FrameworkElement _titleBarParent; // this should be Window.Content in most cases
         private int _height;
 
+        /// <remarks>
+        /// Every Grid and StackPanel used should have fixed value or HorizontalAlignement
+        /// </remarks>
         /// <summary>
         /// Object that automatically create titleBar drag regions according to various parameters.
         /// </summary>
