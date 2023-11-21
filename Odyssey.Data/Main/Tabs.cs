@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Odyssey.Shared.ViewModels.Data;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace Odyssey.Data.Main
 {
-    public class Tabs
+    public static class Tabs
     {
         public static ObservableCollection<Tab> Items { get; set; } = new();
 
@@ -13,17 +14,20 @@ namespace Odyssey.Data.Main
         {
             try
             {
-                string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
+                if(Items.Count!= 0)
                 {
-                    ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver
+                    string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
                     {
-                        IgnoreSerializableAttribute = true,
-                        IgnoreSerializableInterface = true,
-                        IgnoreShouldSerializeMembers = true,
-                    },
-                    Formatting = Formatting.Indented,
-                });
-                File.WriteAllText(Data.TabsFilePath, serializedObject);
+                        ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver
+                        {
+                            IgnoreSerializableAttribute = true,
+                            IgnoreSerializableInterface = true,
+                            IgnoreShouldSerializeMembers = true,
+                        },
+                        Formatting = Formatting.Indented,
+                    });
+                    File.WriteAllText(Data.TabsFilePath, serializedObject);
+                }
             }
             catch { }
         }
@@ -44,6 +48,20 @@ namespace Odyssey.Data.Main
 
             return Items;
 
+        }
+
+        public static ObservableCollection<Tab> Get()
+        {
+            var tabs = new ObservableCollection<Tab>();
+
+            if (File.Exists(Data.TabsFilePath))
+            {
+                string jsonString = File.ReadAllText(Data.TabsFilePath);
+
+                tabs = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<Tab>>(jsonString);
+            }
+
+            return tabs;
         }
     }
 }

@@ -82,7 +82,7 @@
                         <!-- Titlebar content -->
                         <Grid x:Name="AppTitleBar" Height="42"
                                 VerticalAlignment="Stretch"
-                                BorderBrush="#FF2E2E2E"
+                                BorderBrush="#33808080"
                                 BorderThickness="0,0,0,1"
                                 x:FieldModifier="public"
                                 Background="Transparent">
