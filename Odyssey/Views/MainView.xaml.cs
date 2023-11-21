@@ -80,7 +80,7 @@ namespace Odyssey.Views
             titleBarDragRegions = new TitleBarDragRegions(
                 new List<Grid>() { AppTitleBar, secondTitleBar },
                 MainWindow.Current,
-                new List<Type>() { typeof(ProgressBar), typeof(TextBlock), typeof(Grid), typeof(Microsoft.UI.Xaml.Shapes.Rectangle), typeof(Frame)},
+                new List<Type>() { typeof(ProgressBar), typeof(TextBlock), typeof(Microsoft.UI.Xaml.Shapes.Rectangle), typeof(Frame)},
                 MainWindow.Current.Content as FrameworkElement,
                 42);
 
@@ -313,6 +313,15 @@ namespace Odyssey.Views
             options.Position = new Windows.Foundation.Point(splitViewContentFrame.ActualWidth / 2, 100);
 
             searchBar.ShowAt(splitViewContentFrame, options);
+        }
+
+        private void MainMenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(CurrentlySelectedWebView != null)
+            {
+                MainMenuFlyout mainMenuFlyout = new();
+                mainMenuFlyout.ShowAt(infoRegionStckPanel);
+            }
         }
     }
 

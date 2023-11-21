@@ -94,11 +94,14 @@
 
 
                             <!-- Controls region -->
-                            <Button Margin="3" Content="&#xE8A0;" Click="HomeButton_Click"/>
+                            <Grid Width="100" HorizontalAlignment="Left">
+                                <Button Margin="3" Content="&#xE8A0;" Click="HomeButton_Click" FontSize="15"/>
+                                <Button Margin="40,3,3,3" Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
+                            </Grid>
 
                             <!-- Info region -->
-                            <StackPanel HorizontalAlignment="Center"  Grid.Column="2" Orientation="Horizontal">
-                                <Button Content="&#xE9E9;"/>
+                            <StackPanel Orientation="Horizontal" x:Name="infoRegionStckPanel" HorizontalAlignment="Center"  Grid.Column="2" >
+                                <Button Content="&#xE9E9;" Click="MainMenuButton_Click"/>
                                 <TextBlock x:FieldModifier="public" x:Name="documentTitle" Tapped="documentTitle_Tapped" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
                             </StackPanel>
                         </Grid>

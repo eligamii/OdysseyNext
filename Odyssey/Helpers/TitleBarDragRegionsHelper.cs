@@ -15,7 +15,7 @@ using WinRT.Interop;
 namespace Odyssey.Helpers
 {
     // This was made specifically for the Odyssey and LightCode titlebars but should works on almost every app without modification
-    public class TitleBarDragRegions
+    public class TitleBarDragRegions // v1
     {
         [DllImport("Shcore.dll", SetLastError = true)]
         public static extern int GetDpiForMonitor(IntPtr hmonitor, Monitor_DPI_Type dpiType, out uint dpiX, out uint dpiY);
@@ -181,13 +181,21 @@ namespace Odyssey.Helpers
                         // Convert to point
                         Point element1Position = transform.TransformPoint(new Point(0, 0));
                         Point element2Position = transform2.TransformPoint(new Point(0, 0));
-    
+
+                        // Get the max width value between the 2 elements to avoid negative values
+                        int width = Math.Max((int)((element2Position.X - (element1Position.X + element1.ActualSize.X)) * scaleAdjustment),
+                                             (int)((element1Position.X - (element2Position.X + element2.ActualSize.X)) * scaleAdjustment));
+
+                        // Idem but for too high values
+                        int x = Math.Min((int)((element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment),
+                                         (int)((element2.ActualSize.X + titleBarPosition.X) * scaleAdjustment));
+
                         // Create the actual drag region based on the elements 1 and 2 and the titleBar position
                         Windows.Graphics.RectInt32 dragRect;
-                        dragRect.X = (int)((element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment);
+                        dragRect.X = x;
                         dragRect.Y = 0;
                         dragRect.Height = (int)(_height * scaleAdjustment);
-                        dragRect.Width = (int)((element2Position.X - (element1Position.X + element1.ActualSize.X)) * scaleAdjustment);
+                        dragRect.Width = width;
                         dragRectsList.Add(dragRect);
                     }
     
