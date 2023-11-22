@@ -41,7 +41,12 @@ namespace Odyssey.Views.Pages
             lastSessionListView.ItemsSource = Tabs.Get();
             foreach(Tab tab in lastSessionListView.Items)
             {
-                tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+                try
+                {
+                    tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+
+                } catch { }
+
             }
         }
 

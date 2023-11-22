@@ -87,8 +87,6 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
-            await Data.Main.Data.Init();
-
             titleBarDragRegions = new TitleBarDragRegions(
                 new List<Grid>() { AppTitleBar, secondTitleBar },
                 MainWindow.Current,
@@ -116,7 +114,10 @@ namespace Odyssey.Views
             DynamicTheme.TitleBar = AppTitleBar;
             DynamicTheme.UpdateTheme = true;
 
+            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
+
             // Start the 2FA service
+            await Data.Main.Data.Init();
             TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
 
             // Load data          
@@ -125,8 +126,6 @@ namespace Odyssey.Views
 
             // Restore tabs after crash
             RestoreTabs();
-
-            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
 
             // Require these to not crash
             WebView.MainDownloadElement = moreButton;
