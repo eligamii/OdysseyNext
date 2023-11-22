@@ -17,7 +17,9 @@ using Odyssey.Dialogs;
 using Odyssey.FWebView;
 using Odyssey.FWebView.Classes;
 using Odyssey.Helpers;
+using Odyssey.OtherWindows;
 using Odyssey.QuickActions;
+using Odyssey.TwoFactorsAuthentification;
 using Odyssey.Views.Pages;
 using System;
 using System.Collections.Generic;
@@ -43,6 +45,16 @@ namespace Odyssey.Views
     {
         public static MainView Current { get; set; }
         public TitleBarDragRegions titleBarDragRegions;
+        public string MainDocumentTitle { get { return documentTitle.Text; } 
+            set 
+            { 
+                if(value != documentTitle.Text)
+                {
+                    documentTitle.Text = value;
+                    titleBarDragRegions.SetDragRegionForTitleBars();
+                } 
+            }
+        }
         public static WebView CurrentlySelectedWebView
         {
             get { return Current.splitViewContentFrame.Content as WebView; }
@@ -59,10 +71,8 @@ namespace Odyssey.Views
         }
 
 
-        private async void RestoreTabs()
+        private void RestoreTabs()
         {
-            await Data.Main.Data.Init();
-
             // Get the instances of the app to prevent tabs from restoring on anther instances
             // when an instance has opened tabs (so when Settings.SuccessfullyClosed == false with an instance opened)
             var instances = Microsoft.Windows.AppLifecycle.AppInstance.GetInstances();
@@ -77,6 +87,8 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
+            await Data.Main.Data.Init();
+
             titleBarDragRegions = new TitleBarDragRegions(
                 new List<Grid>() { AppTitleBar, secondTitleBar },
                 MainWindow.Current,
@@ -117,8 +129,8 @@ namespace Odyssey.Views
             SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
 
             // Require these to not crash
-            WebView.MainDownloadElement = new Button();
-            WebView.MainHistoryElement = new Button();
+            WebView.MainDownloadElement = moreButton;
+            WebView.MainHistoryElement = moreButton;
             WebView.MainIconElement = new Microsoft.UI.Xaml.Controls.Image();
             WebView.MainProgressBar = progressBar;
             WebView.MainProgressElement = new ProgressBar();
@@ -141,6 +153,22 @@ namespace Odyssey.Views
 
             this.ActualThemeChanged += (s, a) => SetCustomTheme();
             splitViewContentFrame.Navigate(typeof(HomePage));
+
+            // Load 2FA
+            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
+
+            // Update the titlebar drag region based on the text of the documentTitle
+            documentTitle.LayoutUpdated += DocumentTitle_LayoutUpdated;
+        }
+
+        private string _lastText = string.Empty;
+        private void DocumentTitle_LayoutUpdated(object sender, object e)
+        {
+            string text = documentTitle.Text;
+            if(_lastText != text)
+            {
+                titleBarDragRegions.SetDragRegionForTitleBars();
+            }
         }
 
         private bool lastConnectionState;
@@ -323,14 +351,37 @@ namespace Odyssey.Views
                 mainMenuFlyout.ShowAt(infoRegionStckPanel);
             }
         }
-    }
 
-    public class Object
-    {
-        public Object obj = new();
-        public Object()
+        private void HistoryMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
+            WebView.OpenHistoryDialog(moreButton);
+        }
 
+        private void DownloadsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            WebView.OpenDownloadDialog(moreButton);
+        }
+
+        private void _2FAMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(moreButton);
+        }
+
+        private async void SettingsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog settingsDialog = new()
+            {
+                XamlRoot = this.XamlRoot
+            };
+
+            await settingsDialog.ShowAsync();
+        }
+
+        private void DevToolsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            DevToolsWindow devToolsWindow = new();
+            devToolsWindow.Activate();
         }
     }
 }
+

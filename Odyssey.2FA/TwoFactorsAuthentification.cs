@@ -1,9 +1,12 @@
 using Microsoft.UI.Xaml;
 using Odyssey.Shared.Helpers;
+using Odyssey.Shared.ViewModels.Data;
 using Odyssey.TwoFactorsAuthentification.Controls;
 using Odyssey.TwoFactorsAuthentification.ViewModels;
 using OtpNet;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Security.Credentials;
 using Windows.Security.Credentials.UI;
@@ -20,10 +23,7 @@ namespace Odyssey.TwoFactorsAuthentification
         private static DispatcherTimer loginTimer;
         private static bool userAuthenticifated = false;
 
-        private static bool dataInitialized = false;
-
-        // https://learn.microsoft.com/en-us/windows/uwp/security/credential-locker
-        private static PasswordVault vault = new PasswordVault();
+        internal static ObservableCollection<TwoFactAuth> Items { get; set; } = new();
         public static void Init()
         {
             // Setup the login timer (will re-ask to enter Windows Hello password after 5min) 
@@ -31,38 +31,19 @@ namespace Odyssey.TwoFactorsAuthentification
             loginTimer.Interval = TimeSpan.FromMinutes(5);
             loginTimer.Tick += (s, a) => userAuthenticifated = false;
 
-            Data.TwoFactAuthData.Load();
+            InitData();
         }
 
-        private static void InitData()
+        private static async void InitData()
         {
-            if (!dataInitialized)
+            var items = await Data.Main.TwoFactorsAuthentification.Load();
+
+            foreach(var item in items)
             {
-                // If the 2FA.json file was removed
-                bool shouldRestore = Data.TwoFactAuthData.Items.Count == 0;
+                TwoFactAuth twoFactAuth = new(item);
+                twoFactAuth.Start();
 
-                var credencials = Helpers.CredencialsHelper.GetCredentialsFromLocker("Odyssey2FA");
-                foreach (var item in credencials)
-                {
-                    if (shouldRestore)
-                    {
-                        // Create the items
-                        TwoFactAuth twoFactAuth = new()
-                        {
-                            Name = item.UserName.Split("/").ElementAt(0)
-                        };
-
-                        twoFactAuth.Start(Base32Encoding.ToBytes(item.UserName.Split("/").ElementAt(1)));
-                        Data.TwoFactAuthData.Items.Add(twoFactAuth);
-                    }
-                    else
-                    {
-                        TwoFactAuth twoFactAuth = Data.TwoFactAuthData.Items.Where(p => p.Name == item.UserName.Split("/").ElementAt(0)).ToList().First();
-
-                        twoFactAuth.Start(Base32Encoding.ToBytes(item.UserName.Split("/").ElementAt(1)));
-                    }
-                    //vault.Remove(item);
-                }
+                Items.Add(twoFactAuth);
             }
         }
 
@@ -80,7 +61,6 @@ namespace Odyssey.TwoFactorsAuthentification
                     loginTimer.Start();
                     Two2FAFlyout flyout = new();
                     flyout.ShowAt(element);
-                    InitData();
                 }
             }
             else
@@ -90,23 +70,23 @@ namespace Odyssey.TwoFactorsAuthentification
                 loginTimer.Start();
                 Two2FAFlyout flyout = new();
                 flyout.ShowAt(element);
-                InitData();
             }
         }
 
         public static void Add(string name, string secret)
         {
             // Remplacement needed as the password property cannot be read
-            vault.Add(new PasswordCredential("Odyssey2FA", $"{name}/{secret}", "placeholder"));
-
-            TwoFactAuth twoFactAuth = new()
+            TwoFactorAuthItem item = new()
             {
-                Name = name
+                Name = name,
+                Secret = Base32Encoding.ToBytes(secret)
             };
 
-            twoFactAuth.Start(Base32Encoding.ToBytes(secret));
+            TwoFactAuth twoFactAuth = new(item);
+            twoFactAuth.Start();
 
-            Data.TwoFactAuthData.Items.Add(twoFactAuth);
+            Items.Add(twoFactAuth);
+            Data.Main.TwoFactorsAuthentification.Items.Add(item);
         }
 
     }

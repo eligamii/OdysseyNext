@@ -599,21 +599,7 @@ namespace Odyssey.Views
             FavoriteGrid.SelectedItem = favorite;
         }
 
-        private void HistoryMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
-        {
-            WebView.OpenHistoryDialog(moreButton);
-        }
-
-        private void DownloadsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
-        {
-            WebView.OpenDownloadDialog(moreButton);
-        }
-
-        private void _2FAMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
-        {
-            TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(moreButton);
-        }
-
+        
         private void ViewportBehavior_EnteredViewport(object sender, EventArgs e)
         {
             secondNewTabButton.Visibility = ViewportBehavior.IsFullyInViewport ? Visibility.Collapsed : Visibility.Visible;

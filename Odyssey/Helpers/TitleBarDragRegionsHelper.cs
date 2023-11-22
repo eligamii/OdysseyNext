@@ -76,7 +76,11 @@ namespace Odyssey.Helpers
         private int _height;
 
         /// <remarks>
-        /// Every Grid and StackPanel used should have fixed value or HorizontalAlignement
+        /// Remarks :
+        /// <list type="bullet">
+        /// <item>Every Grid and StackPanel used should have fixed value or HorizontalAlignement</item>
+        /// <item>You can use the "children" and "ignore" tag on your elements to threat only their children or ingore them</item>
+        /// </list>
         /// </remarks>
         /// <summary>
         /// Object that automatically create titleBar drag regions according to various parameters.
@@ -101,11 +105,34 @@ namespace Odyssey.Helpers
         }
 
 
+        private List<UIElement> GetChildrenForTitleBar(Grid titleBar)
+        {
+            List<UIElement> finalList = new();
+            var tempList = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
 
+            foreach (FrameworkElement child in tempList)
+            {
+                string tag = child.Tag == null ? "none" : child.Tag.ToString();
+
+                if (tag == "children")
+                {
+                    foreach(var grandChild in ((Panel)child).Children)
+                    {
+                        finalList.Add(grandChild);
+                    }
+                }
+                else if(tag != "ignore")
+                {
+                    finalList.Add(child);
+                }
+            }
+
+            return finalList.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
+        }
         
         private Windows.Graphics.RectInt32 GetFirstOrLastDragRegionForTitleBar(Grid titleBar, bool first = true)
         {
-            var children = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
+            var children = GetChildrenForTitleBar(titleBar);
 
             var transformTitleBar = titleBar.TransformToVisual(_titleBarParent);
             Point titleBarPosition = transformTitleBar.TransformPoint(new Point(0, 0));
@@ -165,8 +192,8 @@ namespace Odyssey.Helpers
 
                 double scaleAdjustment = GetScaleAdjustment();
 
-                var children = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
-                if(children.Count > 0)
+                var children = GetChildrenForTitleBar(titleBar);
+                if (children.Count > 0)
                 {
                     // Set the first drag region (between the start of the titlebar and the first control)
                     dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar));
@@ -190,7 +217,7 @@ namespace Odyssey.Helpers
                                              (int)((element1Position.X - (element2Position.X + element2.ActualSize.X)) * scaleAdjustment));
 
                         // Idem but for too high values
-                        int x = Math.Min((int)((element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment),
+                        int x = Math.Max((int)((element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment),
                                          (int)((element2.ActualSize.X + titleBarPosition.X) * scaleAdjustment));
 
                         // Create the actual drag region based on the elements 1 and 2 and the titleBar position
@@ -218,7 +245,10 @@ namespace Odyssey.Helpers
             }
 
             Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
-            _window.AppWindow.TitleBar.SetDragRectangles(dragRects);
+            try
+            {
+                _window.AppWindow.TitleBar.SetDragRectangles(dragRects);
+            } catch { }
         }
     }
 }

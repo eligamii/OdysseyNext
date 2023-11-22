@@ -13,10 +13,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <!--InfoTip-->
-           
-           
-            
             <!-- Transpatant button style -->
             <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
                 <Setter Property="Background" Value="Transparent"/>
@@ -94,13 +90,48 @@
 
 
                             <!-- Controls region -->
-                            <Grid Width="100" HorizontalAlignment="Left">
-                                <Button Margin="3" Content="&#xE8A0;" Click="HomeButton_Click" FontSize="15"/>
-                                <Button Margin="40,3,3,3" Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
-                            </Grid>
+                            <StackPanel Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <Button Content="&#xE80F;" Click="HomeButton_Click"/>
+                                <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
+                                <Button Visibility="Visible" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right">
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=History, Filename=ContextMenus}" Click="HistoryMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE81C;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=Downloads, Filename=ContextMenus}" Click="DownloadsMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE118;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=TwoFactAuth, Filename=ContextMenus}" Click="_2FAMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE192;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="Settings" Click="SettingsMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE713;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="DevTools" Click="DevToolsMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE756;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+
+                            </StackPanel>
 
                             <!-- Info region -->
-                            <StackPanel Orientation="Horizontal" x:Name="infoRegionStckPanel" HorizontalAlignment="Center"  Grid.Column="2" >
+                            <StackPanel Tag="children" Orientation="Horizontal" x:Name="infoRegionStckPanel" HorizontalAlignment="Center"  Grid.Column="2" >
                                 <Button Content="&#xE9E9;" Click="MainMenuButton_Click"/>
                                 <TextBlock x:FieldModifier="public" x:Name="documentTitle" Tapped="documentTitle_Tapped" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
                             </StackPanel>

@@ -32,11 +32,13 @@ namespace Odyssey.Data.Main
             SearchBarShortcutsFilePath = Path.Combine(path, "SearchBarShortcuts.json");
             QuickActionFilePath = Path.Combine(path, "QuickActions.json");
             FavoritesFilePath = Path.Combine(path, "Favorites.json");
-            HistoryFilePath = Path.Combine(path, "History.json");
-            LoginsFilePath = Path.Combine(path, "Logins.json");
+            HistoryFilePath = Path.Combine(path, "History.json");  
             PinsFilePath = Path.Combine(path, "Pins.json");
             TabsFilePath = Path.Combine(path, "Tabs.json");
 
+            // Always encrypted data
+            LoginsFilePath = Path.Combine(path, "Logins.json");
+            TotpFilePath = Path.Combine(path, "2FA.json");
 
             SearchBarShortcuts.Load();
             QuickActions.Load();

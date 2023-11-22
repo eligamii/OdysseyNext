@@ -16,7 +16,7 @@ namespace Odyssey.TwoFactorsAuthentification.Controls
         public Two2FAFlyout()
         {
             this.InitializeComponent();
-            list.ItemsSource = Data.TwoFactAuthData.Items;
+            list.ItemsSource = TwoFactorsAuthentification.Items;
         }
 
         private void ListViewItem_Tapped(object sender, TappedRoutedEventArgs e)

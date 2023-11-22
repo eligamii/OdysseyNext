@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Odyssey.Shared.ViewModels.Data;
+using OtpNet;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -8,20 +10,19 @@ namespace Odyssey.TwoFactorsAuthentification.ViewModels
 {
     public class TwoFactAuth : INotifyPropertyChanged
     {
-        private string code;
+        private string code = "000000";
         private int progressValue = 100;
 
         private int remainingSeconds;
-
-
-        [DataMember]
-        public OtpNet.OtpHashMode OtpHashMode { get; set; } = OtpNet.OtpHashMode.Sha1;
-        [DataMember]
-        public int Size { get; set; } = 6;
-        [DataMember]
-        public int Step { get; set; } = 30;
-        [DataMember]
         public string Name { get; set; }
+
+        public TwoFactorAuthItem Data { get; set; }
+
+        public TwoFactAuth(TwoFactorAuthItem data)
+        {
+            Data = data;
+            Name = data.Name;
+        }
 
         public string Code
         {
@@ -50,17 +51,16 @@ namespace Odyssey.TwoFactorsAuthentification.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
 
-        private OtpNet.Totp totp;
-        public void Start(byte[] secret)
+        private Totp totp;
+        public void Start()
         {
-            totp = new(secret, Step, OtpHashMode, Size);
-
+            totp = new(Data.Secret, Data.Step, (OtpHashMode)Data.OtpHashMode, Data.Size);
             Refresh();
 
         }

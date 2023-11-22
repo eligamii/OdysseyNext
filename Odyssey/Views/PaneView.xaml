@@ -47,41 +47,6 @@
             </Style>
         </Grid.Resources>
        
-        <Button Visibility="Collapsed" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right" Margin="0,0,5,0">
-            <Button.Flyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Text="{helpers:ResourceString Name=History, Filename=ContextMenus}" Click="HistoryMenuFlyoutItem_Click">
-                        <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xE81C;"/>
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                    <MenuFlyoutItem Text="{helpers:ResourceString Name=Downloads, Filename=ContextMenus}" Click="DownloadsMenuFlyoutItem_Click">
-                        <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xE118;"/>
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                    <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem Text="{helpers:ResourceString Name=TwoFactAuth, Filename=ContextMenus}" Click="_2FAMenuFlyoutItem_Click">
-                        <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xE192;"/>
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                    <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem Text="Settings" Click="SettingsMenuFlyoutItem_Click">
-                        <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xE192;"/>
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                    <MenuFlyoutSeparator/>
-                    <MenuFlyoutItem Text="DevTools" Click="DevToolsMenuFlyoutItem_Click">
-                        <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xE192;"/>
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                </MenuFlyout>
-            </Button.Flyout>
-        </Button>
-
         <GridView Drop="FavoriteGrid_Drop" DragOver="TabsView_DragOver" DragItemsStarting="TabsView_DragItemsStarting" DragItemsCompleted="TabsView_DragItemsCompleted" PointerMoved="FavoriteGrid_PointerMoved" SelectionChanged="ItemsViews_SelectionChanged" Grid.Row="1" AllowDrop="True" CanReorderItems="True" CanDragItems="True" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="12.5,0,8,6" x:Name="FavoriteGrid" x:FieldModifier="public" Loaded="FavoriteGrid_Loaded">
             <GridView.ItemTemplate>
                 <DataTemplate>
