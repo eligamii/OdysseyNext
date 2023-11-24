@@ -12,6 +12,7 @@ namespace Odyssey.Data.Main
     {
         internal static string SearchBarShortcutsFilePath { get; private set; }
         internal static string QuickActionFilePath { get; private set; } // %localappdata%\...\LocalState\Data\QuickActions.json
+        internal static string DownloadsFilePath { get; private set; }
         internal static string FavoritesFilePath { get; private set; } // %localappdata%\...\LocalState\Data\Favorites.json
         internal static string HistoryFilePath { get; private set; } // %localappdata%\...\LocalState\Data\History.json (custom file for performances and control)
         internal static string LoginsFilePath { get; private set; } // %localappdata%\...\LocalState\Data\Logins.json
@@ -31,6 +32,7 @@ namespace Odyssey.Data.Main
 
             SearchBarShortcutsFilePath = Path.Combine(path, "SearchBarShortcuts.json");
             QuickActionFilePath = Path.Combine(path, "QuickActions.json");
+            DownloadsFilePath = Path.Combine(path, "Downloads.json");
             FavoritesFilePath = Path.Combine(path, "Favorites.json");
             HistoryFilePath = Path.Combine(path, "History.json");  
             PinsFilePath = Path.Combine(path, "Pins.json");
@@ -42,6 +44,7 @@ namespace Odyssey.Data.Main
 
             SearchBarShortcuts.Load();
             QuickActions.Load();
+            Downloads.Load();
             Favorites.Load();
             History.Load();
             Logins.Load();

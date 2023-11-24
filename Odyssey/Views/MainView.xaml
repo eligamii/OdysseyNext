@@ -96,6 +96,22 @@
                                 <Button Visibility="Visible" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right">
                                     <Button.Flyout>
                                         <MenuFlyout>
+                                            <MenuFlyoutItem Click="BackButton_Click" Text="{helpers:ResourceString Name=Back, Filename=Main}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE0A6;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Click="ForwardButton_Click" Text="{helpers:ResourceString Name=Forward, Filename=Main}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE0AB;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Click="RefreshButton_Click" Text="{helpers:ResourceString Name=Refresh, Filename=Main}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE149;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
                                             <MenuFlyoutItem Text="{helpers:ResourceString Name=History, Filename=ContextMenus}" Click="HistoryMenuFlyoutItem_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE81C;"/>

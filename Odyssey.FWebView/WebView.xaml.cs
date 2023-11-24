@@ -344,14 +344,12 @@ namespace Odyssey.FWebView
         {
             if (!args.DownloadOperation.Uri.StartsWith("blob"))
             {
-                Downloads.Objects.DownloadItem aria2Download = new(args.DownloadOperation.Uri);
-                Downloads.Data.Downloads.Items.Insert(0, aria2Download);
+                DownloadsFlyout.Items.Insert(0, new DonwloadItem { DownloadUrl = args.DownloadOperation.Uri });
                 args.Cancel = true;
             }
             else // The file was downloaded in another location before (mega.nz downloads)
             {
-                Downloads.Objects.DownloadItem aria2Download = new(args.DownloadOperation);
-                Downloads.Data.Downloads.Items.Insert(0, aria2Download);
+                DownloadsFlyout.Items.Insert(0, new DonwloadItem { downloadOperation = args.DownloadOperation });
             }
 
             downloadsFlyout.ShowAt(MainDownloadElement);

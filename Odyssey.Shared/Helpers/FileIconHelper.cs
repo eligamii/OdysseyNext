@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 
-namespace Odyssey.FWebView.Helpers
+namespace Odyssey.Shared.Helpers
 {
     internal class FileIconHelper
     {

@@ -1,14 +1,18 @@
 ﻿using Newtonsoft.Json;
 using Odyssey.Shared.ViewModels.Data;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Odyssey.Data.Main
 {
-    public class Favorites
+    public class Downloads
     {
-
-        public static ObservableCollection<Favorite> Items { get; set; }
+        public static ObservableCollection<DonwloadItem> Items { get; set; }
 
         internal static void Save()
         {
@@ -22,20 +26,20 @@ namespace Odyssey.Data.Main
                 },
                 Formatting = Formatting.Indented,
             });
-            File.WriteAllText(Data.FavoritesFilePath, serializedObject);
+            File.WriteAllText(Data.DownloadsFilePath, serializedObject);
         }
 
         internal static void Load()
         {
-            if (File.Exists(Data.FavoritesFilePath))
+            if (File.Exists(Data.DownloadsFilePath))
             {
-                string jsonString = File.ReadAllText(Data.FavoritesFilePath);
+                string jsonString = File.ReadAllText(Data.DownloadsFilePath);
 
-                Items = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<Favorite>>(jsonString);
+                Items = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<DonwloadItem>>(jsonString);
             }
             else
             {
-                Items = new ObservableCollection<Favorite>();
+                Items = new ObservableCollection<DonwloadItem>();
             }
 
             Items.CollectionChanged += (s, a) => Save();

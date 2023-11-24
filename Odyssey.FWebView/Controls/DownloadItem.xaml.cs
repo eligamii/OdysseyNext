@@ -12,108 +12,12 @@ namespace Odyssey.FWebView.Controls
 {
     public sealed partial class DownloadItem : ListViewItem
     {
-        private class DownloadData : INotifyPropertyChanged
-        {
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            private bool isProgressActive = false;
-            private bool isProgressIntermeinate = true;
-
-            private double progressValue = 0;
-            private string title = string.Empty;
-            private string subtitle = string.Empty;
-
-            protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-
-            public bool IsProgressActive
-            {
-                get
-                {
-                    return isProgressActive;
-                }
-                set
-                {
-                    if (value != isProgressActive)
-                    {
-                        isProgressActive = value;
-                        OnPropertyChanged();
-                    }
-                }
-            }
-            public bool IsProgressIntermeinate
-            {
-                get
-                {
-                    return isProgressIntermeinate;
-                }
-                set
-                {
-                    if (value != isProgressIntermeinate)
-                    {
-                        isProgressIntermeinate = value;
-                        OnPropertyChanged();
-                    }
-
-                }
-            }
-
-            public double ProgressValue
-            {
-                get
-                {
-                    return progressValue;
-                }
-                set
-                {
-                    if (value != progressValue)
-                    {
-                        progressValue = value;
-                        OnPropertyChanged();
-                    }
-                }
-            }
-            public string Title
-            {
-                get
-                {
-                    return title;
-                }
-                set
-                {
-                    if (value != title)
-                    {
-                        title = value;
-                        OnPropertyChanged();
-                    }
-                }
-            }
-            public string Subtitle
-            {
-                get
-                {
-                    return subtitle;
-                }
-                set
-                {
-                    if (value != subtitle)
-                    {
-                        subtitle = value;
-                        OnPropertyChanged();
-                    }
-                }
-            }
-        }
-
-        DownloadData downloadData = new();
         public DownloadItem(Process process)
         {
             this.InitializeComponent();
             //process.OutputDataReceived += Process_OutputDataReceived; // Get the download info
 
-            this.DataContext = downloadData;
+            //this.DataContext = downloadData;
         }
 
         /*

@@ -46,12 +46,12 @@
 
                             <Grid>
                                 <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0" Source="{Binding Icon}"/>
-                                <ProgressRing x:Name="progressRing" Value="{Binding Progress}" IsActive="{Binding IsProgressActive}" IsIndeterminate="{Binding IsProgressIntermeinate}" Width="19" Height="19"/>
+                                <ProgressRing x:Name="progressRing" Value="{Binding Progress}" IsActive="{Binding IsProgressActive}" IsIndeterminate="False" Width="19" Height="19"/>
                             </Grid>
 
                             <StackPanel Margin="10,-3,0,0" VerticalAlignment="Center" Grid.Column="1">
                                 <TextBlock Text="{Binding Title}" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
-                                <TextBlock Text="{Binding Description}" Margin="0,-2,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
+                                <TextBlock Text="{Binding Subtitle}" Margin="0,-2,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
                             </StackPanel>
 
                         </Grid>

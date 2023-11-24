@@ -121,7 +121,7 @@ namespace Odyssey.Views
             TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
 
             // Load data          
-            Downloads.Aria2.Init();
+            //Downloads.Aria2.Init();
             AdBlocker.AdBlocker.Init();
 
             // Restore tabs after crash
@@ -152,9 +152,6 @@ namespace Odyssey.Views
 
             this.ActualThemeChanged += (s, a) => SetCustomTheme();
             splitViewContentFrame.Navigate(typeof(HomePage));
-
-            // Load 2FA
-            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
 
             // Update the titlebar drag region based on the text of the documentTitle
             documentTitle.LayoutUpdated += DocumentTitle_LayoutUpdated;
