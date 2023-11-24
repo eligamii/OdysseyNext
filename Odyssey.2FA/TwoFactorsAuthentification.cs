@@ -36,14 +36,17 @@ namespace Odyssey.TwoFactorsAuthentification
 
         private static async void InitData()
         {
-            var items = await Data.Main.TwoFactorsAuthentification.Load();
-
-            foreach(var item in items)
+            if(Items.Count == 0) 
             {
-                TwoFactAuth twoFactAuth = new(item);
-                twoFactAuth.Start();
+                var items = await Data.Main.TwoFactorsAuthentification.Load();
 
-                Items.Add(twoFactAuth);
+                foreach(var item in items)
+                {
+                    TwoFactAuth twoFactAuth = new(item);
+                    twoFactAuth.Start();
+    
+                    Items.Add(twoFactAuth);
+                }
             }
         }
 
