@@ -40,10 +40,12 @@ namespace Odyssey.TwoFactorsAuthentification
 
             foreach(var item in items)
             {
-                TwoFactAuth twoFactAuth = new(item);
-                twoFactAuth.Start();
-
-                Items.Add(twoFactAuth);
+                if(!items.Any(p => p.Secret == item.Secret))
+                {
+                    TwoFactAuth twoFactAuth = new(item);
+                    twoFactAuth.Start();    
+                    Items.Add(twoFactAuth);
+                }
             }
         }
 
