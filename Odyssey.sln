@@ -30,6 +30,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Migration", "Odysse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monaco", "Monaco\Monaco.csproj", "{2D7BA2CE-38D0-437A-BD81-783FE736AC87}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AriaSharp", "..\liMusic\AriaSharp\AriaSharp.csproj", "{7C65E0BE-728D-44B5-A12D-300665F794EC}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WebView2Ex.Shared", "..\..\..\Downloads\WebView2Ex-master\WebView2Ex.Shared\WebView2Ex.Shared.shproj", "{DA1F3539-44D9-49B0-A7D6-CA2CC2756E1D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebView2Ex.WinUI", "..\..\..\Downloads\WebView2Ex-master\WebView2Ex.WinUI\WebView2Ex.WinUI.csproj", "{0DDFA628-515A-407B-B186-9EC55C35BAD9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,11 +232,47 @@ Global
 		{2D7BA2CE-38D0-437A-BD81-783FE736AC87}.Release|x64.Build.0 = Release|Any CPU
 		{2D7BA2CE-38D0-437A-BD81-783FE736AC87}.Release|x86.ActiveCfg = Release|Any CPU
 		{2D7BA2CE-38D0-437A-BD81-783FE736AC87}.Release|x86.Build.0 = Release|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Debug|x86.Build.0 = Debug|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Release|ARM64.Build.0 = Release|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Release|x64.Build.0 = Release|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Release|x86.ActiveCfg = Release|Any CPU
+		{7C65E0BE-728D-44B5-A12D-300665F794EC}.Release|x86.Build.0 = Release|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Debug|x64.ActiveCfg = Debug|x64
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Debug|x64.Build.0 = Debug|x64
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Debug|x86.Build.0 = Debug|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Release|ARM64.Build.0 = Release|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Release|x64.ActiveCfg = Release|x64
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Release|x64.Build.0 = Release|x64
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Release|x86.ActiveCfg = Release|Any CPU
+		{0DDFA628-515A-407B-B186-9EC55C35BAD9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E97039EB-46A3-4902-B609-4DE47595235B}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\..\Downloads\WebView2Ex-master\WebView2Ex.Shared\WebView2Ex.Shared.projitems*{0ddfa628-515a-407b-b186-9ec55c35bad9}*SharedItemsImports = 5
+		..\..\..\Downloads\WebView2Ex-master\WebView2Ex.Shared\WebView2Ex.Shared.projitems*{da1f3539-44d9-49b0-a7d6-ca2cc2756e1d}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
