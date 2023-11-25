@@ -1,19 +1,9 @@
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Helpers;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,7 +20,6 @@ namespace Odyssey.FWebView.Controls
 
         };
 
-        Microsoft.Windows.ApplicationModel.Resources.ResourceLoader resourceLoader = new();
 
         MenuFlyoutSubItem moreFlyout = new MenuFlyoutSubItem();
 
@@ -54,6 +43,17 @@ namespace Odyssey.FWebView.Controls
             this.Closed += (s, ex) => deferral.Complete();
             PopulateContextMenu(args, menuList, this);
             //GetQuickActionItems(webView, args);
+
+            // Fix the two separators at the same place issue, temporary
+            int sepCount = 0;
+            foreach(var item in this.Items)
+            {
+                if (item.GetType() == typeof(MenuFlyoutSeparator)) sepCount++;
+                else sepCount = 0;
+
+                if (sepCount == 2) this.Items.Remove(item);
+
+            }
 
             var options = new FlyoutShowOptions() { Position = args.Location };
 
@@ -105,7 +105,9 @@ namespace Odyssey.FWebView.Controls
         {
             if (menuFlyout.GetType() == typeof(FWebViewContextMenu))
             {
-                moreFlyout = new MenuFlyoutSubItem() { Text = resourceLoader.GetString("ShowMoreOptions"), Icon = new FontIcon { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"), Glyph = "\uE10C" } };
+                string text = Shared.Helpers.ResourceString.GetString("More", "ContextMenus");
+
+                moreFlyout = new MenuFlyoutSubItem() { Text = text, Icon = new FontIcon { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"), Glyph = "\uE10C" } };
             }
 
             IList<MenuFlyoutItemBase> itemList = new List<MenuFlyoutItemBase>();
@@ -117,8 +119,14 @@ namespace Odyssey.FWebView.Controls
                 CoreWebView2ContextMenuItem current = menuList[i];
                 if (current.Kind == CoreWebView2ContextMenuItemKind.Separator)
                 {
-                    MenuFlyoutSeparator sep = new MenuFlyoutSeparator();
-                    itemList.Add(sep);
+                    if(menuList.Count > 0)
+                    {
+                        if(menuList.Last().GetType() != typeof(MenuFlyoutSeparator))
+                        {
+                            MenuFlyoutSeparator sep = new MenuFlyoutSeparator();
+                            itemList.Add(sep);
+                        }
+                    }
                     continue;
                 }
 
@@ -179,7 +187,7 @@ namespace Odyssey.FWebView.Controls
 
                 if (current.Name == "inspectElement" && moreFlyout.Items.Count != 0)
                 {
-                    itemList.Insert(itemList.Count - 2, moreFlyout);
+                    itemList.Insert(itemList.Count - 1, moreFlyout);
                 }
 
                 if (menuFlyout.GetType() == typeof(FWebViewContextMenu))

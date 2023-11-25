@@ -6,7 +6,7 @@
     xmlns:local="using:Odyssey.FWebView.Controls.Flyouts"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:helpers="using:Odyssey.Helpers"
+    xmlns:helpers="using:Odyssey.Shared.Helpers"
     mc:Ignorable="d">
 
     <Flyout.FlyoutPresenterStyle>
@@ -29,13 +29,13 @@
         <Grid Grid.Row="0" VerticalAlignment="Center" Margin="12,4,5,0">
             <TextBlock Grid.Row="0" FontSize="16"
                    Style="{ThemeResource BodyStrongTextBlockStyle}"
-                   Text="{helpers:ResourceString Name=Downloads}"/>
+                   Text="{helpers:ResourceString Name=Downloads,Filename=ContextMenus}"/>
         </Grid>
 
         <Grid Grid.Row="1" CornerRadius="3" Margin="6" 
               Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" 
               BorderBrush="#33808080" BorderThickness="1">
-            <ListView Margin="0,3,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" x:Name="DownloadItemsListView">
+            <ListView Margin="0,3,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" Loaded="DownloadItemsListView_Loaded" x:Name="DownloadItemsListView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -45,7 +45,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Grid>
-                                <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0"/>
+                                <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0" Source="{Binding Icon}"/>
                                 <ProgressRing x:Name="progressRing" Value="{Binding Progress}" IsActive="{Binding IsProgressActive}" IsIndeterminate="{Binding IsProgressIntermeinate}" Width="19" Height="19"/>
                             </Grid>
 

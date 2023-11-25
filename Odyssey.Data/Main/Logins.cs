@@ -1,4 +1,5 @@
-﻿using Odyssey.Shared.ViewModels.Data;
+﻿using Odyssey.Data.Helpers;
+using Odyssey.Shared.ViewModels.Data;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
@@ -8,28 +9,39 @@ namespace Odyssey.Data.Main
     public class Logins
     {
 
-        public static ObservableCollection<Login> LoginList { get; set; }
+        public static ObservableCollection<Login> Items { get; set; }
 
-        internal static void Save()
+        public static void Save()
         {
-            // If someone wants to mnually edit JSON save files
             var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(LoginList, options);
-            File.WriteAllText(Data.PinsFilePath, jsonString);
+            string jsonString = JsonSerializer.Serialize(Items, options);
+
+            // Encrypt the string
+            byte[] encryptedJsonString = EncryptionHelpers.ProtectString(jsonString);
+
+            File.WriteAllBytes(Data.LoginsFilePath, encryptedJsonString);
         }
 
         internal static void Load()
         {
             if (File.Exists(Data.LoginsFilePath))
             {
-                string jsonString = File.ReadAllText(Data.LoginsFilePath);
+                // Get encrypted json
+                byte[] encryptedJsonString = File.ReadAllBytes(Data.LoginsFilePath);
 
-                LoginList = JsonSerializer.Deserialize<ObservableCollection<Login>>(jsonString);
+                // Decrypt the encrypted string
+                string jsonString = EncryptionHelpers.UnprotectToString(encryptedJsonString);
+
+                Items = JsonSerializer.Deserialize<ObservableCollection<Login>>(jsonString);
+            }
+            else
+            {
+                Items = new ObservableCollection<Login>();
             }
 
-            LoginList = new ObservableCollection<Login>();
+            
 
-            LoginList.CollectionChanged += (s, a) => Save();
+            Items.CollectionChanged += (s, a) => Save();
         }
     }
 }

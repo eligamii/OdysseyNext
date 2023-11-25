@@ -1,18 +1,12 @@
-using ABI.System;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.Storage;
 
-// All creadit comes to the Aria2 creators. See https://github.com/aria2/aria2 and https://aria2.github.io/
+// All creadit comes to the Downloads creators. See https://github.com/aria2/aria2 and https://aria2.github.io/
 
-namespace Odyssey.Aria2
+namespace Odyssey.Downloads
 {
     public static class Aria2
     {
@@ -20,7 +14,7 @@ namespace Odyssey.Aria2
         public static string DlFolderPath { get; set; }
         public async static void Init()
         {
-            Aria2cPath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Odyssey.Aria2", "Assets", "aria2c.exe");
+            Aria2cPath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Odyssey.Downloads", "Assets", "aria2c.exe");
 
             // Get the donwload folder path
             StorageFolder dlFolder = await (await (await DownloadsFolder.CreateFolderAsync(Guid.NewGuid().ToString())).GetParentAsync()).GetParentAsync();
@@ -64,7 +58,7 @@ namespace Odyssey.Aria2
 
         private static void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if(!string.IsNullOrEmpty(e.Data))
+            if (!string.IsNullOrEmpty(e.Data))
             {
                 Regex regex = new("[0-9]{1,4}[a-zA-Z]{0,2}B");
                 var matches = regex.Matches(e.Data);
@@ -79,9 +73,9 @@ namespace Odyssey.Aria2
                     Regex percentageRegex = new(@"\d{1,3}%");
                     var percentage = percentageRegex.Match(e.Data);
 
-                    if(percentage.Success)
+                    if (percentage.Success)
                     {
-                        int pers = int.Parse(percentage.Value.Replace("%", "")) ;
+                        int pers = int.Parse(percentage.Value.Replace("%", ""));
                     }
                 }
             }

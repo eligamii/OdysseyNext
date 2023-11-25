@@ -1,16 +1,12 @@
 ﻿using Odyssey.Shared.ViewModels.Data;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Shared.ViewModels.WebSearch
 {
     public enum SuggestionKind // aligned with the StringKind enum
     {
         Search = 3, // ex: "Hello world"
-        Url = 0, 
+        Url = 0,
         MathematicalExpression = 5,
         Tab = 6,
         History = 7,
@@ -28,7 +24,7 @@ namespace Odyssey.Shared.ViewModels.WebSearch
     {
         public SuggestionKind Kind { get; set; } = SuggestionKind.Search;
         public string Title { get; set; }
-        public string Url { get; set;}
+        public string Url { get; set; }
         public KeyValuePair<TabLocation, Tab> Tab { get; set; }
         public string Query { get; set; } // The query that correspond with the suggestion
         public string Glyph

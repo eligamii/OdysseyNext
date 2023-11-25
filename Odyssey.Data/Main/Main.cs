@@ -37,6 +37,7 @@ namespace Odyssey.Data.Main
             PinsFilePath = Path.Combine(path, "Pins.json");
             TabsFilePath = Path.Combine(path, "Tabs.json");
 
+
             SearchBarShortcuts.Load();
             QuickActions.Load();
             Favorites.Load();

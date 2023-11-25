@@ -15,7 +15,7 @@
   <mp:PhoneIdentity PhoneProductId="8169cc92-c75f-4f1f-8ce7-df9f19398883" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Odyssey</DisplayName>
+    <DisplayName>Odyssey Preview</DisplayName>
     <PublisherDisplayName>eliga</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -24,9 +24,11 @@
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
   </Dependencies>
-
+  
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="en-US"/>
+    <Resource Language="nl-NL"/>
+	<Resource Language="fr-FR"/>
   </Resources>
 
   <Applications>
@@ -34,14 +36,41 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Odyssey"
+        DisplayName="Odyssey Preview"
         Description="Odyssey"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="landscapeFlipped"/></uap:InitialRotationPreference>
       </uap:VisualElements>
+		<Extensions>
+			<uap:Extension Category="windows.protocol">
+				<uap:Protocol Name="http">
+					<uap:DisplayName>Odyssey</uap:DisplayName>
+				</uap:Protocol>
+			</uap:Extension>
+			<uap:Extension Category="windows.protocol">
+				<uap:Protocol Name="https">
+					<uap:DisplayName>Odyssey</uap:DisplayName>
+				</uap:Protocol>
+			</uap:Extension>
+			<!-- Small uri for easier launch from other browsers -->
+			<uap:Extension Category="windows.protocol">
+				<uap:Protocol Name="odsy">
+					<uap:DisplayName>Odyssey</uap:DisplayName>
+				</uap:Protocol>
+			</uap:Extension>
+
+			<uap:Extension Category="windows.protocol">
+				<uap:Protocol Name="odyssey">
+					<uap:DisplayName>Odyssey</uap:DisplayName>
+				</uap:Protocol>
+			</uap:Extension>
+		</Extensions>
     </Application>
   </Applications>
 

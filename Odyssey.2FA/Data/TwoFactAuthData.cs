@@ -1,12 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Odyssey.TwoFactorsAuthentification.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Odyssey.TwoFactorsAuthentification.Data
@@ -18,7 +14,7 @@ namespace Odyssey.TwoFactorsAuthentification.Data
 
         internal static void Save()
         {
-            // If someone wants to mnually edit JSON save files
+            
             string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
             {
                 ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver

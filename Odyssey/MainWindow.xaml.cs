@@ -1,18 +1,11 @@
 using Microsoft.UI;
-using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.Web.WebView2.Core;
-using Odyssey.AdBlocker;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
-using Odyssey.Helpers;
-using Odyssey.Shared.ViewModels.Data;
+using Odyssey.QuickActions.Data;
 using Odyssey.Views;
 using System;
-using System.Threading.Tasks;
 using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -38,13 +31,6 @@ namespace Odyssey
             // Load default settings for the first run
             Settings.Init();
 
-            // Load data          
-            Aria2.Aria2.Init();
-            AdBlocker.AdBlocker.Init();
-
-            // Use this instead of Systemackdrop = Micaackdrop(); to be able to control the color of the Window
-            MicaBackdropHelper.TrySetMicaBackdropTo(this);
-
             ExtendsContentIntoTitleBar = true;
 
             MinWidth = MinHeight = 500;
@@ -64,14 +50,10 @@ namespace Odyssey
 
             Content = rootFrame;
 
-            // Start the 2FA service
-            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
-            
-            // Launch the CoreWebView2Environment
-            await CoreWebView2Environment.CreateAsync();
-
             // Make possible to access to MainWindow from anywhere
             Current = this;
+
+            UserVariables.Load();
 
             AppWindow.Closing += AppWindow_Closing;
         }
@@ -79,12 +61,24 @@ namespace Odyssey
         private bool _close = false;
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
-            if(!_close)
-            {
-                Settings.SuccessfullyClosed = true;
-                _close = true;
+            args.Cancel = Settings.IsSingleInstanceEnabled;
+            Settings.SuccessfullyClosed = true;
+            QuickActions.Data.UserVariables.Save();
 
+            if (!Settings.IsSingleInstanceEnabled)
+            {
                 Close();
+            }
+            else
+            {
+                foreach (var tab in Tabs.Items)
+                {
+                    if (tab.MainWebView != null) tab.MainWebView.Close();
+                }
+
+                Tabs.Items.Clear();
+
+                AppWindow.Hide();
             }
         }
     }

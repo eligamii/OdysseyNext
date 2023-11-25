@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+      <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+      <xsd:element name="root" msdata:IsDataSet="true">
+        <xsd:complexType>
+          <xsd:choice maxOccurs="unbounded">
+            <xsd:element name="metadata">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                </xsd:sequence>
+                <xsd:attribute name="name" use="required" type="xsd:string" />
+                <xsd:attribute name="type" type="xsd:string" />
+                <xsd:attribute name="mimetype" type="xsd:string" />
+                <xsd:attribute ref="xml:space" />
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="assembly">
+              <xsd:complexType>
+                <xsd:attribute name="alias" type="xsd:string" />
+                <xsd:attribute name="name" type="xsd:string" />
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="data">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                  <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                </xsd:sequence>
+                <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+                <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                <xsd:attribute ref="xml:space" />
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="resheader">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                </xsd:sequence>
+                <xsd:attribute name="name" type="xsd:string" use="required" />
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:choice>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema> 
+<resheader name="resmimetype">
+<value>text/microsoft-resx</value>
+</resheader>
+<resheader name="version">
+<value>2.0</value>
+</resheader>
+<resheader name="writer">
+<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+</resheader>
+<resheader name="reader">
+<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+</resheader>
+<data name="AccessTo2FA" xml:space="preserve">
+<value>Voer uw Windows-wachtwoord in om toegang te krijgen tot uw authenticatiesleutels met twee factoren</value>
+</data>
+<data name="AddToFavorites" xml:space="preserve">
+<value>Toevoegen aan favorieten</value>
+</data>
+<data name="Appearance" xml:space="preserve">
+<value>Verschijning</value>
+</data>
+<data name="Apply" xml:space="preserve">
+<value>Toepassen</value>
+</data>
+<data name="Back" xml:space="preserve">
+<value>Terug</value>
+</data>
+<data name="Cancel" xml:space="preserve">
+<value>Annuleren</value>
+</data>
+<data name="Close" xml:space="preserve">
+<value>Sluiten</value>
+</data>
+<data name="CloseOtherTabs" xml:space="preserve">
+<value>Andere tabbladen sluiten</value>
+</data>
+<data name="CopyCode" xml:space="preserve">
+<value>Genereerde code kopiëren</value>
+</data>
+<data name="CopyLink" xml:space="preserve">
+<value>Kopieer link</value>
+</data>
+<data name="CustomTheme" xml:space="preserve">
+<value>Een aangepast thema gebruiken</value>
+</data>
+<data name="DarkMode" xml:space="preserve">
+<value>Past automatisch een donker thema toe op alle websites</value>
+</data>
+<data name="Delete" xml:space="preserve">
+<value>Verwijderen</value>
+</data>
+<data name="Downloads" xml:space="preserve">
+<value>Map voor gedownloade boeken</value>
+</data>
+<data name="Duplicate" xml:space="preserve">
+<value>Dupliceren</value>
+</data>
+<data name="DynamicTheme" xml:space="preserve">
+<value>Verander het thema op basis van de dominante kleuren van de bezochte website</value>
+</data>
+<data name="Features" xml:space="preserve">
+<value>Functies</value>
+</data>
+<data name="ForceEnableDarkMode" xml:space="preserve">
+<value>zelfs als de Windows-themamodus is ingesteld op licht</value>
+</data>
+<data name="Forward" xml:space="preserve">
+<value>Vooruit</value>
+</data>
+<data name="General" xml:space="preserve">
+<value>Algemeen</value>
+</data>
+<data name="History" xml:space="preserve">
+<value>Geschiedenis</value>
+</data>
+<data name="LaunchURI" xml:space="preserve">
+<value>De bijbehorende app openen</value>
+</data>
+<data name="LaunchURIDesc" xml:space="preserve">
+<value>Wil je de bijbehorende app openen?</value>
+</data>
+<data name="Misc" xml:space="preserve">
+<value>Diversen</value>
+</data>
+<data name="More" xml:space="preserve">
+<value>Meer</value>
+</data>
+<data name="Mute" xml:space="preserve">
+<value>Dempen</value>
+</data>
+<data name="Name" xml:space="preserve">
+<value>Naam</value>
+</data>
+<data name="NeverAgain" xml:space="preserve">
+<value>Meer tonen nooit</value>
+</data>
+<data name="NewTab" xml:space="preserve">
+<value>Nieuw tabblad</value>
+</data>
+<data name="Odyssey" xml:space="preserve">
+<value>Odyssey voorproefje</value>
+</data>
+<data name="OpenInNewWindow" xml:space="preserve">
+<value>In nieuw venster</value>
+</data>
+<data name="Options" xml:space="preserve">
+<value>Opties</value>
+</data>
+<data name="PerfMode" xml:space="preserve">
+<value>Verandert het aantal pixels dat wordt gebruikt om de gemiddelde kleur te berekenen</value>
+</data>
+<data name="Pin" xml:space="preserve">
+<value>Pincode</value>
+</data>
+<data name="PinSearchBar" xml:space="preserve">
+<value>Naar de zoekbalk vastzetten</value>
+</data>
+<data name="Pinned" xml:space="preserve">
+<value>Vastgemaakte tabbladen</value>
+</data>
+<data name="PoweredDarkReader" xml:space="preserve">
+<value>Aangedreven door DarkReader</value>
+</data>
+<data name="Refresh" xml:space="preserve">
+<value>Vernieuw</value>
+</data>
+<data name="RemoveFromFaorites" xml:space="preserve">
+<value>Verwijderen uit favorieten</value>
+</data>
+<data name="Save" xml:space="preserve">
+<value>Opslaan</value>
+</data>
+<data name="SearchEngine" xml:space="preserve">
+<value>Selecteer de zoekmachine die door Odyssey wordt gebruikt</value>
+</data>
+<data name="SearchOnWeb" xml:space="preserve">
+<value>Zoeken</value>
+</data>
+<data name="Secret" xml:space="preserve">
+<value>Geheim</value>
+</data>
+<data name="Set2FA" xml:space="preserve">
+<value>Nieuwe 2FA-sleutel</value>
+</data>
+<data name="ShowInFolder" xml:space="preserve">
+<value>In de bestandsverkenner weergeven</value>
+</data>
+<data name="ShowPane" xml:space="preserve">
+<value>Open het hoofdvenster</value>
+</data>
+<data name="Tabs" xml:space="preserve">
+<value>Geopende tabbladen</value>
+</data>
+<data name="ThemeMode" xml:space="preserve">
+<value>Zet de themamodus op donker of licht</value>
+</data>
+<data name="TwoFactAuth" xml:space="preserve">
+<value>Authenticatie met twee factoren</value>
+</data>
+<data name="TwoFactAuthShort" xml:space="preserve">
+<value>2FA</value>
+</data>
+<data name="Unmute" xml:space="preserve">
+<value>Dempen opheffen</value>
+</data>
+<data name="Unpin" xml:space="preserve">
+<value>Losmaken</value>
+</data>
+<data name="UnpinSearchBar" xml:space="preserve">
+<value>Uit de zoekbalk loskoppelen</value>
+</data>
+<data name="Yes" xml:space="preserve">
+<value>Ja</value>
+</data>
+</root>

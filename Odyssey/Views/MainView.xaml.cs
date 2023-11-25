@@ -1,29 +1,33 @@
-using Microsoft.UI.Windowing;
+using CommunityToolkit.WinUI.UI.Helpers;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.Web.WebView2.Core;
+using Odyssey.Classes;
+using Odyssey.Controls;
+using Odyssey.Controls.Tips;
+using Odyssey.Data.Main;
+using Odyssey.Data.Settings;
+using Odyssey.Dialogs;
+using Odyssey.FWebView;
+using Odyssey.FWebView.Classes;
+using Odyssey.Helpers;
+using Odyssey.QuickActions;
+using Odyssey.Views.Pages;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WinRT.Interop;
-using Odyssey.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using Odyssey.Dialogs;
-using Odyssey.Data.Settings;
-using Odyssey.Helpers;
-using Odyssey.Data.Main;
-using Windows.Security.Credentials.UI;
-using Odyssey.TwoFactorsAuthentification;
+using static System.Net.Mime.MediaTypeNames;
+using Application = Microsoft.UI.Xaml.Application;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,9 +40,9 @@ namespace Odyssey.Views
     public sealed partial class MainView : Page
     {
         public static MainView Current { get; set; }
-        public static FWebView.WebView CurrentlySelectedWebView
+        public static WebView CurrentlySelectedWebView
         {
-            get { return Current.splitViewContentFrame.Content as FWebView.WebView; }
+            get { return Current.splitViewContentFrame.Content as WebView; }
         }
         public MainView()
         {
@@ -49,30 +53,18 @@ namespace Odyssey.Views
             AppTitleBar.Loaded += AppTitleBar_Loaded;
             AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
 
-            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
             Current = this;
-
-            // Require these to not crash
-            FWebView.WebView.MainDownloadElement = downloadButton;
-            FWebView.WebView.MainIconElement = Favicon;
-            FWebView.WebView.MainProgressElement = progressRing;
-            FWebView.WebView.MainWebViewFrame = splitViewContentFrame;
-
-
-            LoadData();
-
-            // Avoid lag when opening the first webview
-            WebView2 webView2 = new() { Source = new Uri("https://www.google.com") };
         }
 
-        private async void LoadData()
+
+        private async void RestoreTabs()
         {
             await Data.Main.Data.Init();
 
             // Get the instances of the app to prevent tabs from restoring on anther instances
             // when an instance has opened tabs (so when Settings.SuccessfullyClosed == false with an instance opened)
             var instances = Microsoft.Windows.AppLifecycle.AppInstance.GetInstances();
-                                                
+
             if (Settings.SuccessfullyClosed == false && instances.Count == 1)
             {
                 PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
@@ -83,7 +75,7 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
-            if(Settings.FirstLaunch != false)
+            if (Settings.FirstLaunch != false)
             {
                 QuickConfigurationDialog quickConfigurationDialog = new()
                 {
@@ -93,11 +85,121 @@ namespace Odyssey.Views
                 await quickConfigurationDialog.ShowAsync();
             }
 
-            FWebView.WebView.XamlRoot = this.XamlRoot;
-            FWebView.Classes.DynamicTheme.PageToUpdateTheme = this;
-            FWebView.Classes.DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
-            FWebView.Classes.DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
-            FWebView.Classes.DynamicTheme.UpdateTheme = true;
+            // Use this instead of Systemackdrop = MicaBackdrop(); to be able to control the color of the Window
+            MicaBackdropHelper.TrySetMicaBackdropTo(MainWindow.Current);
+
+            WebView.XamlRoot = XamlRoot;
+            DynamicTheme.PageToUpdateTheme = this;
+            DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
+            DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
+            DynamicTheme.UpdateTheme = true;
+
+            // Start the 2FA service
+            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
+
+            // Load data          
+            Downloads.Aria2.Init();
+            AdBlocker.AdBlocker.Init();
+
+            // Restore tabs after crash
+            RestoreTabs();
+
+            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
+
+            // Require these to not crash
+            WebView.MainDownloadElement = downloadButton;
+            WebView.MainHistoryElement = historyButton;
+            WebView.MainIconElement = Favicon;
+            WebView.MainProgressElement = progressRing;
+            WebView.MainWebViewFrame = splitViewContentFrame;
+
+            QACommands.Frame = splitViewContentFrame;
+
+            // Set the Quick actions command MainWindow to this window
+            QACommands.MainWindow = MainWindow.Current;
+
+            WebView.TotpLoginDetectedAction += () => SetTotpButtonVisibility();
+            WebView.LoginPageDetectedAction += () => LoginDetectedChanged();
+
+            // Check the internet connection every second for UI things
+            CheckNetworkConnectionState();
+
+            // Set the custom theme if dynamic theme is not enabled
+            SetCustomTheme();
+
+            this.ActualThemeChanged += (s, a) => SetCustomTheme();
+            splitViewContentFrame.Navigate(typeof(HomePage));
+        }
+
+        private bool lastConnectionState;
+
+        private void SetCustomTheme()
+        {
+            if (!Settings.DynamicThemeEnabled)
+            {
+                string color = Settings.CustomThemeColors;
+                if(color != null)
+                {
+                    if (Regex.IsMatch(color, @"#[0-9A-Z]{6}")) // To remove
+                    {
+                        UpdateTheme.UpdateThemeWith(color);
+                    }
+                }
+            }
+        }
+
+        public void SetTotpButtonVisibility()
+        {
+            if (CurrentlySelectedWebView != null)
+                _2faButton.Visibility = CurrentlySelectedWebView.IsTotpDetected ? Visibility.Visible : Visibility.Collapsed;
+            else
+                _2faButton.Visibility = Visibility.Collapsed;
+        }
+
+        public void LoginDetectedChanged()
+        {
+            if(CurrentlySelectedWebView != null)
+            {
+                loginButton.Visibility = CurrentlySelectedWebView.IsLoginPageDetected ? Visibility.Visible : Visibility.Collapsed;
+
+                if (CurrentlySelectedWebView.IsLoginPageDetected)
+                {
+                    MenuFlyout menu = new();
+                    foreach (var item in CurrentlySelectedWebView.AvailableLoginsForPage)
+                    {
+                        MenuFlyoutItem menuFlyoutItem = new();
+                        menuFlyoutItem.Text = item.Username;
+
+                        menuFlyoutItem.Click += (s, a) => CurrentlySelectedWebView.LoginAutoFill.Autofill(item);
+                        menu.Items.Add(menuFlyoutItem);
+                    }
+
+                    loginButton.Flyout = menu;
+                }
+            }
+        }
+
+        private async void CheckNetworkConnectionState()
+        {
+            while (true)
+            {
+                await Task.Delay(250);
+
+                bool isInternetAvailable = Shared.Helpers.NetworkHelper.IsInternetConnectionAvailable();
+                if (lastConnectionState != isInternetAvailable)
+                {
+                    if (!isInternetAvailable)
+                    {
+                        progressRing.Foreground = Application.Current.Resources["FocusStrokeColorOuterBrush"] as Brush;
+                    }
+                    else
+                    {
+                        progressRing.Foreground = Application.Current.Resources["AccentFillColorDefaultBrush"] as Brush;
+                    }
+
+                    lastConnectionState = isInternetAvailable;
+                }
+            }
         }
 
 
@@ -192,7 +294,7 @@ namespace Odyssey.Views
 
         private void SplitView_PaneOpening(SplitView sender, object args)
         {
-            if(showPaneButton != null)
+            if (showPaneButton != null)
             {
                 showPaneButton.Visibility = Visibility.Collapsed;
             }
@@ -208,9 +310,9 @@ namespace Odyssey.Views
         }
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if(CurrentlySelectedWebView != null)
+            if (CurrentlySelectedWebView != null)
             {
-                if(CurrentlySelectedWebView.CanGoBack) CurrentlySelectedWebView.GoBack();
+                if (CurrentlySelectedWebView.CanGoBack) CurrentlySelectedWebView.GoBack();
             }
         }
 
@@ -246,15 +348,21 @@ namespace Odyssey.Views
 
         private void _2FAButton_Click(object sender, RoutedEventArgs e)
         {
-            //TwoFactorsAuthentification.TwoFactorsAuthentification.Add();
             TwoFactorsAuthentification.TwoFactorsAuthentification.ShowFlyout(sender as FrameworkElement);
-             
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FWebView.Controls.Flyouts.HistoryFlyout historyFlyout = new();
-            historyFlyout.ShowAt(sender as FrameworkElement);
+            WebView.OpenHistoryDialog(sender as FrameworkElement);
+        }
+
+        private void infoButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(CurrentlySelectedWebView != null)
+            {
+                pageInfoTip.Open(CurrentlySelectedWebView);
+            }
         }
     }
 }

@@ -1,10 +1,5 @@
-﻿using Antlr.Runtime;
-using NCalc;
+﻿using NCalc;
 using Odyssey.Shared.ViewModels.WebSearch;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Odyssey.WebSearch.Helpers.Suggestions
@@ -15,7 +10,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
         {
             Suggestion suggestion = new();
             Expression e = new Expression(query);
-            
+
             try
             {
                 var res = e.Evaluate();

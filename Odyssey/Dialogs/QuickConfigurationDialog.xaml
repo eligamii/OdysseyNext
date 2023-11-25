@@ -90,6 +90,8 @@
                             <x:String>Startpage</x:String>
                         </ComboBox>
                     </controls:SettingsCard>
+                    
+                    
 
 
                 </StackPanel>

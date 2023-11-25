@@ -1,23 +1,12 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Main;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.Views;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -26,14 +15,14 @@ namespace Odyssey.Controls.ContextMenus
 {
     public sealed partial class TabsContextMenu : MenuFlyout
     {
-        private Tab item = null;
+        private Tab clickedItem = null;
         public TabsContextMenu(Pin item)
         {
             this.InitializeComponent();
 
             Opening += TabsContextMenu_Opening;
-            this.item = item;
-            
+            this.clickedItem = item;
+
         }
 
         public TabsContextMenu(Tab item)
@@ -41,67 +30,67 @@ namespace Odyssey.Controls.ContextMenus
             this.InitializeComponent();
 
             Opening += TabsContextMenu_Opening;
-            this.item = item;
+            this.clickedItem = item;
 
         }
 
         private void TabsContextMenu_Opening(object sender, object e)
         {
-            foreach(var menuItem in this.Items.Where(p => p.Tag != null))
+            foreach (var menuItem in this.Items.Where(p => p.Tag != null))
             {
                 bool shouldCollapse = false;
 
-                foreach(string tag in menuItem.Tag.ToString().Split(","))
+                foreach (string tag in menuItem.Tag.ToString().Split(","))
                 {
-                    switch(tag)
+                    switch (tag)
                     {
                         case "favorite":
-                            if (item.GetType() != typeof(Favorite)) shouldCollapse = true;
+                            if (clickedItem.GetType() != typeof(Favorite)) shouldCollapse = true;
                             break;
 
                         case "notfavorite":
-                            if (item.GetType() == typeof(Favorite)) shouldCollapse = true;
+                            if (clickedItem.GetType() == typeof(Favorite)) shouldCollapse = true;
                             break;
 
                         case "pinned":
-                            if (item.GetType() != typeof(Pin)) shouldCollapse = true;
+                            if (clickedItem.GetType() != typeof(Pin)) shouldCollapse = true;
                             break;
 
                         case "notpinned":
-                            if (item.GetType() == typeof(Pin)) shouldCollapse = true;
+                            if (clickedItem.GetType() == typeof(Pin)) shouldCollapse = true;
                             break;
 
                         case "tab":
-                            if (item.GetType() != typeof(Tab)) shouldCollapse = true;
+                            if (clickedItem.GetType() != typeof(Tab)) shouldCollapse = true;
                             break;
 
                         case "multiple":
-                            if(Tabs.Items.Count < 2) shouldCollapse = true;  
+                            if (Tabs.Items.Count < 2) shouldCollapse = true;
                             break;
 
                         case "muted":
-                            if (item.MainWebView != null)
+                            if (clickedItem.MainWebView != null)
                             {
-                                if (!item.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                                if (!clickedItem.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
                             }
                             else shouldCollapse = true;
                             break;
 
                         case "notmuted":
-                            if (item.MainWebView != null)
+                            if (clickedItem.MainWebView != null)
                             {
-                                if (item.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                                if (clickedItem.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
                             }
                             else shouldCollapse = true;
                             break;
 
                         case "pinnedtosearch":
-                            if (!SearchBarShortcuts.Items.Any(p => p.Url == item.Url))
+                            if (!SearchBarShortcuts.Items.Any(p => p.Url == clickedItem.Url))
                                 shouldCollapse = true;
                             break;
 
                         case "notpinnedtosearch":
-                            if (SearchBarShortcuts.Items.Any(p => p.Url == item.Url))
+                            if (SearchBarShortcuts.Items.Any(p => p.Url == clickedItem.Url))
                                 shouldCollapse = true;
                             break;
                     }
@@ -115,30 +104,30 @@ namespace Odyssey.Controls.ContextMenus
         {
             Pin pin = new Pin()
             {
-                MainWebView = item.MainWebView,
-                Title = item.Title,
-                ImageSource = item.ImageSource,
-                Url = item.Url
+                MainWebView = clickedItem.MainWebView,
+                Title = clickedItem.Title,
+                ImageSource = clickedItem.ImageSource,
+                Url = clickedItem.Url
             };
-            ((FWebView.WebView)pin.MainWebView).LinkedTab = pin;
+            if (pin.MainWebView is not null) ((FWebView.WebView)pin.MainWebView).LinkedTab = pin;
 
             Pins.Items.Add(pin);
             PaneView.Current.PinsTabView.ItemsSource = Pins.Items;
             PaneView.Current.TabsView.SelectedItem = pin;
 
-            Tabs.Items.Remove(item);
+            Tabs.Items.Remove(clickedItem);
         }
 
         private void UnpinMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            Pins.Items.Remove((Pin)item);
+            Pins.Items.Remove((Pin)clickedItem);
 
-            // Convert the pinned item to a tab to be recognized as a Tab when right-clicking
+            // Convert the pinned clickedItem to a tab to be recognized as a Tab when right-clicking
             Tab tab = new()
             {
-                MainWebView = item.MainWebView,
-                Title = item.Title,
-                ImageSource = item.ImageSource
+                MainWebView = clickedItem.MainWebView,
+                Title = clickedItem.Title,
+                ImageSource = clickedItem.ImageSource
             };
 
             ((FWebView.WebView)tab.MainWebView).LinkedTab = tab;
@@ -150,15 +139,15 @@ namespace Odyssey.Controls.ContextMenus
         private void CloseMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             // Remove the tab's WebViews
-            item.MainWebView.Close();
-            if (item.SplitViewWebView != null) item.SplitViewWebView.Close();
-            item.MainWebView = item.SplitViewWebView = null;
+            clickedItem.MainWebView.Close();
+            if (clickedItem.SplitViewWebView != null) clickedItem.SplitViewWebView.Close();
+            clickedItem.MainWebView = clickedItem.SplitViewWebView = null;
 
-            // Getting the index of the item to remove to change the selected tab later
-            int index = Tabs.Items.IndexOf(item);
+            // Getting the index of the clickedItem to remove to change the selected tab later
+            int index = Tabs.Items.IndexOf(clickedItem);
 
             // Remove the tab from the tabs listView
-            Tabs.Items.Remove(item);
+            Tabs.Items.Remove(clickedItem);
 
             // Changing the selected tab to another
             if (index > 0) PaneView.Current.TabsView.SelectedIndex = index - 1;
@@ -169,32 +158,32 @@ namespace Odyssey.Controls.ContextMenus
         private void CloseOtherTabsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             var itemsToRemove = new List<Tab>();
-            foreach(Tab tab in Tabs.Items.Where(p => p != item))
+            foreach (Tab tab in Tabs.Items.Where(p => p != clickedItem))
             {
-                tab.MainWebView.Close();
+                if (tab.MainWebView != null) tab.MainWebView.Close();
                 if (tab.SplitViewWebView != null) tab.SplitViewWebView.Close();
                 tab.MainWebView = tab.SplitViewWebView = null;
 
                 itemsToRemove.Add(tab);
             }
 
-            foreach(Tab tab in itemsToRemove)
+            foreach (Tab tab in itemsToRemove)
             {
                 Tabs.Items.Remove(tab);
             }
-            PaneView.Current.TabsView.SelectedItem = item;
+            PaneView.Current.TabsView.SelectedItem = clickedItem;
         }
 
         private void DuplicateMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             Tab tab = new()
             {
-                MainWebView = FWebView.WebView.Create(item.MainWebView.Source.ToString()),
-                Title = item.Title,
-                ToolTip = item.ToolTip,
-                ImageSource = item.ImageSource,
+                MainWebView = FWebView.WebView.Create(clickedItem.MainWebView.Source.ToString()),
+                Title = clickedItem.Title,
+                ToolTip = clickedItem.ToolTip,
+                ImageSource = clickedItem.ImageSource,
             };
-            int index = Tabs.Items.IndexOf(item);
+            int index = Tabs.Items.IndexOf(clickedItem);
 
             ((FWebView.WebView)tab.MainWebView).LinkedTab = tab;
 
@@ -203,25 +192,25 @@ namespace Odyssey.Controls.ContextMenus
 
         private void MuteUnmuteMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            item.MainWebView.CoreWebView2.IsMuted ^= true;
+            clickedItem.MainWebView.CoreWebView2.IsMuted ^= true;
         }
 
         private void CopyLinkMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             var package = new DataPackage();
-            package.SetText(item.MainWebView.Source.ToString());
+            package.SetText(clickedItem.MainWebView.Source.ToString());
             Clipboard.SetContent(package);
 
         }
 
         private void RefreshMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            item.MainWebView.Reload();
+            clickedItem.MainWebView.Reload();
         }
 
         private void UnpinSearchBarMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            Suggestion suggestion = SearchBarShortcuts.Items.Where(p => p.Url == item.Url).ToList().ElementAt(0);
+            Suggestion suggestion = SearchBarShortcuts.Items.Where(p => p.Url == clickedItem.Url).ToList().ElementAt(0);
 
             SearchBarShortcuts.Items.Remove(suggestion);
         }
@@ -231,8 +220,8 @@ namespace Odyssey.Controls.ContextMenus
             Suggestion suggestion = new()
             {
                 Kind = SuggestionKind.Shortcut,
-                Title = item.Title,
-                Url = item.Url
+                Title = clickedItem.Title,
+                Url = clickedItem.Url
             };
 
             SearchBarShortcuts.Items.Add(suggestion);
@@ -240,7 +229,28 @@ namespace Odyssey.Controls.ContextMenus
 
         private void NewWindowMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-           
+
+        }
+
+        private void AddToFavoritesMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            Favorite favorite = new()
+            {
+                Url = clickedItem.Url,
+                ImageSource = clickedItem.ImageSource
+            };
+
+            if (clickedItem.MainWebView != null)
+            {
+                favorite.MainWebView = clickedItem.MainWebView;
+            }
+
+            Favorites.Items.Add(favorite);
+        }
+
+        private void RemoveFromFvoritesMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            Favorites.Items.Remove(clickedItem as Favorite);
         }
     }
 }

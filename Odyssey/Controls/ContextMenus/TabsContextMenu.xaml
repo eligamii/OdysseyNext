@@ -5,36 +5,36 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Odyssey.Controls.ContextMenus"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helpers="using:Odyssey.Shared.Helpers"
     mc:Ignorable="d">
 
     <MenuFlyout.Items>
-        <MenuFlyoutItem Text="Pin" Tag="notpinned,notfavorite" Click="PinMenuFlyoutItem_Click">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=Pin, Filename=ContextMenus}" Tag="notpinned,notfavorite" Click="PinMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE141;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Unpin" Tag="pinned" Click="UnpinMenuFlyoutItem_Click">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=Unpin,Filename=ContextMenus}" Tag="pinned" Click="UnpinMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE196;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Unpin from the search bar" Tag="pinnedtosearch" Click="UnpinSearchBarMenuFlyoutItem_Click">
-            <MenuFlyoutItem.Icon>
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=UnpinSearchBar,Filename=ContextMenus}" Tag="pinnedtosearch" Click="UnpinSearchBarMenuFlyoutItem_Click">
+            <MenuFlyoutItem.Icon>       
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE196;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Pin to the searchh bar" Tag="notpinnedtosearch" Click="PinSearchBarMenuFlyoutItem_Click">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=PinSearchBar,Filename=ContextMenus}" Tag="notpinnedtosearch" Click="PinSearchBarMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE141;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Add to favorites" Tag="notfavorite">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=AddToFavorites,Filename=ContextMenus}" Tag="notfavorite" Click="AddToFavoritesMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE734;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Remove from favorites" Tag="favorite">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=RemoveFromFavorites,Filename=ContextMenus}" Tag="favorite" Click="RemoveFromFvoritesMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE107;" />
             </MenuFlyoutItem.Icon>
@@ -42,12 +42,12 @@
 
         <MenuFlyoutSeparator/>
 
-        <MenuFlyoutItem Text="Open in a new window" Tag="nologin" Click="NewWindowMenuFlyoutItem_Click" IsEnabled="False">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=OpenInNewWindow,Filename=ContextMenus}" Tag="nologin" Click="NewWindowMenuFlyoutItem_Click" IsEnabled="False">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE17C;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Duplicate" Tag="tab" Click="DuplicateMenuFlyoutItem_Click">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=Duplicate,Filename=ContextMenus}" Tag="tab" Click="DuplicateMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE16F;" />
             </MenuFlyoutItem.Icon>
@@ -55,17 +55,17 @@
 
         <MenuFlyoutSeparator/>
 
-        <MenuFlyoutItem Text="Mute" Tag="notmuted" Click="MuteUnmuteMenuFlyoutItem_Click">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=Mute,Filename=ContextMenus}" Tag="notmuted" Click="MuteUnmuteMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE198;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Unmute" Tag="muted" Click="MuteUnmuteMenuFlyoutItem_Click">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=Unmute,Filename=ContextMenus}" Tag="muted" Click="MuteUnmuteMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE15D;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Refresh" Click="RefreshMenuFlyoutItem_Click">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=Refresh,Filename=ContextMenus}" Click="RefreshMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE149;" />
             </MenuFlyoutItem.Icon>
@@ -73,17 +73,17 @@
 
         <MenuFlyoutSeparator/>
 
-        <MenuFlyoutItem Text="Copy link" Click="CopyLinkMenuFlyoutItem_Click">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=CopyLink,Filename=ContextMenus}" Click="CopyLinkMenuFlyoutItem_Click">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE167;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Click="CloseOtherTabsMenuFlyoutItem_Click" Text="Close other tabs" Tag="multiple,tab">
+        <MenuFlyoutItem Click="CloseOtherTabsMenuFlyoutItem_Click" Text="{helpers:ResourceString Name=CloseOtherTabs,Filename=ContextMenus}" Tag="multiple,tab">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE10A;" />
             </MenuFlyoutItem.Icon>
         </MenuFlyoutItem>
-        <MenuFlyoutItem Text="Close" Click="CloseMenuFlyoutItem_Click" Tag="tab">
+        <MenuFlyoutItem Text="{helpers:ResourceString Name=Close,Filename=ContextMenus}" Click="CloseMenuFlyoutItem_Click" Tag="tab">
             <MenuFlyoutItem.Icon>
                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE10A;" />
             </MenuFlyoutItem.Icon>

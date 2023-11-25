@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Odyssey.FWebView.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helpers="using:Odyssey.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helpers="using:Odyssey.Shared.Helpers"
     mc:Ignorable="d" Height="40" IsEnabled="True" Tapped="ListViewItem_Tapped" RightTapped="ListViewItem_RightTapped">
 
     <ListViewItem.Style>
@@ -14,12 +14,12 @@
 
     <ListViewItem.Resources>
         <MenuFlyout x:Name="contextMenu">
-            <MenuFlyoutItem Click="DeleteMenuFlyoutItem_Click" Text="{helpers:ResourceString Name=Delete}">
+            <MenuFlyoutItem Click="DeleteMenuFlyoutItem_Click" Text="{helpers:ResourceString Name=Delete,Filename=ContextMenus}">
                 <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE74D;" />
                 </MenuFlyoutItem.Icon>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Click="ShowInFolderMenuFlyoutItem_Click" Text="{helpers:ResourceString Name=ShowInFolder}">
+            <MenuFlyoutItem Click="ShowInFolderMenuFlyoutItem_Click" Text="{helpers:ResourceString Name=ShowInFolder,Filename=ContextMenus}">
                 <MenuFlyoutItem.Icon>
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
                 </MenuFlyoutItem.Icon>

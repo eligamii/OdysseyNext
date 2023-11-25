@@ -1,10 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 
 namespace Odyssey.FWebView.Classes
@@ -16,8 +13,6 @@ namespace Odyssey.FWebView.Classes
         private List<string[]> elements = new();
 
         private List<ToolTip> toolTips = new();
-
-        private int i = 0; private int j = 1;
         public WebViewNativeToolTips(WebView webView)
         {
             this.webView = webView;

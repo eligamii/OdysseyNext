@@ -1,12 +1,11 @@
-using ABI.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
-using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
+using Odyssey.FWebView;
 using Odyssey.FWebView.Classes;
-using Odyssey.Helpers;
+using Odyssey.QuickActions;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.Views;
@@ -15,8 +14,10 @@ using Odyssey.WebSearch.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Windows.Foundation;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
-using static System.Net.Mime.MediaTypeNames;
 using Uri = System.Uri;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -28,6 +29,7 @@ namespace Odyssey.Controls
     {
         private string mainIcon = string.Empty;
         private bool newTab;
+        private string command;
 
         public SearchBar(bool newTab = false)
         {
@@ -40,7 +42,37 @@ namespace Odyssey.Controls
             Opened += SearchBar_Opened;
         }
 
-        public void SumitSuggestion(Suggestion suggestion)
+        // For the <ask> static variable
+        public async Task<string> GetText()
+        {
+            FlyoutShowOptions options = new FlyoutShowOptions();
+            options.Placement = FlyoutPlacementMode.Bottom;
+            options.Position = new Point(MainView.Current.splitViewContentFrame.ActualWidth / 2, 100);
+
+            this.ShowAt(MainView.Current.splitViewContentFrame, options);
+
+            searchBarIcon.Glyph = "\uE11B";
+            mainSearchBox.TextChanged -= mainSearchBox_TextChanged;
+            mainSearchBox.KeyDown -= mainSearchBox_KeyDown;
+
+            suggestionListView.Visibility = Visibility.Collapsed;
+            bool keydown = false;
+
+            mainSearchBox.KeyDown += (s, a) =>
+            {
+                if (a.Key == Windows.System.VirtualKey.Enter)
+                {
+                    keydown = true;
+                }
+            };
+
+            // Wait the user to enter [Enter]
+            while (!keydown) await Task.Delay(100);
+
+            return mainSearchBox.Text;
+        }
+
+        public void SummitSuggestion(Suggestion suggestion)
         {
             switch (suggestion.Kind)
             {
@@ -86,7 +118,7 @@ namespace Odyssey.Controls
 
         private void SearchBar_Opened(object sender, object e)
         {
-            if(SearchBarShortcuts.Items.Count > 0)
+            if (SearchBarShortcuts.Items.Count > 0)
             {
                 suggestionListView.Visibility = Visibility.Visible;
                 suggestionListView.ItemsSource = SearchBarShortcuts.Items;
@@ -95,7 +127,7 @@ namespace Odyssey.Controls
 
         private void Flyout_Opened(object sender, object e)
         {
-            
+
         }
 
         private void Flyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
@@ -107,12 +139,13 @@ namespace Odyssey.Controls
 
         private async void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if(e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                if(suggestionListView.SelectedItem == null)
+                if (suggestionListView.SelectedItem == null)
                 {
                     string text = (sender as TextBox).Text;
                     string url = await WebViewNavigateUrlHelper.ToUrl(text);
+                    bool ask = false;
 
                     if (url != string.Empty) // The request will be treated differently with commands and app uris
                     {
@@ -128,7 +161,12 @@ namespace Odyssey.Controls
 
                             tab.MainWebView = webView;
                             Tabs.Items.Add(tab);
-                            PaneView.Current.TabsView.SelectedItem = tab;
+                            try
+                            {
+                                await Task.Delay(100);
+                                PaneView.Current.TabsView.SelectedItem = tab;
+                            }
+                            catch { }
 
                             webView.LinkedTab = tab;
 
@@ -143,15 +181,58 @@ namespace Odyssey.Controls
                     {
                         StringKind kind = await GetStringKind(text);
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
+                        else if (kind == StringKind.OdysseyUrl)
+                        {
+                            if (Regex.IsMatch(text, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
+                            {
+                                WebView.OpenDownloadDialog();
+                            }
+                            else if (Regex.IsMatch(text, ".*/history/{0,1}.*", RegexOptions.IgnoreCase))
+                            {
+                                WebView.OpenHistoryDialog();
+                            }
+                        }
+                        else if (kind == StringKind.QuickActionCommand)
+                        {
+                            if (text.Contains("<ask>"))
+                            {
+                                ask = true;
+
+                                mainSearchBox.Text = string.Empty;
+                                command = text;
+
+                                searchBarIcon.Glyph = "\uE11B";
+                                mainSearchBox.TextChanged -= mainSearchBox_TextChanged;
+                                mainSearchBox.KeyDown -= mainSearchBox_KeyDown;
+                                mainSearchBox.PlaceholderText = string.Empty;
+
+                                suggestionListView.Visibility = Visibility.Collapsed;
+
+                                mainSearchBox.KeyDown += (s, a) =>
+                                {
+                                    if (a.Key == Windows.System.VirtualKey.Enter)
+                                    {
+                                        Variables.AskText = mainSearchBox.Text;
+                                        QACommands.Execute(command);
+
+                                        Hide();
+                                    }
+                                };
+                            }
+                            else
+                            {
+                                QACommands.Execute(text);
+                            }
+                        }
                     }
 
-                    Hide();
+                    if (!ask) Hide();
                 }
                 else
                 {
                     Suggestion suggestion = suggestionListView.SelectedItem as Suggestion;
 
-                    SumitSuggestion(suggestion);
+                    SummitSuggestion(suggestion);
 
                     Hide();
                 }
@@ -209,7 +290,7 @@ namespace Odyssey.Controls
         {
             Suggestions.CurrentQuery = mainSearchBox.Text;
             UpdateIcon(mainSearchBox.Text);
-            if(!suggestionChosen)
+            if (!suggestionChosen)
             {
                 if (mainSearchBox.Text != string.Empty)
                 {
@@ -222,7 +303,7 @@ namespace Odyssey.Controls
                         list = list.Concat(await Suggestions.Suggest(mainSearchBox.Text, 8)).ToList();
 
                         // prevent the list from being empty when the suggestions come after the searchbox text was deleted
-                        if(list.Where(p => p != defaultSuggestion).ToList().Count == 0 && mainSearchBox.Text == string.Empty)
+                        if (list.Where(p => p != defaultSuggestion).ToList().Count == 0 && mainSearchBox.Text == string.Empty)
                         {
                             list = SearchBarShortcuts.Items.ToList();
                         }
@@ -269,14 +350,14 @@ namespace Odyssey.Controls
 
                 case StringKind.OdysseyUrl: searchBarIcon.Glyph = "\uE115"; break;
             }
-             
+
         }
 
         private void suggestionListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             Suggestion suggestion = e.ClickedItem as Suggestion;
 
-            SumitSuggestion(suggestion);
+            SummitSuggestion(suggestion);
 
             Hide();
         }
@@ -287,8 +368,8 @@ namespace Odyssey.Controls
             int index = (int)(pos.Y / 40);
 
             Suggestion rightClickedSuggestion = suggestionListView.Items.ElementAt(index) as Suggestion;
-            
-            if(rightClickedSuggestion.Kind == SuggestionKind.Shortcut)
+
+            if (rightClickedSuggestion.Kind == SuggestionKind.Shortcut)
             {
                 MenuFlyout menu = new MenuFlyout();
                 MenuFlyoutItem menuFlyoutItem = new()

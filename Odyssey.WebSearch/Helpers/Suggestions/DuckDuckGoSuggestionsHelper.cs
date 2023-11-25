@@ -1,10 +1,8 @@
 ﻿using Odyssey.Shared.ViewModels.WebSearch;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -22,7 +20,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
         private static HttpClient client = new HttpClient();
         public async static Task<List<Suggestion>> GetFromDuckDuckGoSuggestions(string query)
         {
-            if(!suggestions.Any(p => p.Query == query))
+            if (!suggestions.Any(p => p.Query == query))
             {
                 string url = $"https://ac.duckduckgo.com/ac/?q={WebUtility.UrlEncode(query)}";
 

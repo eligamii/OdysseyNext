@@ -2,8 +2,6 @@
 using Odyssey.Shared.ViewModels.Data;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Text.Json;
-using System.Xml;
 
 namespace Odyssey.Data.Main
 {
@@ -14,7 +12,7 @@ namespace Odyssey.Data.Main
 
         internal static void Save()
         {
-            // If someone wants to mnually edit JSON save files
+            
 
 
             string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
@@ -43,7 +41,7 @@ namespace Odyssey.Data.Main
                 Items = new ObservableCollection<Pin>();
             }
 
-            
+
 
             Items.CollectionChanged += (s, a) => Save();
         }

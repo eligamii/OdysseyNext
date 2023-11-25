@@ -1,12 +1,7 @@
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation.Metadata;
 
 // Every host blocklists can be found here : https://firebog.net/
 // Credit to the Firebog, Easylist and Spam404 lists mainteners
@@ -22,7 +17,7 @@ namespace Odyssey.AdBlocker
 
         public static void Init()
         {
-            if(easylist == null)
+            if (easylist == null)
             {
                 string assetsFile = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Odyssey.AdBlocker", "Assets");
 
@@ -39,7 +34,7 @@ namespace Odyssey.AdBlocker
         }
 
 
-        public AdBlocker(CoreWebView2 coreWebView) 
+        public AdBlocker(CoreWebView2 coreWebView)
         {
             coreWebView.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.XmlHttpRequest);
             coreWebView.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Image);
@@ -54,7 +49,7 @@ namespace Odyssey.AdBlocker
         {
             string host = new Uri(args.Request.Uri).Host;
 
-            if(ShouldBlock(host, sender))
+            if (ShouldBlock(host, sender))
             {
                 sender.Stop(); // to have the time to block the request
                 args.Response = sender.Environment.CreateWebResourceResponse(null, 503, "Service Unavailable", "");
@@ -64,7 +59,7 @@ namespace Odyssey.AdBlocker
 
         private bool ShouldBlock(string host, CoreWebView2 sender)
         {
-            if(!whitelist.Any(p => p == new Uri(sender.Source).Host))
+            if (!whitelist.Any(p => p == new Uri(sender.Source).Host))
             {
                 if (easylist.Any(p => p == host)) return true;
 

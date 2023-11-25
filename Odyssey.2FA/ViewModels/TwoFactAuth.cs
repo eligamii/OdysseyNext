@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Security.Credentials.UI;
-using WinRT;
 
 namespace Odyssey.TwoFactorsAuthentification.ViewModels
 {
@@ -28,16 +23,21 @@ namespace Odyssey.TwoFactorsAuthentification.ViewModels
         [DataMember]
         public string Name { get; set; }
 
-        public string Code { get { return code; } set 
-            { 
-                if(value != code)
+        public string Code
+        {
+            get { return code; }
+            set
+            {
+                if (value != code)
                 {
                     code = value;
                     NotifyPropertyChanged();
                 }
-            } 
+            }
         }
-        public int ProgressValue { get { return progressValue; }
+        public int ProgressValue
+        {
+            get { return progressValue; }
             set
             {
                 if (value != progressValue)
@@ -62,29 +62,29 @@ namespace Odyssey.TwoFactorsAuthentification.ViewModels
             totp = new(secret, Step, OtpHashMode, Size);
 
             Refresh();
-            
+
         }
 
         private async void Refresh()
         {
             // Calibrate the timer
             int sec = totp.RemainingSeconds();
-            while(totp.RemainingSeconds() == sec)
+            while (totp.RemainingSeconds() == sec)
             {
-                await Task.Delay(100);
+                await Task.Delay(10);
             }
 
             Code = totp.ComputeTotp();
 
-            while(true)
+            while (true)
             {
                 remainingSeconds = totp.RemainingSeconds();
                 ProgressValue = 100 * remainingSeconds / 30;
 
-                if(remainingSeconds == 30)
+                if (remainingSeconds == 30)
                 {
                     // Generate new code
-                     Code = totp.ComputeTotp();
+                    Code = totp.ComputeTotp();
                 }
 
                 await Task.Delay(1000);
