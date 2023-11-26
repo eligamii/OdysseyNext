@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WebView2Ex;
 using Windows.Foundation;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using Uri = System.Uri;
@@ -72,18 +73,18 @@ namespace Odyssey.Controls
             return mainSearchBox.Text;
         }
 
-        public void SummitSuggestion(Suggestion suggestion)
+        public async void SummitSuggestion(Suggestion suggestion)
         {
             switch (suggestion.Kind)
             {
                 case SuggestionKind.Shortcut or SuggestionKind.Search or SuggestionKind.MathematicalExpression or SuggestionKind.History or SuggestionKind.Url:
                     if (MainView.CurrentlySelectedWebView != null)
                     {
-                        MainView.CurrentlySelectedWebView.CoreWebView2.Navigate(suggestion.Url);
+                        MainView.CurrentlySelectedWebView.WebView2Runtime.CoreWebView2.Navigate(suggestion.Url);
                     }
                     else
                     {
-                        FWebView.WebView webView = FWebView.WebView.Create(suggestion.Url);
+                        FWebView.WebView webView = await FWebView.WebView.Create(suggestion.Url);
 
                         Tab tab = new()
                         {
@@ -151,7 +152,7 @@ namespace Odyssey.Controls
                     {
                         if (MainView.CurrentlySelectedWebView == null || newTab)
                         {
-                            FWebView.WebView webView = FWebView.WebView.Create(url);
+                            FWebView.WebView webView = await FWebView.WebView.Create(url);
 
                             Tab tab = new()
                             {
@@ -174,7 +175,7 @@ namespace Odyssey.Controls
                         }
                         else
                         {
-                            MainView.CurrentlySelectedWebView.CoreWebView2.Navigate(url);
+                            MainView.CurrentlySelectedWebView.WebView2Runtime.CoreWebView2.Navigate(url);
                         }
                     }
                     else

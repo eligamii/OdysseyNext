@@ -10,7 +10,37 @@ namespace Odyssey.FWebView.Controls.Flyouts
         public DownloadsFlyout()
         {
             this.InitializeComponent();
+<<<<<<< Updated upstream
             Downloads.Data.Downloads.Load();
+=======
+            Items.CollectionChanged += Items_CollectionChanged;
+
+            DownloadItemsListView.ItemsSource = Items;
+        }
+
+        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+             if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
+                Shared.ViewModels.Data.DonwloadItem item = (Shared.ViewModels.Data.DonwloadItem)e.NewItems[0];
+                
+                if(item.downloadOperation == null)
+                {
+                    var downloadFolder = Shared.Helpers.KnownFolders.GetPath(Shared.Helpers.KnownFolder.Downloads);
+                    var download = AriaSharp.AriaSharpDownloader.Download(item.DownloadUrl, downloadFolder);
+
+                    download.DownloadProgressChanged += (s, a) =>
+                    {
+                        if(a.Status == AriaSharp.AriaDownloadOperation.Status.Downloading)
+                        {
+                            item.Name = s.OutputPath;
+                            item.Progress = a.Progress;
+
+                        }
+                    };
+                }
+            }
+>>>>>>> Stashed changes
         }
 
         private void DownloadItemsListView_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

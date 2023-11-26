@@ -40,6 +40,20 @@ namespace Odyssey.Views
     public sealed partial class MainView : Page
     {
         public static MainView Current { get; set; }
+<<<<<<< Updated upstream
+=======
+        public TitleBarDragRegions titleBarDragRegions;
+        public string MainDocumentTitle { get { return documentTitle.Text; } 
+            set 
+            { 
+                if(value != documentTitle.Text)
+                {
+                    documentTitle.Text = value;
+                    //titleBarDragRegions.SetDragRegionForTitleBars();
+                } 
+            }
+        }
+>>>>>>> Stashed changes
         public static WebView CurrentlySelectedWebView
         {
             get { return Current.splitViewContentFrame.Content as WebView; }
@@ -75,6 +89,17 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
+<<<<<<< Updated upstream
+=======
+            // St
+            /*titleBarDragRegions = new TitleBarDragRegions(
+                new List<Grid>() { AppTitleBar, secondTitleBar },
+                MainWindow.Current,
+                new List<Type>() { typeof(ProgressBar), typeof(TextBlock), typeof(Microsoft.UI.Xaml.Shapes.Rectangle), typeof(Frame)},
+                MainWindow.Current.Content as FrameworkElement,
+                42);*/
+
+>>>>>>> Stashed changes
             if (Settings.FirstLaunch != false)
             {
                 QuickConfigurationDialog quickConfigurationDialog = new()
@@ -129,6 +154,22 @@ namespace Odyssey.Views
 
             this.ActualThemeChanged += (s, a) => SetCustomTheme();
             splitViewContentFrame.Navigate(typeof(HomePage));
+<<<<<<< Updated upstream
+=======
+
+            // Update the titlebar drag region based on the text of the documentTitle
+            documentTitle.LayoutUpdated += DocumentTitle_LayoutUpdated;
+        }
+
+        private string _lastText = string.Empty;
+        private void DocumentTitle_LayoutUpdated(object sender, object e)
+        {
+            string text = documentTitle.Text;
+            if(_lastText != text)
+            {
+                //titleBarDragRegions.SetDragRegionForTitleBars();
+            }
+>>>>>>> Stashed changes
         }
 
         private bool lastConnectionState;
@@ -312,7 +353,7 @@ namespace Odyssey.Views
         {
             if (CurrentlySelectedWebView != null)
             {
-                if (CurrentlySelectedWebView.CanGoBack) CurrentlySelectedWebView.GoBack();
+                if (CurrentlySelectedWebView.WebView2Runtime.CoreWebView2.CanGoBack) CurrentlySelectedWebView.WebView2Runtime.CoreWebView2.GoBack();
             }
         }
 
@@ -320,7 +361,8 @@ namespace Odyssey.Views
         {
             if (CurrentlySelectedWebView != null)
             {
-                if (CurrentlySelectedWebView.CanGoForward) CurrentlySelectedWebView.GoForward();
+                if (CurrentlySelectedWebView.WebView2Runtime.CoreWebView2.CanGoForward)
+                    CurrentlySelectedWebView.WebView2Runtime.CoreWebView2.GoForward();
             }
         }
 
@@ -328,7 +370,7 @@ namespace Odyssey.Views
         {
             if (CurrentlySelectedWebView != null)
             {
-                CurrentlySelectedWebView.Reload();
+                CurrentlySelectedWebView.WebView2Runtime.CoreWebView2.Reload();
             }
         }
         private void SearchButton_Click(object sender, RoutedEventArgs e)

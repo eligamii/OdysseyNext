@@ -27,13 +27,42 @@ namespace Odyssey.Views.Pages
 
     public sealed partial class HomePage : Page
     {
-        WebView webView = WebView.Create("about:blank");
+        WebView webView;
         public HomePage()
         {
             this.InitializeComponent();
+<<<<<<< Updated upstream
             Loaded += (s, a) => searchBox.Focus(FocusState.Programmatic);
         }
 
+=======
+            Loaded += (s, a) =>  searchBox.Focus(FocusState.Programmatic);
+            lastSessionListView.Loaded += LastSessionListView_Loaded;
+
+            Init();
+        }
+
+        private async void Init()
+        {
+            webView = await WebView.Create("about:blank");
+            string s = "t";
+        }
+    
+
+        private void LastSessionListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            lastSessionListView.ItemsSource = Tabs.Get();
+            foreach(Tab tab in lastSessionListView.Items)
+            {
+                try
+                {
+                    tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+
+                } catch { }
+
+            }
+        }
+>>>>>>> Stashed changes
 
         private void TextBox_LosingFocus(UIElement sender, LosingFocusEventArgs args)
         {
@@ -45,7 +74,7 @@ namespace Odyssey.Views.Pages
             if(e.Key == Windows.System.VirtualKey.Enter)
             {
                 string text = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(searchBox.Text);
-                webView.CoreWebView2.Navigate(text);
+                webView.WebView2Runtime.CoreWebView2.Navigate(text);
 
                 Tab tab = new()
                 {
@@ -62,5 +91,28 @@ namespace Odyssey.Views.Pages
 
             }
         }
+<<<<<<< Updated upstream
+=======
+
+        private void lastSessionListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Tab clickedItem = e.ClickedItem as Tab;
+            webView.WebView2Runtime.CoreWebView2.Navigate(clickedItem.Url);
+            Tab tab = new()
+            {
+                Url = clickedItem.Url,
+                Title = clickedItem.Title,
+                ToolTip = clickedItem.Url
+            };
+
+            tab.MainWebView = webView;
+
+            webView.LinkedTab = tab;
+
+            Tabs.Items.Add(tab);
+
+            PaneView.Current.TabsView.SelectedItem = tab;
+        }
+>>>>>>> Stashed changes
     }
 }

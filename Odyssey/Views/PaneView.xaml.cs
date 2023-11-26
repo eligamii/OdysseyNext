@@ -111,7 +111,7 @@ namespace Odyssey.Views
             }
         }
 
-        private void FavoriteGrid_Loaded(object sender, RoutedEventArgs e)
+        private async void FavoriteGrid_Loaded(object sender, RoutedEventArgs e)
         {
             FavoriteGrid.ItemsSource = Favorites.Items;
             FavoriteGrid.Visibility = Favorites.Items.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
@@ -126,7 +126,7 @@ namespace Odyssey.Views
 
             foreach (var item in Favorites.Items)
             {
-                WebView webView = WebView.Create(item.Url);
+                WebView webView = await WebView.Create(item.Url);
                 webView.LinkedTab = item;
 
                 item.MainWebView = webView;
@@ -273,7 +273,7 @@ namespace Odyssey.Views
                         Tab item = e.RemovedItems[0] as Tab;
                         if (item.MainWebView != null)
                         {
-                            await item.MainWebView.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
+                            await item.MainWebView.WebView2Runtime.CoreWebView2.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
                         }
                     }
                     if (e.AddedItems.Count > 0)
@@ -281,7 +281,7 @@ namespace Odyssey.Views
                         Tab addedItem = e.AddedItems[0] as Tab;
                         if (addedItem.MainWebView != null)
                         {
-                            await addedItem.MainWebView.ExecuteScriptAsync("document.exitPictureInPicture();");
+                            await addedItem.MainWebView.WebView2Runtime.CoreWebView2.ExecuteScriptAsync("document.exitPictureInPicture();");
                         }
                     }
                 }
@@ -294,16 +294,14 @@ namespace Odyssey.Views
                 {
                     if (tab.Url != null)
                     {
-                        WebView webView = WebView.Create(tab.Url);
+                        WebView webView = await WebView.Create(tab.Url);
                         webView.LinkedTab = tab;
-                        await webView.EnsureCoreWebView2Async();
                         tab.MainWebView = webView;
                     }
                     else
                     {
-                        WebView webView = WebView.Create(SearchEngine.ToSearchEngineObject(((SearchEngines)Settings.SelectedSearchEngine)).Url);
+                        WebView webView = await WebView.Create(SearchEngine.ToSearchEngineObject(((SearchEngines)Settings.SelectedSearchEngine)).Url);
                         webView.LinkedTab = tab;
-                        await webView.EnsureCoreWebView2Async();
                         tab.MainWebView = webView;
                     }
                 }
@@ -320,7 +318,13 @@ namespace Odyssey.Views
                     MainView.Current.progressRing.Visibility = Visibility.Collapsed;
                 }
 
+<<<<<<< Updated upstream
                 FWebView.Classes.DynamicTheme.UpdateDynamicTheme(tab.MainWebView);
+=======
+                MainView.Current.documentTitle.Text = tab.Title;
+
+                FWebView.Classes.DynamicTheme.UpdateDynamicTheme(tab.MainWebView.WebView2Runtime.CoreWebView2);
+>>>>>>> Stashed changes
 
                 MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
                 UpdateTabSelection(sender);
@@ -461,7 +465,7 @@ namespace Odyssey.Views
                     Title = text
                 };
 
-                WebView webView = WebView.Create(url);
+                WebView webView = await WebView.Create(url);
                 webView.LinkedTab = pin;
                 pin.MainWebView = webView;
             }
@@ -508,7 +512,7 @@ namespace Odyssey.Views
                     Title = text
                 };
 
-                WebView webView = WebView.Create(url);
+                WebView webView = await WebView.Create(url);
                 webView.LinkedTab = tab;
                 tab.MainWebView = webView;
             }
@@ -570,7 +574,7 @@ namespace Odyssey.Views
                     Title = text
                 };
 
-                WebView webView = WebView.Create(url);
+                WebView webView = await WebView.Create(url);
                 webView.LinkedTab = favorite;
                 favorite.MainWebView = webView;
             }

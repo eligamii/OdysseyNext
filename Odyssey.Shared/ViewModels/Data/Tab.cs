@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using WebView2Ex.UI;
 
 namespace Odyssey.Shared.ViewModels.Data
 {
@@ -66,12 +67,12 @@ namespace Odyssey.Shared.ViewModels.Data
                 }
             }
         }
-        public WebView2 MainWebView
+        public WebView2Ex.UI.WebView2Ex MainWebView
         {
             get;
             set;
         }
-        public WebView2 SplitViewWebView
+        public WebView2Ex.UI.WebView2Ex SplitViewWebView
         {
             get;
             set;

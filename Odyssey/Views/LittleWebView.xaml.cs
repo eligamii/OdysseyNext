@@ -29,18 +29,18 @@ namespace Odyssey.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             await Data.Main.Data.Init();
-            await webView.EnsureCoreWebView2Async();
 
-            webView.Source = new Uri(e.Parameter.ToString());
-            webView.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged;
+            //webView.Source = new Uri(e.Parameter.ToString());
+            //webView.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged;
 
             base.OnNavigatedTo(e);
         }
-
+        /*
         private void CoreWebView2_DocumentTitleChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)
         {
             documentTitle.Text = new Uri(sender.Source).Host;
         }
+        */
 
         //**************** Custom titleBar ******************//
         private void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -125,8 +125,9 @@ namespace Odyssey.Views
 
         private void OpenInRegularOdysseyButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
             LittleWebWindow littleWebWindow = new(webView.Source.ToString());
-            littleWebWindow.Activate();
+            littleWebWindow.Activate();*/
         }
     }
 }

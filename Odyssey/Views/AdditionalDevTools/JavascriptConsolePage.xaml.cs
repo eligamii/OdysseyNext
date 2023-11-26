@@ -36,15 +36,15 @@ namespace Odyssey.Views.AdditionalDevTools
             if(MainView.CurrentlySelectedWebView != null)
             {
                 string js = await editor.GetTextAsync();
-                await MainView.CurrentlySelectedWebView.ExecuteScriptAsync(js);
+                await MainView.CurrentlySelectedWebView.WebView2Runtime.CoreWebView2.ExecuteScriptAsync(js);
                 MainWindow.Current.Activate();
             }
 
         }
 
-        private void editor_LinkClicked(object sender, Uri args)
+        private async void editor_LinkClicked(object sender, Uri args)
         {
-            WebView web = WebView.Create(args.ToString());
+            WebView web = await WebView.Create(args.ToString());
 
             Tab tab = new()
             {

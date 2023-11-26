@@ -1,6 +1,7 @@
+extern alias webview;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.Web.WebView2.Core;
+using webview::Microsoft.Web.WebView2.Core;
 using Odyssey.Helpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,9 @@ namespace Odyssey.FWebView.Controls
 
 
 
-        public void Show(WebView2 webView, CoreWebView2ContextMenuRequestedEventArgs args)
+        public void Show(WebView webView, webview::Microsoft.Web.WebView2.Core.CoreWebView2ContextMenuRequestedEventArgs args)
         {
-            CoreWebView2 core = webView.CoreWebView2;
-
+            CoreWebView2 core = webView.WebView2Runtime.CoreWebView2 as CoreWebView2;
             IList<CoreWebView2ContextMenuItem> menuList = args.MenuItems;
             var deferral = args.GetDeferral();
             args.Handled = true;
@@ -55,7 +55,7 @@ namespace Odyssey.FWebView.Controls
 
             }
 
-            var options = new FlyoutShowOptions() { Position = args.Location };
+            var options = new FlyoutShowOptions() { Position = new Windows.Foundation.Point(args.Location.X, args.Location.Y) };
 
             this.ShowAt(webView, options);
         }

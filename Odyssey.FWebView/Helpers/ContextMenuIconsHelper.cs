@@ -1,5 +1,6 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
+﻿extern alias webview;
+using Microsoft.UI.Xaml.Controls;
+using webview::Microsoft.Web.WebView2.Core;
 
 namespace Odyssey.Helpers
 {

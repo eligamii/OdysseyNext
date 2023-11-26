@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿extern alias webview;
+using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
 using Odyssey.QuickActions.Data;
 using System.Collections.Generic;

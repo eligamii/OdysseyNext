@@ -1,4 +1,5 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿extern alias webview;
+using webview::Microsoft.Web.WebView2.Core;
 using System;
 using System.Threading.Tasks;
 
@@ -26,8 +27,8 @@ namespace Odyssey.FWebView.Classes
         private WebView webView;
         public TotpLoginDetection(WebView webView)
         {
-            webView.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
-            webView.CoreWebView2.FrameNavigationCompleted += CoreWebView2_NavigationCompleted;
+            webView.WebView2Runtime.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
+            webView.WebView2Runtime.CoreWebView2.FrameNavigationCompleted += CoreWebView2_NavigationCompleted;
 
             this.webView = webView;
 
@@ -37,12 +38,12 @@ namespace Odyssey.FWebView.Classes
         private async void Init(WebView webView)
         {
             // Create an input variable
-            await webView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync("var testInput");
+            await webView.WebView2Runtime.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync("var testInput");
         }
 
-        private void CoreWebView2_NavigationCompleted(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
+        private void CoreWebView2_NavigationCompleted(object sender, webview::Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
         {
-            ContainTotp(sender);
+            ContainTotp(webView.WebView2Runtime.CoreWebView2);
         }
 
         public async void ContainTotp(CoreWebView2 webView)

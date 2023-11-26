@@ -1,8 +1,15 @@
-﻿using Microsoft.UI;
+﻿extern alias webview;
+using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+<<<<<<< Updated upstream
+=======
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Shapes;
+using webview::Microsoft.Web.WebView2.Core;
+>>>>>>> Stashed changes
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.Helpers;
@@ -17,7 +24,7 @@ namespace Odyssey.FWebView.Classes
         public static AppWindowTitleBar AppWindowTitleBar { get; set; }
         public static bool UpdateTheme { get; set; } = true;
 
-        public static async void UpdateDynamicTheme(WebView2 webView2)
+        public static async void UpdateDynamicTheme(CoreWebView2 webView2)
         {
             // Get webView2 average color
             Color? color = null;

@@ -1,5 +1,12 @@
+<<<<<<< Updated upstream
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
+=======
+﻿extern alias webview;
+using Microsoft.UI.Xaml.Controls;
+using webview::Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json.Linq;
+>>>>>>> Stashed changes
 using Odyssey.Shared.Helpers;
 using System;
 using System.Threading.Tasks;
@@ -11,6 +18,60 @@ namespace Odyssey.FWebView.Helpers
 {
     public class WebView2AverageColorHelper
     {
+<<<<<<< Updated upstream
+=======
+        public class DeserializerClass
+        {
+            public string data { get; set; }
+        }
+
+        public static Bitmap Base64StringToBitmap(string base64String)
+        {
+            byte[] byteBuffer = Convert.FromBase64String(base64String);
+            MemoryStream memoryStream = new(byteBuffer);
+            memoryStream.Position = 0;
+
+            Bitmap bmpReturn = (Bitmap)Bitmap.FromStream(memoryStream);
+
+            memoryStream.Close();
+            return bmpReturn;
+        }
+
+        private static async Task<Bitmap> GetBitmap(CoreWebView2 webView, int width, int height)
+        {
+            dynamic clip = new JObject();
+            clip.x = 0;
+            clip.y = 0;
+            clip.width = width;
+            clip.height = height;
+            clip.scale = 1;
+
+            dynamic settings = new JObject();
+            settings.format = "jpeg";
+            settings.clip = clip;
+            settings.quality = 1;
+            settings.optimizeForSpeed = true;
+            settings.fromSurface = false;
+            settings.captureBeyondViewport = false;
+
+
+            string p = settings.ToString(Newtonsoft.Json.Formatting.None);
+            string data = await webView.CallDevToolsProtocolMethodAsync("Page.captureScreenshot", p);
+            var deserializedData = JsonSerializer.Deserialize<DeserializerClass>(data);
+
+            var bmp = Base64StringToBitmap(deserializedData.data);
+            return bmp;
+        }
+
+
+        public static async Task<Windows.UI.Color> GetFirstPixelColor(CoreWebView2 webView)
+        {
+            var bmp = await GetBitmap(webView, 1, 1);
+            System.Drawing.Color clr = bmp.GetPixel(0, 0);
+            return Windows.UI.Color.FromArgb(255, clr.R, clr.R, clr.B);
+        }
+
+>>>>>>> Stashed changes
         /// <summary>
         /// Get the average color of a part of a webview with the coordinate (0;0) the upper left corner of the webView
         /// </summary>
@@ -18,7 +79,11 @@ namespace Odyssey.FWebView.Helpers
         /// <param name="width">The width (>= 1) of the part to calculate</param>
         /// <param name="height">The height (>=1) of the part to calculate</param>
         /// <param name="step">(>=1) Greater value = less precision / better performance</param>
+<<<<<<< Updated upstream
         internal async static Task<Windows.UI.Color?> GetWebView2AverageColorsAsync(WebView2 webView, uint width = 600, uint height = 1, int step = 1)
+=======
+        public static async Task<Windows.UI.Color> GetAverageColorFrom(CoreWebView2 webView, int width, int height, int step = 1)
+>>>>>>> Stashed changes
         {
             try
             {

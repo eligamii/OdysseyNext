@@ -15,16 +15,16 @@ namespace Odyssey.FWebView.Controls.Flyouts
             this.InitializeComponent();
         }
 
-        private void historyItemsListView_ItemClick(object sender, ItemClickEventArgs e)
+        private async void historyItemsListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             HistoryItem item = e.ClickedItem as HistoryItem;
             if (WebView.SelectedWebView != null)
             {
-                WebView.SelectedWebView.CoreWebView2.Navigate(item.Url);
+                WebView.SelectedWebView.WebView2Runtime.CoreWebView2.Navigate(item.Url);
             }
             else
             {
-                WebView webView = WebView.Create(item.Url);
+                WebView webView = await WebView.Create(item.Url);
                 Tab tab = new()
                 {
                     MainWebView = webView,

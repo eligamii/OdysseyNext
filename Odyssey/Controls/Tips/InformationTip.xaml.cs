@@ -28,7 +28,7 @@ namespace Odyssey.Controls.Tips
 
         public void Open(WebView webView)
         {
-            Subtitle = webView.Source.Host;
+            Subtitle = new Uri(webView.WebView2Runtime.CoreWebView2.Source).Host;
             var ci = webView.SecurityInformation;
             if(ci != null)
             {

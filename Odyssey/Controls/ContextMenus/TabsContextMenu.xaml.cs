@@ -71,7 +71,7 @@ namespace Odyssey.Controls.ContextMenus
                         case "muted":
                             if (clickedItem.MainWebView != null)
                             {
-                                if (!clickedItem.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                                if (!clickedItem.MainWebView.WebView2Runtime.CoreWebView2.IsMuted) shouldCollapse = true;
                             }
                             else shouldCollapse = true;
                             break;
@@ -79,7 +79,7 @@ namespace Odyssey.Controls.ContextMenus
                         case "notmuted":
                             if (clickedItem.MainWebView != null)
                             {
-                                if (clickedItem.MainWebView.CoreWebView2.IsMuted) shouldCollapse = true;
+                                if (clickedItem.MainWebView.WebView2Runtime.CoreWebView2.IsMuted) shouldCollapse = true;
                             }
                             else shouldCollapse = true;
                             break;
@@ -174,11 +174,11 @@ namespace Odyssey.Controls.ContextMenus
             PaneView.Current.TabsView.SelectedItem = clickedItem;
         }
 
-        private void DuplicateMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private async void DuplicateMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             Tab tab = new()
             {
-                MainWebView = FWebView.WebView.Create(clickedItem.MainWebView.Source.ToString()),
+                MainWebView = await FWebView.WebView.Create(clickedItem.MainWebView.WebView2Runtime.CoreWebView2.Source),
                 Title = clickedItem.Title,
                 ToolTip = clickedItem.ToolTip,
                 ImageSource = clickedItem.ImageSource,
@@ -192,20 +192,20 @@ namespace Odyssey.Controls.ContextMenus
 
         private void MuteUnmuteMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            clickedItem.MainWebView.CoreWebView2.IsMuted ^= true;
+            clickedItem.MainWebView.WebView2Runtime.CoreWebView2.IsMuted ^= true;
         }
 
         private void CopyLinkMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             var package = new DataPackage();
-            package.SetText(clickedItem.MainWebView.Source.ToString());
+            package.SetText(clickedItem.MainWebView.WebView2Runtime.CoreWebView2.Source);
             Clipboard.SetContent(package);
 
         }
 
         private void RefreshMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            clickedItem.MainWebView.Reload();
+            clickedItem.MainWebView.WebView2Runtime.CoreWebView2.Reload();
         }
 
         private void UnpinSearchBarMenuFlyoutItem_Click(object sender, RoutedEventArgs e)

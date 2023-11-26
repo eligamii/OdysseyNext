@@ -1,8 +1,10 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿extern alias webview;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
+using webview::Microsoft.Web.WebView2.Core;
 
 namespace Odyssey.FWebView.Classes
 {
@@ -19,7 +21,7 @@ namespace Odyssey.FWebView.Classes
 
             InitializeVariables();
 
-            webView.NavigationStarting += (s, a) =>
+            webView.WebView2Runtime.CoreWebView2.NavigationStarting += (s, a) =>
             {
                 elements.Clear();
 
@@ -31,18 +33,18 @@ namespace Odyssey.FWebView.Classes
                 toolTips.Clear();
             };
 
-            webView.NavigationCompleted += (s, a) => GetElements();
-            webView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+            webView.WebView2Runtime.CoreWebView2.NavigationCompleted += (s, a) => GetElements();
+            webView.WebView2Runtime.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
 
             webView.PointerMoved += (s, a) => lastPointerPos = a.GetCurrentPoint(webView).Position;
         }
 
         private async void InitializeVariables()
         {
-            await webView.ExecuteScriptAsync("var links; var links2");
+            await webView.WebView2Runtime.CoreWebView2.ExecuteScriptAsync("var links; var links2");
         }
 
-        private void CoreWebView2_WebMessageReceived(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2WebMessageReceivedEventArgs args)
+        private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs args)
         {
             string message = args.WebMessageAsJson;
 
@@ -87,7 +89,7 @@ namespace Odyssey.FWebView.Classes
         public async void GetElements()
         {
             string script = @"document.querySelectorAll('a[title]').forEach(element => {  var rect = element.getBoundingClientRect(); window.chrome.webview.postMessage(element + ""{////}"" + element.title + ""{////}"" + rect.left + ""{////}"" + rect.top); element.title = """"; });";
-            await webView.ExecuteScriptAsync(script);
+            await webView.WebView2Runtime.CoreWebView2.ExecuteScriptAsync(script);
 
             string eventScript = @"links = document.querySelectorAll('a[title]');
 links.forEach(link => {
@@ -96,7 +98,7 @@ links.forEach(link => {
     });
 });";
 
-            await webView.ExecuteScriptAsync(eventScript);
+            await webView.WebView2Runtime.CoreWebView2.ExecuteScriptAsync(eventScript);
 
             eventScript = @"links2 = document.querySelectorAll('a[title]');
 links2.forEach(link => {
@@ -104,7 +106,7 @@ links2.forEach(link => {
         window.chrome.webview.postMessage(link + ""{////}out"");
     });
 });";
-            await webView.ExecuteScriptAsync(eventScript);
+            await webView.WebView2Runtime.CoreWebView2.ExecuteScriptAsync(eventScript);
         }
     }
 }
