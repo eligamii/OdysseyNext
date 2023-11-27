@@ -12,8 +12,9 @@ using Windows.UI;
 
 namespace Odyssey.FWebView.Classes
 {
-    public static class DynamicTheme
+    public static class DynamicTheme // This is a very bad class only made for Odyssey
     {
+        public static AcrylicBrush AcrylicBrush { get; set; }
         public static Grid TitleBar { get; set; }
         public static MicaController MicaController { get; set; }
         public static Page PageToUpdateTheme { get; set; }
@@ -52,8 +53,8 @@ namespace Odyssey.FWebView.Classes
                     {
                         PageToUpdateTheme.RequestedTheme = isColorDark ? ElementTheme.Dark : ElementTheme.Light;
 
-                        MicaController.TintOpacity = 0.9f;
-                        MicaController.TintColor = Color.FromArgb(245, nnColor.R, nnColor.G, nnColor.B);
+                        AcrylicBrush.TintOpacity = MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.9f : 0.4f;
+                        AcrylicBrush.TintColor = MicaController.TintColor = Color.FromArgb(245, nnColor.R, nnColor.G, nnColor.B);
                         TitleBar.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(nnColor);
                         TitleBar.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(ColorsHelper.LightEquivalent(nnColor, 0.1));
 
@@ -83,8 +84,8 @@ namespace Odyssey.FWebView.Classes
                             }
                         }
 
-                        MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
-                        MicaController.TintColor = nnColor;
+                        AcrylicBrush.TintOpacity = MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
+                        AcrylicBrush.TintColor = MicaController.TintColor = nnColor;
                         TitleBar.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(ColorsHelper.LightEquivalent(nnColor, 0.01));
 
                         AppWindowTitleBar.ButtonForegroundColor = AppWindowTitleBar.ButtonHoverForegroundColor = PageToUpdateTheme.ActualTheme == ElementTheme.Dark ? Colors.White : Colors.Black;

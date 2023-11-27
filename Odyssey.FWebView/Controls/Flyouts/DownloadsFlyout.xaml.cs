@@ -27,11 +27,11 @@ namespace Odyssey.FWebView.Controls.Flyouts
                 if(item.downloadOperation == null)
                 {
                     var downloadFolder = Shared.Helpers.KnownFolders.GetPath(Shared.Helpers.KnownFolder.Downloads);
-                    var download = AriaSharp.AriaSharpDownloader.Download(item.DownloadUrl, downloadFolder);
+                    var download = AriaSharp.Downloader.Download(item.DownloadUrl, downloadFolder);
 
                     download.DownloadProgressChanged += (s, a) =>
                     {
-                        if(a.Status == AriaSharp.AriaDownload.Status.Downloading)
+                        if(a.Status == AriaSharp.DownloadStatus.Downloading)
                         {
                             item.Name = s.OutputPath;
                             item.Progress = a.Progress;

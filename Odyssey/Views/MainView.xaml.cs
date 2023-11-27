@@ -113,7 +113,7 @@ namespace Odyssey.Views
             DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
             DynamicTheme.TitleBar = AppTitleBar;
             DynamicTheme.UpdateTheme = true;
-
+            DynamicTheme.AcrylicBrush = PaneAcrylicBrush;
             SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
 
             // Start the 2FA service
