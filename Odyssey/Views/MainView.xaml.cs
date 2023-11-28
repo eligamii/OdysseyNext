@@ -378,6 +378,11 @@ namespace Odyssey.Views
             DevToolsWindow devToolsWindow = new();
             devToolsWindow.Activate();
         }
+
+        private void documentTitle_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            string s = e.NewSize;
+        }
     }
 }
 

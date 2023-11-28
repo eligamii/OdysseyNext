@@ -25,7 +25,7 @@ using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 namespace Odyssey.FWebView
 {
-    public sealed partial class WebView : WebView2
+    public sealed partial class WebView : WebView2 // Everything here has been made for 
     {
         public TotpLoginDetection TotpLoginDetection { get; private set; }
 
@@ -135,6 +135,7 @@ namespace Odyssey.FWebView
             this.InitializeComponent();
         }
 
+        
         private async void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
             if (!IsLittleWeb)
@@ -155,10 +156,10 @@ namespace Odyssey.FWebView
 
                 // Loading cycle
                 sender.CoreWebView2.NavigationStarting += (s, a) => { if (IsVisible) MainProgressBar.Value = 0; };
-                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible) MainProgressBar.Value = 1f/6f * 100f; };
-                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible) MainProgressBar.Value = 1f/3f * 100f; };
-                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible) MainProgressBar.Value = 1f/2f * 100f; };
-                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible) MainProgressBar.Value = 7f/8f * 100f; };
+                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/6f * 100f; };
+                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/3f * 100f; };
+                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/2f * 100f; };
+                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 7f/8f * 100f; };
                 sender.CoreWebView2.NavigationCompleted += async (s, a) => { if (IsVisible) { MainProgressBar.Value = 100; await Task.Delay(1000); MainProgressBar.Value = 0; } };
             }
 
