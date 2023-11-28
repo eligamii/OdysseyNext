@@ -80,21 +80,29 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <!-- Titlebar content -->
-                        <Grid x:Name="AppTitleBar" Height="42"
+                        <Grid x:Name="AppTitleBar" MinHeight="42"
                                 VerticalAlignment="Stretch"
                                 BorderBrush="#33808080"
                                 BorderThickness="0,0,0,1"
                                 x:FieldModifier="public"
-                                Background="Transparent">
+                                Background="Transparent"
+                                SizeChanged="AppTitleBar_SizeChanged">
                             <Grid.BackgroundTransition>
                                 <BrushTransition />
                             </Grid.BackgroundTransition>
 
-                            <ProgressBar Background="Transparent" CornerRadius="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" x:Name="progressBar">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="42"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <ProgressBar Background="Transparent" Grid.RowSpan="2" CornerRadius="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" x:Name="progressBar">
                                 <ProgressBar.OpacityTransition>
                                     <ScalarTransition />
                                 </ProgressBar.OpacityTransition>
                             </ProgressBar>
+
+                            <TextBox Visibility="Collapsed" Grid.Row="1" Margin="7,0,7,7" x:Name="urlTextBox" KeyDown="urlTextBox_KeyDown"/>
 
 
                             <!-- Controls region -->
@@ -137,7 +145,7 @@
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
-                                            <MenuFlyoutItem Text="Settings" Click="SettingsMenuFlyoutItem_Click">
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=Options, Filename=Settings}" Click="SettingsMenuFlyoutItem_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE713;"/>
                                                 </MenuFlyoutItem.Icon>
@@ -148,6 +156,10 @@
                                                     <FontIcon Glyph="&#xE756;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <ToggleMenuFlyoutItem Text="Url bar" IsChecked="False" Click="ToggleMenuFlyoutItem_Click">
+                                                
+                                            </ToggleMenuFlyoutItem>
                                         </MenuFlyout>
                                     </Button.Flyout>
                                 </Button>
@@ -157,12 +169,12 @@
                             <!-- Info region -->
                             <StackPanel Tag="children" Orientation="Horizontal" x:Name="infoRegionStckPanel" HorizontalAlignment="Center"  Grid.Column="2" >
                                 <Button Content="&#xE9E9;" Click="MainMenuButton_Click"/>
-                                <TextBlock SizeChanged="documentTitle_SizeChanged" x:FieldModifier="public" x:Name="documentTitle" Tapped="documentTitle_Tapped" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
+                                <TextBlock x:FieldModifier="public" x:Name="documentTitle" Tapped="documentTitle_Tapped" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
                             </StackPanel>
                         </Grid>
 
                         <Grid Grid.Row="1" Visibility="Collapsed">
-                            <TextBox VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5"/>
+                            <TextBox Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5"/>
                         </Grid>
                         
                         <Grid Grid.Row="2">
@@ -175,6 +187,25 @@
                                     Padding="12"
                                     Visibility="Collapsed"
                                     />
+
+                            <!-- Button to show the pane / navigate through tabs when full screen -->
+                            <Button Grid.Row="1" 
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,0,0,0"
+                                    CornerRadius="0"
+                                    Width="12"
+                                    Click="HomeButton_Click"
+                                    ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane,Filename=Main}"
+                                    x:Name="showPaneButton"
+                                    Visibility="Collapsed"
+        
+/>
+                            <Grid.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition />
+                                </TransitionCollection>
+                            </Grid.Transitions>
                         </Grid> 
                     </Grid>
                 </Grid>
@@ -187,19 +218,7 @@
             </SplitView>
         </SplitView>
 
-        <!-- Button to show the pane / navigate through tabs when full screen -->
-        <Button Grid.Row="1" 
-                VerticalAlignment="Stretch"
-                HorizontalAlignment="Left"
-                Margin="0,42,0,0"
-                CornerRadius="0"
-                Width="12"
-                Click="HomeButton_Click"
-                ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane,Filename=Main}"
-                x:Name="showPaneButton"
-                Visibility="Collapsed"
-                
-        />
+        
 
         
     </Grid>

@@ -25,7 +25,7 @@ using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 namespace Odyssey.FWebView
 {
-    public sealed partial class WebView : WebView2 // Everything here has been made for 
+    public sealed partial class WebView : WebView2 // Everything here has been made for Odyssey
     {
         public TotpLoginDetection TotpLoginDetection { get; private set; }
 
@@ -56,6 +56,7 @@ namespace Odyssey.FWebView
         public static ProgressBar MainProgressBar { get; set; } // idem
         public static Frame MainWebViewFrame { get; set; }
         public static ListView TabsView { get; set; }
+        public static TextBox UrlTextBox { get; set; }
 
         private static DownloadsFlyout downloadsFlyout = new();
         private static HistoryFlyout historyFlyout = new();
@@ -412,6 +413,11 @@ namespace Odyssey.FWebView
         private void CoreWebView2_SourceChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2SourceChangedEventArgs args)
         {
             LinkedTab.Url = sender.Source;
+
+            if(IsVisible)
+            {
+                UrlTextBox.Text = sender.Source;
+            }
         }
 
         private async void CoreWebView2_NavigationStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs args)

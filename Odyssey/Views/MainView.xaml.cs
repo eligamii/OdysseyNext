@@ -1,3 +1,4 @@
+using ABI.Windows.Foundation;
 using CommunityToolkit.WinUI.UI.Helpers;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -135,6 +136,7 @@ namespace Odyssey.Views
             WebView.MainProgressElement = new ProgressBar();
             WebView.MainWebViewFrame = splitViewContentFrame;
             WebView.DocumentTextBlock = documentTitle;
+            WebView.UrlTextBox = urlTextBox;
 
             QACommands.Frame = splitViewContentFrame;
 
@@ -158,12 +160,14 @@ namespace Odyssey.Views
         }
 
         private string _lastText = string.Empty;
+
         private void DocumentTitle_LayoutUpdated(object sender, object e)
         {
-            string text = documentTitle.Text;
+            string text = CurrentlySelectedWebView?.CoreWebView2?.DocumentTitle;
             if(_lastText != text)
             {
                 titleBarDragRegions.SetDragRegionForTitleBars();
+                _lastText = text;
             }
         }
 
@@ -379,9 +383,51 @@ namespace Odyssey.Views
             devToolsWindow.Activate();
         }
 
-        private void documentTitle_SizeChanged(object sender, SizeChangedEventArgs e)
+        TextBlock measureTextBlock = new();
+        private async void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            string s = e.NewSize;
+            string text = CurrentlySelectedWebView?.CoreWebView2?.DocumentTitle;
+            documentTitle.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            try
+            {
+                if (documentTitle.DesiredSize.Width >= this.ActualWidth - 300)
+                {
+                    int lastLetter = (int)((this.ActualWidth - 300) / 15);
+                    documentTitle.Text = text.Remove(lastLetter) + "...";
+                }
+                else
+                {
+                    measureTextBlock.Text = text;
+                    measureTextBlock?.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+
+                    await Task.Delay(10);
+
+                    if (documentTitle.DesiredSize.Width < this.ActualWidth - 500)
+                    {
+                        documentTitle.Text = text;
+                    }
+                }
+            } catch { }
+        }
+
+        private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMenuFlyoutItem item = sender as ToggleMenuFlyoutItem;
+            urlTextBox.Visibility = item.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private async void urlTextBox_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                var kind = await WebSearch.Helpers.WebSearchStringKindHelpers.GetStringKind(urlTextBox.Text);
+                if (kind == WebSearch.Helpers.WebSearchStringKindHelpers.StringKind.Url)
+                {
+                    string finalUrl = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(urlTextBox.Text);
+                    MainView.CurrentlySelectedWebView.CoreWebView2.Navigate(finalUrl);
+                }
+            }
         }
     }
 }
