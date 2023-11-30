@@ -28,7 +28,7 @@ namespace Odyssey.FWebView.Classes
 
             try
             {
-                if (Settings.DynamicThemeEnabled)
+                if (Settings.IsDynamicThemeEnabled)
                 {
                     switch (Settings.ThemePerformanceMode)
                     {

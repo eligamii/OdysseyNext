@@ -5,7 +5,10 @@ using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.QuickActions.Data;
 using Odyssey.Views;
+using Odyssey.Views.Pages;
 using System;
+using System.IO;
+using Windows.Storage;
 using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -22,14 +25,15 @@ namespace Odyssey
         public MainWindow()
         {
             InitializeComponent();
-
+            this.Title = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Square44x44Logo.altform-lightunplated_targetsize-24.png");
+            AppWindow.SetIcon(path);
             Init();
         }
 
         private async void Init()
         {
-            // Load default settings for the first run
-            Settings.Init();
+            
 
             ExtendsContentIntoTitleBar = true;
 
@@ -53,7 +57,7 @@ namespace Odyssey
             // Make possible to access to MainWindow from anywhere
             Current = this;
 
-            UserVariables.Load();
+            
 
             AppWindow.Closing += AppWindow_Closing;
         }
@@ -71,11 +75,41 @@ namespace Odyssey
             }
             else
             {
+                // Put Odyssey in the default state
                 foreach (var tab in Tabs.Items)
                 {
                     if (tab.MainWebView != null) tab.MainWebView.Close();
                 }
 
+                foreach (var tab in Pins.Items)
+                {
+                    if (tab.MainWebView != null) tab.MainWebView.Close();
+                    tab.MainWebView = null;
+                }
+
+                foreach (var tab in Favorites.Items)
+                {
+                    if (tab.MainWebView != null) tab.MainWebView.Close();
+                    tab.MainWebView = null;
+                }
+
+                PaneView.Current.FavoriteGrid.SelectedItem =
+                PaneView.Current.PinsTabView.SelectedItem =
+                PaneView.Current.TabsView.SelectedItem = null;
+
+                MainView.Current.splitViewContentFrame.Navigate(typeof(HomePage), null, new SuppressNavigationTransitionInfo());
+
+                MainView.Current.documentTitle.Text = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
+
+                bool dark = Classes.UpdateTheme.IssystemDarkMode();
+                string color = dark ? "#202020" : "#F9F9F9";
+
+                if(Settings.IsDynamicThemeEnabled) 
+                {
+                    MainView.Current.RequestedTheme = Classes.UpdateTheme.IssystemDarkMode() ? Microsoft.UI.Xaml.ElementTheme.Dark : Microsoft.UI.Xaml.ElementTheme.Light;
+                    Classes.UpdateTheme.UpdateThemeWith(color);
+                }
+                
                 Tabs.Items.Clear();
 
                 AppWindow.Hide();

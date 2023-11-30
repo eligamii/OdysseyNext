@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Odyssey.Data.Settings;
 using Odyssey.Helpers;
 using Odyssey.OtherWindows;
+using Odyssey.QuickActions.Data;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -35,8 +36,6 @@ namespace Odyssey
 
             Settings.Init();
 
-          
-
             if (Settings.IsSingleInstanceEnabled)
             {
                 var appArgs = Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().GetActivatedEventArgs();
@@ -57,6 +56,15 @@ namespace Odyssey
                     Microsoft.Windows.AppLifecycle.AppInstance.GetCurrent().Activated += App_Activated;
                 }
             }
+
+            // Start the 2FA service
+            await Data.Main.Data.Init();
+            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
+
+            // Load data          
+            //Downloads.Aria2.Init();
+            AdBlocker.AdBlocker.Init();
+            UserVariables.Load();
 
 
             m_window = new MainWindow();

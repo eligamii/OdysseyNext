@@ -29,7 +29,7 @@ namespace Odyssey.Views.Options
         public ApparancePage()
         {
             this.InitializeComponent();
-            dynamicThemeComboBox.IsOn = Settings.DynamicThemeEnabled;
+            dynamicThemeComboBox.IsOn = Settings.IsDynamicThemeEnabled;
             dynamicThemeModeComboBox.IsOn = Settings.IsDynamicThemeModeChangeEnabled;
             dynamicThemePerfComboBox.SelectedIndex = Settings.ThemePerformanceMode;
 
@@ -38,7 +38,7 @@ namespace Odyssey.Views.Options
 
         private void dynamicThemeComboBox_Toggled(object sender, RoutedEventArgs e)
         {
-            Settings.DynamicThemeEnabled = dynamicThemeComboBox.IsOn;
+            Settings.IsDynamicThemeEnabled = dynamicThemeComboBox.IsOn;
             customThemeExpander.IsEnabled = !dynamicThemeComboBox.IsOn;
         }
 

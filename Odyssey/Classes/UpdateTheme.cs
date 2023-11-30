@@ -10,11 +10,18 @@ using System.Threading.Tasks;
 using Odyssey.Shared.Helpers;
 using Odyssey.Views;
 using Windows.UI;
+using System.Runtime.InteropServices;
+using Microsoft.UI.Xaml.Media;
+using Odyssey.FWebView;
+using Odyssey.Helpers;
 
 namespace Odyssey.Classes
 {
-    internal class UpdateTheme
+    public class UpdateTheme
     {
+        [DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#138")]
+        public static extern bool IssystemDarkMode();
+
         internal static void UpdateThemeWith(string color)
         {
             var sdc = System.Drawing.ColorTranslator.FromHtml(color);
@@ -34,6 +41,12 @@ namespace Odyssey.Classes
 
             FWebView.Classes.DynamicTheme.MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
             FWebView.Classes.DynamicTheme.MicaController.TintColor = nnColor;
+
+            FWebView.Classes.DynamicTheme.AcrylicBrush.TintOpacity = MicaBackdropHelper.BackdropController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.9f : 0.4f;
+            FWebView.Classes.DynamicTheme.AcrylicBrush.TintColor = MicaBackdropHelper.BackdropController.TintColor = Color.FromArgb(245, nnColor.R, nnColor.G, nnColor.B);
+            FWebView.Classes.DynamicTheme.TitleBar.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Colors.Transparent);
+            FWebView.Classes.DynamicTheme.TitleBar.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(20, 128, 128, 128));
+
 
             MainWindow.Current.AppWindow.TitleBar.ButtonForegroundColor = MainWindow.Current.AppWindow.TitleBar.ButtonHoverForegroundColor = MainView.Current.ActualTheme == ElementTheme.Dark ? Colors.White : Colors.Black;
 

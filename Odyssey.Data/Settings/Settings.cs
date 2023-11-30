@@ -22,7 +22,7 @@ namespace Odyssey.Data.Settings
                 OpenTabOnStartup = false;
                 AreExperimentalFeaturesEnabled = false;
                 ThemeMode = 2; // System / Dynamic theme change
-                DynamicThemeEnabled = true;
+                IsDynamicThemeEnabled = true;
                 IsDynamicThemeModeChangeEnabled = true; // if false, the color will be converted to a darker/lighter one
                 ThemePerformanceMode = 1;
                 IsSingleInstanceEnabled = false;
@@ -96,7 +96,7 @@ namespace Odyssey.Data.Settings
             set { Values.Values["ThemePerformanceMode"] = value; }
         }
 
-        public static bool DynamicThemeEnabled
+        public static bool IsDynamicThemeEnabled
         {
             get { return (bool)Values.Values["DynamicThemeEnabled"]; }
             set { Values.Values["DynamicThemeEnabled"] = value; }

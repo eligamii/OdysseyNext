@@ -91,7 +91,7 @@ namespace Odyssey.Views
             titleBarDragRegions = new TitleBarDragRegions(
                 new List<Grid>() { AppTitleBar, secondTitleBar },
                 MainWindow.Current,
-                new List<Type>() { typeof(ProgressBar), typeof(TextBlock), typeof(Microsoft.UI.Xaml.Shapes.Rectangle), typeof(Frame)},
+                new List<Type>() { typeof(ProgressBar), typeof(TextBlock), typeof(Microsoft.UI.Xaml.Shapes.Rectangle), typeof(Frame) },
                 MainWindow.Current.Content as FrameworkElement,
                 42);
 
@@ -116,14 +116,6 @@ namespace Odyssey.Views
             DynamicTheme.UpdateTheme = true;
             DynamicTheme.AcrylicBrush = PaneAcrylicBrush;
             SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
-
-            // Start the 2FA service
-            await Data.Main.Data.Init();
-            TwoFactorsAuthentification.TwoFactorsAuthentification.Init();
-
-            // Load data          
-            //Downloads.Aria2.Init();
-            AdBlocker.AdBlocker.Init();
 
             // Restore tabs after crash
             RestoreTabs();
@@ -175,7 +167,7 @@ namespace Odyssey.Views
 
         private void SetCustomTheme()
         {
-            if (!Settings.DynamicThemeEnabled)
+            if (!Settings.IsDynamicThemeEnabled)
             {
                 string color = Settings.CustomThemeColors;
                 if(color != null)
@@ -411,7 +403,8 @@ namespace Odyssey.Views
             } catch { }
         }
 
-        private void ToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void ToggleMenuFlyoutItem_Click
+            (object sender, RoutedEventArgs e)
         {
             ToggleMenuFlyoutItem item = sender as ToggleMenuFlyoutItem;
             urlTextBox.Visibility = item.IsChecked ? Visibility.Visible : Visibility.Collapsed;
