@@ -1,22 +1,24 @@
 ﻿using Odyssey.Data.Main;
 using Odyssey.QuickActions.Objects;
 using Odyssey.Shared.ViewModels.Data;
+using System;
 using System.Linq;
 
 namespace Odyssey.QuickActions.Commands
 {
     internal static class Close
     {
-        internal static bool Exec(string[] options)
+        internal static Res Exec(string[] options)
         {
             if (options.Count() == 0 || options[0] == "this")
             {
                 // close the window
                 QACommands.MainWindow.Close();
-                return true;
+                return new Res(true);
             }
             else if (options[0] == "all")
             {
+                int count = Tabs.Items.Count();
                 // close every tab
                 foreach (var item in Tabs.Items)
                 {
@@ -26,13 +28,14 @@ namespace Odyssey.QuickActions.Commands
 
                 Tabs.Items.Clear();
                 Tabs.Save(); // Prevent the tabs from being restored after crash
-                return true;
+                return new Res(true, count.ToString());
             }
             else if (!string.IsNullOrWhiteSpace(options[0]))
             {
                 try
                 {
                     var list = new TabList(options[0]).Items;
+                    int count = list.Count();
 
                     if (options[0].Contains("0;"))
                     {
@@ -56,14 +59,14 @@ namespace Odyssey.QuickActions.Commands
                         }
                     }
 
-                    return true;
+                    return new Res(true, count.ToString());
                 }
-                catch { return false; }
+                catch (Exception e) { return new Res(false, null, e.Message); }
 
             }
             else
             {
-                return false; // incorrect command
+                return new Res(false, null, "Incorrect parameters");
             }
         }
 

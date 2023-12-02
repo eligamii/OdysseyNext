@@ -8,11 +8,22 @@ using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
-    internal class Test
+    internal class Ui
     {
         internal static Res Exec(string[] options)
         {
-            Odyssey.Migration.Migration.Migrate(Browser.Edge);
+            if(options.Count() == 1)
+            {
+                string type = options[0].Split(',')[0];
+
+                switch(type)
+                {
+                    case "button":
+                        new UIButton(options[0]);
+                        break;
+                }
+            }
+
             return new Res(true);
         }
     }

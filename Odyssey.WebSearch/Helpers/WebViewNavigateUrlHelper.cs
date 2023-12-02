@@ -10,7 +10,7 @@ namespace Odyssey.WebSearch.Helpers
         // Get the corresponding url from a query (ex: "whats 1+1?" can return "https://www.google.com/search?q=whats+1%2B1%3F")
         public static async Task<string> ToUrl(string query)
         {
-            var kind = await GetStringKind(query);
+            var kind = await GetStringKindAsync(query);
 
             switch (kind)
             {

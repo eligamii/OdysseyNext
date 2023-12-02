@@ -137,6 +137,8 @@ namespace Odyssey.Helpers
             var transformTitleBar = titleBar.TransformToVisual(_titleBarParent);
             Point titleBarPosition = transformTitleBar.TransformPoint(new Point(0, 0));
 
+            if (!IsVisible(titleBar)) return new Windows.Graphics.RectInt32(0, 0, 0, 0);
+
             if (first)
             {
                 double scaleAdjustment = GetScaleAdjustment();

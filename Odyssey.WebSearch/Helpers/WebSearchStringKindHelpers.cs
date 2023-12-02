@@ -23,7 +23,7 @@ namespace Odyssey.WebSearch.Helpers
 
         }
 
-        public static async Task<StringKind> GetStringKind(string str)
+        public static async Task<StringKind> GetStringKindAsync(string str)
         {
             if (quickActionCommandsRegex.IsMatch(str)) return StringKind.QuickActionCommand;
             else if (urlRegex.IsMatch(str)) return StringKind.Url;
@@ -52,6 +52,16 @@ namespace Odyssey.WebSearch.Helpers
                     return StringKind.SearchKeywords;
                 }
             }
+            else return StringKind.SearchKeywords;
+        }
+
+
+        public static StringKind GetStringKind(string str)
+        {
+            if (quickActionCommandsRegex.IsMatch(str)) return StringKind.QuickActionCommand;
+            else if (urlRegex.IsMatch(str)) return StringKind.Url;
+            else if (odysseyUrlRegex.IsMatch(str)) return StringKind.OdysseyUrl;
+            else if (mathematicalExpressionRegex.IsMatch(str)) return StringKind.MathematicalExpression;
             else return StringKind.SearchKeywords;
         }
     }

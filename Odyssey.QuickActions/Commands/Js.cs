@@ -1,4 +1,4 @@
-﻿using Odyssey.Migration;
+﻿using Odyssey.FWebView;
 using Odyssey.QuickActions.Objects;
 using System;
 using System.Collections.Generic;
@@ -8,12 +8,18 @@ using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
-    internal class Test
+    internal class Js
     {
         internal static Res Exec(string[] options)
         {
-            Odyssey.Migration.Migration.Migrate(Browser.Edge);
+            string js = string.Empty;
+            foreach (var option in options) js += option + " ";
+
+            WebView.SelectedWebView.ExecuteScriptAsync(js);
+
             return new Res(true);
         }
+
+
     }
 }

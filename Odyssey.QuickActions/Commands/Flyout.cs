@@ -11,7 +11,7 @@ namespace Odyssey.QuickActions.Commands
         private static string content = "about:blank"; // should be an url
         private static string pos = "0;0";
         private static string buttoncommand = string.Empty;
-        internal static bool Exec(string[] options)
+        internal static Res Exec(string[] options)
         {
             if (options.Count() >= 1) // option requires at least 1 option: content
             {
@@ -32,9 +32,9 @@ namespace Odyssey.QuickActions.Commands
                 flyout.ShowAt(QACommands.Frame, flyoutOptions);
 
 
-                return true;
+                return new Res(true);
             }
-            else return false;
+            else return new Res(false, null, "This command requires at least one option: content");
         }
 
         private static void SetOptions(string option)

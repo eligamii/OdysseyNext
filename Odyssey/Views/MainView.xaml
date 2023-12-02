@@ -102,11 +102,11 @@
                                 </ProgressBar.OpacityTransition>
                             </ProgressBar>
 
-                            <TextBox Visibility="Collapsed" Grid.Row="1" Margin="7,0,7,7" x:Name="urlTextBox" KeyDown="urlTextBox_KeyDown"/>
+                            <TextBox Visibility="Collapsed" Grid.Row="1" Margin="7,0,7,7" x:Name="urlTextBox" KeyDown="urlTextBox_KeyDown" Tag="ignore"/>
 
 
                             <!-- Controls region -->
-                            <StackPanel Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
+                            <StackPanel x:Name="buttonsStackPanel" Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
                                 <Button Content="&#xE80F;" Click="HomeButton_Click"/>
                                 <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
                                 <Button Visibility="Visible" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right">

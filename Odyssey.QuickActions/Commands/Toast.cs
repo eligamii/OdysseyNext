@@ -10,7 +10,7 @@ namespace Odyssey.QuickActions.Commands
         private static string title = "Toast";
         private static string content = string.Empty;
         private static AppNotificationDuration duration = AppNotificationDuration.Default;
-        internal static bool Exec(string[] options)
+        internal static Res Exec(string[] options)
         {
             if (options.Count() >= 1)
             {
@@ -29,11 +29,11 @@ namespace Odyssey.QuickActions.Commands
 
                     title = "Toast"; // set default title
                     content = string.Empty;
-                    return true;
+                    return new Res(true);
                 }
             }
 
-            return false; // This command requires at least 1 option: content
+            return new Res(false, null, "This command requires at least 1 option: content");
         }
 
         private static void SetOptions(string option)

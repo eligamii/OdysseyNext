@@ -19,7 +19,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
+    <ProjectReference Include="..\Odyssey.FWebView\Odyssey.FWebView.csproj" />
     <ProjectReference Include="..\Odyssey.Migration\Odyssey.Migration.csproj" />
+    <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
   </ItemGroup>
 
   <ItemGroup>

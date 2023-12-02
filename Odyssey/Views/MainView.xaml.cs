@@ -131,14 +131,15 @@ namespace Odyssey.Views
             WebView.UrlTextBox = urlTextBox;
 
             QACommands.Frame = splitViewContentFrame;
+            QACommands.ButtonsStackPanel = buttonsStackPanel;
 
             // Set the Quick actions command MainWindow to this window
             QACommands.MainWindow = MainWindow.Current;
 
-            WebView.TotpLoginDetectedAction += () => SetTotpButtonVisibility();
-            WebView.LoginPageDetectedAction += () => LoginDetectedChanged();
+            WebView.TotpLoginDetectedAction += SetTotpButtonVisibility;
+            WebView.LoginPageDetectedAction += LoginDetectedChanged;
 
-            // Check the internet connection every second for UI things
+            // Check the internet connection every second for Ui things
             CheckNetworkConnectionState();
 
             // Set the custom theme if dynamic theme is not enabled
@@ -149,6 +150,8 @@ namespace Odyssey.Views
 
             // Update the titlebar drag region based on the text of the documentTitle
             documentTitle.LayoutUpdated += DocumentTitle_LayoutUpdated;
+
+            QuickActions.QACommands.RestoreUIElements();
         }
 
         private string _lastText = string.Empty;
@@ -414,7 +417,7 @@ namespace Odyssey.Views
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                var kind = await WebSearch.Helpers.WebSearchStringKindHelpers.GetStringKind(urlTextBox.Text);
+                var kind = await WebSearch.Helpers.WebSearchStringKindHelpers.GetStringKindAsync(urlTextBox.Text);
                 if (kind == WebSearch.Helpers.WebSearchStringKindHelpers.StringKind.Url)
                 {
                     string finalUrl = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(urlTextBox.Text);

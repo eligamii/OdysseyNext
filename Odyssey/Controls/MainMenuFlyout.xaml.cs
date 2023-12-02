@@ -41,7 +41,7 @@ namespace Odyssey.Controls
         {
             if(e.Key == Windows.System.VirtualKey.Enter)
             {
-                var kind = await WebSearch.Helpers.WebSearchStringKindHelpers.GetStringKind(urlTextBox.Text);
+                var kind = await WebSearch.Helpers.WebSearchStringKindHelpers.GetStringKindAsync(urlTextBox.Text);
                 if(kind == WebSearch.Helpers.WebSearchStringKindHelpers.StringKind.Url)
                 {
                     string finalUrl = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(urlTextBox.Text);

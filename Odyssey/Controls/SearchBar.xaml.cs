@@ -179,7 +179,7 @@ namespace Odyssey.Controls
                     }
                     else
                     {
-                        StringKind kind = await GetStringKind(text);
+                        StringKind kind = await GetStringKindAsync(text);
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
                         else if (kind == StringKind.OdysseyUrl)
                         {
@@ -334,7 +334,7 @@ namespace Odyssey.Controls
 
         private async void UpdateIcon(string text)
         {
-            StringKind kind = await GetStringKind(text);
+            StringKind kind = await GetStringKindAsync(text);
 
             switch (kind)
             {
@@ -395,3 +395,5 @@ namespace Odyssey.Controls
         }
     }
 }
+
+

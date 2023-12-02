@@ -8,14 +8,19 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Easylist.txt" />
+    <None Remove="Assets\easylist_general_block.txt" />
     <None Remove="Assets\Easyprivacy.txt" />
     <None Remove="Assets\MalwaresList.txt" />
     <None Remove="Assets\Whitelist.txt" />
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.3.230602002" />
-      <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
+      <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +34,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Whitelist.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Assets\easylist_general_block.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

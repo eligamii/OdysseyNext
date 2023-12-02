@@ -1,7 +1,9 @@
 using Microsoft.Web.WebView2.Core;
+using Odyssey.Data.Settings;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 // Every host blocklists can be found here : https://firebog.net/
 // Credit to the Firebog, Easylist and Spam404 lists mainteners
@@ -31,33 +33,55 @@ namespace Odyssey.AdBlocker
                 malwaresList = File.ReadAllLines(malwaresListPath);
                 whitelist = File.ReadAllLines(whitelistListPath);
             }
+
+            if(EasyListAdBlocker.AdBlockList.Count() == 0 && Settings.AdBlockerType == 1)
+            {
+                EasyListAdBlocker.CreateRegexBasedFilterList();
+            }
         }
 
 
         public AdBlocker(CoreWebView2 coreWebView)
         {
-            coreWebView.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.XmlHttpRequest);
-            coreWebView.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Image);
-            coreWebView.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Media);
-            coreWebView.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Script);
-            coreWebView.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.Other);
+            coreWebView.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
 
             coreWebView.WebResourceRequested += CoreWebView_WebResourceRequested;
         }
 
-        private void CoreWebView_WebResourceRequested(CoreWebView2 sender, CoreWebView2WebResourceRequestedEventArgs args)
+        private async void CoreWebView_WebResourceRequested(CoreWebView2 sender, CoreWebView2WebResourceRequestedEventArgs args)
         {
-            string host = new Uri(args.Request.Uri).Host;
-
-            if (ShouldBlock(host, sender))
+            if(Settings.IsAdBlockerEnabled)
             {
-                sender.Stop(); // to have the time to block the request
-                args.Response = sender.Environment.CreateWebResourceResponse(null, 503, "Service Unavailable", "");
-                sender.Resume();
+                if(Settings.AdBlockerType == 0) // host-based
+                {
+                    string host = new Uri(args.Request.Uri).Host;
+
+                    if (ShouldBlockHost(host, sender))
+                    {
+                        sender.Stop(); // to have the time to block the request
+                        args.Response = sender.Environment.CreateWebResourceResponse(null, 503, "Service Unavailable", "");
+                        sender.Resume();
+                    }
+                }
+                else
+                {
+                    if (await ShouldBlock(args.Request.Uri, args.ResourceContext, new Uri(sender.Source).Host))
+                    {
+                        sender.Stop(); // to have the time to block the request
+                        args.Response = sender.Environment.CreateWebResourceResponse(null, 503, "Service Unavailable", "");
+                        sender.Resume();
+                    }
+                }
             }
         }
 
-        private bool ShouldBlock(string host, CoreWebView2 sender)
+        private async Task<bool> ShouldBlock(string request, CoreWebView2WebResourceContext context, string host)
+        {
+
+            return await EasyListAdBlocker.ShouldBlock(request, host, context);
+        }
+
+        private bool ShouldBlockHost(string host, CoreWebView2 sender)
         {
             if (!whitelist.Any(p => p == new Uri(sender.Source).Host))
             {

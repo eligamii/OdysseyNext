@@ -62,6 +62,7 @@ namespace Odyssey.FWebView
         private static HistoryFlyout historyFlyout = new();
 
         private FindFlyout findFlyout;
+        public CoreWebView2ContextMenuRequestedEventArgs ContextMenuRequestedEventArgs { get; set; }
 
         public static WebView SelectedWebView // Used for opening HistoryItems in the selected webview when available
         {
@@ -79,7 +80,7 @@ namespace Odyssey.FWebView
             }
         }
 
-
+        
         // Ojects to know if the user finished scrolling for 2s
         private DispatcherTimer scrollTimer;
         private bool isScrolling = false;
@@ -237,15 +238,19 @@ namespace Odyssey.FWebView
                 await Task.Delay(1500);
                 if(IsVisible)
                 {
-                    Color pixel = await WebView2AverageColorHelper.GetFirstPixelColor(this);
-                    if(pixel != lastPixel)
+                    try
                     {
-                        DynamicTheme.UpdateDynamicTheme(this);
+                        Color pixel = await WebView2AverageColorHelper.GetFirstPixelColor(this);
+                        if (pixel != lastPixel)
+                        {
+                            DynamicTheme.UpdateDynamicTheme(this);
+                        }
+                        else
+                        {
+                            lastPixel = pixel;
+                        }
                     }
-                    else
-                    {
-                        lastPixel = pixel;
-                    }
+                    catch { }
 
                 }
             }
@@ -423,7 +428,7 @@ namespace Odyssey.FWebView
         private async void CoreWebView2_NavigationStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs args)
         {
             IsPageLoading = true;
-            var kind = await GetStringKind(args.Uri);
+            var kind = await GetStringKindAsync(args.Uri);
             if (kind == StringKind.ExternalAppUri)
             {
                 args.Cancel = true;
@@ -456,7 +461,7 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_ContextMenuRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2ContextMenuRequestedEventArgs args)
         {
-            QuickActions.Variables.ContextMenuArgs = args;
+            ContextMenuRequestedEventArgs = args;
 
             FWebViewContextMenu fWebViewContextMenu = new();
             fWebViewContextMenu.Show(this, args);

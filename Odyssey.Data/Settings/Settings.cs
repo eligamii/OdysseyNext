@@ -8,26 +8,26 @@ namespace Odyssey.Data.Settings
 
         public static void Init()
         {
-            if (Inititalized != true)
-            {
-                FirstLaunch = true;
-                Inititalized = true;
-                IsPaneLocked = true;
-                CancelAppUriLaunchConfirmationDialog = false;
-                SuccessfullyClosed = true;
-                IsDarkReaderEnabled = true;
-                ForceDarkReader = false;
-                AutoPictureInPicture = true;
-                PlaySoundsOnOnlyOneTab = false;
-                OpenTabOnStartup = false;
-                AreExperimentalFeaturesEnabled = false;
-                ThemeMode = 2; // System / Dynamic theme change
-                IsDynamicThemeEnabled = true;
-                IsDynamicThemeModeChangeEnabled = true; // if false, the color will be converted to a darker/lighter one
-                ThemePerformanceMode = 1;
-                IsSingleInstanceEnabled = false;
-                IsHisoryEncryptionEnabled = false;
-            }
+            // Individually test if each setting has a key to make adding settings without crash possible
+            if (!Values.Values.ContainsKey("FirstLaunch")) FirstLaunch = true;
+            if (!Values.Values.ContainsKey("Inititalized")) Inititalized = true;
+            if (!Values.Values.ContainsKey("IsPaneLocked")) IsPaneLocked = true;
+            if (!Values.Values.ContainsKey("CancelAppUriLaunchConfirmationDialog")) CancelAppUriLaunchConfirmationDialog = false;
+            if (!Values.Values.ContainsKey("SuccessfullyClosed")) SuccessfullyClosed = true;
+            if (!Values.Values.ContainsKey("IsDarkReaderEnabled")) IsDarkReaderEnabled = true;
+            if (!Values.Values.ContainsKey("ForceDarkReader")) ForceDarkReader = false;
+            if (!Values.Values.ContainsKey("AutoPictureInPicture")) AutoPictureInPicture = true;
+            if (!Values.Values.ContainsKey("PlaySoundsOnOnlyOneTab")) PlaySoundsOnOnlyOneTab = false;
+            if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabOnStartup = false;
+            if (!Values.Values.ContainsKey("AreExperimentalFeaturesEnabled")) AreExperimentalFeaturesEnabled = false;
+            if (!Values.Values.ContainsKey("ThemeMode")) ThemeMode = 2;
+            if (!Values.Values.ContainsKey("DynamicThemeEnabled")) IsDynamicThemeEnabled = true;
+            if (!Values.Values.ContainsKey("IsDynamicThemeModeChangeEnabled")) IsDynamicThemeModeChangeEnabled = true;
+            if (!Values.Values.ContainsKey("ThemePerformanceMode")) ThemePerformanceMode = 1;
+            if (!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = false;
+            if (!Values.Values.ContainsKey("IsHisoryEncryptionEnabled")) IsHisoryEncryptionEnabled = false;
+            if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
+            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0;
         }
 
         public static bool? Inititalized
@@ -40,6 +40,18 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool)Values.Values["IsHisoryEncryptionEnabled"]; }
             set { Values.Values["IsHisoryEncryptionEnabled"] = value; }
+        }
+
+        public static bool UseCustomAdBlockers
+        {
+            get { return (bool)Values.Values["UseCustomAdBlockers"]; }
+            set { Values.Values["UseCustomAdBlockers"] = value; }
+        }
+
+        public static string CustomAdBlockerPath // paths separated by ','
+        {
+            get { return (string)Values.Values["CustomAdBlockerPath"]; }
+            set { Values.Values["CustomAdBlockerPath"] = value; }
         }
 
         public static bool AutoPictureInPicture
@@ -112,6 +124,18 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool)Values.Values["IsDarkReaderEnabled"]; }
             set { Values.Values["IsDarkReaderEnabled"] = value; }
+        }
+
+        public static bool IsAdBlockerEnabled
+        {
+            get { return (bool)Values.Values["IsAdBlockerEnabled"]; }
+            set { Values.Values["IsAdBlockerEnabled"] = value; }
+        }
+
+        public static int AdBlockerType // 0 = host-based, 1 = AdBlock-Plus-filterlist-based
+        {
+            get { return (int)Values.Values["AdBlockerType"]; }
+            set { Values.Values["AdBlockerType"] = value; }
         }
         public static bool ForceDarkReader
         {
