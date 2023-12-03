@@ -28,12 +28,19 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("IsHisoryEncryptionEnabled")) IsHisoryEncryptionEnabled = false;
             if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
             if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0;
+            if (!Values.Values.ContainsKey("DisplayQACommandErrors")) DisplayQACommandErrors = true;
         }
 
         public static bool? Inititalized
         {
             get { return (bool?)Values.Values["Inititalized"]; }
             set { Values.Values["Inititalized"] = value; }
+        }
+
+        public static bool DisplayQACommandErrors
+        {
+            get { return (bool)Values.Values["DisplayQACommandErrors"]; }
+            set { Values.Values["DisplayQACommandErrors"] = value; }
         }
 
         public static bool IsHisoryEncryptionEnabled 

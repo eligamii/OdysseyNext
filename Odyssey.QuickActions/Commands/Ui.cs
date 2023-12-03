@@ -14,7 +14,7 @@ namespace Odyssey.QuickActions.Commands
         {
             if(options.Count() == 1)
             {
-                string type = options[0].Split(',')[0];
+                string type = options[0].Split(',')[1];
 
                 switch(type)
                 {

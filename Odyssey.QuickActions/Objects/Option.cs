@@ -46,7 +46,8 @@ namespace Odyssey.QuickActions.Objects
                 }
             }
 
-
+            Value = Value.Replace("\\[", "[")
+                         .Replace("\\]", "]");
         }
         internal string Name { get; private set; }
         internal string Value { get; private set; }

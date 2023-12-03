@@ -22,9 +22,12 @@ namespace Odyssey.QuickActions
         public static Window MainWindow { internal get; set; } // for commands which manipulate the app itself as $close or $minimize do
         public static void RestoreUIElements()
         {
-            foreach(var variable in UserVariables.Items.Where(p => p.Key.StartsWith("ui")))
+            foreach(var variable in UserVariables.Items)
             {
-                if(variable.Key.StartsWith("uib"))
+                string pattern = "\"([^ ]*,){3}[^ ]*\"";
+                bool match = Regex.IsMatch(variable.Value, pattern);
+
+                if (match)
                 {
                     new UIButton(variable.Value, true);
                 }
@@ -68,7 +71,7 @@ namespace Odyssey.QuickActions
                 // Get the command var (ex: flyout)
                 commandName = Regex.Match(command, @"^[a-z]*").Value;
             }
-            catch { return new Res(false, null, "the entered command is in a $<non existant variable> pattern"); } // the entered command is in a $<non existant variable> pattern 
+            catch { return new Res(false, null, "The entered command is in a $<non existant variable> pattern"); } // the entered command is in a $<non existant variable> pattern 
 
             string commandWithoutCommandName;
             // The string used by the commands

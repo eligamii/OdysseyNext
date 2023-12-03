@@ -16,12 +16,12 @@ namespace Odyssey.QuickActions.Objects
     {
         Button XAMLButton { get; set; }
         private string command;
-        public UIButton(string option, bool isRestoring = false) // button,glyph,command-variable syntax
+        public UIButton(string option, bool isRestoring = false) // name,button,glyph,command-variable syntax
         {
             string[] options = option.Split(',');
-            int unicode = int.Parse(options[1], System.Globalization.NumberStyles.HexNumber);
+            int unicode = int.Parse(options[2], System.Globalization.NumberStyles.HexNumber);
 
-            string variable = options[2].Replace("\"", "");
+            string variable = options[3].Replace("\"", "");
 
             char glyph = (char)unicode;
             this.command = Variables.ConvertToValues($"<{variable}>");
@@ -38,7 +38,7 @@ namespace Odyssey.QuickActions.Objects
             XAMLButton.Click += XAMLButton_Click;
 
             // Save the UIButton 
-            if(!isRestoring) QACommands.Execute($"$set var:ui{option[0]}{new Guid()} value:\"{option}\"").RunSynchronously();
+            if(!isRestoring) QACommands.Execute($"$set var:{options[0].Replace("\"", "")} value:\"{option}\"");
             QACommands.ButtonsStackPanel.Children.Insert(2, XAMLButton);
         }
 

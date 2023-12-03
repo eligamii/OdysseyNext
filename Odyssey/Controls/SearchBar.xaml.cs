@@ -3,9 +3,11 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Odyssey.Data.Main;
+using Odyssey.Data.Settings;
 using Odyssey.FWebView;
 using Odyssey.FWebView.Classes;
 using Odyssey.QuickActions;
+using Odyssey.QuickActions.Objects;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.Views;
@@ -208,12 +210,14 @@ namespace Odyssey.Controls
 
                                 suggestionListView.Visibility = Visibility.Collapsed;
 
-                                mainSearchBox.KeyDown += (s, a) =>
+                                mainSearchBox.KeyDown += async (s, a) =>
                                 {
                                     if (a.Key == Windows.System.VirtualKey.Enter)
                                     {
                                         Variables.AskText = mainSearchBox.Text;
-                                        QACommands.Execute(command);
+                                        Res res = await QACommands.Execute(command);
+
+                                        if (!res.Success && Settings.DisplayQACommandErrors) await QACommands.Execute($"toast title:\"Exception\" content:\"{res.Message}\"");
 
                                         Hide();
                                     }
@@ -221,7 +225,9 @@ namespace Odyssey.Controls
                             }
                             else
                             {
-                                QACommands.Execute(text);
+                                Res res = await QACommands.Execute(text);
+
+                                if (!res.Success && Settings.DisplayQACommandErrors) await QACommands.Execute($"toast title:\"Exception\" content:\"{res.Message}\"");
                             }
                         }
                     }
