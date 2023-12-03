@@ -38,14 +38,14 @@ namespace Odyssey.QuickActions.Objects
             XAMLButton.Click += XAMLButton_Click;
 
             // Save the UIButton 
-            if(!isRestoring) QACommands.Execute($"$set var:ui{option[0]}{new Guid()} value:\"{option}\"");
+            if(!isRestoring) QACommands.Execute($"$set var:ui{option[0]}{new Guid()} value:\"{option}\"").RunSynchronously();
             QACommands.ButtonsStackPanel.Children.Insert(2, XAMLButton);
         }
 
-        private void XAMLButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private async void XAMLButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             if(command.StartsWith("\"")) command = command.Remove(command.IndexOf("\""), 1).Remove(command.Length - 2, 1);
-            QACommands.Execute(command);
+            await QACommands.Execute(command);
         }
     }
 }

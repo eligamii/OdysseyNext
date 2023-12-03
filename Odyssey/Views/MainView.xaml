@@ -57,14 +57,14 @@
 
                     <Rectangle Grid.Row="0" Grid.RowSpan="2" Fill="{ThemeResource LayerFillColorDefaultBrush}" x:Name="LayerBackground" x:FieldModifier="public" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
-                    <StackPanel Margin="5,2,0,2" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <StackPanel Tag="pane" Margin="5,2,0,2" Orientation="Horizontal" HorizontalAlignment="Left">
                         <Button Click="BackButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Back, Filename=Main}" Content="&#xE0A6;"/>
                         <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Forward, Filename=Main}" Content="&#xE0AB;"/>
                         <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh, Filename=Main}" Content="&#xE149;"/>
                     </StackPanel>
 
                     <!-- Background - [TODO] Replace that -->
-                    <Frame Grid.Row="1" x:Name="SplitViewPaneFrame" x:FieldModifier="public"/>
+                    <Frame Tag="pane" Grid.Row="1" x:Name="SplitViewPaneFrame" x:FieldModifier="public"/>
 
                 </Grid>
             </SplitView.Pane>
@@ -81,6 +81,7 @@
                         </Grid.RowDefinitions>
                         <!-- Titlebar content -->
                         <Grid x:Name="AppTitleBar" MinHeight="42"
+                                Tag="ignorepane"
                                 VerticalAlignment="Stretch"
                                 BorderBrush="#33808080"
                                 BorderThickness="0,0,0,1"

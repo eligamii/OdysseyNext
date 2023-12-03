@@ -6,8 +6,10 @@ using Microsoft.UI.Xaml.Controls;
 using Odyssey.QuickActions.Commands;
 using Odyssey.QuickActions.Data;
 using Odyssey.QuickActions.Objects;
+using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Flyout = Odyssey.QuickActions.Commands.Flyout;
 
 namespace Odyssey.QuickActions
@@ -29,8 +31,28 @@ namespace Odyssey.QuickActions
             }
         }
 
-        public static Res Execute(string command)
+        public static async Task<string> ExecuteSubCommands(string command)
         {
+            Regex subCommandPresentRegex = new("(?<!\\\\)(\\[|\\])");
+            Regex subCommandsSeparator = new("(?<=\\[)[^\\]\\[]*(?=\\])");
+            var c = subCommandPresentRegex.Matches(command).Count();
+            while (c % 2 == 0 && c > 0)
+            {
+                foreach(Match match in subCommandsSeparator.Matches(command))
+                {
+                    Res res = await Execute(match.Value);
+                    command.Replace($"[{match.Value}]", res.Output);
+                }
+            }
+
+            return command;
+        }
+
+        public static async Task<Res> Execute(string command)
+        {
+            // Execute sub-commands
+            command = await ExecuteSubCommands(command);
+
             // Replace the <variable> with real values
             command = Variables.ConvertToValues(command);
 
@@ -62,7 +84,7 @@ namespace Odyssey.QuickActions
             // Sepatate every option
             string[] options = Regex.Matches(commandWithoutCommandName, optionsRegex).Select(p => p.Value).Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
 
-            // Execute the command
+            // Execute the command (it's the only part you should worry about when adding new commands)
             switch (commandName)
             {
                 case "flyout": return Flyout.Exec(options); // opens a flyout at desired position
@@ -72,7 +94,7 @@ namespace Odyssey.QuickActions
                 case "toast": return Toast.Exec(options); // create a toast notification, wip
                 case "new": return New.Exec(options); // create a new tab
                 case "test": return Test.Exec(options); // only for testing purposes, to remove in stable releases
-                case "js": return Js.Exec(options); // execute js scripts
+                case "js": return await Js.Exec(options); // execute js scripts
                 case "navigate": return Navigate.Exec(options); // navigate to an url
                 case "ui": return Ui.Exec(options); // Create a control visible and usable by the user
                 case "back": return Back.Exec(options); // go back

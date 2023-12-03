@@ -51,18 +51,28 @@ namespace Odyssey.Helpers
         {
             try
             {
-                var parent = VisualTreeHelper.GetParent(element);
-                int tests = 0;
-                while (parent.GetType() != typeof(SplitView) && tests < 10) {
-                    tests++;
-                    parent = VisualTreeHelper.GetParent(parent);
-                }
+                if((string)element.Tag != "ignorepane")
+                {
+                    var parent = VisualTreeHelper.GetParent(element);
+                    int tests = 0;
+                    while (parent.GetType() != typeof(SplitView) && tests < 10)
+                    {
+                        tests++;
+                        parent = VisualTreeHelper.GetParent(parent);
+                    }
 
-                if (parent.GetType() == typeof(SplitView)) {
-                    SplitView splitView = (SplitView)parent;
-                    return splitView.IsPaneOpen;
+                    if (parent.GetType() == typeof(SplitView))
+                    {
+                        SplitView splitView = (SplitView)parent;
+
+                        return splitView.IsPaneOpen;
+                    }
+                    else return true;
                 }
-                else return true;
+                else
+                {
+                    return true;
+                }
             }
             catch { return true; }
         }
