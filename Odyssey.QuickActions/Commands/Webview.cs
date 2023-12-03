@@ -24,7 +24,7 @@ namespace Odyssey.QuickActions.Commands
                     default: return new Res(false, null, "Invalid parameter");
                 }
             }
-            return new Res(false, null, "no tab is currently selected");
+            return new Res(false, null, "No tab is currently selected");
         }
     }
 }

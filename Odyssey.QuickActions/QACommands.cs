@@ -41,7 +41,8 @@ namespace Odyssey.QuickActions
                 foreach(Match match in subCommandsSeparator.Matches(command))
                 {
                     Res res = await Execute(match.Value);
-                    command.Replace($"[{match.Value}]", res.Output);
+                    command = command.Replace($"[{match.Value}]", $"\"{res.Output}\"");
+                    c = subCommandPresentRegex.Matches(command).Count();
                 }
             }
 

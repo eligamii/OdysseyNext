@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
+using Odyssey.FWebView;
 using Odyssey.QuickActions.Data;
 using System.Collections.Generic;
 
@@ -26,6 +27,7 @@ namespace Odyssey.QuickActions
                                    .Replace("<selectiontext>", SelectionText)
                                    .Replace("<ask>", AskText)
                                    .Replace("<flyouturl>", QAFlyoutUrl)
+                                   .Replace("<currenturl>", CurrentUrl)
                                    ;
 
             foreach (var variable in UserVariables.Items)
@@ -55,6 +57,14 @@ namespace Odyssey.QuickActions
         //************* WebView **************
 
         // The right-clicked webview weblink (if one)
+        private static string CurrentUrl
+        {
+            get
+            {
+                return WebView.SelectedWebView?.Source.ToString();
+            }
+        }
+
         private static string LinkUrl
         {
             get
