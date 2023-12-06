@@ -1,3 +1,4 @@
+using ABI.System;
 using ABI.Windows.Foundation;
 using CommunityToolkit.WinUI.UI.Helpers;
 using Microsoft.UI;
@@ -20,6 +21,7 @@ using Odyssey.FWebView.Classes;
 using Odyssey.Helpers;
 using Odyssey.OtherWindows;
 using Odyssey.QuickActions;
+using Odyssey.Shared.ViewModels.Data;
 using Odyssey.TwoFactorsAuthentification;
 using Odyssey.Views.Pages;
 using System;
@@ -33,6 +35,7 @@ using Windows.Foundation;
 using WinRT.Interop;
 using static System.Net.Mime.MediaTypeNames;
 using Application = Microsoft.UI.Xaml.Application;
+using Type = System.Type;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -88,6 +91,8 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
+            // Automatically create titlebar drag regions for the window (see Odyssey.App.Helpers.TitleBarDragRegionsHelpers)
+            // rs)
             titleBarDragRegions = new TitleBarDragRegions(
                 new List<Grid>() { AppTitleBar, secondTitleBar },
                 MainWindow.Current,
@@ -152,6 +157,18 @@ namespace Odyssey.Views
             documentTitle.LayoutUpdated += DocumentTitle_LayoutUpdated;
 
             QuickActions.QACommands.RestoreUIElements();
+
+            SplitView.DisplayMode = Settings.IsPaneLocked ? SplitViewDisplayMode.Inline : SplitViewDisplayMode.Overlay;
+            SplitView.PaneBackground = Settings.IsPaneLocked ? new SolidColorBrush(Colors.Transparent) : PaneAcrylicBrush;
+
+
+            // Temporary startup colors fix
+            bool dark = Classes.UpdateTheme.IssystemDarkMode();
+            string color = dark ? "#202020" : "#F9F9F9";
+
+            RequestedTheme = UpdateTheme.IssystemDarkMode() ? ElementTheme.Dark : ElementTheme.Light;
+            UpdateTheme.UpdateThemeWith(color);
+
         }
 
         private string _lastText = string.Empty;
@@ -406,24 +423,69 @@ namespace Odyssey.Views
             } catch { }
         }
 
-        private void ToggleMenuFlyoutItem_Click
-            (object sender, RoutedEventArgs e)
+        private void UrlBarToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             ToggleMenuFlyoutItem item = sender as ToggleMenuFlyoutItem;
             urlTextBox.Visibility = item.IsChecked ? Visibility.Visible : Visibility.Collapsed;
+            Settings.IsDevBarEnabled = item.IsChecked;
         }
 
         private async void urlTextBox_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter)
+            if(e.Key == Windows.System.VirtualKey.Enter)
             {
-                var kind = await WebSearch.Helpers.WebSearchStringKindHelpers.GetStringKindAsync(urlTextBox.Text);
-                if (kind == WebSearch.Helpers.WebSearchStringKindHelpers.StringKind.Url)
+                string finalUrl = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(urlTextBox.Text);
+                if (finalUrl != string.Empty)
                 {
-                    string finalUrl = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(urlTextBox.Text);
-                    MainView.CurrentlySelectedWebView.CoreWebView2.Navigate(finalUrl);
+                    if (CurrentlySelectedWebView != null)
+                    {
+                        CurrentlySelectedWebView.CoreWebView2.Navigate(finalUrl);
+                    }
+                    else
+                    {
+                        FWebView.WebView webView = FWebView.WebView.Create(finalUrl);
+                        Tab tab = new()
+                        {
+                            Title = urlTextBox.Text,
+                            ToolTip = finalUrl,
+                        };
+
+                        tab.MainWebView = webView;
+                        Tabs.Items.Add(tab);
+                        try
+                        {
+                            await Task.Delay(100);
+                            PaneView.Current.TabsView.SelectedItem = tab;
+                        }
+                        catch { }
+                        webView.LinkedTab = tab;
+                        splitViewContentFrame.Content = webView;
+                    }
                 }
             }
+        }
+
+        private void urlTextBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            urlTextBox.Visibility = Settings.IsDevBarEnabled ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void UrlBarToggleMenuFlyoutItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((ToggleMenuFlyoutItem)sender).IsChecked = Settings.IsDevBarEnabled;
+        }
+
+        private void LockPaneToggleMenuFlyoutItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((ToggleMenuFlyoutItem)sender).IsChecked = Settings.IsPaneLocked;
+        }
+
+        private void LockPaneToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMenuFlyoutItem item = sender as ToggleMenuFlyoutItem;
+            SplitView.DisplayMode = item.IsChecked ? SplitViewDisplayMode.Inline : SplitViewDisplayMode.Overlay;
+            SplitView.PaneBackground = item.IsChecked ? new SolidColorBrush(Colors.Transparent) : PaneAcrylicBrush;
+            Settings.IsPaneLocked = item.IsChecked;
         }
     }
 }

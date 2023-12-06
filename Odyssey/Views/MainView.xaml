@@ -14,7 +14,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <!-- Pane dynamic theme acrylic -->
-            <media:AcrylicBrush x:Name="PaneAcrylicBrush"/>
+            <media:AcrylicBrush x:Name="PaneAcrylicBrush" />
 
             <!-- Transpatant button style -->
             <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
@@ -103,7 +103,7 @@
                                 </ProgressBar.OpacityTransition>
                             </ProgressBar>
 
-                            <TextBox Visibility="Collapsed" Grid.Row="1" Margin="7,0,7,7" x:Name="urlTextBox" KeyDown="urlTextBox_KeyDown" Tag="ignore"/>
+                            <TextBox Visibility="Collapsed" Grid.Row="1" Margin="7,0,7,7" x:Name="urlTextBox" KeyDown="urlTextBox_KeyDown" Tag="ignore" Loaded="urlTextBox_Loaded"/>
 
 
                             <!-- Controls region -->
@@ -158,8 +158,11 @@
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
-                                            <ToggleMenuFlyoutItem Text="Url bar" IsChecked="False" Click="ToggleMenuFlyoutItem_Click">
+                                            <ToggleMenuFlyoutItem Text="Url bar" IsChecked="False" Click="UrlBarToggleMenuFlyoutItem_Click" Loaded="UrlBarToggleMenuFlyoutItem_Loaded">
                                                 
+                                            </ToggleMenuFlyoutItem>
+                                            <ToggleMenuFlyoutItem Text="Lock pane" IsChecked="False" Click="LockPaneToggleMenuFlyoutItem_Click" Loaded="LockPaneToggleMenuFlyoutItem_Loaded">
+
                                             </ToggleMenuFlyoutItem>
                                         </MenuFlyout>
                                     </Button.Flyout>

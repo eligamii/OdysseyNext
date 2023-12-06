@@ -14,13 +14,18 @@ namespace Odyssey.QuickActions.Commands
     {
         internal static async Task<Res> Exec(string[] options)
         {
-            string js = string.Empty;
-            foreach (var option in options) js += option + " ";
+            if(WebView.SelectedWebView != null)
+            {
+                string js = string.Empty;
+                foreach (var option in options) js += option + " ";
 
-            string res = await WebView.SelectedWebView.ExecuteScriptAsync(js);
-            res = JavascriptHelpers.ToCSharpString(res);
+                string res = await WebView.SelectedWebView.ExecuteScriptAsync(js);
+                res = JavascriptHelpers.ToCSharpString(res);
 
-            return new Res(true, res);
+                return new Res(true, res);
+            }
+
+            return new Res(false, null, "No tab is currently selected");
         }
 
 

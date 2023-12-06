@@ -33,26 +33,18 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <StackPanel Margin="10" Grid.Row="0">
             <TextBlock Text="A propos" FontWeight="Medium" FontSize="14"/>
-            <TextBlock TextWrapping="WrapWholeWords" Text="Cette page utilise une connection sécurisée"/>
+            <TextBlock TextWrapping="WrapWholeWords" Text="Cette page utilise une connection sécurisée."/>
+            <HyperlinkButton Padding="0,2" Content="Voir le certificat"/>
         </StackPanel>
 
-        <Grid Grid.Row="1" Background="{StaticResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="#33808080"  BorderThickness="0,1,0,0">
-            <TextBox Margin="5" TextWrapping="Wrap" GotFocus="urlTextBox_GotFocus" LostFocus="urlTextBox_LostFocus" x:Name="urlTextBox" HorizontalAlignment="Stretch" KeyDown="urlTextBox_KeyDown" PlaceholderText="www.google.com"/>
-        </Grid>
-
-        <Grid Grid.Row="2" BorderBrush="#33808080" BorderThickness="0,1,0,0" Background="{StaticResource CardBackgroundFillColorDefaultBrush}">
-            <StackPanel Padding="5" Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Left">
-                <Button Content="&#xE72B;"/>
-                <Button Content="&#xE72A;"/>
-                <Button Content="&#xE72C;"/>
-                <Button Content="&#xE721;"/>
-                <Button Content="&#xE712;"/>
-            </StackPanel>
-        </Grid>
+        <StackPanel Padding="10,5" Grid.Row="1">
+            
+            <CheckBox Content="Autoriser les cookies"/>
+        </StackPanel>
+        
     </Grid>
 </Flyout>

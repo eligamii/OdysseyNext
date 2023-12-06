@@ -5,7 +5,10 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Web.WebView2.Core;
+using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
+using Odyssey.FWebView;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,15 +27,33 @@ namespace Odyssey.Views.Options
     /// </summary>
     public sealed partial class MiscPage : Page
     {
+        private static WebView2 _webViewToEngageReset = null;
         public MiscPage()
         {
             this.InitializeComponent();
             singleInstanceToggleSwitch.IsOn = Settings.IsSingleInstanceEnabled;
+
+            if (_webViewToEngageReset == null) _webViewToEngageReset = WebView.Create();
         }
 
         private void singleInstanceToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             Settings.IsSingleInstanceEnabled = singleInstanceToggleSwitch.IsOn;
         }
+
+        private int _clickCount = 0;
+        private async void RepeatButton_Click(object sender, RoutedEventArgs e)
+        {
+            _clickCount++;
+
+            if (_clickCount == 100)
+            {
+                await Data.Main.Data.Reset(_webViewToEngageReset.CoreWebView2);
+                MainWindow.ResetEngaged = true;
+                MainWindow.Current.Close();
+            }
+        }
+
+
     }
 }

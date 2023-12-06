@@ -33,7 +33,7 @@ namespace Odyssey.Controls
         {
             if(MainView.CurrentlySelectedWebView != null)
             {
-                urlTextBox.Text = MainView.CurrentlySelectedWebView.Source.ToString();
+                var info = MainView.CurrentlySelectedWebView.SecurityInformation;
             }
         }
 
@@ -41,12 +41,7 @@ namespace Odyssey.Controls
         {
             if(e.Key == Windows.System.VirtualKey.Enter)
             {
-                var kind = await WebSearch.Helpers.WebSearchStringKindHelpers.GetStringKindAsync(urlTextBox.Text);
-                if(kind == WebSearch.Helpers.WebSearchStringKindHelpers.StringKind.Url)
-                {
-                    string finalUrl = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(urlTextBox.Text);
-                    MainView.CurrentlySelectedWebView.CoreWebView2.Navigate(finalUrl);
-                }
+                
             }
         }
 

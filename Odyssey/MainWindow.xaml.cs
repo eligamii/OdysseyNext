@@ -63,56 +63,60 @@ namespace Odyssey
         }
 
         private bool _close = false;
+        public static bool ResetEngaged { get; set; } = false;
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
-            args.Cancel = Settings.IsSingleInstanceEnabled;
-            Settings.SuccessfullyClosed = true;
-            QuickActions.Data.UserVariables.Save();
-
-            if (!Settings.IsSingleInstanceEnabled)
+            if(!ResetEngaged)
             {
-                Close();
-            }
-            else
-            {
-                // Put Odyssey in the default state
-                foreach (var tab in Tabs.Items)
+                args.Cancel = Settings.IsSingleInstanceEnabled;
+                Settings.SuccessfullyClosed = true;
+                QuickActions.Data.UserVariables.Save();
+
+                if (!Settings.IsSingleInstanceEnabled)
                 {
-                    if (tab.MainWebView != null) tab.MainWebView.Close();
+                    Close();
                 }
-
-                foreach (var tab in Pins.Items)
+                else
                 {
-                    if (tab.MainWebView != null) tab.MainWebView.Close();
-                    tab.MainWebView = null;
+                    // Put Odyssey in the default state
+                    foreach (var tab in Tabs.Items)
+                    {
+                        if (tab.MainWebView != null) tab.MainWebView.Close();
+                    }
+
+                    foreach (var tab in Pins.Items)
+                    {
+                        if (tab.MainWebView != null) tab.MainWebView.Close();
+                        tab.MainWebView = null;
+                    }
+
+                    foreach (var tab in Favorites.Items)
+                    {
+                        if (tab.MainWebView != null) tab.MainWebView.Close();
+                        tab.MainWebView = null;
+                    }
+
+                    PaneView.Current.FavoriteGrid.SelectedItem =
+                    PaneView.Current.PinsTabView.SelectedItem =
+                    PaneView.Current.TabsView.SelectedItem = null;
+
+                    MainView.Current.splitViewContentFrame.Navigate(typeof(HomePage), null, new SuppressNavigationTransitionInfo());
+
+                    MainView.Current.documentTitle.Text = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
+
+                    bool dark = Classes.UpdateTheme.IssystemDarkMode();
+                    string color = dark ? "#202020" : "#F9F9F9";
+
+                    if (Settings.IsDynamicThemeEnabled)
+                    {
+                        MainView.Current.RequestedTheme = Classes.UpdateTheme.IssystemDarkMode() ? Microsoft.UI.Xaml.ElementTheme.Dark : Microsoft.UI.Xaml.ElementTheme.Light;
+                        Classes.UpdateTheme.UpdateThemeWith(color);
+                    }
+
+                    Tabs.Items.Clear();
+
+                    AppWindow.Hide();
                 }
-
-                foreach (var tab in Favorites.Items)
-                {
-                    if (tab.MainWebView != null) tab.MainWebView.Close();
-                    tab.MainWebView = null;
-                }
-
-                PaneView.Current.FavoriteGrid.SelectedItem =
-                PaneView.Current.PinsTabView.SelectedItem =
-                PaneView.Current.TabsView.SelectedItem = null;
-
-                MainView.Current.splitViewContentFrame.Navigate(typeof(HomePage), null, new SuppressNavigationTransitionInfo());
-
-                MainView.Current.documentTitle.Text = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
-
-                bool dark = Classes.UpdateTheme.IssystemDarkMode();
-                string color = dark ? "#202020" : "#F9F9F9";
-
-                if(Settings.IsDynamicThemeEnabled) 
-                {
-                    MainView.Current.RequestedTheme = Classes.UpdateTheme.IssystemDarkMode() ? Microsoft.UI.Xaml.ElementTheme.Dark : Microsoft.UI.Xaml.ElementTheme.Light;
-                    Classes.UpdateTheme.UpdateThemeWith(color);
-                }
-                
-                Tabs.Items.Clear();
-
-                AppWindow.Hide();
             }
         }
     }

@@ -5,7 +5,9 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Odyssey.QuickActions.Commands;
 using Odyssey.QuickActions.Data;
+using Odyssey.QuickActions.Helpers;
 using Odyssey.QuickActions.Objects;
+using Odyssey.QuickActions.SystemCommands;
 using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -29,7 +31,7 @@ namespace Odyssey.QuickActions
 
                 if (match)
                 {
-                    new UIButton(variable.Value, true);
+                    _ = new UIButton(variable.Value, true);
                 }
             }
         }
@@ -52,6 +54,24 @@ namespace Odyssey.QuickActions
             return command;
         }
 
+        public static string ResolveTests(string command)
+        {
+            Regex testPresentRegex = new("(?<!\\\\)(\\(|\\))");
+            Regex testSeparator = new("(?<=\\()[^\\)\\(]*(?=\\))");
+            var c = testPresentRegex.Matches(command).Count();
+            while (c % 2 == 0 && c > 0)
+            {
+                foreach (Match match in testSeparator.Matches(command))
+                {
+                    string boolean = TestHelper.Test(match.Value);
+                    command = command.Replace($"({match.Value})", $"{boolean}");
+                    c = testSeparator.Matches(command).Count();
+                }
+            }
+
+            return command;
+        }
+
         public static async Task<Res> Execute(string command)
         {
             // Execute sub-commands
@@ -59,6 +79,9 @@ namespace Odyssey.QuickActions
 
             // Replace the <variable> with real values
             command = Variables.ConvertToValues(command);
+
+            // Do the eventual tests
+            command = ResolveTests(command); // == doest work for now
 
             // Remove the first "$" is the command is from the search box
             if (command.StartsWith("$"))
@@ -91,6 +114,9 @@ namespace Odyssey.QuickActions
             // Execute the command (it's the only part you should worry about when adding new commands)
             switch (commandName)
             {
+                case "if": return await If.Exec(options); // test then execute something
+                case "while": return await While.Exec(options); // While loop
+
                 case "flyout": return Flyout.Exec(options); // opens a flyout at desired position
                 case "close": return Close.Exec(options); // close the window or tabs
                 case "minimize": return Minimize.Exec(options); // minimize the window

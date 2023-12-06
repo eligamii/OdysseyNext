@@ -29,6 +29,7 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
             if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0;
             if (!Values.Values.ContainsKey("DisplayQACommandErrors")) DisplayQACommandErrors = true;
+            if (!Values.Values.ContainsKey("IsDevBarEnabled")) IsDevBarEnabled = true;
         }
 
         public static bool? Inititalized
@@ -41,6 +42,12 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool)Values.Values["DisplayQACommandErrors"]; }
             set { Values.Values["DisplayQACommandErrors"] = value; }
+        }
+
+        public static bool IsDevBarEnabled
+        {
+            get { return (bool)Values.Values["IsDevBarEnabled"]; }
+            set { Values.Values["IsDevBarEnabled"] = value; }
         }
 
         public static bool IsHisoryEncryptionEnabled 

@@ -33,6 +33,7 @@ namespace Odyssey.FWebView
         public static Action TotpLoginDetectedAction { get; set; }
         public static Action LoginPageDetectedAction { get; set; }
 
+        public bool IsPrivateModeEnabled { get; set; } = false;
         public bool IsLoginPageDetected { get; set; }
         public List<Login> AvailableLoginsForPage { get; set; }
         public bool IsTotpDetected { get; set; } = false;
@@ -42,7 +43,6 @@ namespace Odyssey.FWebView
         public Favorite LinkedFavorite { get; set; } = null;
         public bool IsPageLoading { get; private set; } = true;
         public bool IsLittleWeb { get; set; } = false;
-        public bool IsPrivateModeEnabled { get; set; } = false;
         public DarkReader DarkReader { get; set; }
         public SecurityInformation SecurityInformation { get; set; } = null;
         public WebView2KeyDownHelpers.KeyDownListener KeyDownListener { get; set; }
@@ -84,10 +84,12 @@ namespace Odyssey.FWebView
         // Ojects to know if the user finished scrolling for 2s
         private DispatcherTimer scrollTimer;
         private bool isScrolling = false;
-        public static WebView Create(string url = "about:blank")
+        
+        public static WebView Create(string url = "about:blank", bool privateMode = false)
         {
             WebView newWebView = new();
             newWebView.Source = new Uri(url);
+            newWebView.IsPrivateModeEnabled = privateMode;
 
             return newWebView;
         }
@@ -138,7 +140,7 @@ namespace Odyssey.FWebView
         }
 
         
-        private async void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
+        private void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
             if (!IsLittleWeb)
             {
@@ -155,7 +157,6 @@ namespace Odyssey.FWebView
                 scrollTimer.Interval = TimeSpan.FromSeconds(2);
                 scrollTimer.Tick += ScrollTimer_Tick;
 
-
                 // Loading cycle
                 sender.CoreWebView2.NavigationStarting += (s, a) => { if (IsVisible) MainProgressBar.Value = 0; };
                 sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/6f * 100f; };
@@ -170,6 +171,13 @@ namespace Odyssey.FWebView
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect the downloads to aria2
             sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
 
+            // Set the tracking level to strict
+            sender.CoreWebView2.Profile.PreferredTrackingPreventionLevel = CoreWebView2TrackingPreventionLevel.Strict;
+     
+            // May not work for now
+            sender.CoreWebView2.Settings.IsPasswordAutosaveEnabled = true;
+            sender.CoreWebView2.Settings.IsGeneralAutofillEnabled = true;
+
             // Add extensions
             AdBlocker.AdBlocker blocker = new(sender.CoreWebView2);
 
@@ -177,7 +185,7 @@ namespace Odyssey.FWebView
             //WebViewNativeToolTips tips = new(this);
 
             // Disable default keyboard accelerators keys to add custom find,... dialogs
-            sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = false;
+            sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = Settings.AreExperimentalFeaturesEnabled;
 
             // Save things only when private mode is disabled
             if (!IsPrivateModeEnabled)
@@ -212,18 +220,21 @@ namespace Odyssey.FWebView
                 }
             }
             sender.CoreWebView2.Settings.AreDevToolsEnabled = true;
+
+
             // Add CDP event to get certificate info
             try // it seems to has some chances to fail and idk why
             {
-                // It makes the app very unstable 
+                // It makes the app very unstable so disabled for now
+
                 /*
-                
                 await sender.CoreWebView2.CallDevToolsProtocolMethodAsync("Network.enable", "{}");
                 await sender.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.enable", "{}");
 
                 var res = sender.CoreWebView2.GetDevToolsProtocolEventReceiver("Security.visibleSecurityStateChanged");
                 res.DevToolsProtocolEventReceived += DevToolsProtocolEventReceived;
                 */
+
             }
             catch { }
 
@@ -251,7 +262,7 @@ namespace Odyssey.FWebView
                         }
                     }
                     catch { }
-
+                    
                 }
             }
         }
@@ -259,10 +270,10 @@ namespace Odyssey.FWebView
         private void DevToolsProtocolEventReceived(CoreWebView2 sender, CoreWebView2DevToolsProtocolEventReceivedEventArgs args)
         {
             // memory access violation
-            /*
+            
             string json = args.ParameterObjectAsJson;
             SecurityInformation = JsonConvert.DeserializeObject<SecurityInformation>(json);
-            */
+            
         }
 
         private void CoreWebView2_PermissionRequested(CoreWebView2 sender, CoreWebView2PermissionRequestedEventArgs args)

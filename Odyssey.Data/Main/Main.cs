@@ -1,7 +1,10 @@
+using Microsoft.UI.Xaml.Shapes;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Path = System.IO.Path;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -20,7 +23,7 @@ namespace Odyssey.Data.Main
         internal static string TabsFilePath { get; private set; }
         internal static string TotpFilePath { get; private set; }
 
-
+        private static string dataPath;
 
         private static StorageFolder dataFolder;
 
@@ -28,7 +31,7 @@ namespace Odyssey.Data.Main
         {
             // Create the main folder for storing JSON-based data
             dataFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Data", CreationCollisionOption.OpenIfExists);
-            string path = dataFolder.Path;
+            string path = dataPath = dataFolder.Path;
 
             SearchBarShortcutsFilePath = Path.Combine(path, "SearchBarShortcuts.json");
             QuickActionFilePath = Path.Combine(path, "QuickActions.json");
@@ -50,6 +53,19 @@ namespace Odyssey.Data.Main
             Logins.Load();
             Pins.Load();
             Tabs.Load();
+        }
+
+        public static async Task Reset(CoreWebView2 core)
+        {
+            await core.Profile.ClearBrowsingDataAsync();
+
+            foreach(var file in await dataFolder.GetFilesAsync())
+            {
+                await file.DeleteAsync();
+            }
+
+            Directory.Delete(dataPath);
+            ApplicationData.Current.LocalSettings.Values.Clear();
         }
     }
 }
