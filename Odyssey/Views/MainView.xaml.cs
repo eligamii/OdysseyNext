@@ -175,12 +175,15 @@ namespace Odyssey.Views
 
         private void DocumentTitle_LayoutUpdated(object sender, object e)
         {
-            string text = CurrentlySelectedWebView?.CoreWebView2?.DocumentTitle;
-            if(_lastText != text)
+            try
             {
-                titleBarDragRegions.SetDragRegionForTitleBars();
-                _lastText = text;
-            }
+                string text = CurrentlySelectedWebView?.CoreWebView2?.DocumentTitle;
+                if (_lastText != text)
+                {
+                    titleBarDragRegions.SetDragRegionForTitleBars();
+                    _lastText = text;
+                }
+            } catch (COMException) { }
         }
 
         private bool lastConnectionState;

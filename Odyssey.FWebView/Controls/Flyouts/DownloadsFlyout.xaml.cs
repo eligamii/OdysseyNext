@@ -1,4 +1,6 @@
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
+using System;
 using System.Collections.ObjectModel;
 using Windows.Storage;
 
@@ -21,7 +23,7 @@ namespace Odyssey.FWebView.Controls.Flyouts
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
              if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
+             {
                 Shared.ViewModels.Data.DonwloadItem item = (Shared.ViewModels.Data.DonwloadItem)e.NewItems[0];
                 
                 if(item.downloadOperation == null)
@@ -29,13 +31,26 @@ namespace Odyssey.FWebView.Controls.Flyouts
                     var downloadFolder = Shared.Helpers.KnownFolders.GetPath(Shared.Helpers.KnownFolder.Downloads);
                     var download = AriaSharp.Downloader.Download(item.DownloadUrl, downloadFolder);
 
-                    download.DownloadProgressChanged += (s, a) =>
+                    download.DownloadProgressChanged += async (s, a) =>
                     {
-                        if(a.Status == AriaSharp.DownloadStatus.Downloading)
+                        if(!string.IsNullOrWhiteSpace(s.Filename))
                         {
-                            item.Name = s.OutputPath;
-                            item.Progress = a.Progress;
+                            item.Name = s.Filename;
+                        }
 
+                        item.Progress = a.Progress;
+
+                        if(a.Status == AriaSharp.DownloadStatus.Completed)
+                        {
+                           try
+                           {
+                                var file = await StorageFile.GetFileFromPathAsync(s.OutputPath);
+                                var icon = await Shared.Helpers.FileIconHelper.GetFileIconAsync(file);
+                                BitmapImage bitmap = new();
+                                await bitmap.SetSourceAsync(icon);
+                                item.ImageSource = bitmap;
+                           }
+                           catch { }
                         }
                     };
                 }

@@ -7,12 +7,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:helpers="using:Odyssey.Shared.Helpers"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    >
 
     <Flyout.FlyoutPresenterStyle>
         <Style TargetType="FlyoutPresenter"  BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+            <Setter Property="BorderBrush" Value="#33808080"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="CornerRadius" Value="12"/>
             <Setter Property="MaxHeight" Value="Infinity"/>
             <Setter Property="MaxWidth" Value="Infinity"/>
             <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
@@ -20,27 +23,26 @@
         </Style>
     </Flyout.FlyoutPresenterStyle>
 
-    <Grid Width="310" Height="510">
+    <Grid Width="290" MaxHeight="510">
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="12,4,5,0">
+        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="15,8,5,0">
             <TextBlock Grid.Row="0" FontSize="16"
                    Style="{ThemeResource BodyStrongTextBlockStyle}"
                    Text="{helpers:ResourceString Name=Downloads,Filename=ContextMenus}"/>
         </Grid>
 
         <Grid Grid.Row="1" CornerRadius="3" Margin="6" 
-              Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" 
-              BorderBrush="#33808080" BorderThickness="1">
+              BorderThickness="1">
             <ListView Margin="0,3,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" Loaded="DownloadItemsListView_Loaded" x:Name="DownloadItemsListView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid Height="58">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="19"/>
+                                <ColumnDefinition Width="0"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
@@ -50,8 +52,8 @@
                             </Grid>
 
                             <StackPanel Margin="10,-3,0,0" VerticalAlignment="Center" Grid.Column="1">
-                                <TextBlock Text="{Binding Title}" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
-                                <TextBlock Text="{Binding Subtitle}" Margin="0,-2,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
+                                <TextBlock Text="Download.cmd" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
+                                <TextBlock Text="Ouvrir le fichier" Margin="0,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
                             </StackPanel>
 
                         </Grid>
