@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Shapes;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.Helpers;
+using System;
 using Windows.UI;
 
 namespace Odyssey.FWebView.Classes
@@ -32,8 +33,8 @@ namespace Odyssey.FWebView.Classes
                 {
                     switch (Settings.ThemePerformanceMode)
                     {
-                        case 0: // 40000 pixels, quality mode
-                            color = await WebView2AverageColorHelper.GetAverageColorFrom(webView2, 400, 400, 4); break;
+                        case 0: // Depend of the size of the webview (unlimited pixels), quality mode
+                            color = await WebView2AverageColorHelper.GetAverageColorFrom(webView2, (int)Math.Round((float)webView2.DesiredSize.Width, 0), 400, 4); break;
 
                         case 1: // 8000 pixels, default mode
                             color = await WebView2AverageColorHelper.GetAverageColorFrom(webView2, 400, 80, 4); break;

@@ -9,27 +9,41 @@ namespace Odyssey.Data.Settings
         public static void Init()
         {
             // Individually test if each setting has a key to make adding settings without crash possible
+            // Internal
             if (!Values.Values.ContainsKey("FirstLaunch")) FirstLaunch = true;
             if (!Values.Values.ContainsKey("Inititalized")) Inititalized = true;
+            if (!Values.Values.ContainsKey("SuccessfullyClosed")) SuccessfullyClosed = true;
+
+            // Personalization
             if (!Values.Values.ContainsKey("IsPaneLocked")) IsPaneLocked = true;
             if (!Values.Values.ContainsKey("CancelAppUriLaunchConfirmationDialog")) CancelAppUriLaunchConfirmationDialog = false;
-            if (!Values.Values.ContainsKey("SuccessfullyClosed")) SuccessfullyClosed = true;
-            if (!Values.Values.ContainsKey("IsDarkReaderEnabled")) IsDarkReaderEnabled = true;
-            if (!Values.Values.ContainsKey("ForceDarkReader")) ForceDarkReader = false;
-            if (!Values.Values.ContainsKey("AutoPictureInPicture")) AutoPictureInPicture = true;
-            if (!Values.Values.ContainsKey("PlaySoundsOnOnlyOneTab")) PlaySoundsOnOnlyOneTab = false;
-            if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabOnStartup = false;
-            if (!Values.Values.ContainsKey("AreExperimentalFeaturesEnabled")) AreExperimentalFeaturesEnabled = false;
-            if (!Values.Values.ContainsKey("ThemeMode")) ThemeMode = 2;
             if (!Values.Values.ContainsKey("DynamicThemeEnabled")) IsDynamicThemeEnabled = true;
             if (!Values.Values.ContainsKey("IsDynamicThemeModeChangeEnabled")) IsDynamicThemeModeChangeEnabled = true;
             if (!Values.Values.ContainsKey("ThemePerformanceMode")) ThemePerformanceMode = 1;
-            if (!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = false;
+            if (!Values.Values.ContainsKey("ThemeMode")) ThemeMode = 2;
+            if (!Values.Values.ContainsKey("IsDevBarEnabled")) IsDevBarEnabled = false;
+
+            // Dark reader
+            if (!Values.Values.ContainsKey("IsDarkReaderEnabled")) IsDarkReaderEnabled = true;
+            if (!Values.Values.ContainsKey("ForceDarkReader")) ForceDarkReader = false;
+
+            // Features
+            if (!Values.Values.ContainsKey("AutoPictureInPicture")) AutoPictureInPicture = true;
+            if (!Values.Values.ContainsKey("PlaySoundsOnOnlyOneTab")) PlaySoundsOnOnlyOneTab = false;
+            if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabOnStartup = false;
+            if(!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = false;
             if (!Values.Values.ContainsKey("IsHisoryEncryptionEnabled")) IsHisoryEncryptionEnabled = false;
+
+            // Misc
+            if (!Values.Values.ContainsKey("AreExperimentalFeaturesEnabled")) AreExperimentalFeaturesEnabled = false;
+            if (!Values.Values.ContainsKey("DisplayQACommandErrors")) DisplayQACommandErrors = true;
+
+            // Ad blocker
             if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
             if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0;
-            if (!Values.Values.ContainsKey("DisplayQACommandErrors")) DisplayQACommandErrors = true;
-            if (!Values.Values.ContainsKey("IsDevBarEnabled")) IsDevBarEnabled = true;
+            if (!Values.Values.ContainsKey("IsEasylistFilterListEnabled")) IsEasylistFilterListEnabled = false;
+            if (!Values.Values.ContainsKey("IsEasyprivacyFilterListEnabled")) IsEasyprivacyFilterListEnabled = false;
+            if (!Values.Values.ContainsKey("IsSpam404FilterListEnabled")) IsSpam404FilterListEnabled = false;
         }
 
         public static bool? Inititalized
@@ -42,6 +56,24 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool)Values.Values["DisplayQACommandErrors"]; }
             set { Values.Values["DisplayQACommandErrors"] = value; }
+        }
+
+        public static bool IsEasylistFilterListEnabled
+        {
+            get { return (bool)Values.Values["IsEasylistFilterListEnabled"]; }
+            set { Values.Values["IsEasylistFilterListEnabled"] = value; }
+        }
+
+        public static bool IsEasyprivacyFilterListEnabled
+        {
+            get { return (bool)Values.Values["IsEasyprivacyFilterListEnabled"]; }
+            set { Values.Values["IsEasyprivacyFilterListEnabled"] = value; }
+        }
+
+        public static bool IsSpam404FilterListEnabled
+        {
+            get { return (bool)Values.Values["IsSpam404FilterListEnabled"]; }
+            set { Values.Values["IsSpam404FilterListEnabled"] = value; }
         }
 
         public static bool IsDevBarEnabled
