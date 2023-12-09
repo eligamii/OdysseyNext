@@ -5,7 +5,10 @@ using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.QuickActions.Data;
 using Odyssey.Views;
+using Odyssey.Views.Pages;
 using System;
+using System.IO;
+using Windows.Storage;
 using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -22,14 +25,15 @@ namespace Odyssey
         public MainWindow()
         {
             InitializeComponent();
-
+            this.Title = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Square44x44Logo.altform-lightunplated_targetsize-24.png");
+            AppWindow.SetIcon(path);
             Init();
         }
 
         private async void Init()
         {
-            // Load default settings for the first run
-            Settings.Init();
+            
 
             ExtendsContentIntoTitleBar = true;
 
@@ -53,32 +57,66 @@ namespace Odyssey
             // Make possible to access to MainWindow from anywhere
             Current = this;
 
-            UserVariables.Load();
+            
 
             AppWindow.Closing += AppWindow_Closing;
         }
 
         private bool _close = false;
+        public static bool ResetEngaged { get; set; } = false;
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
-            args.Cancel = Settings.IsSingleInstanceEnabled;
-            Settings.SuccessfullyClosed = true;
-            QuickActions.Data.UserVariables.Save();
+            if(!ResetEngaged)
+            {
+                args.Cancel = Settings.IsSingleInstanceEnabled;
+                Settings.SuccessfullyClosed = true;
+                QuickActions.Data.UserVariables.Save();
 
-            if (!Settings.IsSingleInstanceEnabled)
-            {
-                Close();
-            }
-            else
-            {
-                foreach (var tab in Tabs.Items)
+                if (!Settings.IsSingleInstanceEnabled)
                 {
-                    if (tab.MainWebView != null) tab.MainWebView.Close();
+                    Close();
                 }
+                else
+                {
+                    // Put Odyssey in the default state
+                    foreach (var tab in Tabs.Items)
+                    {
+                        if (tab.MainWebView != null) tab.MainWebView.Close();
+                    }
 
-                Tabs.Items.Clear();
+                    foreach (var tab in Pins.Items)
+                    {
+                        if (tab.MainWebView != null) tab.MainWebView.Close();
+                        tab.MainWebView = null;
+                    }
 
-                AppWindow.Hide();
+                    foreach (var tab in Favorites.Items)
+                    {
+                        if (tab.MainWebView != null) tab.MainWebView.Close();
+                        tab.MainWebView = null;
+                    }
+
+                    PaneView.Current.FavoriteGrid.SelectedItem =
+                    PaneView.Current.PinsTabView.SelectedItem =
+                    PaneView.Current.TabsView.SelectedItem = null;
+
+                    MainView.Current.splitViewContentFrame.Navigate(typeof(HomePage), null, new SuppressNavigationTransitionInfo());
+
+                    MainView.Current.documentTitle.Text = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
+
+                    bool dark = Classes.UpdateTheme.IssystemDarkMode();
+                    string color = dark ? "#202020" : "#F9F9F9";
+
+                    if (Settings.IsDynamicThemeEnabled)
+                    {
+                        MainView.Current.RequestedTheme = Classes.UpdateTheme.IssystemDarkMode() ? Microsoft.UI.Xaml.ElementTheme.Dark : Microsoft.UI.Xaml.ElementTheme.Light;
+                        Classes.UpdateTheme.UpdateThemeWith(color);
+                    }
+
+                    Tabs.Items.Clear();
+
+                    AppWindow.Hide();
+                }
             }
         }
     }

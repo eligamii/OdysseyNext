@@ -7,15 +7,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:helpers="using:Odyssey.Shared.Helpers" 
-    xmlns:controls="using:Odyssey.Controls.Tips"
+    xmlns:controls="using:Odyssey.Controls.Tips" xmlns:media="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     mc:Ignorable="d"
     >
 
     <Page.Resources>
         <ResourceDictionary>
-            <!--InfoTip-->
-            <controls:InformationTip x:Name="pageInfoTip" Target="{x:Bind infoButton}"/>
-            
+            <!-- Pane dynamic theme acrylic -->
+            <media:AcrylicBrush x:Name="PaneAcrylicBrush" />
+
             <!-- Transpatant button style -->
             <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
                 <Setter Property="Background" Value="Transparent"/>
@@ -29,121 +29,191 @@
     </Page.Resources>
 
     <Grid x:Name="RootGrid" x:FieldModifier="public">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="42" x:Name="TitleBarRow"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
 
-        <!-- Titlebar content -->
-        <Grid x:Name="AppTitleBar" 
-              VerticalAlignment="Stretch"
-              BorderBrush="#33808080"
-              BorderThickness="0,0,0,0.5"
-              x:FieldModifier="public">
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0"/>
-                <ColumnDefinition x:Name="ControlsColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="RightDragColumn" Width="*"/>
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Controls region -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,1,0,0">
-                <Button Click="HomeButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane, Filename=Main}" x:Name="HomeButton" x:FieldModifier="public" Height="32" Content="&#xE10F;"  Margin="3,0,0,0"  FontFamily="Segoe Fluent Icons"/>
-                <AppBarSeparator/>
-                <Button Click="BackButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Back, Filename=Main}" Content="&#xE0A6;"/>
-                <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Forward, Filename=Main}" Content="&#xE0AB;"/>
-                <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh, Filename=Main}" Content="&#xE149;"/>
-                <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
-                <Button x:Name="_2faButton" Visibility="Collapsed" Click="_2FAButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=TwoFactAuth,Filename=ContextMenus}" Content="&#xE192;"/>
-                <Button Visibility="Collapsed" Click="Button_Click" x:Name="historyButton" ToolTipService.ToolTip="{helpers:ResourceString Filename=ContextMenus,Name=History}" Content="&#xE81C;"/>
-                <Button Visibility="Collapsed" x:Name="downloadButton"  Click="DownloadsButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Downloads,Filename=ContextMenus}" Content="&#xE118;" FontSize="15"/>
-                <AppBarSeparator/>
-                <Button Padding="10,3" x:Name="infoButton" Click="infoButton_Click">
-                    <Button.Content>
-                        <Grid x:Name="iconGrid" >
-                            <ProgressRing Width="15" Height="15"
-                                    Foreground="{ThemeResource FocusStrokeColorOuterBrush}"
-                                    x:Name="progressRing" Visibility="Collapsed" x:FieldModifier="public"
-                                    />
-
-                            <Image Height="15" x:Name="Favicon" x:FieldModifier="public">
-                                <Image.Source>
-                                    <BitmapImage UriSource="/Assets/icon.png"/>
-                                </Image.Source>
-                            </Image>
-
-                        </Grid>
-                    </Button.Content>
-                    <Button.Transitions>
-                        <TransitionCollection>
-                            <RepositionThemeTransition />
-                        </TransitionCollection>
-                    </Button.Transitions>
-                </Button>
-
-            </StackPanel>
-
-            <!-- Info region -->
-            <StackPanel Margin="0,0,0,0" Grid.Column="2" Orientation="Horizontal">
-                <TextBlock x:FieldModifier="public" x:Name="documentTitle" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
-
-                <StackPanel.Transitions>
-                    <TransitionCollection>
-                        <RepositionThemeTransition />
-                    </TransitionCollection>
-                </StackPanel.Transitions>
-            </StackPanel>
-        </Grid>
-        
-        <!-- Main content -->
+        <!-- Main splitView -->
         <SplitView x:Name="SplitView" Grid.Row="1"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Stretch"
                    OpenPaneLength="231"
-                   PaneBackground="Transparent"
+                   PaneBackground="{StaticResource PaneAcrylicBrush}"
                    BorderBrush="#33808080"
                    BorderThickness="0,0,1,0"
-                   DisplayMode="Inline"
+                   DisplayMode="Overlay"
                    x:FieldModifier="public"
                    IsPaneOpen="True"
                    PaneClosing="SplitView_PaneClosing"
-                   PaneOpening="SplitView_PaneOpening">
+                   PaneOpening="SplitView_PaneOpening"
+                   PaneClosed="SplitView_PaneClosed"
+                   PaneOpened="SplitView_PaneClosed">
             
             <!-- SplitView pane -->
             <SplitView.Pane>
-                <Grid>
+                <!-- Main pane content -->
+                <Grid x:Name="secondTitleBar" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="0"/>
+                        <RowDefinition Height="45"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    
-                    <!-- Main pane content -->
-                    <Grid Grid.Row="1" >
-                        <!-- Background - [TODO] Replace that -->
-                        <Rectangle Grid.RowSpan="2" Fill="{ThemeResource LayerFillColorDefaultBrush}" x:Name="LayerBackground" x:FieldModifier="public" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
-                        <Frame x:Name="SplitViewPaneFrame" x:FieldModifier="public"/>
-                    </Grid>
+                    <Rectangle Grid.Row="0" Grid.RowSpan="2" Fill="{ThemeResource LayerFillColorDefaultBrush}" x:Name="LayerBackground" x:FieldModifier="public" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                    <StackPanel Tag="pane" Margin="5,2,0,2" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Click="BackButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Back, Filename=Main}" Content="&#xE0A6;"/>
+                        <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Forward, Filename=Main}" Content="&#xE0AB;"/>
+                        <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh, Filename=Main}" Content="&#xE149;"/>
+                    </StackPanel>
+
+                    <!-- Background - [TODO] Replace that -->
+                    <Frame Tag="pane" Grid.Row="1" x:Name="SplitViewPaneFrame" x:FieldModifier="public"/>
+
                 </Grid>
             </SplitView.Pane>
 
             <!-- Sidebar and WebView frame -->
-            <SplitView x:FieldModifier="public" x:Name="sidebar" PaneBackground="Transparent" BorderBrush="#33808080" BorderThickness="1,0,0,0" Grid.Row="1" DisplayMode="Inline" IsPaneOpen="False" PanePlacement="Right">
-
+            <SplitView x:FieldModifier="public" x:Name="sidebar" PaneBackground="Transparent" BorderBrush="#33808080" BorderThickness="1,0,0,0" Grid.Row="1" DisplayMode="Overlay" IsPaneOpen="False" PanePlacement="Right">
                 <Grid>
-                    <Frame x:Name="splitViewContentFrame" BorderBrush="#33808080" x:FieldModifier="public" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
-                    <Button Style="{ThemeResource AccentButtonStyle}"
-                            Grid.Row="1" 
-                            VerticalAlignment="Top" HorizontalAlignment="Left"
-                            Margin="12"
-                            Content="Logins"
-                            x:Name="loginButton"
-                            Padding="12"
-                            Visibility="Collapsed"
-                            />         
+                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!-- Titlebar content -->
+                        <Grid x:Name="AppTitleBar" MinHeight="42"
+                                Tag="ignorepane"
+                                VerticalAlignment="Stretch"
+                                BorderBrush="#33808080"
+                                BorderThickness="0,0,0,1"
+                                x:FieldModifier="public"
+                                Background="Transparent"
+                                SizeChanged="AppTitleBar_SizeChanged">
+                            <Grid.BackgroundTransition>
+                                <BrushTransition />
+                            </Grid.BackgroundTransition>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="42"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <ProgressBar Background="Transparent" Grid.RowSpan="2" CornerRadius="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" x:Name="progressBar">
+                                <ProgressBar.OpacityTransition>
+                                    <ScalarTransition />
+                                </ProgressBar.OpacityTransition>
+                            </ProgressBar>
+
+                            <TextBox Visibility="Collapsed" Grid.Row="1" Margin="7,0,7,7" x:Name="urlTextBox" KeyDown="urlTextBox_KeyDown" Tag="ignore" Loaded="urlTextBox_Loaded"/>
+
+
+                            <!-- Controls region -->
+                            <StackPanel x:Name="buttonsStackPanel" Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <Button Content="&#xE80F;" Click="HomeButton_Click"/>
+                                <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
+                                <Button Visibility="Visible" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right">
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Click="BackButton_Click" Text="{helpers:ResourceString Name=Back, Filename=Main}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE0A6;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Click="ForwardButton_Click" Text="{helpers:ResourceString Name=Forward, Filename=Main}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE0AB;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Click="RefreshButton_Click" Text="{helpers:ResourceString Name=Refresh, Filename=Main}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE149;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=History, Filename=ContextMenus}" Click="HistoryMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE81C;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=Downloads, Filename=ContextMenus}" Click="DownloadsMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE118;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=TwoFactAuth, Filename=ContextMenus}" Click="_2FAMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE192;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=Options, Filename=Settings}" Click="SettingsMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE713;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Text="DevTools" Click="DevToolsMenuFlyoutItem_Click">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE756;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <ToggleMenuFlyoutItem Text="Url bar" IsChecked="False" Click="UrlBarToggleMenuFlyoutItem_Click" Loaded="UrlBarToggleMenuFlyoutItem_Loaded">
+                                                
+                                            </ToggleMenuFlyoutItem>
+                                            <ToggleMenuFlyoutItem Text="Lock pane" IsChecked="False" Click="LockPaneToggleMenuFlyoutItem_Click" Loaded="LockPaneToggleMenuFlyoutItem_Loaded">
+
+                                            </ToggleMenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+
+                            </StackPanel>
+
+                            <!-- Info region -->
+                            <StackPanel Tag="children" Orientation="Horizontal" x:Name="infoRegionStckPanel" HorizontalAlignment="Center"  Grid.Column="2" >
+                                <Button Content="&#xE9E9;" Click="MainMenuButton_Click"/>
+                                <TextBlock x:FieldModifier="public" x:Name="documentTitle" Tapped="documentTitle_Tapped" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="1" Visibility="Collapsed">
+                            <TextBox Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5"/>
+                        </Grid>
+                        
+                        <Grid Grid.Row="2">
+                            <Frame x:Name="splitViewContentFrame" BorderBrush="#33808080" x:FieldModifier="public" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
+                            <Button Style="{ThemeResource AccentButtonStyle}"
+                                    VerticalAlignment="Top" HorizontalAlignment="Left"
+                                    Margin="12"
+                                    Content="Logins"
+                                    x:Name="loginButton"
+                                    Padding="12"
+                                    Visibility="Collapsed"
+                                    />
+
+                            <!-- Button to show the pane / navigate through tabs when full screen -->
+                            <Button Grid.Row="1" 
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,0,0,0"
+                                    CornerRadius="0"
+                                    Width="12"
+                                    Click="HomeButton_Click"
+                                    ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane,Filename=Main}"
+                                    x:Name="showPaneButton"
+                                    Visibility="Collapsed"
+        
+/>
+                            <Grid.Transitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition />
+                                </TransitionCollection>
+                            </Grid.Transitions>
+                        </Grid> 
+                    </Grid>
                 </Grid>
+                
                 <SplitView.Transitions>
                     <TransitionCollection>
                         <RepositionThemeTransition />
@@ -152,18 +222,7 @@
             </SplitView>
         </SplitView>
 
-        <!-- Button to show the pane / navigate through tabs when full screen -->
-        <Button Grid.Row="1" 
-                VerticalAlignment="Stretch"
-                HorizontalAlignment="Left"
-                Margin="0"
-                CornerRadius="0"
-                Width="12"
-                Click="HomeButton_Click"
-                ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane,Filename=Main}"
-                x:Name="showPaneButton"
-                Visibility="Collapsed"
-        />
+        
 
         
     </Grid>

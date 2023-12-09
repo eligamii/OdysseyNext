@@ -7,11 +7,11 @@ namespace Odyssey.WebSearch.Helpers
 {
     public class WebSearchStringKindHelpers
     {
-        private readonly static string urlRegex = @"^(https?:\/\/){0,1}(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,12}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
-        private readonly static string odysseyUrlRegex = @"^(edge|chrome|odyssey)://[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
-        private readonly static string externalAppUriRegex = @"^[-a-zA-Z0-9]{2,20}:;*";
-        private readonly static string mathematicalExpressionRegex = @"^[a-zA-Z0-9\(\)]+([-+/*^\(\),=][a-zA-Z0-9\(\)\=]+(\.[a-zA-Z0-9\(\)]+)?){1,}$"; // match also with functions (Pow(),...) but has false positive (ex: pow1,1)
-        private readonly static string quickActionCommandsRegex = @"\$([a-z]{2,}|<[a-z]{2,}>)( [a-z]*(:((""[-a-zA-Z0-9()@:%_\+.~#?&/\\=<>; ]{1,}"")|([a-z;]{1,}|<[a-z]{3,}>))){0,1})*"; // ex: $flyout pos:default content:<linkuri>
+        private readonly static Regex urlRegex = new( @"^(https?://)?[a-zA-Z0-9]{0,63}(?<!/)\.{0,1}([a-zA-Z0-9]|(?<!\.)-){1,63}\.[a-zA-Z]{1,63}(/.*)*$", RegexOptions.Compiled);
+        private readonly static Regex odysseyUrlRegex = new(@"^(edge|chrome|odyssey)://[-a-zA-Z0-9@:%._\+~#=]{1,256}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)", RegexOptions.Compiled);
+        private readonly static Regex externalAppUriRegex = new(@"^[-a-zA-Z0-9]{2,20}:;*", RegexOptions.Compiled);
+        private readonly static Regex mathematicalExpressionRegex = new(@"^[a-zA-Z0-9\(\)]+([-+/*^\(\),=][a-zA-Z0-9\(\)\=]+(\.[a-zA-Z0-9\(\)]+)?){1,}$", RegexOptions.Compiled); // match also with functions (Pow(),...) but has false positive (ex: pow1,1)
+        private readonly static Regex quickActionCommandsRegex = new(@"\$([a-z]{2,}|<[a-z]{2,}>)( [a-z]*(:((""[-a-zA-Z0-9()@:%_\+.~#?&/\\=<>; ]{1,}"")|([a-z;]{1,}|<[a-z]{3,}>))){0,1})*", RegexOptions.Compiled); // ex: $flyout pos:default content:<linkuri>
         public enum StringKind
         {
             Url,                        // https://
@@ -23,28 +23,45 @@ namespace Odyssey.WebSearch.Helpers
 
         }
 
-        public static async Task<StringKind> GetStringKind(string str)
+        public static async Task<StringKind> GetStringKindAsync(string str)
         {
-            if (Regex.IsMatch(str, quickActionCommandsRegex)) return StringKind.QuickActionCommand;
-            else if (Regex.IsMatch(str, urlRegex)) return StringKind.Url;
-            else if (Regex.IsMatch(str, odysseyUrlRegex)) return StringKind.OdysseyUrl;
-            else if (Regex.IsMatch(str, mathematicalExpressionRegex)) return StringKind.MathematicalExpression;
-            else if (Regex.IsMatch(str, externalAppUriRegex))
+            if (quickActionCommandsRegex.IsMatch(str)) return StringKind.QuickActionCommand;
+            else if (urlRegex.IsMatch(str)) return StringKind.Url;
+            else if (odysseyUrlRegex.IsMatch(str)) return StringKind.OdysseyUrl;
+            else if (mathematicalExpressionRegex.IsMatch(str)) return StringKind.MathematicalExpression;
+            else if (externalAppUriRegex.IsMatch(str))
             {
                 try
                 {
-                    LaunchQuerySupportStatus res = await Launcher.QueryUriSupportAsync(new System.Uri(str), LaunchQuerySupportType.Uri);
-                    if (res == LaunchQuerySupportStatus.Available && !str.StartsWith("http")) // prevent some webpages from opening in both Odyssey and the default browser
+                    if(Uri.IsWellFormedUriString(str, UriKind.Absolute))
                     {
-                        return StringKind.ExternalAppUri;
+                        LaunchQuerySupportStatus res = await Launcher.QueryUriSupportAsync(new System.Uri(str), LaunchQuerySupportType.Uri);
+                        if (res == LaunchQuerySupportStatus.Available && !str.StartsWith("http")) // prevent some webpages from opening in both Odyssey and the default browser
+                        {
+                            return StringKind.ExternalAppUri;
+                        }
+                        else return StringKind.SearchKeywords;
                     }
-                    else return StringKind.SearchKeywords;
+                    else
+                    {
+                        return StringKind.SearchKeywords;
+                    }
                 }
                 catch (UriFormatException)
                 {
                     return StringKind.SearchKeywords;
                 }
             }
+            else return StringKind.SearchKeywords;
+        }
+
+
+        public static StringKind GetStringKind(string str)
+        {
+            if (quickActionCommandsRegex.IsMatch(str)) return StringKind.QuickActionCommand;
+            else if (urlRegex.IsMatch(str)) return StringKind.Url;
+            else if (odysseyUrlRegex.IsMatch(str)) return StringKind.OdysseyUrl;
+            else if (mathematicalExpressionRegex.IsMatch(str)) return StringKind.MathematicalExpression;
             else return StringKind.SearchKeywords;
         }
     }

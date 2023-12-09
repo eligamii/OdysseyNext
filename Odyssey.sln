@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
@@ -14,8 +14,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.WebSearch", "Odyssey.WebSearch\Odyssey.WebSearch.csproj", "{43317869-153A-475D-85A1-EACF00B63135}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.FWebView", "Odyssey.FWebView\Odyssey.FWebView.csproj", "{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.Downloads", "Odyssey.Aria2\Odyssey.Downloads.csproj", "{5C27F468-3769-473B-B4EC-D48F44384DAC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Odyssey.AdBlocker", "Odyssey.AdBlocker\Odyssey.AdBlocker.csproj", "{A31FABD3-0578-4C35-990A-6BD3FCA718EF}"
 EndProject
@@ -152,22 +150,6 @@ Global
 		{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}.Release|x64.Build.0 = Release|Any CPU
 		{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}.Release|x86.ActiveCfg = Release|Any CPU
 		{154BF7AB-8B8A-41C1-9B6B-28BC8377EBB4}.Release|x86.Build.0 = Release|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|x64.Build.0 = Debug|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Debug|x86.Build.0 = Debug|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|ARM64.Build.0 = Release|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|x64.ActiveCfg = Release|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|x64.Build.0 = Release|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|x86.ActiveCfg = Release|Any CPU
-		{5C27F468-3769-473B-B4EC-D48F44384DAC}.Release|x86.Build.0 = Release|Any CPU
 		{A31FABD3-0578-4C35-990A-6BD3FCA718EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A31FABD3-0578-4C35-990A-6BD3FCA718EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A31FABD3-0578-4C35-990A-6BD3FCA718EF}.Debug|ARM64.ActiveCfg = Debug|Any CPU

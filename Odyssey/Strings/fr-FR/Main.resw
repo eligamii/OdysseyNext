@@ -121,7 +121,7 @@
     <value>Retour</value>
   </data>
   <data name="Forward" xml:space="preserve">
-    <value>Annuler l'action retour</value>
+    <value>Suivant</value>
   </data>
   <data name="NewTab" xml:space="preserve">
     <value>Nouvel onglet</value>

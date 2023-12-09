@@ -142,7 +142,7 @@
     <value>Historique</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>Plus</value>
+    <value>Afficher plus d'options</value>
   </data>
   <data name="Mute" xml:space="preserve">
     <value>Mettre en sourdine</value>

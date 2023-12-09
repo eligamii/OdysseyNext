@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 
-namespace Odyssey.FWebView.Helpers
+namespace Odyssey.Shared.Helpers
 {
-    internal class FileIconHelper
+    public class FileIconHelper
     {
-        public async static Task<StorageItemThumbnail> GetFileIcon(StorageFile file, uint size = 32)
+        public async static Task<StorageItemThumbnail> GetFileIconAsync(StorageFile file, uint size = 32)
         {
             StorageItemThumbnail iconTmb;
             var imgExt = new[] { "bmp", "gif", "jpeg", "jpg", "png" }.FirstOrDefault(ext => file.Path.ToLower().EndsWith(ext));

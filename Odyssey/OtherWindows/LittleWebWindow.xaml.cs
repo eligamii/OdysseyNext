@@ -25,7 +25,7 @@ namespace Odyssey.OtherWindows
             Settings.Init();
 
             // Load data          
-            Downloads.Aria2.Init();
+            //Downloads.Aria2.Init();
             AdBlocker.AdBlocker.Init();
 
             // Use this instead of Systemackdrop = Micaackdrop(); to be able to control the color of the Window

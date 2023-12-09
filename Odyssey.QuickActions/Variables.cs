@@ -1,5 +1,7 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
+using Odyssey.FWebView;
 using Odyssey.QuickActions.Data;
 using System.Collections.Generic;
 
@@ -7,13 +9,15 @@ namespace Odyssey.QuickActions
 {
     public class Variables
     {
+        internal static List<KeyValuePair<string, string>> SessionUserVariables { get; set; } = new();
+
         public static CoreWebView2ContextMenuRequestedEventArgs ContextMenuArgs { internal get; set; } // for the <linkurl>, <selectionurl>,... variables
         public static string AskText { get; set; }
         internal static string QAFlyoutUrl { get; set; } = string.Empty;
-        internal static List<KeyValuePair<string, string>> SessionUserVariables { get; set; } = new();
 
 
-        internal static string VariablesToValues(string command) // ex: $command option:<pos> => $command option:"172;537"
+
+        internal static string ConvertToValues(string command) // ex: $command option:<pos> => $command option:"172;537"
         {
             string resultCommand = string.Empty;
 
@@ -23,6 +27,7 @@ namespace Odyssey.QuickActions
                                    .Replace("<selectiontext>", SelectionText)
                                    .Replace("<ask>", AskText)
                                    .Replace("<flyouturl>", QAFlyoutUrl)
+                                   .Replace("<currenturl>", CurrentUrl)
                                    ;
 
             foreach (var variable in UserVariables.Items)
@@ -52,6 +57,14 @@ namespace Odyssey.QuickActions
         //************* WebView **************
 
         // The right-clicked webview weblink (if one)
+        private static string CurrentUrl
+        {
+            get
+            {
+                return WebView.SelectedWebView?.Source.ToString();
+            }
+        }
+
         private static string LinkUrl
         {
             get

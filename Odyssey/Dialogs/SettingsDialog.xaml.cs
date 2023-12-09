@@ -53,6 +53,8 @@ namespace Odyssey.Dialogs
                     OptionsViewFrame.Navigate(typeof(GeneralPage), null, animation); break;
                 case 1:
                     OptionsViewFrame.Navigate(typeof(ApparancePage), null, animation); break;
+                case 2:
+                    OptionsViewFrame.Navigate(typeof(FeaturesPage), null, animation); break;
                 case 3:
                     OptionsViewFrame.Navigate(typeof(MiscPage), null, animation); break;
 

@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
 
         <Grid x:Name="appTitleBar" Height="38" Grid.Row="0">
-            <TextBlock Text="Developper Tools" VerticalAlignment="Center" Margin="16,0"/>
+            <TextBlock Text="Developper Tools (Ask for any dev tool you want in the Developper Sanctuary Discord)" VerticalAlignment="Center" Margin="16,0"/>
         </Grid>
 
         <NavigationView PaneDisplayMode="LeftCompact" Grid.Row="1" IsBackButtonVisible="Collapsed">

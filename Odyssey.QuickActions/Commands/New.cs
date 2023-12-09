@@ -9,7 +9,7 @@ namespace Odyssey.QuickActions.Commands
     internal class New
     {
         private static string url = string.Empty;
-        internal static bool Exec(string[] options)
+        internal static Res Exec(string[] options)
         {
             if (options.Count() == 2)
             {
@@ -23,11 +23,11 @@ namespace Odyssey.QuickActions.Commands
                         case "pin": NewPin(); break;
                     }
 
-                    return true;
+                    return new Res(true);
                 }
             }
 
-            return false;
+            return new Res(false, null, "This option requires at least two options: tab/pin and url");
         }
 
         private static void NewPin()

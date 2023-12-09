@@ -127,7 +127,7 @@
     <value>Thème personnalisé</value>
   </data>
   <data name="DarkMode" xml:space="preserve">
-    <value>Mode sombre</value>
+    <value>Mode sombre automatique</value>
   </data>
   <data name="DynamicTheme" xml:space="preserve">
     <value>Thème dynamique</value>

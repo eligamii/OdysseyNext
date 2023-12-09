@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>  
+    <UseRidGraph>true</UseRidGraph>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>Odyssey.FWebView</RootNamespace>
-    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
   <ItemGroup>
@@ -22,6 +23,7 @@
   <ItemGroup>
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+      <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,9 +36,7 @@
     <ProjectReference Include="..\..\..\..\Downloads\WebView2Ex-master\WebView2Ex.WinUI\WebView2Ex.WinUI.csproj" />
     <ProjectReference Include="..\..\liMusic\AriaSharp\AriaSharp.csproj" />
     <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
-    <ProjectReference Include="..\Odyssey.Aria2\Odyssey.Downloads.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
-    <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
     <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
   </ItemGroup>

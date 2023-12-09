@@ -19,11 +19,11 @@ namespace Odyssey.QuickActions.Controls
             sender.CoreWebView2.SourceChanged += (s, a) => Variables.QAFlyoutUrl = s.Source;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(Command))
             {
-                QACommands.Execute(Command);
+                await QACommands.Execute(Command);
                 Hide();
             }
         }

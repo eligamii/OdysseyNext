@@ -13,7 +13,7 @@ namespace Odyssey.WebSearch
         public async static Task<List<Suggestion>> Suggest(string query, int maxSuggestions)
         {
             List<Suggestion> suggestions = new();
-            var kind = await WebSearchStringKindHelpers.GetStringKind(query);
+            var kind = await WebSearchStringKindHelpers.GetStringKindAsync(query);
 
             if (kind == WebSearchStringKindHelpers.StringKind.MathematicalExpression)
             {

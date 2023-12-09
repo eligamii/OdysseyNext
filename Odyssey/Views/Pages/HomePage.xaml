@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Odyssey.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:Microsoft.UI.Xaml.Media" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:helpers="using:Odyssey.Shared.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:media="using:Microsoft.UI.Xaml.Media" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:helpers="using:Odyssey.Shared.Helpers" xmlns:data="using:Odyssey.Shared.ViewModels.Data"
     mc:Ignorable="d"
     >
 
@@ -16,26 +16,49 @@
 
 
 
-        <Grid BorderBrush="#33808080" BorderThickness="1" VerticalAlignment="Top" CornerRadius="8" Height="60" Margin="100,100,100,0" MaxWidth="600" Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}">
-            <TextBox IsSpellCheckEnabled="False" x:Name="searchBox" KeyDown="TextBox_KeyDown" Width="559" PlaceholderText="Il fait beau... non ?" LosingFocus="TextBox_LosingFocus" >
-                <TextBox.Style>
-                    <Style TargetType="TextBox">
-                        <Setter Property="Padding" Value="19"/>
-                        <Setter Property="Background" Value="Transparent"/>
-                    </Style>
-                </TextBox.Style>
+        <ScrollViewer Margin="100,100,100,0" MaxWidth="600">
+            <StackPanel>
+                <TextBox  VerticalAlignment="Top" IsSpellCheckEnabled="False" x:Name="searchBox" KeyDown="TextBox_KeyDown" CornerRadius="8" Height="60" BorderBrush="#33808080" BorderThickness="1" Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}" Width="559" PlaceholderText="{helpers:ResourceString Name=SearchOnWeb,Filename=Main}" LosingFocus="TextBox_LosingFocus" >
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Padding" Value="19"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                    </TextBox.Style>
 
-                <TextBox.Resources>
-                    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent" />
-                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/>
+                    <TextBox.Resources>
+                        <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#33808080"/>
 
-                    <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
-                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent"/>
-                </TextBox.Resources>
-            </TextBox>
+                        <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+                        <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent"/>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBlock Margin="30,40,0,5" FontWeight="Medium" FontSize="14" Text="Last session tabs"/>
+                <ListView Margin="15,0" x:Name="lastSessionListView" SelectionMode="None" IsItemClickEnabled="True" ItemClick="lastSessionListView_ItemClick">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ListViewItem>
+                                <Grid HorizontalAlignment="Stretch" Height="60">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0" Width="17" Margin="0,0,0,0" Source="{Binding ImageSource}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                    <StackPanel Margin="5,-2,5,0" VerticalAlignment="Center" Grid.Column="1">
+                                        <TextBlock Grid.Column="1" Margin="0,0,0,0" Text="{Binding Title}"  ToolTipService.ToolTip="{Binding Description}"/>
+                                        <TextBlock Margin="0,0,0,0" Text="{Binding Url}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                    </StackPanel>
+                                </Grid>
+                                <ListViewItem.Resources>
+                                    <SolidColorBrush x:Key="ListViewItemBorderBrushFocused" Color="Transparent"/>
+                                </ListViewItem.Resources>
+                            </ListViewItem>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </ScrollViewer>
 
-        </Grid>
-        
     </Grid>
 
 </Page>

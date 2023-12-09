@@ -1,4 +1,5 @@
 ﻿using Odyssey.Migration;
+using Odyssey.QuickActions.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace Odyssey.QuickActions.Commands
 {
     internal class Test
     {
-        internal static bool Exec(string[] options)
+        internal static Res Exec(string[] options)
         {
             Odyssey.Migration.Migration.Migrate(Browser.Edge);
-            return true;
+            return new Res(true);
         }
     }
 }

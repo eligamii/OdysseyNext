@@ -3,9 +3,11 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Odyssey.Data.Main;
+using Odyssey.Data.Settings;
 using Odyssey.FWebView;
 using Odyssey.FWebView.Classes;
 using Odyssey.QuickActions;
+using Odyssey.QuickActions.Objects;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.Views;
@@ -179,7 +181,7 @@ namespace Odyssey.Controls
                     }
                     else
                     {
-                        StringKind kind = await GetStringKind(text);
+                        StringKind kind = await GetStringKindAsync(text);
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
                         else if (kind == StringKind.OdysseyUrl)
                         {
@@ -208,12 +210,14 @@ namespace Odyssey.Controls
 
                                 suggestionListView.Visibility = Visibility.Collapsed;
 
-                                mainSearchBox.KeyDown += (s, a) =>
+                                mainSearchBox.KeyDown += async (s, a) =>
                                 {
                                     if (a.Key == Windows.System.VirtualKey.Enter)
                                     {
                                         Variables.AskText = mainSearchBox.Text;
-                                        QACommands.Execute(command);
+                                        Res res = await QACommands.Execute(command);
+
+                                        if (!res.Success && Settings.DisplayQACommandErrors) await QACommands.Execute($"toast title:\"Exception\" content:\"{res.Message}\"");
 
                                         Hide();
                                     }
@@ -221,7 +225,9 @@ namespace Odyssey.Controls
                             }
                             else
                             {
-                                QACommands.Execute(text);
+                                Res res = await QACommands.Execute(text);
+
+                                if (!res.Success && Settings.DisplayQACommandErrors) await QACommands.Execute($"toast title:\"Exception\" content:\"{res.Message}\"");
                             }
                         }
                     }
@@ -334,7 +340,7 @@ namespace Odyssey.Controls
 
         private async void UpdateIcon(string text)
         {
-            StringKind kind = await GetStringKind(text);
+            StringKind kind = await GetStringKindAsync(text);
 
             switch (kind)
             {
@@ -395,3 +401,5 @@ namespace Odyssey.Controls
         }
     }
 }
+
+

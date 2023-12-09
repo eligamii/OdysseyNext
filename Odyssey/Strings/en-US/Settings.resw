@@ -127,7 +127,7 @@
     <value>Custom theme</value>
   </data>
   <data name="DarkMode" xml:space="preserve">
-    <value>Dark mode</value>
+    <value>Automatic dark mode</value>
   </data>
   <data name="DynamicTheme" xml:space="preserve">
     <value>Dynamic theme</value>

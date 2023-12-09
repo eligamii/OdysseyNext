@@ -20,7 +20,7 @@ namespace Odyssey.QuickActions.Commands
         /// - (required) value: the new value of the variable
         /// </remarks>
         /// <returns></returns>
-        internal static bool Exec(string[] options)
+        internal static Res Exec(string[] options)
         {
             if (options.Count() == 2)
             {
@@ -42,11 +42,11 @@ namespace Odyssey.QuickActions.Commands
 
                     Data.UserVariables.Items.Add(new KeyValuePair<string, string>(var, $"\"{value}\""));
 
-                    return true;
+                    return new Res(true, $"\"{value}\"");
                 }
             }
 
-            return false; // this command requires at least two options: var and value
+            return new Res(false, null, "This command requires at least two options: var and value");
         }
 
         private static void SetOptions(string option)
