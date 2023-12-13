@@ -22,35 +22,35 @@ namespace Odyssey.FWebView.Controls.Flyouts
 
         private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-             if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-             {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
                 Shared.ViewModels.Data.DonwloadItem item = (Shared.ViewModels.Data.DonwloadItem)e.NewItems[0];
-                
-                if(item.downloadOperation == null)
+
+                if (item.downloadOperation == null)
                 {
                     var downloadFolder = Shared.Helpers.KnownFolders.GetPath(Shared.Helpers.KnownFolder.Downloads);
                     var download = AriaSharp.Downloader.Download(item.DownloadUrl, downloadFolder);
 
                     download.DownloadProgressChanged += async (s, a) =>
                     {
-                        if(!string.IsNullOrWhiteSpace(s.Filename))
+                        if (!string.IsNullOrWhiteSpace(s.Filename))
                         {
                             item.Name = s.Filename;
                         }
 
                         item.Progress = a.Progress;
 
-                        if(a.Status == AriaSharp.DownloadStatus.Completed)
+                        if (a.Status == AriaSharp.AriaDownloadOperation.Status.Completed)
                         {
-                           try
-                           {
+                            try
+                            {
                                 var file = await StorageFile.GetFileFromPathAsync(s.OutputPath);
                                 var icon = await Shared.Helpers.FileIconHelper.GetFileIconAsync(file);
                                 BitmapImage bitmap = new();
                                 await bitmap.SetSourceAsync(icon);
                                 item.ImageSource = bitmap;
-                           }
-                           catch { }
+                            }
+                            catch { }
                         }
                     };
                 }
@@ -59,7 +59,7 @@ namespace Odyssey.FWebView.Controls.Flyouts
 
         private void DownloadItemsListView_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            
+
         }
     }
 }

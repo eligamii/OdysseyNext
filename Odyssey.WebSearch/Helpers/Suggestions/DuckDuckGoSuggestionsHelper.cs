@@ -31,7 +31,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
                 {
                     Suggestion suggestion = new();
                     suggestion.Title = ddgsuggestion.phrase;
-                    suggestion.Url = await WebViewNavigateUrlHelper.ToUrl(ddgsuggestion.phrase);
+                    suggestion.Url = await WebViewNavigateUrlHelper.ToWebView2Url(ddgsuggestion.phrase);
                     suggestion.Kind = SuggestionKind.Search;
                     suggestion.Query = query;
 

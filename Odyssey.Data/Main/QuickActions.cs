@@ -11,7 +11,7 @@ namespace Odyssey.Data.Main
 
         internal static void Save()
         {
-            
+
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonString = JsonSerializer.Serialize(QuickActionsList, options);
             File.WriteAllText(Data.QuickActionFilePath, jsonString);

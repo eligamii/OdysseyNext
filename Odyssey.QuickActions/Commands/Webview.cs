@@ -1,10 +1,5 @@
 ﻿using Odyssey.FWebView;
 using Odyssey.QuickActions.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -14,7 +9,7 @@ namespace Odyssey.QuickActions.Commands
         {
             if (WebView.SelectedWebView != null)
             {
-                switch(options[0])
+                switch (options[0])
                 {
                     case "devtools": WebView.SelectedWebView.CoreWebView2?.OpenDevToolsWindow(); break;
                     case "taskmgr": WebView.SelectedWebView.CoreWebView2?.OpenTaskManagerWindow(); break;

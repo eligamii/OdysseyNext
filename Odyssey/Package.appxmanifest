@@ -9,8 +9,8 @@
 
   <Identity
     Name="OdysseyPreview"
-    Publisher="CN=eliga"
-    Version="0.7.0.0" />
+    Publisher="CN=OdysseyAuthors"
+    Version="0.8.3.0" />
 
   <mp:PhoneIdentity PhoneProductId="8169cc92-c75f-4f1f-8ce7-df9f19398883" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

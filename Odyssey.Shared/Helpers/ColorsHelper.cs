@@ -119,7 +119,7 @@ namespace Odyssey.Shared.Helpers
             return Windows.UI.Color.FromArgb(color.A, R, G, B);
         }
 
-        public static Color Lighten(Windows.UI.Color color, double minAmount) 
+        public static Color Lighten(Windows.UI.Color color, double minAmount)
         {
             RGBtoHSL(color.R, color.G, color.B, out double H, out double S, out double L);
 

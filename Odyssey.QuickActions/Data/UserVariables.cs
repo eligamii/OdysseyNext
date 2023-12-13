@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Odyssey.QuickActions.Data
@@ -14,7 +13,7 @@ namespace Odyssey.QuickActions.Data
 
         public static void Save()
         {
-            
+
             string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
             {
                 ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver

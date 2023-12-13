@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Odyssey.Shared.ViewModels.Data;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace Odyssey.Data.Main
@@ -14,7 +13,7 @@ namespace Odyssey.Data.Main
         {
             try
             {
-                if(Items.Count!= 0)
+                if (Items.Count != 0)
                 {
                     string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings
                     {

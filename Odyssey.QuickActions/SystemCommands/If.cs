@@ -1,9 +1,5 @@
 ﻿
 using Odyssey.QuickActions.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.SystemCommands
@@ -16,7 +12,7 @@ namespace Odyssey.QuickActions.SystemCommands
 
             if (test == "true" || test == "false")
             {
-                if(test == "true")
+                if (test == "true")
                 {
                     return await QACommands.Execute(new Option(options[1]).Value);
                 }

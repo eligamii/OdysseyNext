@@ -1,14 +1,9 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Main;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Odyssey.FWebView.Classes
 {
@@ -22,7 +17,7 @@ namespace Odyssey.FWebView.Classes
         public bool LoginPageDetected { get; set; } = false;
         public List<Login> AvailableLogins { get; set; } = new();
     }
-   
+
 
     public class LoginAutoFill
     {

@@ -1,10 +1,6 @@
-﻿using Odyssey.Migration;
-using Odyssey.QuickActions.Objects;
+﻿using Odyssey.QuickActions.Objects;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -12,11 +8,11 @@ namespace Odyssey.QuickActions.Commands
     {
         internal static Res Exec(string[] options)
         {
-            if(options.Count() == 1)
+            if (options.Count() == 1)
             {
                 string type = options[0].Split(',')[1];
 
-                switch(type)
+                switch (type)
                 {
                     case "button":
                         new UIButton(options[0]);

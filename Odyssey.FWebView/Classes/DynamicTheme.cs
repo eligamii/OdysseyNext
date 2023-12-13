@@ -4,11 +4,9 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Shapes;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.Helpers;
-using System;
 using Windows.UI;
 
 namespace Odyssey.FWebView.Classes

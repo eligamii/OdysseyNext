@@ -1,7 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Markup;
-using System.Diagnostics;
 using Windows.ApplicationModel.Resources;
-using Windows.Services.Maps;
 
 // This entire code is from https://github.com/files-community/Files/blob/main/src/Files.App/Helpers/ResourceHelpers.cs
 

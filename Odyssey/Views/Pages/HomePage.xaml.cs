@@ -1,22 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Odyssey.Controls;
+using Odyssey.Data.Main;
 using Odyssey.FWebView;
 using Odyssey.Shared.ViewModels.Data;
-using Odyssey.Data.Main;
-using static System.Net.Mime.MediaTypeNames;
+using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -39,27 +27,28 @@ namespace Odyssey.Views.Pages
         private void LastSessionListView_Loaded(object sender, RoutedEventArgs e)
         {
             lastSessionListView.ItemsSource = Tabs.Get();
-            foreach(Tab tab in lastSessionListView.Items)
+            foreach (Tab tab in lastSessionListView.Items)
             {
                 try
                 {
                     tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
 
-                } catch { }
+                }
+                catch { }
 
             }
         }
 
         private void TextBox_LosingFocus(UIElement sender, LosingFocusEventArgs args)
         {
-            
+
         }
 
         private async void TextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if(e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                string text = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(searchBox.Text);
+                string text = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(searchBox.Text);
                 webView.CoreWebView2.Navigate(text);
 
                 Tab tab = new()

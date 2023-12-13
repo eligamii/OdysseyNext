@@ -1,19 +1,15 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.Gaming.Input;
 
 namespace Odyssey.AdBlocker
 {
-    public class EasyListAdBlocker
+    public class EasyListAdBlocker // https://github.com/brave-experiments/ad-block
     {
         public class Filter
         {
@@ -38,7 +34,7 @@ namespace Odyssey.AdBlocker
         public static List<Filter> AdBlockList { get; set; } = new();
 
 
-        
+
 
 
 
@@ -54,7 +50,7 @@ namespace Odyssey.AdBlocker
                 if (p.Regex.IsMatch(str)) should = true;
                 if (should && p.BlockIfNotTrue) shouldnt = true;
 
-                if(should && !shouldnt)
+                if (should && !shouldnt)
                 {
                     foreach (var option in p.Options)
                     {
@@ -110,15 +106,15 @@ namespace Odyssey.AdBlocker
 
                 if (regex.StartsWith("@@")) { regex = regex.Replace("@@", ""); blockIfNotTrue = true; }
 
-                if(filter.Contains("$"))
+                if (filter.Contains("$"))
                 {
                     string opts = filter.Split("$")[1];
                     string[] optArray = opts.Contains(',') ? opts.Split(",") : [opts];
-                    
-                    foreach(string opt in optArray)
+
+                    foreach (string opt in optArray)
                     {
                         Option option = new();
-                        if(opt.Contains("domain="))
+                        if (opt.Contains("domain="))
                         {
                             string domain = opt.Split("=")[1];
                             string domainWithoutInv = domain.Replace("~", "");

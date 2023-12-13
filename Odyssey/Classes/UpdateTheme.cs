@@ -1,19 +1,10 @@
-﻿using Microsoft.UI.Composition.SystemBackdrops;
+﻿using Microsoft.UI;
 using Microsoft.UI.Xaml;
-using Microsoft.UI;
-using Odyssey.FWebView.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Odyssey.Helpers;
 using Odyssey.Shared.Helpers;
 using Odyssey.Views;
-using Windows.UI;
 using System.Runtime.InteropServices;
-using Microsoft.UI.Xaml.Media;
-using Odyssey.FWebView;
-using Odyssey.Helpers;
+using Windows.UI;
 
 namespace Odyssey.Classes
 {
@@ -25,7 +16,7 @@ namespace Odyssey.Classes
         internal static void UpdateThemeWith(string color)
         {
             var sdc = System.Drawing.ColorTranslator.FromHtml(color);
-            var nnColor = Color.FromArgb(140, sdc.R, sdc.G, sdc.B) ;
+            var nnColor = Color.FromArgb(140, sdc.R, sdc.G, sdc.B);
 
             bool isColorDark = ColorsHelper.IsColorDark(nnColor, 0.52);
             if (MainView.Current.ActualTheme == ElementTheme.Light)

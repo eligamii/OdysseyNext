@@ -1,4 +1,3 @@
-using Microsoft.UI.Xaml.Shapes;
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.IO;
@@ -37,7 +36,7 @@ namespace Odyssey.Data.Main
             QuickActionFilePath = Path.Combine(path, "QuickActions.json");
             DownloadsFilePath = Path.Combine(path, "Downloads.json");
             FavoritesFilePath = Path.Combine(path, "Favorites.json");
-            HistoryFilePath = Path.Combine(path, "History.json");  
+            HistoryFilePath = Path.Combine(path, "History.json");
             PinsFilePath = Path.Combine(path, "Pins.json");
             TabsFilePath = Path.Combine(path, "Tabs.json");
 
@@ -45,6 +44,7 @@ namespace Odyssey.Data.Main
             LoginsFilePath = Path.Combine(path, "Logins.json");
             TotpFilePath = Path.Combine(path, "2FA.json");
 
+            await TwoFactorsAuthentification.Load();
             SearchBarShortcuts.Load();
             QuickActions.Load();
             Downloads.Load();
@@ -59,7 +59,7 @@ namespace Odyssey.Data.Main
         {
             await core.Profile.ClearBrowsingDataAsync();
 
-            foreach(var file in await dataFolder.GetFilesAsync())
+            foreach (var file in await dataFolder.GetFilesAsync())
             {
                 await file.DeleteAsync();
             }

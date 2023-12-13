@@ -8,7 +8,6 @@ using Odyssey.QuickActions.Data;
 using Odyssey.QuickActions.Helpers;
 using Odyssey.QuickActions.Objects;
 using Odyssey.QuickActions.SystemCommands;
-using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ namespace Odyssey.QuickActions
         public static Window MainWindow { internal get; set; } // for commands which manipulate the app itself as $close or $minimize do
         public static void RestoreUIElements()
         {
-            foreach(var variable in UserVariables.Items)
+            foreach (var variable in UserVariables.Items)
             {
                 string pattern = "\"([^ ]*,){3}[^ ]*\"";
                 bool match = Regex.IsMatch(variable.Value, pattern);
@@ -43,7 +42,7 @@ namespace Odyssey.QuickActions
             var c = subCommandPresentRegex.Matches(command).Count();
             while (c % 2 == 0 && c > 0)
             {
-                foreach(Match match in subCommandsSeparator.Matches(command))
+                foreach (Match match in subCommandsSeparator.Matches(command))
                 {
                     Res res = await Execute(match.Value);
                     command = command.Replace($"[{match.Value}]", $"\"{res.Output}\"");
@@ -88,7 +87,7 @@ namespace Odyssey.QuickActions
                 command = command.Substring(1);
 
             string commandName;
-           
+
             try
             {
                 // Get the command var (ex: flyout)
@@ -103,7 +102,7 @@ namespace Odyssey.QuickActions
             {
                 commandWithoutCommandName = command.Substring(commandName.Length + 1); // also remove the first space
             }
-            catch 
+            catch
             {
                 commandWithoutCommandName = string.Empty;
             }

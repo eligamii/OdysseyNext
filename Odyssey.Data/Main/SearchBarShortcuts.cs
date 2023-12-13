@@ -11,7 +11,7 @@ namespace Odyssey.Data.Main
 
         internal static void Save()
         {
-            
+
 
 
             string serializedObject = JsonConvert.SerializeObject(Items, new JsonSerializerSettings

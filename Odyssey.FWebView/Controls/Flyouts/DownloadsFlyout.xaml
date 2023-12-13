@@ -52,8 +52,8 @@
                             </Grid>
 
                             <StackPanel Margin="10,-3,0,0" VerticalAlignment="Center" Grid.Column="1">
-                                <TextBlock Text="Download.cmd" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
-                                <TextBlock Text="Ouvrir le fichier" Margin="0,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
+                                <TextBlock Text="" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
+                                <TextBlock Text="" Margin="0,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
                             </StackPanel>
 
                         </Grid>

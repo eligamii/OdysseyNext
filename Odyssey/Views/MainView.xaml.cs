@@ -1,18 +1,11 @@
-using ABI.System;
-using ABI.Windows.Foundation;
-using CommunityToolkit.WinUI.UI.Helpers;
 using Microsoft.UI;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Shapes;
-using Microsoft.Web.WebView2.Core;
 using Odyssey.Classes;
 using Odyssey.Controls;
-using Odyssey.Controls.Tips;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Dialogs;
@@ -22,19 +15,12 @@ using Odyssey.Helpers;
 using Odyssey.OtherWindows;
 using Odyssey.QuickActions;
 using Odyssey.Shared.ViewModels.Data;
-using Odyssey.TwoFactorsAuthentification;
 using Odyssey.Views.Pages;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using WinRT.Interop;
-using static System.Net.Mime.MediaTypeNames;
-using Application = Microsoft.UI.Xaml.Application;
 using Type = System.Type;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -49,14 +35,16 @@ namespace Odyssey.Views
     {
         public static MainView Current { get; set; }
         public TitleBarDragRegions titleBarDragRegions;
-        public string MainDocumentTitle { get { return documentTitle.Text; } 
-            set 
-            { 
-                if(value != documentTitle.Text)
+        public string MainDocumentTitle
+        {
+            get { return documentTitle.Text; }
+            set
+            {
+                if (value != documentTitle.Text)
                 {
                     documentTitle.Text = value;
                     titleBarDragRegions.SetDragRegionForTitleBars();
-                } 
+                }
             }
         }
         public static WebView CurrentlySelectedWebView
@@ -69,7 +57,7 @@ namespace Odyssey.Views
 
             Loaded += MainView_Loaded;
 
-            
+
 
             Current = this;
         }
@@ -183,7 +171,8 @@ namespace Odyssey.Views
                     titleBarDragRegions.SetDragRegionForTitleBars();
                     _lastText = text;
                 }
-            } catch (COMException) { }
+            }
+            catch (COMException) { }
         }
 
         private bool lastConnectionState;
@@ -193,7 +182,7 @@ namespace Odyssey.Views
             if (!Settings.IsDynamicThemeEnabled)
             {
                 string color = Settings.CustomThemeColors;
-                if(color != null)
+                if (color != null)
                 {
                     if (Regex.IsMatch(color, @"#[0-9A-Z]{6}")) // To remove
                     {
@@ -214,7 +203,7 @@ namespace Odyssey.Views
 
         public void LoginDetectedChanged()
         {
-            if(CurrentlySelectedWebView != null)
+            if (CurrentlySelectedWebView != null)
             {
                 loginButton.Visibility = CurrentlySelectedWebView.IsLoginPageDetected ? Visibility.Visible : Visibility.Collapsed;
 
@@ -311,7 +300,15 @@ namespace Odyssey.Views
             SearchBar searchBar = new SearchBar();
             FlyoutShowOptions options = new FlyoutShowOptions();
             options.Placement = FlyoutPlacementMode.Bottom;
-            options.Position = new Windows.Foundation.Point(splitViewContentFrame.ActualWidth / 2, 100);
+            
+            if(splitViewContentFrame.ActualWidth > 610)
+            {
+                options.Position = new Windows.Foundation.Point(splitViewContentFrame.ActualWidth / 2, 100);
+            }
+            else
+            {
+                options.Position = new Windows.Foundation.Point(this.ActualWidth / 2, 100);
+            }
 
             searchBar.ShowAt(splitViewContentFrame, options);
         }
@@ -334,7 +331,7 @@ namespace Odyssey.Views
 
         private void infoButton_Click(object sender, RoutedEventArgs e)
         {
-            if(CurrentlySelectedWebView != null)
+            if (CurrentlySelectedWebView != null)
             {
                 //pageInfoTip.Open(CurrentlySelectedWebView);
             }
@@ -360,7 +357,7 @@ namespace Odyssey.Views
 
         private void MainMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            if(CurrentlySelectedWebView != null)
+            if (CurrentlySelectedWebView != null && false) // disabled
             {
                 MainMenuFlyout mainMenuFlyout = new();
                 mainMenuFlyout.ShowAt(infoRegionStckPanel);
@@ -423,7 +420,8 @@ namespace Odyssey.Views
                         documentTitle.Text = text;
                     }
                 }
-            } catch { }
+            }
+            catch { }
         }
 
         private void UrlBarToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
@@ -435,9 +433,9 @@ namespace Odyssey.Views
 
         private async void urlTextBox_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
-            if(e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                string finalUrl = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(urlTextBox.Text);
+                string finalUrl = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(urlTextBox.Text);
                 if (finalUrl != string.Empty)
                 {
                     if (CurrentlySelectedWebView != null)

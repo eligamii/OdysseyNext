@@ -1,11 +1,7 @@
 ﻿using Odyssey.FWebView;
-using Odyssey.Migration;
 using Odyssey.QuickActions.Objects;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -17,7 +13,7 @@ namespace Odyssey.QuickActions.Commands
 
             var opt = new Option(options[0]);
 
-            if(opt.Name != "url") return new Res(false, null, "Invalid parameter (only parameter accepted: url)");
+            if (opt.Name != "url") return new Res(false, null, "Invalid parameter (only parameter accepted: url)");
 
             string option = opt.Value;
             var kind = WebSearch.Helpers.WebSearchStringKindHelpers.GetStringKind(option);
@@ -33,7 +29,7 @@ namespace Odyssey.QuickActions.Commands
 
         private static async void NavigateTo(string str)
         {
-            string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(str);
+            string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(str);
             WebView.SelectedWebView.CoreWebView2.Navigate(url);
         }
     }

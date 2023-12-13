@@ -1,16 +1,10 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json.Linq;
-using Odyssey.Shared.Helpers;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using Windows.UI;
 
 namespace Odyssey.FWebView.Helpers
 {
@@ -106,8 +100,8 @@ namespace Odyssey.FWebView.Helpers
 
         }
 
-        
-        
+
+
     }
 
 }

@@ -6,7 +6,7 @@ namespace Monaco.Helpers
     {
         public static string ToCSharpString(this string str)
         {
-            if(str != "null")
+            if (str != "null")
             {
                 // convert \x things
                 str = str.Replace(@"\\", "\\")

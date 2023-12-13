@@ -8,6 +8,7 @@ namespace Odyssey.Data.Settings
 
         public static void Init()
         {
+            // Set default settings configuration
             // Individually test if each setting has a key to make adding settings without crash possible
             // Internal
             if (!Values.Values.ContainsKey("FirstLaunch")) FirstLaunch = true;
@@ -16,7 +17,7 @@ namespace Odyssey.Data.Settings
 
             // Personalization
             if (!Values.Values.ContainsKey("IsPaneLocked")) IsPaneLocked = true;
-            if (!Values.Values.ContainsKey("CancelAppUriLaunchConfirmationDialog")) CancelAppUriLaunchConfirmationDialog = false;
+            if (!Values.Values.ContainsKey("CancelAppUriLaunchConfirmationDialog")) CancelAppUriLaunchConfirmationDialog = true;
             if (!Values.Values.ContainsKey("DynamicThemeEnabled")) IsDynamicThemeEnabled = true;
             if (!Values.Values.ContainsKey("IsDynamicThemeModeChangeEnabled")) IsDynamicThemeModeChangeEnabled = true;
             if (!Values.Values.ContainsKey("ThemePerformanceMode")) ThemePerformanceMode = 1;
@@ -31,7 +32,7 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("AutoPictureInPicture")) AutoPictureInPicture = true;
             if (!Values.Values.ContainsKey("PlaySoundsOnOnlyOneTab")) PlaySoundsOnOnlyOneTab = false;
             if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabOnStartup = false;
-            if(!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = false;
+            if (!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = false;
             if (!Values.Values.ContainsKey("IsHisoryEncryptionEnabled")) IsHisoryEncryptionEnabled = false;
 
             // Misc
@@ -40,7 +41,7 @@ namespace Odyssey.Data.Settings
 
             // Ad blocker
             if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
-            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0;
+            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0; // Experimental (adblock ro regex adblocker)
             if (!Values.Values.ContainsKey("IsEasylistFilterListEnabled")) IsEasylistFilterListEnabled = false;
             if (!Values.Values.ContainsKey("IsEasyprivacyFilterListEnabled")) IsEasyprivacyFilterListEnabled = false;
             if (!Values.Values.ContainsKey("IsSpam404FilterListEnabled")) IsSpam404FilterListEnabled = false;
@@ -82,7 +83,7 @@ namespace Odyssey.Data.Settings
             set { Values.Values["IsDevBarEnabled"] = value; }
         }
 
-        public static bool IsHisoryEncryptionEnabled 
+        public static bool IsHisoryEncryptionEnabled
         {
             get { return (bool)Values.Values["IsHisoryEncryptionEnabled"]; }
             set { Values.Values["IsHisoryEncryptionEnabled"] = value; }

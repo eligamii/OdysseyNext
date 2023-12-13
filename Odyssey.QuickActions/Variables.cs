@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView;
 using Odyssey.QuickActions.Data;

@@ -1,4 +1,5 @@
-﻿using Odyssey.Shared.ViewModels.Data;
+﻿using Odyssey.Data.Helpers;
+using Odyssey.Shared.ViewModels.Data;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
@@ -12,17 +13,26 @@ namespace Odyssey.Data.Main
 
         internal static void Save()
         {
-            
+
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonString = JsonSerializer.Serialize(Items, options);
-            File.WriteAllText(Data.HistoryFilePath, jsonString);
+
+            // Encrypt the string
+            byte[] encryptedJsonString = EncryptionHelpers.ProtectString(jsonString);
+
+            File.WriteAllBytes(Data.HistoryFilePath, encryptedJsonString);
         }
 
         internal static void Load()
         {
             if (File.Exists(Data.HistoryFilePath))
             {
-                string jsonString = File.ReadAllText(Data.HistoryFilePath);
+                // Get encrypted json
+                byte[] encryptedJsonString = File.ReadAllBytes(Data.HistoryFilePath);
+
+                // Decrypt the encrypted string
+                string jsonString = EncryptionHelpers.UnprotectToString(encryptedJsonString);
+
                 Items = JsonSerializer.Deserialize<ObservableCollection<HistoryItem>>(jsonString);
             }
             else

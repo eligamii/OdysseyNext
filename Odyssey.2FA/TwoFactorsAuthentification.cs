@@ -5,10 +5,7 @@ using Odyssey.TwoFactorsAuthentification.Controls;
 using Odyssey.TwoFactorsAuthentification.ViewModels;
 using OtpNet;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using Windows.Security.Credentials;
 using Windows.Security.Credentials.UI;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -36,16 +33,13 @@ namespace Odyssey.TwoFactorsAuthentification
 
         private static async void InitData()
         {
-            var items = await Data.Main.TwoFactorsAuthentification.Load();
+            var items = Data.Main.TwoFactorsAuthentification.Items;
 
-            foreach(var item in items)
+            foreach (var item in items)
             {
-                if(!items.Any(p => p.Secret == item.Secret))
-                {
-                    TwoFactAuth twoFactAuth = new(item);
-                    twoFactAuth.Start();    
-                    Items.Add(twoFactAuth);
-                }
+                TwoFactAuth twoFactAuth = new(item);
+                twoFactAuth.Start();
+                Items.Add(twoFactAuth);
             }
         }
 

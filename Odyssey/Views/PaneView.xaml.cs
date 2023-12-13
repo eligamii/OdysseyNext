@@ -261,8 +261,45 @@ namespace Odyssey.Views
             }
         }
 
-        private async void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
+            if (e.AddedItems.Count > 0)
+            {
+                MainView.Current.splitViewContentFrame.Content = null;
+
+                var tab = e.AddedItems.FirstOrDefault() as Tab;
+                if (tab.MainWebView == null)
+                {
+                    if (tab.Url != null)
+                    {
+                        WebView webView = WebView.Create(tab.Url);
+                        webView.LinkedTab = tab;
+                        tab.MainWebView = webView;
+                    }
+                    else
+                    {
+                        WebView webView = WebView.Create(SearchEngine.ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine).Url);
+                        webView.LinkedTab = tab;
+                        tab.MainWebView = webView;
+                    }
+                }
+
+                MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
+
+                MainView.Current.documentTitle.Text = tab.Title;
+
+                FWebView.Classes.DynamicTheme.UpdateDynamicTheme(tab.MainWebView);
+                UpdateTabSelection(sender);
+            }
+
+
+
+            if (e.AddedItems.Count != 0) // Save tabs as much as possible to avoid data loss after crash
+                Tabs.Save();
+
+            MainView.Current.SetTotpButtonVisibility();
+
             try
             {
                 // Enable picture in picture
@@ -273,7 +310,7 @@ namespace Odyssey.Views
                         Tab item = e.RemovedItems[0] as Tab;
                         if (item.MainWebView != null)
                         {
-                            await item.MainWebView.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
+                            item.MainWebView.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
                         }
                     }
                     if (e.AddedItems.Count > 0)
@@ -281,59 +318,12 @@ namespace Odyssey.Views
                         Tab addedItem = e.AddedItems[0] as Tab;
                         if (addedItem.MainWebView != null)
                         {
-                            await addedItem.MainWebView.ExecuteScriptAsync("document.exitPictureInPicture();");
+                            addedItem.MainWebView.ExecuteScriptAsync("document.exitPictureInPicture();");
                         }
                     }
                 }
-            }catch (InvalidOperationException){ }
-
-            if (e.AddedItems.Count > 0)
-            {
-                var tab = e.AddedItems[0] as Tab;
-                if (tab.MainWebView == null)
-                {
-                    if (tab.Url != null)
-                    {
-                        WebView webView = WebView.Create(tab.Url);
-                        webView.LinkedTab = tab;
-                        await webView.EnsureCoreWebView2Async();
-                        tab.MainWebView = webView;
-                    }
-                    else
-                    {
-                        WebView webView = WebView.Create(SearchEngine.ToSearchEngineObject(((SearchEngines)Settings.SelectedSearchEngine)).Url);
-                        webView.LinkedTab = tab;
-                        await webView.EnsureCoreWebView2Async();
-                        tab.MainWebView = webView;
-                    }
-                }
-
-
-                if ((tab.MainWebView as WebView).IsPageLoading)
-                {
-                    //MainView.Current.Favicon.Source = null;
-                    //MainView.Current.progressRing.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    //MainView.Current.Favicon.Source = tab.ImageSource;
-                    //MainView.Current.progressRing.Visibility = Visibility.Collapsed;
-                }
-
-                MainView.Current.documentTitle.Text = tab.Title;
-
-                FWebView.Classes.DynamicTheme.UpdateDynamicTheme(tab.MainWebView);
-
-                MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
-                UpdateTabSelection(sender);
             }
-
-
-
-            if (e.AddedItems.Count != 0) // Save tabs as much as possible to avoid data loss after crash
-                Tabs.Save();
-
-            MainView.Current.SetTotpButtonVisibility();
+            catch (InvalidOperationException) { }
         }
         private void FavoriteGridItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -454,7 +444,7 @@ namespace Odyssey.Views
             {
                 string text = await e.DataView.GetTextAsync();
 
-                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(text);
 
                 pin = new()
                 {
@@ -501,7 +491,7 @@ namespace Odyssey.Views
             {
                 string text = await e.DataView.GetTextAsync();
 
-                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(text);
 
                 tab = new()
                 {
@@ -563,7 +553,7 @@ namespace Odyssey.Views
             {
                 string text = await e.DataView.GetTextAsync();
 
-                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(text);
 
                 favorite = new()
                 {
@@ -599,7 +589,7 @@ namespace Odyssey.Views
             FavoriteGrid.SelectedItem = favorite;
         }
 
-        
+
         private void ViewportBehavior_EnteredViewport(object sender, EventArgs e)
         {
             secondNewTabButton.Visibility = ViewportBehavior.IsFullyInViewport ? Visibility.Collapsed : Visibility.Visible;

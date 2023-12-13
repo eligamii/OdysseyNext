@@ -11,27 +11,34 @@
         /// <returns></returns>
         public static MatchValue IsMatch(string str1, string str2, float tolerability)
         {
-            float length = str1.Length;
-            float matches = 0;
-            float t = tolerability;
-
-            for (int i = 0; i < length && i < str2.Length; i++)
+            if (str2 != null)
             {
-                char str1char = str1[i].ToString().ToLower().ToCharArray()[0];
-                char str2char = str2[i].ToString().ToLower().ToCharArray()[0];
+                float length = str1.Length;
+                float matches = 0;
+                float t = tolerability;
 
-                if (str1char == str2char) { matches++; }
+                for (int i = 0; i < length && i < str2.Length; i++)
+                {
+                    char str1char = str1[i].ToString().ToLower().ToCharArray()[0];
+                    char str2char = str2[i].ToString().ToLower().ToCharArray()[0];
+
+                    if (str1char == str2char) { matches++; }
+                }
+
+                float f = 0;
+
+                if (matches > 0)
+                    f = matches / length;
+                bool b = f >= t;
+
+                var value = new MatchValue() { Success = b, Value = f };
+
+                return value;
             }
-
-            float f = 0;
-
-            if (matches > 0)
-                f = matches / length;
-            bool b = f >= t;
-
-            var value = new MatchValue() { Success = b, Value = f };
-
-            return value;
+            else
+            {
+                return new MatchValue() { Success = false };
+            }
         }
 
         public class MatchValue

@@ -19,6 +19,17 @@
     <MultilingualFallbackLanguage>en-US</MultilingualFallbackLanguage>
     <TranslationReport Condition="'$(Configuration)' == 'Release'">true</TranslationReport>
     <SuppressPseudoWarning Condition="'$(Configuration)' == 'Debug'">true</SuppressPseudoWarning>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <PackageCertificateKeyFile>Odyssey.App_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Auto</AppxBundle>
+    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxPackageDir>C:\Users\eliga\Documents\Odyssey\OdysseyNext-preview\OdysseyNext-preview\Odyssey\bin\x64\0.8.0\</AppxPackageDir>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\Resources\en-US.resx" />
@@ -71,16 +82,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.231202003-experimental1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25936-preview" />
     <PackageReference Include="WinUIEx" Version="2.3.3" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
   <!-- 
@@ -92,8 +96,10 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\liMusic\AriaSharp\AriaSharp.csproj" />
-    <ProjectReference Include="..\Monaco\Monaco.csproj" />
+    <ProjectReference Include="..\..\..\..\AriaSharp-main\AriaSharp-main\AriaSharp.csproj" />
+    <ProjectReference Include="..\..\..\..\Monaco-main\Monaco-main\Monaco.csproj" />
+  
+
     <ProjectReference Include="..\Odyssey.2FA\Odyssey.TwoFactorsAuthentification.csproj" />
     <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />

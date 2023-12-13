@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using WinRT.Interop;
 
@@ -51,7 +49,7 @@ namespace Odyssey.Helpers
         {
             try
             {
-                if((string)element.Tag != "ignorepane")
+                if ((string)element.Tag != "ignorepane")
                 {
                     var parent = VisualTreeHelper.GetParent(element);
                     int tests = 0;
@@ -126,12 +124,12 @@ namespace Odyssey.Helpers
 
                 if (tag == "children")
                 {
-                    foreach(var grandChild in ((Panel)child).Children)
+                    foreach (var grandChild in ((Panel)child).Children)
                     {
                         finalList.Add(grandChild);
                     }
                 }
-                else if(tag != "ignore")
+                else if (tag != "ignore")
                 {
                     finalList.Add(child);
                 }
@@ -139,7 +137,7 @@ namespace Odyssey.Helpers
 
             return finalList.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
         }
-        
+
         private Windows.Graphics.RectInt32 GetFirstOrLastDragRegionForTitleBar(Grid titleBar, bool first = true)
         {
             var children = GetChildrenForTitleBar(titleBar);
@@ -192,7 +190,7 @@ namespace Odyssey.Helpers
 
 
 
-        
+
         public void SetDragRegionForTitleBars()
         {
             List<Windows.Graphics.RectInt32> dragRectsList = new();
@@ -209,17 +207,17 @@ namespace Odyssey.Helpers
                 {
                     // Set the first drag region (between the start of the titlebar and the first control)
                     dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar));
-    
+
                     for (int i = 0; i < children.Count - 1; i++)
                     {
                         // Get the two element which in between the drag region will be setted
                         UIElement element1 = children[i];
                         UIElement element2 = children[i + 1];
-    
+
                         // Get the position of the two element relative to the titlebar
                         var transform = element1.TransformToVisual(titleBar);
                         var transform2 = element2.TransformToVisual(titleBar);
-    
+
                         // Convert to point
                         Point element1Position = transform.TransformPoint(new Point(0, 0));
                         Point element2Position = transform2.TransformPoint(new Point(0, 0));
@@ -240,7 +238,7 @@ namespace Odyssey.Helpers
                         dragRect.Width = width;
                         dragRectsList.Add(dragRect);
                     }
-    
+
                     // Set the last titleBar (between the last control and the end of the titlebar)
                     dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar, false));
                 }
@@ -260,7 +258,8 @@ namespace Odyssey.Helpers
             try
             {
                 _window.AppWindow.TitleBar.SetDragRectangles(dragRects);
-            } catch { }
+            }
+            catch { }
         }
     }
 }

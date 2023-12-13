@@ -1,9 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace Odyssey.QuickActions.Helpers
 {
@@ -22,7 +17,7 @@ namespace Odyssey.QuickActions.Helpers
             bool? negate = null;
             bool? greater = null;
 
-            switch(rawLeft.Last())
+            switch (rawLeft.Last())
             {
                 case '!': negate = true; break;
                 case '=': negate = false; break;

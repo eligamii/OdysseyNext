@@ -46,7 +46,7 @@ namespace Odyssey.FWebView.Controls
 
             // Fix the two separators at the same place issue, temporary
             int sepCount = 0;
-            foreach(var item in this.Items)
+            foreach (var item in this.Items)
             {
                 if (item.GetType() == typeof(MenuFlyoutSeparator)) sepCount++;
                 else sepCount = 0;
@@ -119,9 +119,9 @@ namespace Odyssey.FWebView.Controls
                 CoreWebView2ContextMenuItem current = menuList[i];
                 if (current.Kind == CoreWebView2ContextMenuItemKind.Separator)
                 {
-                    if(menuList.Count > 0)
+                    if (menuList.Count > 0)
                     {
-                        if(menuList.Last().GetType() != typeof(MenuFlyoutSeparator))
+                        if (menuList.Last().GetType() != typeof(MenuFlyoutSeparator))
                         {
                             MenuFlyoutSeparator sep = new MenuFlyoutSeparator();
                             itemList.Add(sep);

@@ -1,19 +1,13 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Shared.ViewModels.Data
 {
     [DataContract]
     public class DonwloadItem : INotifyPropertyChanged
-    { 
+    {
         private string name;
         private string subtitle;
         private BitmapImage image;
@@ -99,7 +93,7 @@ namespace Odyssey.Shared.ViewModels.Data
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void NotifyPropertyChanged([CallerMemberName]string propertyName = "")
+        internal void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using Uri = System.Uri;
@@ -31,12 +32,13 @@ namespace Odyssey.Controls
     {
         private string mainIcon = string.Empty;
         private bool newTab;
+        private bool startNewTab;
         private string command;
 
         public SearchBar(bool newTab = false)
         {
             this.InitializeComponent();
-            this.newTab = newTab || MainView.CurrentlySelectedWebView == null;
+            this.newTab = startNewTab = newTab || MainView.CurrentlySelectedWebView == null;
 
             mainIcon = this.newTab ? "\uEC6C" : "\uE11A";
             searchBarIcon.Glyph = mainIcon;
@@ -141,12 +143,15 @@ namespace Odyssey.Controls
 
         private async void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (e.Key == Windows.System.VirtualKey.Shift)
+                newTab = true;
+
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 if (suggestionListView.SelectedItem == null)
                 {
                     string text = (sender as TextBox).Text;
-                    string url = await WebViewNavigateUrlHelper.ToUrl(text);
+                    string url = await WebViewNavigateUrlHelper.ToWebView2Url(text);
                     bool ask = false;
 
                     if (url != string.Empty) // The request will be treated differently with commands and app uris
@@ -183,8 +188,9 @@ namespace Odyssey.Controls
                     {
                         StringKind kind = await GetStringKindAsync(text);
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
-                        else if (kind == StringKind.OdysseyUrl)
+                        else if (kind == StringKind.InternalUrl)
                         {
+                            // Redirect edge://downloads and edge://history to the Odyssey flyouts
                             if (Regex.IsMatch(text, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
                             {
                                 WebView.OpenDownloadDialog();
@@ -303,8 +309,20 @@ namespace Odyssey.Controls
                     try
                     {
                         var list = new List<Suggestion>();
-                        Suggestion defaultSuggestion = new() { Kind = SuggestionKind.Search, Title = mainSearchBox.Text, Url = await WebViewNavigateUrlHelper.ToUrl(mainSearchBox.Text) };
+                        Suggestion defaultSuggestion = new() { Kind = SuggestionKind.Search, Title = mainSearchBox.Text, Url = await WebViewNavigateUrlHelper.ToWebView2Url(mainSearchBox.Text) };
                         list.Add(defaultSuggestion);
+
+                        var package = Clipboard.GetContent();
+                        if (package.Contains(StandardDataFormats.Text))
+                        {
+                            var clipboardText = await package.GetTextAsync();
+                            if (GetStringKind(clipboardText) == StringKind.Url)
+                            {
+                                Suggestion suggestion = new() { Kind = SuggestionKind.Url, Title = clipboardText, Url = await WebViewNavigateUrlHelper.ToWebView2Url(clipboardText) };
+                                list.Add(suggestion);
+                            }
+                        }
+
 
                         list = list.Concat(await Suggestions.Suggest(mainSearchBox.Text, 8)).ToList();
 
@@ -316,7 +334,7 @@ namespace Odyssey.Controls
 
                         suggestionListView.ItemsSource = list;
 
-                        suggestionListView.Visibility = list.Where(p => p != defaultSuggestion).ToList().Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+                        suggestionListView.Visibility = list.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                     }
                     catch { }
                 }
@@ -337,7 +355,6 @@ namespace Odyssey.Controls
             suggestionChosen = false;
         }
 
-
         private async void UpdateIcon(string text)
         {
             StringKind kind = await GetStringKindAsync(text);
@@ -354,7 +371,7 @@ namespace Odyssey.Controls
 
                 case StringKind.QuickActionCommand: searchBarIcon.Glyph = "\uE756"; break;
 
-                case StringKind.OdysseyUrl: searchBarIcon.Glyph = "\uE115"; break;
+                case StringKind.InternalUrl: searchBarIcon.Glyph = "\uE115"; break;
             }
 
         }
@@ -399,7 +416,13 @@ namespace Odyssey.Controls
         {
             args.TryCancel();
         }
+
+        private void mainSearchBox_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Shift)
+            {
+                newTab = startNewTab;
+            }
+        }
     }
 }
-
-

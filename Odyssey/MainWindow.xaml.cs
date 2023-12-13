@@ -3,12 +3,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
-using Odyssey.QuickActions.Data;
 using Odyssey.Views;
 using Odyssey.Views.Pages;
 using System;
 using System.IO;
-using Windows.Storage;
 using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -31,10 +29,8 @@ namespace Odyssey
             Init();
         }
 
-        private async void Init()
+        private void Init()
         {
-            
-
             ExtendsContentIntoTitleBar = true;
 
             MinWidth = MinHeight = 500;
@@ -57,7 +53,7 @@ namespace Odyssey
             // Make possible to access to MainWindow from anywhere
             Current = this;
 
-            
+
 
             AppWindow.Closing += AppWindow_Closing;
         }
@@ -66,7 +62,7 @@ namespace Odyssey
         public static bool ResetEngaged { get; set; } = false;
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
-            if(!ResetEngaged)
+            if (!ResetEngaged)
             {
                 args.Cancel = Settings.IsSingleInstanceEnabled;
                 Settings.SuccessfullyClosed = true;

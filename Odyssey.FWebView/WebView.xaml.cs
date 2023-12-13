@@ -80,11 +80,11 @@ namespace Odyssey.FWebView
             }
         }
 
-        
+
         // Ojects to know if the user finished scrolling for 2s
         private DispatcherTimer scrollTimer;
         private bool isScrolling = false;
-        
+
         public static WebView Create(string url = "about:blank", bool privateMode = false)
         {
             WebView newWebView = new();
@@ -139,7 +139,7 @@ namespace Odyssey.FWebView
             this.InitializeComponent();
         }
 
-        
+
         private void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
             if (!IsLittleWeb)
@@ -159,10 +159,10 @@ namespace Odyssey.FWebView
 
                 // Loading cycle
                 sender.CoreWebView2.NavigationStarting += (s, a) => { if (IsVisible) MainProgressBar.Value = 0; };
-                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/6f * 100f; };
-                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/3f * 100f; };
-                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/2f * 100f; };
-                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 7f/8f * 100f; };
+                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f / 6f * 100f; };
+                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f / 3f * 100f; };
+                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f / 2f * 100f; };
+                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 7f / 8f * 100f; };
                 sender.CoreWebView2.NavigationCompleted += async (s, a) => { if (IsVisible) { MainProgressBar.Value = 100; await Task.Delay(1000); MainProgressBar.Value = 0; } };
             }
 
@@ -173,7 +173,7 @@ namespace Odyssey.FWebView
 
             // Set the tracking level to strict
             sender.CoreWebView2.Profile.PreferredTrackingPreventionLevel = CoreWebView2TrackingPreventionLevel.Strict;
-     
+
             // May not work for now
             sender.CoreWebView2.Settings.IsPasswordAutosaveEnabled = true;
             sender.CoreWebView2.Settings.IsGeneralAutofillEnabled = true;
@@ -184,7 +184,7 @@ namespace Odyssey.FWebView
             // Show native tooltips instead of Edge ones (disabled for now)
             //WebViewNativeToolTips tips = new(this);
 
-            
+
 
             // Disable default keyboard accelerators keys to add custom find,... dialogs
             sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = Settings.AreExperimentalFeaturesEnabled;
@@ -243,13 +243,13 @@ namespace Odyssey.FWebView
             UpdateThemeWithColorChange();
         }
 
-        Color? lastPixel = null; 
+        Color? lastPixel = null;
         private async void UpdateThemeWithColorChange()
         {
-            while(true)
+            while (true)
             {
                 await Task.Delay(1500);
-                if(IsVisible)
+                if (IsVisible)
                 {
                     try
                     {
@@ -264,7 +264,7 @@ namespace Odyssey.FWebView
                         }
                     }
                     catch { }
-                    
+
                 }
             }
         }
@@ -272,10 +272,10 @@ namespace Odyssey.FWebView
         private void DevToolsProtocolEventReceived(CoreWebView2 sender, CoreWebView2DevToolsProtocolEventReceivedEventArgs args)
         {
             // memory access violation
-            
+
             string json = args.ParameterObjectAsJson;
             SecurityInformation = JsonConvert.DeserializeObject<SecurityInformation>(json);
-            
+
         }
 
         private void CoreWebView2_PermissionRequested(CoreWebView2 sender, CoreWebView2PermissionRequestedEventArgs args)
@@ -432,7 +432,7 @@ namespace Odyssey.FWebView
         {
             LinkedTab.Url = sender.Source;
 
-            if(IsVisible)
+            if (IsVisible)
             {
                 UrlTextBox.Text = sender.Source;
             }
@@ -447,7 +447,7 @@ namespace Odyssey.FWebView
                 args.Cancel = true;
                 AppUriLaunch.Launch(new Uri(args.Uri));
             }
-            else if (kind == StringKind.OdysseyUrl)
+            else if (kind == StringKind.InternalUrl)
             {
                 if (Regex.IsMatch(args.Uri, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
                 {
@@ -483,7 +483,7 @@ namespace Odyssey.FWebView
         private void CoreWebView2_DocumentTitleChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)
         {
             LinkedTab.Title = sender.DocumentTitle;
-            if(IsVisible)
+            if (IsVisible)
             {
                 DocumentTextBlock.Text = sender.DocumentTitle;
             }

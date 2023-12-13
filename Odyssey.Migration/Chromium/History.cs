@@ -3,15 +3,10 @@ using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Windows.Storage;
 
 namespace Odyssey.Migration.Chromium
 {
-    internal static class History
+    public static class History
     {
         public static List<HistoryItem> Get(string path)
         {
@@ -31,7 +26,7 @@ namespace Odyssey.Migration.Chromium
 
                 while (query.Read())
                 {
-
+                    // Simple filter save only 
                     if (query.GetString(1) != string.Empty && lastUrl != query.GetString(0) && query.GetString(2) != "1" && !(new Uri(lastUrl).Host == new Uri(query.GetString(0)).Host && lastTitle == query.GetString(1)))
                     {
                         HistoryItem historyItem = new HistoryItem();
