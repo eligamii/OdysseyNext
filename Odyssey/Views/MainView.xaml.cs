@@ -488,6 +488,26 @@ namespace Odyssey.Views
             SplitView.PaneBackground = item.IsChecked ? new SolidColorBrush(Colors.Transparent) : PaneAcrylicBrush;
             Settings.IsPaneLocked = item.IsChecked;
         }
+
+        private void wheelTabSwitchItems_PointerWheelChanged(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint(this);
+            int delta = pointer.Properties.MouseWheelDelta;
+            int indexShift = delta > 0 ? -1 : 1;
+
+            int index = PaneView.Current.TabsView.SelectedIndex;
+            int maxIndex = PaneView.Current.TabsView.Items.Count - 1;
+
+            if (index != -1)
+            {
+                int newIndex = index + indexShift;
+
+                if(newIndex >= 0 && newIndex <= maxIndex)
+                {
+                    PaneView.Current.TabsView.SelectedIndex = newIndex;
+                }
+            }
+        }
     }
 }
 

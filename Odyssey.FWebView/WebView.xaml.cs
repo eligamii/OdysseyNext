@@ -15,6 +15,7 @@ using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -99,13 +100,20 @@ namespace Odyssey.FWebView
         {
             get
             {
-                var parent = VisualTreeHelper.GetParent(this);
-                if (parent != null)
+                try
                 {
-                    parent = VisualTreeHelper.GetParent(parent);
-                    return parent.GetType() == typeof(Frame);
+                    var parent = VisualTreeHelper.GetParent(this);
+                    if (parent != null)
+                    {
+                        parent = VisualTreeHelper.GetParent(parent);
+                        return parent.GetType() == typeof(Frame);
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-                else
+                catch(COMException)
                 {
                     return false;
                 }
@@ -126,12 +134,19 @@ namespace Odyssey.FWebView
 
         private async Task<BitmapImage> GetFaviconAsBitmapImageAsync()
         {
-            // Getting the favicon from the webView
-            var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
-            BitmapImage bitmapImage = new();
-            await bitmapImage.SetSourceAsync(stream);
+            if(WebView2SavedFavicons.GetFaviconAsBitmapImage(this.Source.ToString(), out BitmapImage icon))
+            {
+                return icon;
+            }
+            else
+            {
+                // Getting the favicon from the webView
+                var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
+                BitmapImage bitmapImage = new();
+                await bitmapImage.SetSourceAsync(stream);
 
-            return bitmapImage;
+                return bitmapImage;
+            }
         }
 
         public WebView()

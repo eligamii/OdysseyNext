@@ -46,11 +46,18 @@ namespace Odyssey.FWebView.Helpers
 
 
             string p = settings.ToString(Newtonsoft.Json.Formatting.None);
-            string data = await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.captureScreenshot", p);
-            var deserializedData = JsonSerializer.Deserialize<DeserializerClass>(data);
+            if(webView.CoreWebView2 != null)
+            {
+                string data = await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.captureScreenshot", p);
+                var deserializedData = JsonSerializer.Deserialize<DeserializerClass>(data);
 
-            var bmp = Base64StringToBitmap(deserializedData.data);
-            return bmp;
+                var bmp = Base64StringToBitmap(deserializedData.data);
+                return bmp;
+            }
+            else
+            {
+                return null;
+            }
         }
 
 

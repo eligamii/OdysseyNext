@@ -21,8 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+      <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.0" />
       <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+      <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.7" />
       <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 

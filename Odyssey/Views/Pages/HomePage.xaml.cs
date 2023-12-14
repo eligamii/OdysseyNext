@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Odyssey.Data.Main;
 using Odyssey.FWebView;
 using Odyssey.Shared.ViewModels.Data;
@@ -31,8 +32,14 @@ namespace Odyssey.Views.Pages
             {
                 try
                 {
-                    tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
-
+                    if(FWebView.Helpers.WebView2SavedFavicons.GetFaviconAsBitmapImage(tab.Url, out BitmapImage image))
+                    {
+                        tab.ImageSource = image;
+                    }
+                    else
+                    {
+                        tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+                    }
                 }
                 catch { }
 

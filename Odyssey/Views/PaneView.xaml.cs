@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
@@ -54,10 +55,18 @@ namespace Odyssey.Views
                 {
                     if (tab.ImageSource == null && tab.Url != null)
                     {
-                        tab.ImageSource = new()
+                        try
                         {
-                            UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
-                        };
+                            if (FWebView.Helpers.WebView2SavedFavicons.GetFaviconAsBitmapImage(tab.Url, out BitmapImage image))
+                            {
+                                tab.ImageSource = image;
+                            }
+                            else
+                            {
+                                tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+                            }
+                        }
+                        catch { }
                     }
                 }
 
@@ -65,10 +74,18 @@ namespace Odyssey.Views
                 {
                     if (tab.ImageSource == null && tab.Url != null)
                     {
-                        tab.ImageSource = new()
+                        try
                         {
-                            UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
-                        };
+                            if (FWebView.Helpers.WebView2SavedFavicons.GetFaviconAsBitmapImage(tab.Url, out BitmapImage image))
+                            {
+                                tab.ImageSource = image;
+                            }
+                            else
+                            {
+                                tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+                            }
+                        }
+                        catch { }
                     }
                 }
             }

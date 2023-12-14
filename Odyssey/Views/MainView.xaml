@@ -108,7 +108,7 @@
 
                             <!-- Controls region -->
                             <StackPanel x:Name="buttonsStackPanel" Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button Content="&#xE80F;" Click="HomeButton_Click"/>
+                                <Button Content="&#xE80F;" Click="HomeButton_Click" PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"/>
                                 <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
                                 <Button Visibility="Visible" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right">
                                     <Button.Flyout>
@@ -203,8 +203,8 @@
                                     ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane,Filename=Main}"
                                     x:Name="showPaneButton"
                                     Visibility="Collapsed"
-        
-/>
+                                    PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"
+                                    />
                             <Grid.Transitions>
                                 <TransitionCollection>
                                     <RepositionThemeTransition />

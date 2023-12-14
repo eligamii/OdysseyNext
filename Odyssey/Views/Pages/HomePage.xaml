@@ -11,11 +11,6 @@
 
 
     <Grid>
-
-
-
-
-
         <ScrollViewer Margin="100,100,100,0" MaxWidth="600">
             <StackPanel>
                 <TextBox  VerticalAlignment="Top" IsSpellCheckEnabled="False" x:Name="searchBox" KeyDown="TextBox_KeyDown" CornerRadius="8" Height="60" BorderBrush="#33808080" BorderThickness="1" Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}" Width="559" PlaceholderText="{helpers:ResourceString Name=SearchOnWeb,Filename=Main}" LosingFocus="TextBox_LosingFocus" >
