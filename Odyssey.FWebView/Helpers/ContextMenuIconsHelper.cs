@@ -7,13 +7,10 @@ namespace Odyssey.Helpers
 {
     class ContextMenuIconsHelper
     {
-        // Set as much icons manually as possible (FontIcon) for better quality and to match with the actual fluent icons
-        // See the "redo" icon in Edge for example to see why
-        public static async void SetIcon(object newItem, CoreWebView2ContextMenuItem current)
+        public static void SetIcon(object newItem, CoreWebView2ContextMenuItem current)
         {
             FontIcon fontIcon = new FontIcon() { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons") };
             string glyph = "";
-            ImageIcon icon = null;
 
             switch (current.Name)
             {
@@ -92,34 +89,90 @@ namespace Odyssey.Helpers
                 case "selectAll":
                     glyph = "\uE14E";
                     break;
+            }
 
-                default:
-                    if(current.Icon != null)
-                    {
-                        BitmapImage image = new();
-                        await image.SetSourceAsync(current.Icon);
+            if(glyph != string.Empty)
+            {
+                fontIcon.Glyph = glyph;
 
-                        icon = new();
-                        icon.Source = image;
-                    }
-                    else
+                if (newItem != null)
+                {
+                    if (newItem.GetType() == typeof(AppBarButton) || newItem.GetType() == typeof(AppBarToggleButton))
                     {
-                        icon = null;
+                        ((AppBarButton)newItem).Icon = fontIcon;
                     }
+                    else if (newItem.GetType() != typeof(AppBarSeparator))
+                    {
+                        ((MenuFlyoutItem)newItem).Icon = fontIcon;
+                    }
+                }
+            }
+            else
+            {
+                SetIconById(newItem, current);
+            }
+        }
+
+        private static void SetIconById(object newItem, CoreWebView2ContextMenuItem current)
+        {
+            FontIcon fontIcon = new FontIcon() { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons") };
+            string glyph = "";
+
+            switch(current.CommandId)
+            {
+                case 50211: // Voice
+                    glyph = "\uE720";
                     break;
+
+                case 41005: // Spell check
+                    glyph = "\uF87B";
+                    break;
+
+                case 41120: // Writing direction
+                    glyph = "\uE8AB";
+                    break;
+
+                case 41000 or 41001 or 41002: // Spell check suggestions
+                    glyph = "\uE73E";
+                    break;
+
+                case 50123: // Copy video screen
+                    glyph = "\uEE71";
+                    break;
+
+                case 50124: // Open video in new tab
+                    glyph = "\uE8A7";
+                    break;
+
+                case 50125: // PiP
+                    glyph = "\uE8A7";
+                    break;
+
+                case 50131: // Media controls
+                    glyph = "\uE90F";
+                    break;
+
+                case 50130: // Repeat
+                    glyph = "\uE8EE";
+                    break;
+
             }
 
             fontIcon.Glyph = glyph;
 
-            if(newItem != null)
+            if (newItem != null)
             {
-                if (newItem.GetType() == typeof(AppBarButton) || newItem.GetType() == typeof(AppBarToggleButton))
+                if (newItem.GetType() == typeof(AppBarButton))
                 {
-                    ((AppBarButton)newItem).Icon = glyph == string.Empty ? icon : fontIcon;
+                    ((AppBarButton)newItem).Icon = fontIcon;
+                }
+                else if (newItem.GetType() == typeof(AppBarToggleButton))
+                {
+                    ((AppBarToggleButton)newItem).Icon = fontIcon;
                 }
                 else if (newItem.GetType() != typeof(AppBarSeparator))
                 {
-                    ((MenuFlyoutItem)newItem).Icon = glyph == string.Empty ? icon : fontIcon;
+                    ((MenuFlyoutItem)newItem).Icon = fontIcon;
                 }
             }
         }

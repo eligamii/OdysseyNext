@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Helpers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -31,9 +32,10 @@ namespace Odyssey.FWebView.Controls
             this.InitializeComponent();
         }
 
-
+        private WebView2 webView;
         public void Show(WebView2 webView, CoreWebView2ContextMenuRequestedEventArgs args)
         {
+            this.webView = webView;
             CoreWebView2 core = webView.CoreWebView2;
 
             IList<CoreWebView2ContextMenuItem> menuList = args.MenuItems;
@@ -61,7 +63,15 @@ namespace Odyssey.FWebView.Controls
                         ((AppBarSeparator)item).Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
                     }
                 }
+                else if(item.GetType() == typeof(AppBarButton))
+                {
+                    if(SecondaryCommands.Where(p => p.GetType() == typeof(AppBarButton)).Where(p => ((AppBarButton)p).Label == ((AppBarButton)item).Label).Count() >= 2)
+                    {
+                        ((AppBarButton)item).Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                    }
+                }
             }
+
 
             this.ShowAt(webView, options);
         }
@@ -118,6 +128,7 @@ namespace Odyssey.FWebView.Controls
             {
                 // The item that will be added
                 object newContextMenuItem = null;
+                Debug.WriteLine(webView2contextMenuItem.Label + " " + webView2contextMenuItem.CommandId);
 
                 switch (webView2contextMenuItem.Kind)
                 {
@@ -127,6 +138,7 @@ namespace Odyssey.FWebView.Controls
 
                     case CoreWebView2ContextMenuItemKind.CheckBox or CoreWebView2ContextMenuItemKind.Radio:
                         newContextMenuItem = new AppBarToggleButton();
+                        ((AppBarToggleButton)newContextMenuItem).IsEnabled = webView2contextMenuItem.IsEnabled;
                         ((AppBarToggleButton)newContextMenuItem).Label = webView2contextMenuItem.Label.Replace("&", "");
                         ((AppBarToggleButton)newContextMenuItem).KeyboardAcceleratorTextOverride = webView2contextMenuItem.ShortcutKeyDescription;
                         ((AppBarToggleButton)newContextMenuItem).IsChecked = webView2contextMenuItem.IsChecked;
@@ -138,6 +150,7 @@ namespace Odyssey.FWebView.Controls
 
                     case CoreWebView2ContextMenuItemKind.Submenu:
                         newContextMenuItem = new AppBarButton();
+                        ((AppBarButton)newContextMenuItem).IsEnabled = webView2contextMenuItem.IsEnabled;
                         ((AppBarButton)newContextMenuItem).Label = webView2contextMenuItem.Label.Replace("&", "");
                         ((AppBarButton)newContextMenuItem).KeyboardAcceleratorTextOverride = webView2contextMenuItem.ShortcutKeyDescription;
                         var flyout = new MenuFlyout();
@@ -147,12 +160,11 @@ namespace Odyssey.FWebView.Controls
                         }
 
                         ((AppBarButton)newContextMenuItem).Flyout = flyout;
-                        
-
                         break;
 
                     default:
                         newContextMenuItem = new AppBarButton();
+                        ((AppBarButton)newContextMenuItem).IsEnabled = webView2contextMenuItem.IsEnabled;
                         ((AppBarButton)newContextMenuItem).Label = webView2contextMenuItem.Label.Replace("&", "");
                         ((AppBarButton)newContextMenuItem).KeyboardAcceleratorTextOverride = webView2contextMenuItem.ShortcutKeyDescription;
                         ((AppBarButton)newContextMenuItem).Click += (s, ex) =>
@@ -168,8 +180,20 @@ namespace Odyssey.FWebView.Controls
 
                 if (primaryList.Contains(webView2contextMenuItem.Name))
                 {
-                    this.PrimaryCommands.Add((ICommandBarElement)newContextMenuItem);
-                    ((AppBarButton)newContextMenuItem).Click += (s, a) => this.Hide();
+                    if (((AppBarButton)newContextMenuItem).IsEnabled && webView2contextMenuItem.Label != string.Empty)
+                    {
+                        // Fix the forward button with a test
+                        if(webView.CanGoForward && webView2contextMenuItem.Name == "forward")
+                        {
+                            this.PrimaryCommands.Add((ICommandBarElement)newContextMenuItem);
+                            ((AppBarButton)newContextMenuItem).Click += (s, a) => this.Hide();
+                        }
+                        else if(webView2contextMenuItem.Name != "forward")
+                        {
+                            this.PrimaryCommands.Add((ICommandBarElement)newContextMenuItem);
+                            ((AppBarButton)newContextMenuItem).Click += (s, a) => this.Hide();
+                        }
+                    }
                 }
                 else
                 {
