@@ -1,5 +1,4 @@
-﻿using Odyssey.FWebView;
-using Odyssey.QuickActions.Objects;
+﻿using Odyssey.QuickActions.Objects;
 using System;
 using System.Linq;
 
@@ -30,7 +29,7 @@ namespace Odyssey.QuickActions.Commands
         private static async void NavigateTo(string str)
         {
             string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(str);
-            WebView.SelectedWebView.CoreWebView2.Navigate(url);
+            Variables.SelectedWebView.CoreWebView2.Navigate(url);
         }
     }
 }

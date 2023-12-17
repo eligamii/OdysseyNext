@@ -2,9 +2,11 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Helpers;
+using Odyssey.Shared.Helpers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Windows.ApplicationModel.VoiceCommands;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -35,6 +37,7 @@ namespace Odyssey.FWebView.Controls
         private WebView2 webView;
         public void Show(WebView2 webView, CoreWebView2ContextMenuRequestedEventArgs args)
         {
+
             this.webView = webView;
             CoreWebView2 core = webView.CoreWebView2;
 
@@ -44,6 +47,7 @@ namespace Odyssey.FWebView.Controls
 
             this.Closed += (s, ex) => deferral.Complete();
             PopulateContextMenu(args);
+            PopulateWithQuickActions(args);
             
             var options = new FlyoutShowOptions() { Position = args.Location, Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft };
             this.AlwaysExpanded = true;
@@ -72,11 +76,41 @@ namespace Odyssey.FWebView.Controls
                 }
             }
 
-
             this.ShowAt(webView, options);
+
         }
 
         
+
+        private void PopulateWithQuickActions(CoreWebView2ContextMenuRequestedEventArgs args)
+        {
+            foreach(var item in Data.Main.QuickActions.Items)
+            {
+                if(item.CondiditonsAreMet(args))
+                {
+                    AppBarButton button = new();
+                    button.Label = item.Label;
+                    button.Icon = new SymbolIconEx(item.Icon);
+                    button.Click += async (s, a) => await QuickActions.QACommands.Execute(item.Command);
+
+                    switch(item.ShowOptions.Position)
+                    {
+                        case Shared.Enums.QuickActionShowPosition.PrimaryItems:
+                            PrimaryCommands.Insert(0, button);
+                            break;
+
+                        case Shared.Enums.QuickActionShowPosition.Top:
+                            SecondaryCommands.Insert(0, button);
+                            break;
+
+                        case Shared.Enums.QuickActionShowPosition.BeforeInspectItem:
+                            SecondaryCommands.Insert(SecondaryCommands.Count - 2, button);
+                            break;
+                    }
+                }
+            }
+        }
+
 
         private List<MenuFlyoutItemBase> PopulateSubContextMenus(CoreWebView2ContextMenuRequestedEventArgs args, CoreWebView2ContextMenuItem current, object parent)
         {

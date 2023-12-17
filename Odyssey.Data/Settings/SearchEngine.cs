@@ -7,6 +7,7 @@
         public string Prefix { get; private set; }
         public string SearchUrl { get { return Url + Prefix; } }
 
+
         public static SearchEngine ToSearchEngineObject(SearchEngines? searchEngineEnum)
         {
             switch (searchEngineEnum)

@@ -1,17 +1,17 @@
-﻿using Odyssey.FWebView;
-using Odyssey.QuickActions.Objects;
+﻿using Odyssey.QuickActions.Objects;
 
 namespace Odyssey.QuickActions.Commands
 {
+    
     internal class Back
     {
         internal static Res Exec(string[] options)
         {
-            if (WebView.SelectedWebView != null)
+            if (Variables.SelectedWebView != null)
             {
-                if (WebView.SelectedWebView.CanGoBack)
+                if (Variables.SelectedWebView.CanGoBack)
                 {
-                    WebView.SelectedWebView.GoBack();
+                    Variables.SelectedWebView.GoBack();
                     return new Res(true);
                 }
 

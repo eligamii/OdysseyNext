@@ -508,6 +508,14 @@ namespace Odyssey.Views
                 }
             }
         }
+
+        private async void QuickActionsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            QuickActionsContentDialog contentDialog = new();
+            contentDialog.XamlRoot = this.Content.XamlRoot;
+
+            await contentDialog.ShowAsync();
+        }
     }
 }
 

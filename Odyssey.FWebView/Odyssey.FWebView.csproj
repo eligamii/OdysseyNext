@@ -33,6 +33,7 @@
    
     <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
+    <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
     <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
   </ItemGroup>

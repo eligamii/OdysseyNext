@@ -1,6 +1,7 @@
-﻿using Microsoft.Web.WebView2.Core;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
-using Odyssey.FWebView;
+using Odyssey.QuickActions.Commands;
 using Odyssey.QuickActions.Data;
 using System.Collections.Generic;
 
@@ -56,11 +57,28 @@ namespace Odyssey.QuickActions
         //************* WebView **************
 
         // The right-clicked webview weblink (if one)
-        private static string CurrentUrl
+        public static string CurrentUrl
         {
             get
             {
-                return WebView.SelectedWebView?.Source.ToString();
+                try
+                {
+                    return (QACommands.Frame.Content as WebView2).Source.ToString();
+                }
+                catch { return null; }
+            }
+        }
+
+        public static WebView2 SelectedWebView
+        {
+            get
+            {
+                try
+                {
+                    return QACommands.Frame.Content as WebView2;
+                }
+                catch { return null; }
+
             }
         }
 

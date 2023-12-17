@@ -493,6 +493,8 @@ namespace Odyssey.FWebView
 
             FWebViewContextMenu fWebViewContextMenu = new();
             fWebViewContextMenu.Show(this, args);
+
+            QuickActions.Variables.ContextMenuArgs = args;
         }
 
         private void CoreWebView2_DocumentTitleChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)

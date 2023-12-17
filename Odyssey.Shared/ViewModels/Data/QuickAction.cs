@@ -1,18 +1,18 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using Odyssey.Shared.Enums;
+using Odyssey.Shared.Helpers;
 
 namespace Odyssey.Shared.ViewModels.Data
 {
     public class QuickAction
     {
         public string Label { get; set; }
-        public int Icon { get; set; }
+        public SymbolEx Icon { get; set; }
         public string Command { get; set; }
         public QuickActionItemShowOptions ShowOptions { get; set; }
 
 
-
-        private bool CondiditonsAreMet(CoreWebView2ContextMenuRequestedEventArgs args)
+        public bool CondiditonsAreMet(CoreWebView2ContextMenuRequestedEventArgs args)
         {
             switch (ShowOptions.ShowCondition)
             {

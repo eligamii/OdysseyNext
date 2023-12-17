@@ -23,8 +23,8 @@
 
     public enum QuickActionShowPosition
     {
+        PrimaryItems,
         Top,
-        InShowMoreOptions,
         BeforeInspectItem
     }
 

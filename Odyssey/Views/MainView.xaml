@@ -161,9 +161,14 @@
                                             <ToggleMenuFlyoutItem Text="Url bar" IsChecked="False" Click="UrlBarToggleMenuFlyoutItem_Click" Loaded="UrlBarToggleMenuFlyoutItem_Loaded">
                                                 
                                             </ToggleMenuFlyoutItem>
+                                            
                                             <ToggleMenuFlyoutItem Text="Lock pane" IsChecked="False" Click="LockPaneToggleMenuFlyoutItem_Click" Loaded="LockPaneToggleMenuFlyoutItem_Loaded">
 
                                             </ToggleMenuFlyoutItem>
+
+                                            <MenuFlyoutItem Text="Quick actions" Click="QuickActionsMenuFlyoutItem_Click">
+
+                                            </MenuFlyoutItem>
                                         </MenuFlyout>
                                     </Button.Flyout>
                                 </Button>

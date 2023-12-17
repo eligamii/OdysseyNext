@@ -35,7 +35,7 @@ namespace Odyssey.QuickActions
             }
         }
 
-        public static async Task<string> ExecuteSubCommands(string command)
+        private static async Task<string> ExecuteSubCommands(string command)
         {
             Regex subCommandPresentRegex = new("(?<!\\\\)(\\[|\\])");
             Regex subCommandsSeparator = new("(?<=\\[)[^\\]\\[]*(?=\\])");
@@ -53,7 +53,7 @@ namespace Odyssey.QuickActions
             return command;
         }
 
-        public static string ResolveTests(string command)
+        private static string ResolveTests(string command)
         {
             Regex testPresentRegex = new("(?<!\\\\)(\\(|\\))");
             Regex testSeparator = new("(?<=\\()[^\\)\\(]*(?=\\))");

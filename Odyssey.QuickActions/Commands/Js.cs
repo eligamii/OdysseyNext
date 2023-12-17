@@ -1,5 +1,4 @@
 ﻿using Monaco.Helpers;
-using Odyssey.FWebView;
 using Odyssey.QuickActions.Objects;
 using System;
 using System.Threading.Tasks;
@@ -10,12 +9,12 @@ namespace Odyssey.QuickActions.Commands
     {
         internal static async Task<Res> Exec(string[] options)
         {
-            if (WebView.SelectedWebView != null)
+            if (Variables.SelectedWebView != null)
             {
                 string js = string.Empty;
                 foreach (var option in options) js += option + " ";
 
-                string res = await WebView.SelectedWebView.ExecuteScriptAsync(js);
+                string res = await Variables.SelectedWebView.ExecuteScriptAsync(js);
                 res = JavascriptHelpers.ToCSharpString(res);
 
                 return new Res(true, res);
