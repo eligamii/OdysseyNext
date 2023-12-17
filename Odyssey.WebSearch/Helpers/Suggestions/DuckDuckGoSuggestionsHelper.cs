@@ -18,6 +18,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
 
 
         private static HttpClient client = new HttpClient();
+
         public async static Task<List<Suggestion>> GetFromDuckDuckGoSuggestions(string query)
         {
             if (!suggestions.Any(p => p.Query == query))

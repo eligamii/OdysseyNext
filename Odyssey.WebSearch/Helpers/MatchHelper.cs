@@ -1,4 +1,8 @@
-﻿namespace Odyssey.WebSearch.Helpers
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Odyssey.WebSearch.Helpers
 {
     internal static class MatchHelper
     {
@@ -11,35 +15,69 @@
         /// <returns></returns>
         public static MatchValue IsMatch(string str1, string str2, float tolerability)
         {
-            if (str2 != null)
+            if (!string.IsNullOrWhiteSpace(str1) && !string.IsNullOrEmpty(str2))
             {
-                float length = str1.Length;
-                float matches = 0;
-                float t = tolerability;
+                
 
-                for (int i = 0; i < length && i < str2.Length; i++)
+                string longestString = str1.Length > str2.Length ? str1 : str2;
+                string shortestString = str1.Length > str2.Length ? str2 : str1;
+
+                longestString = new(longestString.ToASCII().Where(p => p.ToString() != " ").ToArray());
+                shortestString = new(shortestString.ToASCII().Where(p => p.ToString() != " ").ToArray());
+
+                char firstShortestStringChar = shortestString[0];
+                List<int> indexes = new();
+
+                for(int i = longestString.IndexOf(firstShortestStringChar); i != -1; i = longestString.IndexOf(firstShortestStringChar, i + 1))
                 {
-                    char str1char = str1[i].ToString().ToLower().ToCharArray()[0];
-                    char str2char = str2[i].ToString().ToLower().ToCharArray()[0];
-
-                    if (str1char == str2char) { matches++; }
+                    indexes.Add(i);
                 }
 
-                float f = 0;
+                
 
-                if (matches > 0)
-                    f = matches / length;
-                bool b = f >= t;
+                foreach(int index in indexes)
+                {
+                    int matches = 0;
+                    int tests = 0;
 
-                var value = new MatchValue() { Success = b, Value = f };
+                    for (int i = 0; i + index <= longestString.Length - 1 && i <= shortestString.Length - 1; i++)
+                    {
+                        tests++;
+                        int longIndex = i + index;
 
-                return value;
+                        if (longestString[longIndex] == shortestString[i]) 
+                            matches++;
+                    }
+
+                    float successPercentage = matches / tests;
+
+                    bool success = successPercentage >= tolerability;
+
+                    if(success) 
+                        return new MatchValue() { Success = success, SuccessRate = successPercentage };
+                }
             }
-            else
-            {
-                return new MatchValue() { Success = false };
-            }
+
+            return new MatchValue() { Success = false };
         }
+
+        private static string ToASCII(this string input) // WIP
+        {
+            Encoding encoding;
+            string str = input;
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            encoding = Encoding.GetEncoding(1250);
+            str = encoding.GetString(encoding.GetBytes(str));
+            encoding = Encoding.GetEncoding(1252);
+            str = encoding.GetString(encoding.GetBytes(str));
+            encoding = Encoding.ASCII;
+            str = encoding.GetString(encoding.GetBytes(str));
+
+            return str;
+        }
+
 
         public class MatchValue
         {
@@ -48,9 +86,9 @@
             /// </summary>
             public bool Success { get; set; }
             /// <summary>
-            /// The persentage of characters that matches (0 to 1)
+            /// The percentage of characters that matches (0 to 1)
             /// </summary>
-            public float Value { get; set; }
+            public float SuccessRate { get; set; }
         }
     }
 }

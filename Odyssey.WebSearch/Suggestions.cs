@@ -3,6 +3,7 @@ using Odyssey.WebSearch.Helpers;
 using Odyssey.WebSearch.Helpers.Suggestions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Odyssey.WebSearch
@@ -23,9 +24,11 @@ namespace Odyssey.WebSearch
 
             suggestions = suggestions.Concat(TabsSuggestionsHelper.SearchForMatchingTabs(query)).ToList();
 
-            var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
-
-            suggestions = suggestions.Concat(ddgSuggestions).ToList();
+            try
+            {
+               // var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
+                //suggestions = suggestions.Concat(ddgSuggestions).ToList();
+            } catch (HttpRequestException) { }
 
             return suggestions.Take(maxSuggestions).ToList();
         }
