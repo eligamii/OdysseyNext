@@ -45,10 +45,10 @@ namespace Odyssey.Dialogs
         private void EnableSave()
         {
             saveButton.IsEnabled = !string.IsNullOrWhiteSpace(labelTextBox.Text) &&
-                                   !string.IsNullOrWhiteSpace(iconBox.SelectedItem.ToString()) &&
+                                   !string.IsNullOrWhiteSpace(iconBox.SelectedItem?.ToString()) &&
                                    !string.IsNullOrWhiteSpace(enableOnWhatWebsiteTextBox.Text) &&
-                                   !string.IsNullOrWhiteSpace(showWhenBox.SelectedItem.ToString()) &&
-                                   !string.IsNullOrWhiteSpace(positionBox.SelectedItem.ToString()) &&
+                                   !string.IsNullOrWhiteSpace(showWhenBox.SelectedItem?.ToString()) &&
+                                   !string.IsNullOrWhiteSpace(positionBox.SelectedItem?.ToString()) &&
                                    !string.IsNullOrWhiteSpace(commandTextBox.Text);
         }
 

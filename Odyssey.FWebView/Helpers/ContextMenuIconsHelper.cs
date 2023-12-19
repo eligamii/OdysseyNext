@@ -160,6 +160,10 @@ namespace Odyssey.Helpers
                     glyph = "\uE16F";
                     break;
 
+                case 50116: // Load image (when images fail to load)
+                    glyph = "\uE72C";
+                    break;
+
             }
 
             fontIcon.Glyph = glyph;
