@@ -156,6 +156,10 @@ namespace Odyssey.Helpers
                     glyph = "\uE8EE";
                     break;
 
+                case 50148: // Copy highlighted
+                    glyph = "\uE16F";
+                    break;
+
             }
 
             fontIcon.Glyph = glyph;

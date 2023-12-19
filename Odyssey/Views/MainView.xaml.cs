@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Newtonsoft.Json.Linq;
 using Odyssey.Classes;
 using Odyssey.Controls;
 using Odyssey.Data.Main;
@@ -398,30 +399,28 @@ namespace Odyssey.Views
         TextBlock measureTextBlock = new();
         private async void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            string text = CurrentlySelectedWebView?.CoreWebView2?.DocumentTitle;
-            documentTitle.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            try
+            if(CurrentlySelectedWebView != null)
             {
-                if (documentTitle.DesiredSize.Width >= this.ActualWidth - 300)
+                if (CurrentlySelectedWebView.CoreWebView2?.DocumentTitle != null)
                 {
-                    int lastLetter = (int)((this.ActualWidth - 300) / 15);
-                    documentTitle.Text = text.Remove(lastLetter) + "...";
-                }
-                else
-                {
-                    measureTextBlock.Text = text;
-                    measureTextBlock?.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
-
-                    await Task.Delay(10);
-
-                    if (documentTitle.DesiredSize.Width < this.ActualWidth - 500)
+                    try
                     {
-                        documentTitle.Text = text;
+                        var rect = documentTitle.ContentEnd.GetCharacterRect(Microsoft.UI.Xaml.Documents.LogicalDirection.Backward);
+                        string doc = CurrentlySelectedWebView.CoreWebView2.DocumentTitle;
+
+                        documentTitle.Text = doc;
+
+                        while (rect.Right > (double)this.ActualWidth - 400d)
+                        {
+                            if (documentTitle.Text.EndsWith("...")) documentTitle.Text = documentTitle.Text.Remove(documentTitle.Text.Length - 3, 3);
+                            documentTitle.Text = documentTitle.Text.Remove(documentTitle.Text.Length - 1, 1) + "...";
+                            rect = documentTitle.ContentEnd.GetCharacterRect(Microsoft.UI.Xaml.Documents.LogicalDirection.Backward);
+                        }
                     }
+                    catch { }
                 }
             }
-            catch { }
         }
 
         private void UrlBarToggleMenuFlyoutItem_Click(object sender, RoutedEventArgs e)

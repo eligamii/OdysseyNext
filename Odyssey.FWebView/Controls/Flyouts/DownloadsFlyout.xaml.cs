@@ -44,7 +44,7 @@ namespace Odyssey.FWebView.Controls.Flyouts
                         {
                             try
                             {
-                                var file = await StorageFile.GetFileFromPathAsync(s.OutputPath);
+                                var file = await StorageFile.GetFileFromPathAsync(s.OutputFile.FullName);
                                 var icon = await Shared.Helpers.FileIconHelper.GetFileIconAsync(file);
                                 BitmapImage bitmap = new();
                                 await bitmap.SetSourceAsync(icon);
