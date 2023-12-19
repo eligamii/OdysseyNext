@@ -92,6 +92,20 @@ namespace Odyssey.FWebView.Controls
                     button.Label = item.Label;
                     button.Icon = new SymbolIconEx(item.Icon);
                     button.Click += async (s, a) => await QuickActions.QACommands.Execute(item.Command);
+                    button.RightTapped += (s, a) => 
+                    {
+                        MenuFlyout flyout = new();
+                        MenuFlyoutItem fitem = new() { Text = "Remove" };
+                        fitem.Click += (s, a) =>
+                        {
+                            button.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                            Data.Main.QuickActions.Items.Remove(item);
+                        };
+
+                        flyout.Items.Add(fitem);
+
+                        flyout.ShowAt(button);
+                    };
 
                     switch(item.ShowOptions.Position)
                     {

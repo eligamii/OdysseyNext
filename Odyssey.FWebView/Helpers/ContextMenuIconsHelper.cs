@@ -113,6 +113,7 @@ namespace Odyssey.Helpers
             }
         }
 
+        // For the icons without name (wip and not tested on other devices, ids may change in the future)
         private static void SetIconById(object newItem, CoreWebView2ContextMenuItem current)
         {
             FontIcon fontIcon = new FontIcon() { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons") };
