@@ -125,11 +125,12 @@ namespace Odyssey.QuickActions
                 case "test": return Test.Exec(options); // only for testing purposes, to remove in stable releases
                 case "js": return await Js.Exec(options); // execute js scripts
                 case "navigate": return Navigate.Exec(options); // navigate to an url
-                case "ui": return Ui.Exec(options); // Create a control visible and usable by the user
+                case "ui": return Ui.Exec(options); // create a control visible and usable by the user
                 case "back": return Back.Exec(options); // go back
                 case "forward": return Forward.Exec(options); // go forward
                 case "refresh": return Refresh.Exec(options); // refresh the webview, wip
                 case "webview": return Webview.Exec(options); // webview tools, like devtools, task manager, etc, wip
+                case "kdesend": return await Kde_send.Exec(options); // share a file or a link to another device, wip
 
                 default: return new Res(false, null, "Command not found");
             }

@@ -158,15 +158,15 @@
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
-                                            <ToggleMenuFlyoutItem Text="Url bar" IsChecked="False" Click="UrlBarToggleMenuFlyoutItem_Click" Loaded="UrlBarToggleMenuFlyoutItem_Loaded">
+                                            <ToggleMenuFlyoutItem Text="{helpers:ResourceString Name=UrlBar,Filename=ContextMenus}" IsChecked="False" Click="UrlBarToggleMenuFlyoutItem_Click" Loaded="UrlBarToggleMenuFlyoutItem_Loaded">
                                                 
                                             </ToggleMenuFlyoutItem>
                                             
-                                            <ToggleMenuFlyoutItem Text="Lock pane" IsChecked="False" Click="LockPaneToggleMenuFlyoutItem_Click" Loaded="LockPaneToggleMenuFlyoutItem_Loaded">
+                                            <ToggleMenuFlyoutItem Text="{helpers:ResourceString Name=LockPane,Filename=ContextMenus}" IsChecked="False" Click="LockPaneToggleMenuFlyoutItem_Click" Loaded="LockPaneToggleMenuFlyoutItem_Loaded">
 
                                             </ToggleMenuFlyoutItem>
 
-                                            <MenuFlyoutItem Text="Quick actions" Click="QuickActionsMenuFlyoutItem_Click">
+                                            <MenuFlyoutItem Text="{helpers:ResourceString Name=QuickActions,Filename=ContextMenus}" Click="QuickActionsMenuFlyoutItem_Click">
 
                                             </MenuFlyoutItem>
                                         </MenuFlyout>

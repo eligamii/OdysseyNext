@@ -44,11 +44,12 @@ namespace Odyssey.FWebView.Controls.Flyouts
                         {
                             try
                             {
-                                var file = await StorageFile.GetFileFromPathAsync(s.OutputFile.FullName);
+                                /*
+                                var file = await StorageFile.GetFileFromPathAsync(s.OutputPath.FullName);
                                 var icon = await Shared.Helpers.FileIconHelper.GetFileIconAsync(file);
                                 BitmapImage bitmap = new();
                                 await bitmap.SetSourceAsync(icon);
-                                item.ImageSource = bitmap;
+                                item.ImageSource = bitmap;*/
                             }
                             catch { }
                         }

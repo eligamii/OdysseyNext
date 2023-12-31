@@ -65,7 +65,7 @@ namespace Odyssey.QuickActions
                 {
                     return (QACommands.Frame.Content as WebView2).Source.ToString();
                 }
-                catch { return null; }
+                catch { return string.Empty; }
             }
         }
 

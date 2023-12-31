@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Odyssey.QuickActions.Helpers
 {
     public class TestHelper
     {
+        private readonly char[] operators = ['<', '>', '!'];
         public static string Test(string test)
         {
             string[] members = test.Split('=');
@@ -20,7 +23,6 @@ namespace Odyssey.QuickActions.Helpers
             switch (rawLeft.Last())
             {
                 case '!': negate = true; break;
-                case '=': negate = false; break;
                 case '<': greater = false; break;
                 case '>': greater = true; break;
             }
@@ -46,5 +48,7 @@ namespace Odyssey.QuickActions.Helpers
                 return (negate == false && left == right).ToString().ToLower();
             }
         }
+
+        
     }
 }

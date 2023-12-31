@@ -38,67 +38,70 @@ namespace Odyssey.FWebView.Helpers
         /// </summary>
         public static async void Init()
         {
-            // Favicons database
-            string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "EBWebView", "Default", "Favicons");
-
-            using (SqliteConnection connection = new SqliteConnection($"Filename={path}"))
+            try
             {
-                connection.Open();
+                // Favicons database
+                string path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "EBWebView", "Default", "Favicons");
 
-                SqliteCommand command = new SqliteCommand("SELECT page_url, icon_id FROM icon_mapping", connection);
-                SqliteDataReader query = command.ExecuteReader();
-
-                while(query.Read())
+                using (SqliteConnection connection = new SqliteConnection($"Filename={path}"))
                 {
-                    string url = query.GetString(0);
-                    int id = query.GetInt32(1);
+                    connection.Open();
 
-                    if(iconMaps.Any(p => p.IconId == id))
+                    SqliteCommand command = new SqliteCommand("SELECT page_url, icon_id FROM icon_mapping", connection);
+                    SqliteDataReader query = command.ExecuteReader();
+
+                    while (query.Read())
                     {
-                        iconMaps.Where(p => p.IconId == id).FirstOrDefault().Urls.Add(url);
-                    }
-                    else
-                    {
-                        IconMap iconMap = new()
+                        string url = query.GetString(0);
+                        int id = query.GetInt32(1);
+
+                        if (iconMaps.Any(p => p.IconId == id))
                         {
-                            IconId = id,
-                            Urls = new List<string> { url }
-                        };
+                            iconMaps.Where(p => p.IconId == id).FirstOrDefault().Urls.Add(url);
+                        }
+                        else
+                        {
+                            IconMap iconMap = new()
+                            {
+                                IconId = id,
+                                Urls = new List<string> { url }
+                            };
 
-                        iconMaps.Add(iconMap);
+                            iconMaps.Add(iconMap);
+                        }
+                    }
+
+
+
+
+                    command = new SqliteCommand("SELECT image_data, icon_id, width FROM favicon_bitmaps", connection);
+                    query = command.ExecuteReader();
+
+                    while (query.Read())
+                    {
+                        int id = query.GetInt32(1);
+                        var bytes = (byte[])query[0];
+                        int quality = query.GetInt32(2);
+
+                        InMemoryRandomAccessStream randomAccessStream = new InMemoryRandomAccessStream();
+                        await randomAccessStream.WriteAsync(bytes.AsBuffer());
+                        randomAccessStream.Seek(0);
+
+                        Icon icon = new();
+                        icon.IconId = id;
+                        icon.Quality = quality;
+
+                        BitmapImage image = new();
+                        await image.SetSourceAsync(randomAccessStream);
+
+                        icon.Image = image;
+
+                        icons.Add(icon);
+
+
                     }
                 }
-
-
-
-
-                command = new SqliteCommand("SELECT image_data, icon_id, width FROM favicon_bitmaps", connection);
-                query = command.ExecuteReader();
-
-                while(query.Read())
-                {
-                    int id = query.GetInt32(1);
-                    var bytes = (byte[])query[0];
-                    int quality = query.GetInt32(2);
-
-                    InMemoryRandomAccessStream randomAccessStream = new InMemoryRandomAccessStream();
-                    await randomAccessStream.WriteAsync(bytes.AsBuffer());
-                    randomAccessStream.Seek(0);
-
-                    Icon icon = new();
-                    icon.IconId = id;
-                    icon.Quality = quality;
-
-                    BitmapImage image = new();
-                    await image.SetSourceAsync(randomAccessStream);
-
-                    icon.Image = image;
-
-                    icons.Add(icon);
-
-
-                }
-            }
+            } catch { }
         }
 
         private static int GetIdFromUrl(string url)

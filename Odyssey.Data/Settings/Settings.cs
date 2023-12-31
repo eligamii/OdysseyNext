@@ -9,7 +9,8 @@ namespace Odyssey.Data.Settings
         public static void Init()
         {
             // Set default settings configuration
-            // Individually test if each setting has a key to make adding settings without crash possible
+            // Individually test if each setting has a key to avoid crashes when programmatically adding settings key to the project
+
             // Internal
             if (!Values.Values.ContainsKey("FirstLaunch")) FirstLaunch = true;
             if (!Values.Values.ContainsKey("Inititalized")) Inititalized = true;
@@ -41,16 +42,25 @@ namespace Odyssey.Data.Settings
 
             // Ad blocker
             if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
-            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0; // Experimental (adblock ro regex adblocker)
-            if (!Values.Values.ContainsKey("IsEasylistFilterListEnabled")) IsEasylistFilterListEnabled = false;
-            if (!Values.Values.ContainsKey("IsEasyprivacyFilterListEnabled")) IsEasyprivacyFilterListEnabled = false;
-            if (!Values.Values.ContainsKey("IsSpam404FilterListEnabled")) IsSpam404FilterListEnabled = false;
+            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0; // Experimental (adblock to regex adblocker)
+            if (!Values.Values.ContainsKey("IsEasylistFilterListEnabled")) IsEasylistFilterListEnabled = true;
+            if (!Values.Values.ContainsKey("IsEasyprivacyFilterListEnabled")) IsEasyprivacyFilterListEnabled = true;
+            if (!Values.Values.ContainsKey("IsSpam404FilterListEnabled")) IsSpam404FilterListEnabled = true;
+
+            // Search engine
+            if (!Values.Values.ContainsKey("SelectedSearchEngine")) SelectedSearchEngine = (int)SearchEngines.Startpage;
         }
 
         public static bool? Inititalized
         {
             get { return (bool?)Values.Values["Inititalized"]; }
             set { Values.Values["Inititalized"] = value; }
+        }
+
+        public static string KDEDefaultDevice
+        {
+            get { return (string)Values.Values["KDEDefaultDevice"]; }
+            set { Values.Values["KDEDefaultDevice"] = value; }
         }
 
         public static bool DisplayQACommandErrors
