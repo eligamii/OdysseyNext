@@ -195,4 +195,7 @@
   <data name="UrlBar" xml:space="preserve">
     <value>Afficher la barre d'adresse</value>
   </data>
+  <data name="LockPane" xml:space="preserve">
+    <value>Verrouiller le paanneau principal</value>
+  </data>
 </root>

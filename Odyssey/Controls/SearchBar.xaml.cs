@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView;
@@ -15,6 +16,8 @@ using Odyssey.WebSearch;
 using Odyssey.WebSearch.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -35,6 +38,8 @@ namespace Odyssey.Controls
         private bool startNewTab;
         private string command;
 
+        private static FontFamily cascadiaCode; 
+
         public SearchBar(bool newTab = false)
         {
             this.InitializeComponent();
@@ -44,9 +49,19 @@ namespace Odyssey.Controls
             searchBarIcon.Glyph = mainIcon;
 
             Opened += SearchBar_Opened;
+
+            if(cascadiaCode == null) // Load the Cascadia Code font for QACommand typing
+            {
+                var cascadiaCodeFilePath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Assets", "CascadiaCode.ttf");
+
+                PrivateFontCollection collection = new PrivateFontCollection();
+                collection.AddFontFile(cascadiaCodeFilePath);
+                cascadiaCode = new FontFamily("Cascadia Code Regular");
+    
+            }
         }
 
-        // For the <ask> static variable
+        // For the <ask> QACommand variable
         public async Task<string> GetText()
         {
             FlyoutShowOptions options = new FlyoutShowOptions();
@@ -358,6 +373,7 @@ namespace Odyssey.Controls
         private async void UpdateIcon(string text)
         {
             StringKind kind = await GetStringKindAsync(text);
+            bool enableCode = false;
 
             switch (kind)
             {
@@ -369,11 +385,47 @@ namespace Odyssey.Controls
 
                 case StringKind.ExternalAppUri: searchBarIcon.Glyph = "\uECAA"; break;
 
-                case StringKind.QuickActionCommand: searchBarIcon.Glyph = "\uE756"; break;
+                case StringKind.QuickActionCommand: searchBarIcon.Glyph = "\uE756"; enableCode = true; break;
 
                 case StringKind.InternalUrl: searchBarIcon.Glyph = "\uE115"; break;
             }
 
+            EnableCodeMode(enableCode);
+
+        }
+
+        private void EnableCodeMode(bool enable)
+        {
+            if(enable)
+            {
+                mainSearchBox.FontFamily = new("Consolas");
+
+                mainSearchBox.TextChanging += MainSearchBoxInCodeMode_TextChanging;
+                mainSearchBox.TextChanged += MainSearchBoxInCodeMode_TextChanged;
+            }
+            else
+            {
+                mainSearchBox.FontFamily = new("Segoe UI Variable");
+
+                mainSearchBox.TextChanging -= MainSearchBoxInCodeMode_TextChanging;
+                mainSearchBox.TextChanged -= MainSearchBoxInCodeMode_TextChanged;
+            }
+        }
+
+        string oldText = string.Empty;
+        private void MainSearchBoxInCodeMode_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            oldText = mainSearchBox.Text;
+        }
+
+        private void MainSearchBoxInCodeMode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string newText = mainSearchBox.Text;
+
+            if(newText.Length - oldText.Length == 1) // One character added at the end 
+            {
+                
+            }
         }
 
         private void suggestionListView_ItemClick(object sender, ItemClickEventArgs e)

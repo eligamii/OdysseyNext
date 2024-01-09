@@ -37,6 +37,7 @@
     <Content Remove="Assets\Resources\nl-NL.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\CascadiaCode.ttf" />
     <None Remove="Assets\icon.png" />
     <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
     <None Remove="Controls\MainMenuFlyout.xaml" />
@@ -135,6 +136,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\CascadiaCode.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

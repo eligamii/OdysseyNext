@@ -1,5 +1,9 @@
-﻿namespace Odyssey.Data.Settings
+﻿using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
+
+namespace Odyssey.Data.Settings
 {
+
     public class SearchEngine
     {
         public string Name { get; private set; }
@@ -33,6 +37,9 @@
             else if (obj == SearchEngine.Yahoo) return SearchEngines.Yahoo;
             else return SearchEngines.Bing;
         }
+
+
+
 
         public static SearchEngine Google
         {

@@ -1,4 +1,4 @@
-using Microsoft.UI;
+﻿using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Web.WebView2.Core;
 using Type = System.Type;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -81,7 +82,6 @@ namespace Odyssey.Views
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
             // Automatically create titlebar drag regions for the window (see Odyssey.App.Helpers.TitleBarDragRegionsHelpers)
-            // rs)
             titleBarDragRegions = new TitleBarDragRegions(
                 new List<Grid>() { AppTitleBar, secondTitleBar },
                 MainWindow.Current,
@@ -151,13 +151,23 @@ namespace Odyssey.Views
             SplitView.PaneBackground = Settings.IsPaneLocked ? new SolidColorBrush(Colors.Transparent) : PaneAcrylicBrush;
 
 
-            // Temporary startup colors fix
+            // Temporary startup colors fix (to match the color when Odyssey is re-opened when the single-instance feature is enabled)
             bool dark = Classes.UpdateTheme.IssystemDarkMode();
             string color = dark ? "#202020" : "#F9F9F9";
 
             RequestedTheme = UpdateTheme.IssystemDarkMode() ? ElementTheme.Dark : ElementTheme.Light;
             UpdateTheme.UpdateThemeWith(color);
+            
+            //WebView.CurrentlySelectedWebViewEventTriggered += WebViewOnCurrentlySelectedWebViewEventTriggered;
 
+        }
+
+        private void WebViewOnCurrentlySelectedWebViewEventTriggered(CoreWebView2 sender, CurrentlySelectedWebViewEventTriggeredEventArgs args)
+        {
+            if (args.EventType == EventType.FullScreenEvent)
+            {
+                
+            }
         }
 
         private string _lastText = string.Empty;

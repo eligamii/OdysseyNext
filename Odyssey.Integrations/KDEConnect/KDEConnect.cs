@@ -23,7 +23,7 @@ namespace Odyssey.Integrations.KDEConnect
 
     public class KDEConnect
     {
-        private static Regex idRegex = new("^[^ ]*");
+        private static Regex idRegex = new("^[^ ]*"); // Will match with the device uuid
         private static async Task<string> Send(string args)
         {
             Process process = new();
@@ -49,7 +49,7 @@ namespace Odyssey.Integrations.KDEConnect
         {
             List<Device> devices = new();
 
-            string rawOutput = await Send("-l");
+            string rawOutput = await Send("-a");
             string[] devicesLines = rawOutput.Split("\r\n").Where(p => p.StartsWith('-')).ToArray();
 
             foreach(string line in devicesLines)

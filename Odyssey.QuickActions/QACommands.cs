@@ -71,6 +71,7 @@ namespace Odyssey.QuickActions
             return command;
         }
 
+
         public static async Task<Res> Execute(string command)
         {
             // Execute sub-commands
@@ -80,7 +81,7 @@ namespace Odyssey.QuickActions
             command = Variables.ConvertToValues(command);
 
             // Do the eventual tests
-            command = ResolveTests(command); // == doest work for now
+            //command = ResolveTests(command); // == doest work for now
 
             // Remove the first "$" is the command is from the search box
             if (command.StartsWith("$"))
@@ -113,8 +114,9 @@ namespace Odyssey.QuickActions
             // Execute the command (it's the only part you should worry about when adding new commands)
             switch (commandName)
             {
-                case "if": return await If.Exec(options); // test then execute something
-                case "while": return await While.Exec(options); // While loop
+
+                case "if": return await If.Exec(options); // execute another command only if the (test) returns true, wip
+                case "while": return await While.Exec(options); // execute the command while the test is true, wip
 
                 case "flyout": return Flyout.Exec(options); // opens a flyout at desired position
                 case "close": return Close.Exec(options); // close the window or tabs
@@ -122,7 +124,7 @@ namespace Odyssey.QuickActions
                 case "set": return Set.Exec(options); // create or modify a new variable
                 case "toast": return Toast.Exec(options); // create a toast notification, wip
                 case "new": return New.Exec(options); // create a new tab
-                case "test": return Test.Exec(options); // only for testing purposes, to remove in stable releases
+                case "test": return await Test.Exec(options); // only for testing purposes, to remove in stable releases
                 case "js": return await Js.Exec(options); // execute js scripts
                 case "navigate": return Navigate.Exec(options); // navigate to an url
                 case "ui": return Ui.Exec(options); // create a control visible and usable by the user
@@ -131,6 +133,7 @@ namespace Odyssey.QuickActions
                 case "refresh": return Refresh.Exec(options); // refresh the webview, wip
                 case "webview": return Webview.Exec(options); // webview tools, like devtools, task manager, etc, wip
                 case "kdesend": return await Kde_send.Exec(options); // share a file or a link to another device, wip
+                case "calc": return Calc.Exec(options); // Calculate a mathematical expression using NCalc
 
                 default: return new Res(false, null, "Command not found");
             }

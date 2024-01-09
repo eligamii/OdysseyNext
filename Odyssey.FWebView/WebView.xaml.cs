@@ -26,10 +26,31 @@ using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 namespace Odyssey.FWebView
 {
+
+    public enum EventType
+    {
+        FullScreenEvent
+    }
+
+    public class CurrentlySelectedWebViewEventTriggeredEventArgs
+    {
+        public object Args { get; set; }
+        public EventType EventType { get; set; }
+
+        public CurrentlySelectedWebViewEventTriggeredEventArgs(object args, EventType type)
+        {
+            Args = args;
+            EventType = type;
+        }
+    }
     public sealed partial class WebView : WebView2 // Everything here has been made for Odyssey
     {
         public TotpLoginDetection TotpLoginDetection { get; private set; }
 
+        
+        public delegate void CurrentlySelectedWebViewEventEventHandler(CoreWebView2 sender, object args);
+
+        public static event CurrentlySelectedWebViewEventEventHandler CurrentlySelectedWebViewEventTriggered;
         // To remove
         public static Action TotpLoginDetectedAction { get; set; }
         public static Action LoginPageDetectedAction { get; set; }
@@ -106,7 +127,7 @@ namespace Odyssey.FWebView
                     if (parent != null)
                     {
                         parent = VisualTreeHelper.GetParent(parent);
-                        return parent.GetType() == typeof(Frame);
+                        return GetType() == typeof(Frame);
                     }
                     else
                     {
@@ -167,6 +188,7 @@ namespace Odyssey.FWebView
                 sender.CoreWebView2.FaviconChanged += CoreWebView2_FaviconChanged; // Set the icon of the linked tab
                 sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
 
+                sender.CoreWebView2.ContainsFullScreenElementChanged += (s, a) => CurrentlySelectedWebViewEventTriggered(s, new CurrentlySelectedWebViewEventTriggeredEventArgs(a, EventType.FullScreenEvent));
                 // Scroll events (Uppate dynamic theme)
                 scrollTimer = new DispatcherTimer();
                 scrollTimer.Interval = TimeSpan.FromSeconds(2);
@@ -186,7 +208,7 @@ namespace Odyssey.FWebView
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect the downloads to aria2
             sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
 
-            // Set the tracking level to strict
+            // Set the tracking level to strict (will block 50%+ of the trackers)
             sender.CoreWebView2.Profile.PreferredTrackingPreventionLevel = CoreWebView2TrackingPreventionLevel.Strict;
 
             // May not work for now
@@ -256,6 +278,18 @@ namespace Odyssey.FWebView
             catch { }
 
             UpdateThemeWithColorChange();
+        }
+
+        private void CoreWebView2OnContainsFullScreenElementChanged(CoreWebView2 sender, object args)
+        {
+            if (sender.ContainsFullScreenElement)
+            {
+                
+            }
+            else
+            {
+                
+            }
         }
 
         Color? lastPixel = null;

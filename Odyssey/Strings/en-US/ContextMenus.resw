@@ -195,4 +195,7 @@
   <data name="UrlBar" xml:space="preserve">
     <value>Show the address bar</value>
   </data>
+  <data name="LockPane" xml:space="preserve">
+    <value>Lock the pane</value>
+  </data>
 </root>

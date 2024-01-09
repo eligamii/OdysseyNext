@@ -42,7 +42,7 @@ namespace Odyssey.Data.Settings
 
             // Ad blocker
             if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
-            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0; // Experimental (adblock to regex adblocker)
+            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0; // Experimental (adblock t o regex adblocker)
             if (!Values.Values.ContainsKey("IsEasylistFilterListEnabled")) IsEasylistFilterListEnabled = true;
             if (!Values.Values.ContainsKey("IsEasyprivacyFilterListEnabled")) IsEasyprivacyFilterListEnabled = true;
             if (!Values.Values.ContainsKey("IsSpam404FilterListEnabled")) IsSpam404FilterListEnabled = true;
