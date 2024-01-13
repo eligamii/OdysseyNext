@@ -1,5 +1,7 @@
 ﻿
 using Odyssey.QuickActions.Objects;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.SystemCommands
@@ -14,7 +16,14 @@ namespace Odyssey.QuickActions.SystemCommands
             {
                 if (test == "true")
                 {
-                    return await QACommands.Execute(new Option(options[1]).Value);
+                    string command = string.Empty;
+
+                    for(int i = 1; i > options.Count() - 1; i++)
+                    {
+                        command += options[i];
+                    }
+
+                    return await QACommands.Execute(command);
                 }
                 else
                 {
@@ -23,7 +32,7 @@ namespace Odyssey.QuickActions.SystemCommands
             }
             else
             {
-                return new Res(false, null, "Wrong test");
+                return new Res(false, null, $"The first argument should be \"true\" or \"false\" (The argument is {options[0]}).");
             }
         }
     }

@@ -91,46 +91,31 @@ namespace Odyssey.FWebView.Controls
         {
             if(args.ContextMenuTarget.HasLinkUri)
             {
+                MenuFlyout menuFlyout = new();
+
                 foreach(Device device in await KDEConnect.GetDevicesAsync())
                 {
-                    AppBarButton deviceButton = new();
-                    deviceButton.Click += (s, a) => KDEConnect.Share(args.ContextMenuTarget.LinkUri, device);
-                    deviceButton.Label = $"Send to \"{device.Name}\"";
-                    deviceButton.Icon = new SymbolIconEx(SymbolEx.OpenInNewWindow);
+                    MenuFlyoutItem deviceButton = new();
+                    deviceButton.Click += (s, a) => { KDEConnect.Share(args.ContextMenuTarget.LinkUri, device); this.Hide(); };
+                    deviceButton.Text = device.Name;
+                    deviceButton.Icon = new SymbolIconEx(SymbolEx.MobileTablet);
 
-                    SecondaryCommands.Insert(0, deviceButton);
+                    menuFlyout.Items.Insert(0, deviceButton);
                 }
 
-                AppBarButton previewButton = new();
-                previewButton.Click += async (s, a) => await QACommands.Execute($"flyout content:\"{args.ContextMenuTarget.LinkUri}\" pos:<pointerpos> buttoncommand:\"navigate url:\"<flyouturl>\"\"");
-                previewButton.Label = "Preview";
-                previewButton.Icon = new SymbolIconEx(SymbolEx.PreviewLink);
-
-                SecondaryCommands.Insert(0, previewButton);
-            }
-
-            if(args.ContextMenuTarget.HasSelection)
-            {
-                string search = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(args.ContextMenuTarget.SelectionText);
-
-                AppBarButton quickSearchButton = new();
-                quickSearchButton.Click += async (s, a) => await QACommands.Execute($"flyout content:\"{search}\" pos:<pointerpos> buttoncommand:\"navigate url:\"<flyouturl>\"\"");
-                quickSearchButton.Label = "Quick search";
-                quickSearchButton.Icon = new SymbolIconEx(SymbolEx.Search);
-
-                PrimaryCommands.Insert(0, quickSearchButton);
+                if(menuFlyout.Items.Count > 0)
+                {
+                    sendToAppBarButton.Flyout = menuFlyout;
+                }
+                else
+                {
+                    sendToAppBarButton.IsEnabled = false;
+                }
             }
             else
-            {         
-                AppBarButton quickSearchButton = new();
-                quickSearchButton.Click += async (s, a) => await QACommands.Execute($"flyout pos:<pointerpos> content:\"{SearchEngine.ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine).Url}\" buttoncommand:\"navigate url:\"<flyouturl>\"\"");
-                quickSearchButton.Label = "Search";
-                quickSearchButton.Icon = new SymbolIconEx(SymbolEx.Search);
-
-                PrimaryCommands.Insert(0, quickSearchButton);
+            {
+                sendToAppBarButton.Visibility = previewAppBarButton.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
             }
-
-
         }
 
         private void PopulateWithQuickActions(CoreWebView2ContextMenuRequestedEventArgs args)
@@ -299,6 +284,15 @@ namespace Odyssey.FWebView.Controls
                     this.SecondaryCommands.Add((ICommandBarElement)newContextMenuItem);
                 }
             }
+        }
+
+
+
+
+
+        private void PreviewButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+
         }
     }
 }

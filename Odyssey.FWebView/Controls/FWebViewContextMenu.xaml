@@ -6,7 +6,13 @@
     xmlns:local="using:Odyssey.FWebView.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
- />
+    xmlns:helpers="using:Odyssey.Shared.Helpers"
+    mc:Ignorable="d">
+
+    <CommandBarFlyout.SecondaryCommands>
+        <AppBarButton Label="{helpers:ResourceString Name=Preview,Filename=ContextMenus}" Icon="PreviewLink" x:Name="previewAppBarButton" Click="PreviewButton_Click"/>
+        <AppBarButton Label="{helpers:ResourceString Name=SendTo,Filename=ContextMenus}" Icon="NewWindow" x:Name="sendToAppBarButton"/>
+    </CommandBarFlyout.SecondaryCommands>
+</CommandBarFlyout>
 
 

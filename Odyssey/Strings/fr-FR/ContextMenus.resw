@@ -198,4 +198,7 @@
   <data name="LockPane" xml:space="preserve">
     <value>Verrouiller le paanneau principal</value>
   </data>
+  <data name="SendTo" xml:space="preserve">
+    <value>Envoyer à</value>
+  </data>
 </root>

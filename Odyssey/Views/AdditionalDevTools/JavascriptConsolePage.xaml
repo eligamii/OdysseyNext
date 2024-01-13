@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
 
-        <monaco:Editor LinkClicked="editor_LinkClicked" Grid.Row="1" x:Name="editor" StartingLanguage="JavaScript"/>
+        <monaco:Editor LinkClicked="editor_LinkClicked" Grid.Row="1" x:Name="editor"/>
 
         <Grid BorderBrush="#33808080" BorderThickness="0,0,0,1" Background="{StaticResource LayerOnAcrylicFillColorDefaultBrush}">
             <Button Margin="5,0" Click="ExecuteButton_Click" Style="{ThemeResource AccentButtonStyle}" Content="Execute"/>

@@ -58,11 +58,11 @@ namespace Odyssey.QuickActions
             Regex testPresentRegex = new("(?<!\\\\)(\\(|\\))");
             Regex testSeparator = new("(?<=\\()[^\\)\\(]*(?=\\))");
             var c = testPresentRegex.Matches(command).Count();
-            while (c % 2 == 0 && c > 0)
+            while (c > 0)
             {
                 foreach (Match match in testSeparator.Matches(command))
                 {
-                    string boolean = TestHelper.Test(match.Value);
+                    string boolean = TestHelper.ResolveTest(match.Value);
                     command = command.Replace($"({match.Value})", $"{boolean}");
                     c = testSeparator.Matches(command).Count();
                 }
@@ -80,8 +80,8 @@ namespace Odyssey.QuickActions
             // Replace the <variable> with real values
             command = Variables.ConvertToValues(command);
 
-            // Do the eventual tests
-            //command = ResolveTests(command); // == doest work for now
+            // Resolve the (test)
+            command = ResolveTests(command); 
 
             // Remove the first "$" is the command is from the search box
             if (command.StartsWith("$"))

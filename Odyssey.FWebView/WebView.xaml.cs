@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.WebUI;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -155,19 +156,31 @@ namespace Odyssey.FWebView
 
         private async Task<BitmapImage> GetFaviconAsBitmapImageAsync()
         {
-            if(WebView2SavedFavicons.GetFaviconAsBitmapImage(this.Source.ToString(), out BitmapImage icon))
+            BitmapImage image;
+
+            if(WebView2SavedFavicons.GetFaviconAsBitmapImage(this.Source.ToString(), out BitmapImage savedImage))
             {
-                return icon;
+                image = savedImage;
             }
             else
             {
                 // Getting the favicon from the webView
                 var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
-                BitmapImage bitmapImage = new();
-                await bitmapImage.SetSourceAsync(stream);
-
-                return bitmapImage;
+                image = new BitmapImage();
+                await image.SetSourceAsync(stream);
             }
+
+            
+            if(this.CoreWebView2.FaviconUri == string.Empty)
+            {
+                LinkedTab.ForegroundColor = new SolidColorBrush(await WebView2AverageColorHelper.GetAverageColorFrom(this, 100, 100, 1));
+            }
+            else
+            {
+                LinkedTab.ForegroundColor = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            }
+
+            return image;
         }
 
         public WebView()

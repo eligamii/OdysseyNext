@@ -198,4 +198,7 @@
   <data name="LockPane" xml:space="preserve">
     <value>Lock the pane</value>
   </data>
+  <data name="SendTo" xml:space="preserve">
+    <value>Send to</value>
+  </data>
 </root>

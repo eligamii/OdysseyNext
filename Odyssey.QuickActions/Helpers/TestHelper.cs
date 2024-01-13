@@ -4,19 +4,21 @@ using System.Text.RegularExpressions;
 
 namespace Odyssey.QuickActions.Helpers
 {
-    public class TestHelper
+    public static partial class TestHelper
     {
-        private static Regex membersSeparatorRegex = new(@"[^<>\!\=]*");
-        private static Regex operatorSeparatorRegex = new (@"[<>\!\=]{0,1}\={0,1}");
-        
+        [GeneratedRegex(@"[^<>\!\=\|\&]*")]
+        private static partial Regex MembersSeparatorRegex();
+
+        [GeneratedRegex(@"[<>\!\=\|\&]{0,1}[\=\|\&]{0,1}")]
+        private static partial Regex OperatorRegex();
+
         public static string ResolveTest(string test)
         {
-            var members = membersSeparatorRegex.Matches(test);
-            string operators = operatorSeparatorRegex.Matches(test)[0].Value;
+                                                               // Prevent the array from having multiple blank values
+            var members = MembersSeparatorRegex().Matches(test).Where(p => p.Length > 0).ToArray();
+            string operators = OperatorRegex().Matches(test).Where(p => p.Length > 0).ToArray()[0].Value;
             
-            bool? greater;
             bool negate = false;
-            bool equals = false;
             
             bool operatorTest = false;
             
@@ -33,7 +35,15 @@ namespace Odyssey.QuickActions.Helpers
                 case '!':
                     negate = true;
                     break;
-                    
+
+                case '|':
+                    operatorTest = members[0].Value == "true" || members[1].Value == "true";
+                    break;
+
+                case '&':
+                    operatorTest = members[0].Value == "true" && members[1].Value == "true";
+                    break;
+
                 case '=': break;
                 
                 default:
@@ -46,12 +56,18 @@ namespace Odyssey.QuickActions.Helpers
                 {
                     if(negate) 
                     {
-                        return (!(operatorTest || members[0].Value == members[1].Value)).ToString();
+                        return (!(operatorTest || members[0].Value == members[1].Value)).ToString().ToLower();
                     }
                     else 
                     {
-                        return (operatorTest || members[0].Value == members[1].Value).ToString();
+                        return (operatorTest || members[0].Value == members[1].Value).ToString().ToLower();
                     }
+                }
+                else if ((operators[1] == '|' && operators[0] == '|') || (operators[1] == '&' && operators[0] == '&')
+                      && (members[0].Value == "true" || members[0].Value == "false") // the members should be only be true or false
+                      && (members[1].Value == "true" || members[1].Value == "false"))
+                {
+                    return operatorTest.ToString().ToLower();
                 }
                 else
                 {
@@ -60,7 +76,7 @@ namespace Odyssey.QuickActions.Helpers
             }
             else
             {
-                return operatorTest.ToString();
+                return operatorTest.ToString().ToLower();
             }
             
         }
@@ -79,7 +95,7 @@ namespace Odyssey.QuickActions.Helpers
                 else
                     return intMember1 < intMember2;
             }
-            else if(Regex.IsMatch(member1, @"[0-9]*;[0-9]"))
+            else if(membersAreCoordinates)
             {
                 if(greater) { return int.Parse(member1.Split(";")[1]) > int.Parse(member2.Split(";")[1]); }
                 else { return int.Parse(member1.Split(";")[1]) < int.Parse(member2.Split(";")[1]); }
@@ -90,50 +106,7 @@ namespace Odyssey.QuickActions.Helpers
                 else {return lengthMember1 < lengthMember2;}
             }
         }
-        
-        private readonly char[] operators = ['<', '>', '!'];
-        public static string Test(string test)
-        {
-            string[] members = test.Split('=');
 
-            string rawLeft = members[0]; // ex: hello world!, hello world=, 25< or 25>
 
-            string left = rawLeft.Remove(rawLeft.Length - 1, 1); // ex: hello world or 25
-            string right = members[1]; // ex: good luck or 59
-
-            // Finding what test to do
-            bool? negate = null;
-            bool? greater = null;
-
-            switch (rawLeft.Last())
-            {
-                case '!': negate = true; break;
-                case '<': greater = false; break;
-                case '>': greater = true; break;
-            }
-
-            // ex: when the test is hello world &= good luck (when the test is invalid)
-            if (negate == null && greater == null) return "null";
-
-            // ******** mathematical test *********
-            if (greater != null)
-            {
-                bool isRightInt = int.TryParse(right, out int rightInt);
-                bool isLeftInt = int.TryParse(left, out int leftInt);
-
-                // ex: the test is linux >= windows
-                if (!isRightInt || !isLeftInt) return "null";
-
-                // doo the actual test
-                if (greater == true) return (leftInt > rightInt).ToString().ToLower();
-                else return (leftInt < rightInt).ToString().ToLower();
-            }
-            else // ******** equals test *********
-            {
-                return (negate == false && left == right).ToString().ToLower();
-            }
-        }
-
-        
     }
 }

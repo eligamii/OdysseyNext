@@ -108,7 +108,7 @@
 
                             <!-- Controls region -->
                             <StackPanel x:Name="buttonsStackPanel" Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button Content="&#xE80F;" Click="HomeButton_Click" PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"/>
+                                <Button Content="&#xE80F;" Click="HomeButton_Click" RightTapped="HomeButton_RightTapped" PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"/>
                                 <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
                                 <Button Visibility="Visible" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right">
                                     <Button.Flyout>
@@ -159,15 +159,21 @@
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
                                             <ToggleMenuFlyoutItem Text="{helpers:ResourceString Name=UrlBar,Filename=ContextMenus}" IsChecked="False" Click="UrlBarToggleMenuFlyoutItem_Click" Loaded="UrlBarToggleMenuFlyoutItem_Loaded">
-                                                
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE721;"/>
+                                                </MenuFlyoutItem.Icon>
                                             </ToggleMenuFlyoutItem>
                                             
                                             <ToggleMenuFlyoutItem Text="{helpers:ResourceString Name=LockPane,Filename=ContextMenus}" IsChecked="False" Click="LockPaneToggleMenuFlyoutItem_Click" Loaded="LockPaneToggleMenuFlyoutItem_Loaded">
-
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE72E;"/>
+                                                </MenuFlyoutItem.Icon>
                                             </ToggleMenuFlyoutItem>
 
                                             <MenuFlyoutItem Text="{helpers:ResourceString Name=QuickActions,Filename=ContextMenus}" Click="QuickActionsMenuFlyoutItem_Click">
-
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE756;"/>
+                                                </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                         </MenuFlyout>
                                     </Button.Flyout>
@@ -208,6 +214,7 @@
                                     ToolTipService.ToolTip="{helpers:ResourceString Name=ShowPane,Filename=Main}"
                                     x:Name="showPaneButton"
                                     Visibility="Collapsed"
+                                    RightTapped="HomeButton_RightTapped"
                                     PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"
                                     />
                             <Grid.Transitions>

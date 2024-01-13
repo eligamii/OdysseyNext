@@ -72,6 +72,8 @@ namespace Odyssey.FWebView.Classes
                             {
                                 var c = ColorsHelper.Lighten(nnColor, 0.7);
                                 nnColor = Color.FromArgb(255, c.R, c.G, c.B);
+
+                                
                             }
                         }
                         else

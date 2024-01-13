@@ -24,6 +24,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Web.WebView2.Core;
 using Type = System.Type;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -524,6 +525,64 @@ namespace Odyssey.Views
             contentDialog.XamlRoot = this.Content.XamlRoot;
 
             await contentDialog.ShowAsync();
+        }
+
+        private void HomeButton_RightTapped(object sender, Microsoft.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+            MenuFlyout flyout = new();
+            FlyoutShowOptions options = new()
+            {
+                Position = e.GetPosition(this)
+            };
+
+            foreach(Tab tab in Favorites.Items)
+            {
+                var bit = new BitmapIcon();
+
+                ToggleMenuFlyoutItem item = new();
+                item.Text = tab.Title;
+                item.Icon = new SymbolIcon(Symbol.OutlineStar);
+                item.IsChecked = CurrentlySelectedWebView == tab.MainWebView;
+                item.Click += (s, a) =>
+                {
+                    if (item.IsChecked) PaneView.Current.FavoriteGrid.SelectedItem = tab;
+                };
+
+                flyout.Items.Add(item);
+            }
+            flyout.Items.Add(new MenuFlyoutSeparator());
+
+            foreach (Tab tab in Pins.Items)
+            {
+                ToggleMenuFlyoutItem item = new();
+                item.Text = tab.Title;
+                item.Icon = new SymbolIcon(Symbol.Pin);
+                item.IsChecked = CurrentlySelectedWebView == tab.MainWebView;
+                item.Click += (s, a) =>
+                {
+                    if (item.IsChecked) PaneView.Current.PinsTabView.SelectedItem = tab;
+                };
+
+                flyout.Items.Add(item);
+            }
+
+            flyout.Items.Add(new MenuFlyoutSeparator());
+
+            foreach (Tab tab in Tabs.Items)
+            {
+                ToggleMenuFlyoutItem item = new();
+                item.Text = tab.Title;
+                item.Icon = new SymbolIcon(Symbol.World);
+                item.IsChecked = CurrentlySelectedWebView == tab.MainWebView;
+                item.Click += (s, a) =>
+                {
+                    if(item.IsChecked) PaneView.Current.TabsView.SelectedItem = tab;
+                };
+
+                flyout.Items.Add(item);
+            }
+
+            flyout.ShowAt(this, options);
         }
     }
 }

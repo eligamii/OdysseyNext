@@ -26,7 +26,7 @@ namespace Odyssey.Migration.Chromium
 
                 while (query.Read())
                 {
-                    // Simple filter save only 
+                    // Simple filter to not save items that shouldn't be visible on Chromium browsers' history viewer 
                     if (query.GetString(1) != string.Empty && lastUrl != query.GetString(0) && query.GetString(2) != "1" && !(new Uri(lastUrl).Host == new Uri(query.GetString(0)).Host && lastTitle == query.GetString(1)))
                     {
                         HistoryItem historyItem = new HistoryItem();

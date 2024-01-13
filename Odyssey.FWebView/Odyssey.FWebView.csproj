@@ -8,6 +8,7 @@
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Binary\aria2.exe" />
     <None Remove="Controls\DownloadItem.xaml" />
     <None Remove="Controls\Flyouts\DownloadsFlyout.xaml" />
     <None Remove="Controls\Flyouts\FindFlyout.xaml" />
@@ -17,15 +18,21 @@
     <None Remove="WebView.xaml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Binary\aria2.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.0" />
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
+      <PackageReference Include="Aria2.NET" Version="1.0.5" />
+      <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
       <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.7" />
-      <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+      <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +44,12 @@
     <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
     <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Assets\square.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

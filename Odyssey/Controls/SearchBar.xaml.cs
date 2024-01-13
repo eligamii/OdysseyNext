@@ -49,16 +49,6 @@ namespace Odyssey.Controls
             searchBarIcon.Glyph = mainIcon;
 
             Opened += SearchBar_Opened;
-
-            if(cascadiaCode == null) // Load the Cascadia Code font for QACommand typing
-            {
-                var cascadiaCodeFilePath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Assets", "CascadiaCode.ttf");
-
-                PrivateFontCollection collection = new PrivateFontCollection();
-                collection.AddFontFile(cascadiaCodeFilePath);
-                cascadiaCode = new FontFamily("Cascadia Code Regular");
-    
-            }
         }
 
         // For the <ask> QACommand variable
