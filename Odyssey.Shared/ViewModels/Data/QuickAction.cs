@@ -9,6 +9,7 @@ namespace Odyssey.Shared.ViewModels.Data
         public string Label { get; set; }
         public SymbolEx Icon { get; set; }
         public string Command { get; set; }
+        public int Index { get; set; }
         public QuickActionItemShowOptions ShowOptions { get; set; }
 
 

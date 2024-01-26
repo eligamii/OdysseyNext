@@ -30,9 +30,9 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("ForceDarkReader")) ForceDarkReader = false;
 
             // Features
-            if (!Values.Values.ContainsKey("AutoPictureInPicture")) AutoPictureInPicture = true;
+            if (!Values.Values.ContainsKey("AutoPictureInPicture")) IsAutoPictureInPictureEnabled = true;
             if (!Values.Values.ContainsKey("PlaySoundsOnOnlyOneTab")) PlaySoundsOnOnlyOneTab = false;
-            if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabOnStartup = false;
+            if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabAtStartup = false;
             if (!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = false;
             if (!Values.Values.ContainsKey("IsHisoryEncryptionEnabled")) IsHisoryEncryptionEnabled = false;
 
@@ -49,12 +49,40 @@ namespace Odyssey.Data.Settings
 
             // Search engine
             if (!Values.Values.ContainsKey("SelectedSearchEngine")) SelectedSearchEngine = (int)SearchEngines.Startpage;
+            if (!Values.Values.ContainsKey("AreSearchSuggestionsEnabled")) AreSearchSuggestionsEnabled = false;
+
+            // Behaviors
+            if (!Values.Values.ContainsKey("RestoreTabsAfterCrash")) RestoreTabsAfterCrash = false;
         }
 
         public static bool? Inititalized
         {
             get { return (bool?)Values.Values["Inititalized"]; }
             set { Values.Values["Inititalized"] = value; }
+        }
+
+        public static bool RestoreTabsAfterCrash
+        {
+            get { return (bool)Values.Values["RestoreTabsAfterCrash"]; }
+            set { Values.Values["RestoreTabsAfterCrash"] = value; }
+        }
+
+        public static bool AreSearchSuggestionsEnabled
+        {
+            get { return (bool)Values.Values["AreSearchSuggestionsEnabled"]; }
+            set { Values.Values["AreSearchSuggestionsEnabled"] = value; }
+        }
+
+        public static string CustomSearchSuggestionApiUrl
+        {
+            get { return (string)Values.Values["CustomSearchSuggestionApiUrl"]; }
+            set { Values.Values["CustomSearchSuggestionApiUrl"] = value; }
+        }
+
+        public static int SearchSuggestionApi // 0 = searx, 1 = duckduckgo (need more testing with searx)
+        {
+            get { return (int)Values.Values["SearchSuggestionApi"]; }
+            set { Values.Values["SearchSuggestionApi"] = value; }
         }
 
         public static string KDEDefaultDevice
@@ -99,19 +127,7 @@ namespace Odyssey.Data.Settings
             set { Values.Values["IsHisoryEncryptionEnabled"] = value; }
         }
 
-        public static bool UseCustomAdBlockers
-        {
-            get { return (bool)Values.Values["UseCustomAdBlockers"]; }
-            set { Values.Values["UseCustomAdBlockers"] = value; }
-        }
-
-        public static string CustomAdBlockerPath // paths separated by ','
-        {
-            get { return (string)Values.Values["CustomAdBlockerPath"]; }
-            set { Values.Values["CustomAdBlockerPath"] = value; }
-        }
-
-        public static bool AutoPictureInPicture
+        public static bool IsAutoPictureInPictureEnabled
         {
             get { return (bool)Values.Values["AutoPictureInPicture"]; }
             set { Values.Values["AutoPictureInPicture"] = value; }
@@ -135,7 +151,7 @@ namespace Odyssey.Data.Settings
             set { Values.Values["IsSingleInstanceEnabled"] = value; }
         }
 
-        public static bool OpenTabOnStartup
+        public static bool OpenTabAtStartup
         {
             get { return (bool)Values.Values["OpenTabOnStartup"]; }
             set { Values.Values["OpenTabOnStartup"] = value; }

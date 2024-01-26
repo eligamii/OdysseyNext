@@ -27,7 +27,7 @@ namespace Odyssey.FWebView.Helpers
             return bmpReturn;
         }
 
-        private static async Task<Bitmap> GetBitmap(WebView2 webView, int width, int height)
+        private static async Task<Bitmap> GetBitmapAsync(WebView2 webView, int width, int height)
         {
             dynamic clip = new JObject();
             clip.x = 0;
@@ -61,10 +61,10 @@ namespace Odyssey.FWebView.Helpers
         }
 
 
-        public static async Task<Windows.UI.Color> GetFirstPixelColor(WebView2 webView)
+        public static async Task<Windows.UI.Color> GetFirstPixelColorAsync(WebView2 webView)
         {
-            var bmp = await GetBitmap(webView, 1, 1);
-            System.Drawing.Color clr = bmp.GetPixel(0, 0);
+            var bmp = await GetBitmapAsync(webView, 1, 1);
+            Color clr = bmp.GetPixel(0, 0);
             return Windows.UI.Color.FromArgb(255, clr.R, clr.R, clr.B);
         }
 
@@ -75,10 +75,10 @@ namespace Odyssey.FWebView.Helpers
         /// <param name="width">The width (>= 1) of the part to calculate</param>
         /// <param name="height">The height (>=1) of the part to calculate</param>
         /// <param name="step">(>=1) Greater value = less precision / better performance</param>
-        public static async Task<Windows.UI.Color> GetAverageColorFrom(WebView2 webView, int width, int height, int step = 1)
+        public static async Task<Windows.UI.Color> GetAverageColorFromWebView2Async(WebView2 webView, int width, int height, int step = 1)
         {
             // Capture an image
-            var bmp = await GetBitmap(webView, width, height);
+            var bmp = await GetBitmapAsync(webView, width, height);
 
             int r = 0;
             int g = 0;
@@ -90,7 +90,7 @@ namespace Odyssey.FWebView.Helpers
             {
                 for (int y = 0; y < height; y++)
                 {
-                    System.Drawing.Color clr = bmp.GetPixel(x, y);
+                    Color clr = bmp.GetPixel(x, y);
                     r += clr.R;
                     g += clr.G;
                     b += clr.B;

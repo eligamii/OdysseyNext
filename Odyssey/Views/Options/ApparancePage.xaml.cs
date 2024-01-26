@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Odyssey.Classes;
 using Odyssey.Data.Settings;
+using Odyssey.Dialogs;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -78,7 +79,7 @@ namespace Odyssey.Views.Options
             sender.SelectionStart = selection;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void CustomThemeButton_Click(object sender, RoutedEventArgs e)
         {
             string text = customThemeTextBox.Text;
 
@@ -87,6 +88,15 @@ namespace Odyssey.Views.Options
                 UpdateTheme.UpdateThemeWith(text);
                 Settings.CustomThemeColors = text;
             }
+        }
+
+        private async void CustomizeTitleBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog.Current.Hide();
+
+            var dialog = new CustomizeTitleBarItemsDialog();
+            dialog.XamlRoot = this.Content.XamlRoot;
+            await dialog.ShowAsync();
         }
     }
 }

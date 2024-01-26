@@ -11,6 +11,11 @@ namespace Odyssey.Shared.Helpers
             Symbol = symbol;
         }
 
+        public SymbolIconEx()
+        {
+            FontFamily = new FontFamily("Segoe Fluent Icons");
+        }
+
         public SymbolEx Symbol
         {
             get => (SymbolEx)Glyph[0];

@@ -10,7 +10,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
 {
     internal static class DuckDuckGoSuggestionsHelper
     {
-        private static List<Suggestion> suggestions = new(); // Save suggestions for faster suggestions
+        private static List<Suggestion> suggestions = new(); // cache suggestions for faster suggestions
         public class DDGSuggestion //DuckDuckGo JSON suggestions
         {
             public string phrase { get; set; }

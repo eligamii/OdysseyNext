@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.Helpers;
+using System.Threading.Tasks;
 using Windows.UI;
 
 namespace Odyssey.FWebView.Classes
@@ -20,7 +21,7 @@ namespace Odyssey.FWebView.Classes
         public static AppWindowTitleBar AppWindowTitleBar { get; set; }
         public static bool UpdateTheme { get; set; } = true;
 
-        public static async void UpdateDynamicTheme(WebView2 webView2)
+        public static async Task UpdateDynamicThemeAsync(WebView2 webView2)
         {
             // Get webView2 average color
             Color? color = null;
@@ -32,13 +33,13 @@ namespace Odyssey.FWebView.Classes
                     switch (Settings.ThemePerformanceMode)
                     {
                         case 0: // Depend of the size of the webview (min = 20225 pixels or (min window size - locked pane size) / 4)px, quality mode
-                            color = await WebView2AverageColorHelper.GetAverageColorFrom(webView2, (int)webView2.ActualWidth, 100, 4); break;
+                            color = await WebView2AverageColorHelper.GetAverageColorFromWebView2Async(webView2, (int)webView2.ActualWidth, 100, 4); break;
 
                         case 1: // Depend of the size of the webview (min = 2022 pixels), default mode
-                            color = await WebView2AverageColorHelper.GetAverageColorFrom(webView2, (int)webView2.ActualWidth, 10, 4); break;
+                            color = await WebView2AverageColorHelper.GetAverageColorFromWebView2Async(webView2, (int)webView2.ActualWidth, 10, 4); break;
 
                         case 2: // 100 pixels, performace mode
-                            color = await WebView2AverageColorHelper.GetAverageColorFrom(webView2, 10, 10, 1); break;
+                            color = await WebView2AverageColorHelper.GetAverageColorFromWebView2Async(webView2, 10, 10, 1); break;
                     }
                 }
 

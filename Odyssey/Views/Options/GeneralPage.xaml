@@ -26,6 +26,13 @@
             </ComboBox>
         </controls:SettingsCard>
 
+        <controls:SettingsExpander Header="Enable online search suggestions" Description="Get search suggestion from online sources">
+            <controls:SettingsExpander.HeaderIcon>
+                <helpers:SymbolIconEx Symbol="SearchAndApps"/>
+            </controls:SettingsExpander.HeaderIcon>
+            <ToggleSwitch x:Name="searchSuggestionToggleSwitch" Toggled="searchSuggestionToggleSwitch_Toggled"/>
+        </controls:SettingsExpander>
+
         <controls:SettingsExpander Header="{helpers:ResourceString Name=DarkMode, Filename=Settings}" Description="{helpers:ResourceString Name=DarkMode, Filename=SettingsDescriptions}">
             <controls:SettingsExpander.HeaderIcon>
                 <FontIcon Glyph="&#xE7A1;"/>

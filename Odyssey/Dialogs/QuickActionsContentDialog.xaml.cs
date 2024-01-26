@@ -1,3 +1,4 @@
+using CommunityToolkit.WinUI.Controls;
 using CommunityToolkit.WinUI.UI.Controls.TextToolbarSymbols;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -5,10 +6,13 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Settings;
 using Odyssey.Shared.Helpers;
 using Odyssey.Shared.ViewModels.Data;
+using Odyssey.Views.Options;
+using Odyssey.Views.QuickActionsDialog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,92 +36,37 @@ namespace Odyssey.Dialogs
         {
             this.InitializeComponent();
 
-            labelTextBox.TextChanged += (s, a) => EnableSave();
-            iconBox.TextSubmitted += (s, a) => EnableSave();
-            enableOnWhatWebsiteTextBox.TextChanged += (s, a) => EnableSave();
-            showWhenBox.TextSubmitted += (s, a) => EnableSave();
-            positionBox.TextSubmitted += (s, a) => EnableSave();
-            commandTextBox.TextChanged += (s, a) => EnableSave();
+            rootFrame.Loaded += (s, a) => rootFrame.Navigate(typeof(CreateQuickActionPage));
 
-            InitIcons();
         }
 
-        private void EnableSave()
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            saveButton.IsEnabled = !string.IsNullOrWhiteSpace(labelTextBox.Text) &&
-                                   !string.IsNullOrWhiteSpace(iconBox.SelectedItem?.ToString()) &&
-                                   !string.IsNullOrWhiteSpace(enableOnWhatWebsiteTextBox.Text) &&
-                                   !string.IsNullOrWhiteSpace(showWhenBox.SelectedItem?.ToString()) &&
-                                   !string.IsNullOrWhiteSpace(positionBox.SelectedItem?.ToString()) &&
-                                   !string.IsNullOrWhiteSpace(commandTextBox.Text);
+            if (rootFrame.CanGoBack) rootFrame.GoBack();
         }
 
-        private async void InitIcons()
+        private void CloseButton_Click(object sender, RoutedEventArgs e) => Hide();
+
+        private void segmented_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(icons == null)
+            if(e.RemovedItems.Count > 0)
             {
-                icons = new();
+                Segmented segmented = sender as Segmented;
+                int oldIndex = segmented.Items.IndexOf(e.RemovedItems[0]);
+                int newIndex = segmented.Items.IndexOf(e.AddedItems[0]);
 
-                await Task.Factory.StartNew(() =>
+                SlideNavigationTransitionEffect effect = oldIndex > newIndex ? SlideNavigationTransitionEffect.FromLeft : SlideNavigationTransitionEffect.FromRight;
+                var animation = new SlideNavigationTransitionInfo() { Effect = effect };
+
+                switch (newIndex)
                 {
-                    foreach (SymbolEx enu in Enum.GetValues(typeof(SymbolEx)).AsParallel())
-                    {
-                        icons.Add(char.ConvertFromUtf32((int)enu)[0]);
-                    }
-                });
+                    case 0:
+                        rootFrame.Navigate(typeof(ManageQuickActionsPage), null, animation); break;
+                    case 1:
+                        rootFrame.Navigate(typeof(CreateQuickActionPage), null, animation); break;
 
-                
+                }
             }
-            iconBox.ItemsSource = icons;
-
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            QuickAction action = new();
-            action.Label = "Recherche rapide";
-            action.Icon = SymbolEx.Search;
-
-            action.ShowOptions = new()
-            {
-                Position = Shared.Enums.QuickActionShowPosition.Top,
-                ShowCondition = Shared.Enums.QuickActionShowCondition.HasSelection,
-                Type = Shared.Enums.QuickActionShowType.ContextMenuItem,
-                UrlRegex = ".*"
-            };
-
-            string searchUrl = SearchEngine.ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine).SearchUrl;
-            action.Command = $"$flyout content:\"{searchUrl}<selectiontext>\" pos:<pointerpos>";
-            Data.Main.QuickActions.Items.Add(action);
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            int iconPoint = char.ConvertToUtf32(iconBox.SelectedItem.ToString(), 0);
-            SymbolEx symbol = (SymbolEx)iconPoint;
-
-            QuickAction action = new();
-            action.Label = labelTextBox.Text;
-            action.Icon = symbol;
-
-            action.ShowOptions = new()
-            {
-                Position = (Shared.Enums.QuickActionShowPosition)positionBox.SelectedIndex,
-                ShowCondition = (Shared.Enums.QuickActionShowCondition)showWhenBox.SelectedIndex,
-                Type = Shared.Enums.QuickActionShowType.ContextMenuItem,
-                UrlRegex = enableOnWhatWebsiteTextBox.Text
-            };
-
-            action.Command = commandTextBox.Text;
-            Data.Main.QuickActions.Items.Add(action);
-
-            Hide();
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            Hide();
-        }
-
     }
 }

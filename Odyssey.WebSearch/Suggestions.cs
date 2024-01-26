@@ -1,4 +1,5 @@
-﻿using Odyssey.Shared.ViewModels.WebSearch;
+﻿using Odyssey.Data.Settings;
+using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.WebSearch.Helpers;
 using Odyssey.WebSearch.Helpers.Suggestions;
 using System.Collections.Generic;
@@ -24,11 +25,22 @@ namespace Odyssey.WebSearch
 
             suggestions = suggestions.Concat(TabsSuggestionsHelper.SearchForMatchingTabs(query)).ToList();
 
-            try
+            if(Settings.AreSearchSuggestionsEnabled)
             {
-               // var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
-                //suggestions = suggestions.Concat(ddgSuggestions).ToList();
-            } catch (HttpRequestException) { }
+                try
+                {
+                    if(true)
+                    {
+                        var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
+                        suggestions = suggestions.Concat(ddgSuggestions).ToList();
+                    }
+                    else
+                    {
+                        // [TODO] implement searx
+                    }
+                }
+                catch (HttpRequestException) { }
+            }
 
             return suggestions.Take(maxSuggestions).ToList();
         }

@@ -120,14 +120,14 @@ namespace Odyssey.FWebView.Controls
 
         private void PopulateWithQuickActions(CoreWebView2ContextMenuRequestedEventArgs args)
         {
-            foreach(var item in Data.Main.QuickActions.Items)
+            foreach(var item in Data.Main.QuickActions.Items.Where(p => (int)p.ShowOptions.Position < 3))
             {
                 if(item.CondiditonsAreMet(args))
                 {
                     AppBarButton button = new();
                     button.Label = item.Label;
                     button.Icon = new SymbolIconEx(item.Icon);
-                    button.Click += async (s, a) => await QuickActions.QACommands.Execute(item.Command);
+                    button.Click += async (s, a) => await QACommands.Execute(item.Command);
                     button.RightTapped += (s, a) => 
                     {
                         MenuFlyout flyout = new();

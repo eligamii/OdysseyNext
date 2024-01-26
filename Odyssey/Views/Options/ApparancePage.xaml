@@ -42,7 +42,7 @@
         <controls:SettingsExpander x:Name="customThemeExpander" Header="{helpers:ResourceString Name=CustomTheme, Filename=Settings}" Description="{helpers:ResourceString Name=CustomTheme, Filename=SettingsDescriptions}">
             <StackPanel Spacing="4" Orientation="Horizontal">
                 <TextBox x:Name="customThemeTextBox" Width="125" PlaceholderText="#FFFFFF" KeyDown="TextBox_KeyDown" TextChanging="TextBox_TextChanging"/>
-                <Button Click="Button_Click" Content="{helpers:ResourceString Name=Apply, Filename=Settings}" Style="{ThemeResource AccentButtonStyle}"/>
+                <Button Click="CustomThemeButton_Click" Content="{helpers:ResourceString Name=Apply, Filename=Settings}" Style="{ThemeResource AccentButtonStyle}"/>
             </StackPanel>
             <controls:SettingsExpander.ItemsHeader>
                 <InfoBar Title="Pre-made themes soon!"
@@ -55,5 +55,9 @@
                 </InfoBar>
             </controls:SettingsExpander.ItemsHeader>
         </controls:SettingsExpander>
+
+        <controls:SettingsCard Header="Customize titlebar" Description="Add or remove items from the titlebar">
+            <Button Click="CustomizeTitleBarButton_Click"/>
+        </controls:SettingsCard>
     </StackPanel>
 </Page>

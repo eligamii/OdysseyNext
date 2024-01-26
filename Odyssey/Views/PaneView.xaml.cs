@@ -306,7 +306,7 @@ namespace Odyssey.Views
 
                 MainView.Current.documentTitle.Text = tab.Title;
 
-                FWebView.Classes.DynamicTheme.UpdateDynamicTheme(tab.MainWebView);
+                _ = FWebView.Classes.DynamicTheme.UpdateDynamicThemeAsync(tab.MainWebView);
                 UpdateTabSelection(sender);
             }
 
@@ -320,14 +320,14 @@ namespace Odyssey.Views
             try
             {
                 // Enable picture in picture
-                if (Settings.AutoPictureInPicture != false)
+                if (Settings.IsAutoPictureInPictureEnabled != false)
                 {
                     if (e.RemovedItems.Count > 0)
                     {
                         Tab item = e.RemovedItems[0] as Tab;
                         if (item.MainWebView != null)
                         {
-                            item.MainWebView.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
+                            _ = item.MainWebView.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
                         }
                     }
                     if (e.AddedItems.Count > 0)
@@ -335,7 +335,7 @@ namespace Odyssey.Views
                         Tab addedItem = e.AddedItems[0] as Tab;
                         if (addedItem.MainWebView != null)
                         {
-                            addedItem.MainWebView.ExecuteScriptAsync("document.exitPictureInPicture();");
+                            _ = addedItem.MainWebView.ExecuteScriptAsync("document.exitPictureInPicture();");
                         }
                     }
                 }
@@ -612,14 +612,14 @@ namespace Odyssey.Views
             secondNewTabButton.Visibility = ViewportBehavior.IsFullyInViewport ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        private async void SettingsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void SettingsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             SettingsDialog settingsDialog = new()
             {
                 XamlRoot = this.XamlRoot
             };
 
-            await settingsDialog.ShowAsync();
+            _ = settingsDialog.ShowAsync();
         }
 
         private void DevToolsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)

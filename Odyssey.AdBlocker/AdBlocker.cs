@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.AdBlocker
 {
-    public class AdBlocker
+    public class AdBlocker // Instalnt and only compatible with host-based lists
     {
         private static string[] easylist;
         private static string[] easyprivacy;

@@ -18,6 +18,7 @@ namespace Odyssey.Views.Options
         {
             this.InitializeComponent();
             singleInstanceToggleSwitch.IsOn = Settings.IsSingleInstanceEnabled;
+            openTabAtStartupToggleSwitch.IsOn = Settings.OpenTabAtStartup;
 
             if (_webViewToEngageReset == null) _webViewToEngageReset = WebView.Create();
         }
@@ -25,6 +26,10 @@ namespace Odyssey.Views.Options
         private void singleInstanceToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             Settings.IsSingleInstanceEnabled = singleInstanceToggleSwitch.IsOn;
+        }
+        private void openTabAtStartupToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            Settings.OpenTabAtStartup = openTabAtStartupToggleSwitch.IsOn;
         }
 
         private int _clickCount = 0;
@@ -40,6 +45,6 @@ namespace Odyssey.Views.Options
             }
         }
 
-
+        
     }
 }

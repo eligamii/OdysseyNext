@@ -54,7 +54,7 @@ namespace Odyssey.FWebView.Helpers
         public static async Task<object> CreateDefaultIcon(WebView2 webView)
         {
             string defaultIconPath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Odyssey.FWebView", "Assets", "square.png");
-            var windowsColor = await WebView2AverageColorHelper.GetAverageColorFrom(webView, 100, 100, 1);
+            var windowsColor = await WebView2AverageColorHelper.GetAverageColorFromWebView2Async(webView, 100, 100, 1);
 
             Color color = Color.FromArgb(windowsColor.A, windowsColor.R, windowsColor.G, windowsColor.B);
             Bitmap defaultIcon = (Bitmap)System.Drawing.Image.FromFile(defaultIconPath);

@@ -31,7 +31,7 @@ namespace Odyssey.FWebView.Controls.Flyouts
                     var downloadFolder = Shared.Helpers.KnownFolders.GetPath(Shared.Helpers.KnownFolder.Downloads);
                     var download = AriaSharp.Downloader.Download(item.DownloadUrl, downloadFolder);
 
-                    download.DownloadProgressChanged += async (s, a) =>
+                    download.DownloadProgressChanged += (s, a) =>
                     {
                         if (!string.IsNullOrWhiteSpace(s.Filename))
                         {

@@ -58,7 +58,7 @@ namespace Odyssey
 
             // Load data          
             //Downloads.Aria2.Init();
-            AdBlocker.AdBlocker.Init();
+            //AdBlocker.AdBlocker.Init();
             UserVariables.Load();
             FWebView.Helpers.WebView2SavedFavicons.Init();
 

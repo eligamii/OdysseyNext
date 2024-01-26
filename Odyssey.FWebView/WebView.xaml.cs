@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
+using Odyssey.AdBlocker;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Classes;
@@ -49,7 +50,7 @@ namespace Odyssey.FWebView
         public TotpLoginDetection TotpLoginDetection { get; private set; }
 
         
-        public delegate void CurrentlySelectedWebViewEventEventHandler(CoreWebView2 sender, object args);
+        public delegate void CurrentlySelectedWebViewEventEventHandler(CoreWebView2 sender, CurrentlySelectedWebViewEventTriggeredEventArgs args);
 
         public static event CurrentlySelectedWebViewEventEventHandler CurrentlySelectedWebViewEventTriggered;
         // To remove
@@ -156,31 +157,35 @@ namespace Odyssey.FWebView
 
         private async Task<BitmapImage> GetFaviconAsBitmapImageAsync()
         {
-            BitmapImage image;
+            try
+            {
+                BitmapImage image;
 
-            if(WebView2SavedFavicons.GetFaviconAsBitmapImage(this.Source.ToString(), out BitmapImage savedImage))
-            {
-                image = savedImage;
-            }
-            else
-            {
-                // Getting the favicon from the webView
-                var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
-                image = new BitmapImage();
-                await image.SetSourceAsync(stream);
-            }
+                if (WebView2SavedFavicons.GetFaviconAsBitmapImage(this.Source.ToString(), out BitmapImage savedImage))
+                {
+                    image = savedImage;
+                }
+                else
+                {
+                    // Getting the favicon from the webView
+                    var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
+                    image = new BitmapImage();
+                    await image.SetSourceAsync(stream);
+                }
 
-            
-            if(this.CoreWebView2.FaviconUri == string.Empty)
-            {
-                LinkedTab.ForegroundColor = new SolidColorBrush(await WebView2AverageColorHelper.GetAverageColorFrom(this, 100, 100, 1));
-            }
-            else
-            {
-                LinkedTab.ForegroundColor = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-            }
 
-            return image;
+                if (this.CoreWebView2.FaviconUri == string.Empty)
+                {
+                    LinkedTab.ForegroundColor = new SolidColorBrush(await WebView2AverageColorHelper.GetAverageColorFromWebView2Async(this, 100, 100, 1));
+                }
+                else
+                {
+                    LinkedTab.ForegroundColor = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                }
+
+                return image;
+            }
+            catch { return null; }
         }
 
         public WebView()
@@ -213,7 +218,7 @@ namespace Odyssey.FWebView
                 sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f / 3f * 100f; };
                 sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f / 2f * 100f; };
                 sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 7f / 8f * 100f; };
-                sender.CoreWebView2.NavigationCompleted += async (s, a) => { if (IsVisible) { MainProgressBar.Value = 100; await Task.Delay(1000); MainProgressBar.Value = 0; } };
+                sender.CoreWebView2.NavigationCompleted += (s, a) => { if (IsVisible) { MainProgressBar.Value = 0; } };
             }
 
             sender.CoreWebView2.PermissionRequested += CoreWebView2_PermissionRequested;
@@ -229,7 +234,7 @@ namespace Odyssey.FWebView
             sender.CoreWebView2.Settings.IsGeneralAutofillEnabled = true;
 
             // Add extensions
-            AdBlocker.AdBlocker blocker = new(sender.CoreWebView2);
+            DiltillNETAdBlocker.AttachCoreWebView2(sender.CoreWebView2);
 
             // Show native tooltips instead of Edge ones (disabled for now)
             //WebViewNativeToolTips tips = new(this);
@@ -290,7 +295,7 @@ namespace Odyssey.FWebView
             }
             catch { }
 
-            UpdateThemeWithColorChange();
+            _ = UpdateThemeWithColorChangeAsync();
         }
 
         private void CoreWebView2OnContainsFullScreenElementChanged(CoreWebView2 sender, object args)
@@ -306,7 +311,7 @@ namespace Odyssey.FWebView
         }
 
         Color? lastPixel = null;
-        private async void UpdateThemeWithColorChange()
+        private async Task UpdateThemeWithColorChangeAsync()
         {
             while (true)
             {
@@ -315,10 +320,10 @@ namespace Odyssey.FWebView
                 {
                     try
                     {
-                        Color pixel = await WebView2AverageColorHelper.GetFirstPixelColor(this);
+                        Color pixel = await WebView2AverageColorHelper.GetFirstPixelColorAsync(this);
                         if (pixel != lastPixel)
                         {
-                            DynamicTheme.UpdateDynamicTheme(this);
+                            _ = DynamicTheme.UpdateDynamicThemeAsync(this);
                         }
                         else
                         {
@@ -449,7 +454,7 @@ namespace Odyssey.FWebView
             // Checking if the user has finished scrolling for 2 seconds
             if (isScrolling && IsVisible)
             {
-                DynamicTheme.UpdateDynamicTheme(this);
+                _ = DynamicTheme.UpdateDynamicThemeAsync(this);
                 isScrolling = false;
             }
         }
@@ -458,7 +463,7 @@ namespace Odyssey.FWebView
         {
             if (IsVisible && !IsLittleWeb)
             {
-                DynamicTheme.UpdateDynamicTheme(this);
+                _ = DynamicTheme.UpdateDynamicThemeAsync(this);
             }
         }
 
@@ -477,8 +482,7 @@ namespace Odyssey.FWebView
             if (IsVisible)
             {
                 MainProgressElement.Visibility = Visibility.Collapsed;
-                MainIconElement.Source = bitmapImage;
-                DynamicTheme.UpdateDynamicTheme(this);
+                _ = DynamicTheme.UpdateDynamicThemeAsync(this);
             }
 
 
@@ -528,7 +532,7 @@ namespace Odyssey.FWebView
             {
                 MainIconElement.Source = null; // will hide the element
                 MainProgressElement.Visibility = Visibility.Visible;
-                DynamicTheme.UpdateDynamicTheme(this);
+                DynamicTheme.UpdateDynamicThemeAsync(this);
             }
 
 

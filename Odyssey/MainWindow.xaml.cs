@@ -1,5 +1,7 @@
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
@@ -7,6 +9,7 @@ using Odyssey.Views;
 using Odyssey.Views.Pages;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using WinUIEx;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -54,11 +57,9 @@ namespace Odyssey
             Current = this;
 
 
-
             AppWindow.Closing += AppWindow_Closing;
         }
 
-        private bool _close = false;
         public static bool ResetEngaged { get; set; } = false;
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
@@ -67,6 +68,7 @@ namespace Odyssey
                 args.Cancel = Settings.IsSingleInstanceEnabled;
                 Settings.SuccessfullyClosed = true;
                 QuickActions.Data.UserVariables.Save();
+                Data.Main.TitleBarButtons.Save();
 
                 if (!Settings.IsSingleInstanceEnabled)
                 {

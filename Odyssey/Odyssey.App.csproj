@@ -40,9 +40,12 @@
     <None Remove="Assets\CascadiaCode.ttf" />
     <None Remove="Assets\icon.png" />
     <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
+    <None Remove="Controls\Flyouts\IconSelectorFlyout.xaml" />
     <None Remove="Controls\MainMenuFlyout.xaml" />
     <None Remove="Controls\SearchBar.xaml" />
     <None Remove="Controls\Tips\InformationTip.xaml" />
+    <None Remove="Dialogs\CustomizeTitleBarItemsDialog.xaml" />
+    <None Remove="Dialogs\MigrateDataContentDialog.xaml" />
     <None Remove="Dialogs\QuickActionsContentDialog.xaml" />
     <None Remove="Dialogs\QuickConfigurationDialog.xaml" />
     <None Remove="Dialogs\SettingsDialog.xaml" />
@@ -58,6 +61,8 @@
     <None Remove="Views\Options\MiscPage.xaml" />
     <None Remove="Views\Pages\HomePage.xaml" />
     <None Remove="Views\PaneView.xaml" />
+    <None Remove="Views\QuickActionsDialog\CreateQuickActionView.xaml" />
+    <None Remove="Views\QuickActionsDialog\ManageQuickActionsView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -163,6 +168,21 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>nl-NL.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Dialogs\CustomizeTitleBarItemsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Dialogs\MigrateDataContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\QuickActionsDialog\ManageQuickActionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Dialogs\QuickActionsContentDialog.xaml">
@@ -274,6 +294,16 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\AdditionalDevTools\JavascriptConsolePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\QuickActionsDialog\CreateQuickActionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\IconSelectorFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

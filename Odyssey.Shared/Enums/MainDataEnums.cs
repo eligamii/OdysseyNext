@@ -25,7 +25,9 @@
     {
         PrimaryItems,
         Top,
-        BeforeInspectItem
+        BeforeInspectItem,
+        TitleBarButton,
+        Nowhere,
     }
 
     public enum QuickActionShowCondition

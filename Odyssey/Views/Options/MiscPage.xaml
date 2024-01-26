@@ -16,11 +16,15 @@
                 <FontIcon Glyph="&#xE11A;"/>
             </controls:SettingsCard.HeaderIcon>
         </controls:SettingsCard>
+        <controls:SettingsCard Header="Open tab at startup" Description="Will open the homepage of the selected search engine">
+            <ToggleSwitch x:Name="openTabAtStartupToggleSwitch" Toggled="openTabAtStartupToggleSwitch_Toggled"/>
+        </controls:SettingsCard>
         <controls:SettingsCard Background="{StaticResource SystemFillColorCriticalBackgroundBrush}" Header="Reset data" Description="Reset your data">
             <RepeatButton Content="Long-press to reset" Click="RepeatButton_Click"/>
             <controls:SettingsCard.HeaderIcon>
                 <FontIcon Glyph="&#xE7BA;"/>
             </controls:SettingsCard.HeaderIcon>
         </controls:SettingsCard>
+
     </StackPanel>
 </Page>

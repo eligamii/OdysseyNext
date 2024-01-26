@@ -18,8 +18,10 @@ namespace Odyssey.Views.Options
             this.InitializeComponent();
 
             searchEngineComboBox.SelectedIndex = Settings.SelectedSearchEngine;
+            searchSuggestionToggleSwitch.IsOn = Settings.AreSearchSuggestionsEnabled;
             darkModeToggleSwitch.IsOn = Settings.IsDarkReaderEnabled;
             forceDarkModeCheckBox.IsChecked = Settings.ForceDarkReader;
+
         }
 
         private void searchEngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -34,8 +36,13 @@ namespace Odyssey.Views.Options
 
         private async void ForceDarkModeCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Delay(100);
+            await Task.Delay(100); 
             Settings.ForceDarkReader = forceDarkModeCheckBox.IsChecked == true;
+        }
+
+        private void searchSuggestionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            Settings.AreSearchSuggestionsEnabled = searchSuggestionToggleSwitch.IsOn;
         }
     }
 }

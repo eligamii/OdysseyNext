@@ -28,8 +28,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid x:Name="RootGrid" x:FieldModifier="public">
-
+    <Grid x:Name="RootGrid" x:FieldModifier="public" PointerMoved="RootGrid_PointerMoved">
         <!-- Main splitView -->
         <SplitView x:Name="SplitView" Grid.Row="1"
                    VerticalAlignment="Stretch"
@@ -58,6 +57,7 @@
                     <Rectangle Grid.Row="0" Grid.RowSpan="2" Fill="{ThemeResource LayerFillColorDefaultBrush}" x:Name="LayerBackground" x:FieldModifier="public" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
                     <StackPanel Tag="pane" Margin="5,2,0,2" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Content="&#xE80F;" Click="HomeButton_Click" RightTapped="HomeButton_RightTapped" PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"/>
                         <Button Click="BackButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Back, Filename=Main}" Content="&#xE0A6;"/>
                         <Button Click="ForwardButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Forward, Filename=Main}" Content="&#xE0AB;"/>
                         <Button Click="RefreshButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=Refresh, Filename=Main}" Content="&#xE149;"/>
@@ -72,7 +72,6 @@
             <!-- Sidebar and WebView frame -->
             <SplitView x:FieldModifier="public" x:Name="sidebar" PaneBackground="Transparent" BorderBrush="#33808080" BorderThickness="1,0,0,0" Grid.Row="1" DisplayMode="Overlay" IsPaneOpen="False" PanePlacement="Right">
                 <Grid>
-                    
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -87,7 +86,7 @@
                                 BorderThickness="0,0,0,1"
                                 x:FieldModifier="public"
                                 Background="Transparent"
-                                SizeChanged="AppTitleBar_SizeChanged">
+                                Loaded="AppTitleBar_Loaded">
                             <Grid.BackgroundTransition>
                                 <BrushTransition />
                             </Grid.BackgroundTransition>
@@ -96,6 +95,8 @@
                                 <RowDefinition Height="42"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
+
+                            
 
                             <ProgressBar Background="Transparent" Grid.RowSpan="2" CornerRadius="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" x:Name="progressBar">
                                 <ProgressBar.OpacityTransition>
@@ -107,9 +108,13 @@
 
 
                             <!-- Controls region -->
-                            <StackPanel x:Name="buttonsStackPanel" Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
-                                <Button Content="&#xE80F;" Click="HomeButton_Click" RightTapped="HomeButton_RightTapped" PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"/>
-                                <Button Click="SearchButton_Click" ToolTipService.ToolTip="{helpers:ResourceString Name=SearchOnWeb, Filename=Main}" Content="&#xE11A;" FontSize="15"/>
+                            <StackPanel x:Name="buttonsStackPanel" x:FieldModifier="public" Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
+                                <StackPanel.Resources>
+                                    <Style TargetType="helpers:SymbolIconEx">
+                                        <Setter Property="FontSize" Value="15"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                
                                 <Button Visibility="Visible" x:Name="moreButton" x:FieldModifier="public" Grid.Row="0" Content="&#xE10C;" HorizontalAlignment="Right">
                                     <Button.Flyout>
                                         <MenuFlyout>
@@ -184,7 +189,7 @@
                             <!-- Info region -->
                             <StackPanel Tag="children" Orientation="Horizontal" x:Name="infoRegionStckPanel" HorizontalAlignment="Center"  Grid.Column="2" >
                                 <Button Content="&#xE9E9;" Click="MainMenuButton_Click"/>
-                                <TextBlock x:FieldModifier="public" x:Name="documentTitle" Tapped="documentTitle_Tapped" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
+                                <TextBlock x:FieldModifier="public" x:Name="documentTitle" Tapped="documentTitle_Tapped" TextWrapping="NoWrap" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
                             </StackPanel>
                         </Grid>
 
@@ -193,6 +198,7 @@
                         </Grid>
                         
                         <Grid Grid.Row="2">
+                            
                             <Frame x:Name="splitViewContentFrame" BorderBrush="#33808080" x:FieldModifier="public" Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"/>
                             <Button Style="{ThemeResource AccentButtonStyle}"
                                     VerticalAlignment="Top" HorizontalAlignment="Left"
@@ -217,6 +223,7 @@
                                     RightTapped="HomeButton_RightTapped"
                                     PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"
                                     />
+
                             <Grid.Transitions>
                                 <TransitionCollection>
                                     <RepositionThemeTransition />

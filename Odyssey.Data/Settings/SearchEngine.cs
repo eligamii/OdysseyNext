@@ -38,7 +38,10 @@ namespace Odyssey.Data.Settings
             else return SearchEngines.Bing;
         }
 
-
+        public static SearchEngine SelectedSearchEngine
+        {
+            get => ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine);
+        }
 
 
         public static SearchEngine Google

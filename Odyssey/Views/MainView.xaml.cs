@@ -25,6 +25,11 @@ using System.Threading.Tasks;
 using Microsoft.Web.WebView2.Core;
 using Type = System.Type;
 using Microsoft.UI.Xaml.Media.Imaging;
+using System.Linq;
+using Odyssey.Shared.Helpers;
+using System.Diagnostics;
+using Microsoft.UI.Windowing;
+using Odyssey.AdBlocker;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -72,7 +77,7 @@ namespace Odyssey.Views
             // when an instance has opened tabs (so when Settings.SuccessfullyClosed == false with an instance opened)
             var instances = Microsoft.Windows.AppLifecycle.AppInstance.GetInstances();
 
-            if (Settings.SuccessfullyClosed == false && instances.Count == 1)
+            if (Settings.SuccessfullyClosed == false && Settings.RestoreTabsAfterCrash && instances.Count == 1)
             {
                 PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
             }
@@ -115,10 +120,12 @@ namespace Odyssey.Views
             // Restore tabs after crash
             RestoreTabs();
 
+            DiltillNETAdBlocker.Init();
+
             // Require these to not crash
             WebView.MainDownloadElement = moreButton;
             WebView.MainHistoryElement = moreButton;
-            WebView.MainIconElement = new Microsoft.UI.Xaml.Controls.Image();
+            WebView.MainIconElement = new Image();
             WebView.MainProgressBar = progressBar;
             WebView.MainProgressElement = new ProgressBar();
             WebView.MainWebViewFrame = splitViewContentFrame;
@@ -134,14 +141,33 @@ namespace Odyssey.Views
             WebView.TotpLoginDetectedAction += SetTotpButtonVisibility;
             WebView.LoginPageDetectedAction += LoginDetectedChanged;
 
-            // Check the internet connection every second for Ui things
-            CheckNetworkConnectionState();
 
             // Set the custom theme if dynamic theme is not enabled
             SetCustomTheme();
 
             this.ActualThemeChanged += (s, a) => SetCustomTheme();
-            splitViewContentFrame.Navigate(typeof(HomePage));
+
+            if(Settings.OpenTabAtStartup)
+            {
+                WebView webView = WebView.Create(SearchEngine.SelectedSearchEngine.Url);
+
+                Tab tab = new()
+                {
+                    Url = SearchEngine.SelectedSearchEngine.Url,
+                    Title = SearchEngine.SelectedSearchEngine.Name,
+                    MainWebView = webView
+                };
+
+                webView.LinkedTab = tab;
+
+                Tabs.Items.Add(tab);
+                PaneView.Current.TabsView.SelectedItem = tab;
+            }
+            else
+            {
+                splitViewContentFrame.Navigate(typeof(HomePage));
+            }
+
 
             // Update the titlebar drag region based on the text of the documentTitle
             documentTitle.LayoutUpdated += DocumentTitle_LayoutUpdated;
@@ -158,17 +184,55 @@ namespace Odyssey.Views
 
             RequestedTheme = UpdateTheme.IssystemDarkMode() ? ElementTheme.Dark : ElementTheme.Light;
             UpdateTheme.UpdateThemeWith(color);
-            
-            //WebView.CurrentlySelectedWebViewEventTriggered += WebViewOnCurrentlySelectedWebViewEventTriggered;
 
+            WebView.CurrentlySelectedWebViewEventTriggered += WebView_CurrentlySelectedWebViewEventTriggered; ;
+
+            Controls.TitleBarButtons.AddButtonsTo(buttonsStackPanel, false);
+
+
+            titleBarDragRegions.SetDragRegionForTitleBars();
         }
 
-        private void WebViewOnCurrentlySelectedWebViewEventTriggered(CoreWebView2 sender, CurrentlySelectedWebViewEventTriggeredEventArgs args)
+        private bool _wasOpened;
+        private void WebView_CurrentlySelectedWebViewEventTriggered(CoreWebView2 sender, CurrentlySelectedWebViewEventTriggeredEventArgs args)
         {
-            if (args.EventType == EventType.FullScreenEvent)
+            if(args.EventType == EventType.FullScreenEvent)
             {
-                
+                if(sender.ContainsFullScreenElement)
+                {
+                    MainWindow.Current.PresenterKind = AppWindowPresenterKind.FullScreen;
+                    SplitView.DisplayMode = SplitViewDisplayMode.Inline;
+
+                    AppTitleBar.Visibility = Visibility.Collapsed;
+                    _wasOpened = SplitView.IsPaneOpen;
+                    SplitView.IsPaneOpen = false;
+
+                    SplitView.PaneOpened += SplitView_PaneOpened;
+                    SplitView.PaneClosed += SplitView_PaneClosedOnFullScreen;
+                }
+                else
+                {
+                    SplitView.PaneOpened -= SplitView_PaneOpened;
+                    SplitView.PaneClosed -= SplitView_PaneClosedOnFullScreen;
+
+                    MainWindow.Current.PresenterKind = AppWindowPresenterKind.Default;
+                    SplitView.DisplayMode = Settings.IsPaneLocked ? SplitViewDisplayMode.Inline : SplitViewDisplayMode.Overlay;
+
+                    AppTitleBar.Visibility = Visibility.Visible;
+                    SplitView.IsPaneOpen = _wasOpened;
+
+                }
             }
+        }
+
+        private void SplitView_PaneClosedOnFullScreen(SplitView sender, object args)
+        {
+            AppTitleBar.Visibility = Visibility.Collapsed;
+        }
+
+        private void SplitView_PaneOpened(SplitView sender, object args)
+        {
+            AppTitleBar.Visibility = Visibility.Visible;
         }
 
         private string _lastText = string.Empty;
@@ -407,21 +471,20 @@ namespace Odyssey.Views
             devToolsWindow.Activate();
         }
 
+
         TextBlock measureTextBlock = new();
         private async void AppTitleBar_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
-            if(CurrentlySelectedWebView != null)
+            if (CurrentlySelectedWebView != null)
             {
                 if (CurrentlySelectedWebView.CoreWebView2?.DocumentTitle != null)
                 {
                     try
-                    {
-                        var rect = documentTitle.ContentEnd.GetCharacterRect(Microsoft.UI.Xaml.Documents.LogicalDirection.Backward);
+                    {                       
                         string doc = CurrentlySelectedWebView.CoreWebView2.DocumentTitle;
-
                         documentTitle.Text = doc;
 
+                        var rect = documentTitle.ContentEnd.GetCharacterRect(Microsoft.UI.Xaml.Documents.LogicalDirection.Backward);
                         while (rect.Right > (double)this.ActualWidth - 400d)
                         {
                             if (documentTitle.Text.EndsWith("...")) documentTitle.Text = documentTitle.Text.Remove(documentTitle.Text.Length - 3, 3);
@@ -583,6 +646,17 @@ namespace Odyssey.Views
             }
 
             flyout.ShowAt(this, options);
+        }
+
+        private async void AppTitleBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(2000);
+            AppTitleBar.SizeChanged += AppTitleBar_SizeChanged;
+        }
+
+        private void RootGrid_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            
         }
     }
 }

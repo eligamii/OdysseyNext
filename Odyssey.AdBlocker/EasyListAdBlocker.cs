@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.AdBlocker
 {
-    public class EasyListAdBlocker // https://github.com/brave-experiments/ad-block
+    public class EasyListAdBlocker // 200ms/test * 60000/tests per requests and use 1gb of ram to inititalize
     {
         public class Filter
         {
