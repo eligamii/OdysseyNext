@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Controls;
 using Odyssey.Data.Main;
+using Odyssey.Shared.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
 using System;
@@ -20,8 +21,8 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using static Odyssey.Controls.TitleBarButtons;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Dialogs
 {
@@ -171,7 +172,32 @@ namespace Odyssey.Dialogs
             AddButtonsTo(MainView.Current.buttonsStackPanel, false);
             Data.Main.TitleBarButtons.Save();
 
+            MainView.Current.titleBarDragRegions.SetDragRegionForTitleBars();
+
             Hide();
+        }
+
+        private SymbolEx _symbol;
+        private void iconSelectorFlyout_SymbolSelected(Shared.Helpers.SymbolEx symbol) => _symbol = symbol;
+
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TitleBarButton button = new();
+            button.Id = -1;
+            button.Title = labelTextBox.Text;
+            button.Command = commandTextBox.Text;
+            button.Icon = SymbolIconEx.SymbolExToString(_symbol);
+
+            UITitleBarButton uITitleBarButton = new(button.Id);
+            uITitleBarButton.Command = button.Command;
+            uITitleBarButton.Click += ButtonsStackPanel_RightTapped;
+            uITitleBarButton.Content = button.Icon;
+
+            buttonsStackPanel.Children.Insert(0, uITitleBarButton);
+            Data.Main.TitleBarButtons.Items.Add(button);
+            Data.Main.TitleBarButtons.Save();
+
         }
     }
 }

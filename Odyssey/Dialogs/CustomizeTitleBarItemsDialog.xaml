@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Odyssey.Dialogs"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helpers="using:Odyssey.Shared.Helpers" xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ui="using:CommunityToolkit.WinUI" xmlns:controls="using:Odyssey.Controls.Flyouts"
     mc:Ignorable="d"
     Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" 
     CornerRadius="6">
@@ -19,7 +19,7 @@
             <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent" />
             <ui:AttachedDropShadow x:Key="CommonShadow"
                                CastTo="{x:Bind ShadowTarget}"
-                               Offset="4" />
+                               Opacity="0.2" Color="DarkGray"/>
 
         </ResourceDictionary>
     </ContentDialog.Resources>
@@ -35,7 +35,7 @@
         </Grid.ColumnDefinitions>
         <Grid.Resources>
             <Style TargetType="Grid" x:Key="Shadow">
-                <Setter Property="ui:Effects.Shadow" Value="{StaticResource CommonShadow}" />
+                <Setter Property="ui:Effects.Shadow" Value="{StaticResource CommonShadow}"/>
             </Style>
         </Grid.Resources>
 
@@ -80,21 +80,47 @@
         </Grid>
 
 
-        <ListView x:Name="availableItems" Grid.Row="1" IsItemClickEnabled="True" SelectionMode="None" ItemClick="availableItems_ItemClick">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            
+            <ListView x:Name="availableItems" Grid.Row="0" IsItemClickEnabled="True" SelectionMode="None" ItemClick="availableItems_ItemClick">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <FontIcon Glyph="{Binding Icon}" FontSize="15"/>
-                        <TextBlock Text="{Binding Title}" Grid.Column="1"/>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                            <FontIcon Glyph="{Binding Icon}" FontSize="15"/>
+                            <TextBlock Text="{Binding Title}" Grid.Column="1"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Button Grid.Row="1" Content="Create">
+                <Button.Flyout>
+                    <Flyout>
+                        <Grid>
+                            <StackPanel>
+                                <Button Content="Icon">
+                                    <Button.Flyout>
+                                        <controls:IconSelectorFlyout x:Name="iconSelectorFlyout" SymbolSelected="iconSelectorFlyout_SymbolSelected"/>
+                                    </Button.Flyout>
+                                </Button>
+                                <TextBox x:Name="labelTextBox"/>
+                                <TextBox x:Name="commandTextBox"/>
+                                <Button Content="Create" Click="Button_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </Grid>
 
         <Border x:Name="ShadowTarget" />
 

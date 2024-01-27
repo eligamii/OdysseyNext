@@ -24,6 +24,7 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("ThemePerformanceMode")) ThemePerformanceMode = 1;
             if (!Values.Values.ContainsKey("ThemeMode")) ThemeMode = 2;
             if (!Values.Values.ContainsKey("IsDevBarEnabled")) IsDevBarEnabled = false;
+            if (!Values.Values.ContainsKey("ShowHostInsteadOfDocumentTitle")) ShowHostInsteadOfDocumentTitle = true;
 
             // Dark reader
             if (!Values.Values.ContainsKey("IsDarkReaderEnabled")) IsDarkReaderEnabled = true;
@@ -71,6 +72,12 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool)Values.Values["AreSearchSuggestionsEnabled"]; }
             set { Values.Values["AreSearchSuggestionsEnabled"] = value; }
+        }
+
+        public static bool ShowHostInsteadOfDocumentTitle
+        {
+            get { return (bool)Values.Values["ShowHostInsteadOfDocumentTitle"]; }
+            set { Values.Values["ShowHostInsteadOfDocumentTitle"] = value; }
         }
 
         public static string CustomSearchSuggestionApiUrl

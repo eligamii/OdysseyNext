@@ -30,9 +30,10 @@ using Odyssey.Shared.Helpers;
 using System.Diagnostics;
 using Microsoft.UI.Windowing;
 using Odyssey.AdBlocker;
+using Microsoft.Graphics.Canvas.Text;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Views
 {
@@ -194,36 +195,8 @@ namespace Odyssey.Views
         }
 
         private bool _wasOpened;
-        private void WebView_CurrentlySelectedWebViewEventTriggered(CoreWebView2 sender, CurrentlySelectedWebViewEventTriggeredEventArgs args)
-        {
-            if(args.EventType == EventType.FullScreenEvent)
-            {
-                if(sender.ContainsFullScreenElement)
-                {
-                    MainWindow.Current.PresenterKind = AppWindowPresenterKind.FullScreen;
-                    SplitView.DisplayMode = SplitViewDisplayMode.Inline;
+       
 
-                    AppTitleBar.Visibility = Visibility.Collapsed;
-                    _wasOpened = SplitView.IsPaneOpen;
-                    SplitView.IsPaneOpen = false;
-
-                    SplitView.PaneOpened += SplitView_PaneOpened;
-                    SplitView.PaneClosed += SplitView_PaneClosedOnFullScreen;
-                }
-                else
-                {
-                    SplitView.PaneOpened -= SplitView_PaneOpened;
-                    SplitView.PaneClosed -= SplitView_PaneClosedOnFullScreen;
-
-                    MainWindow.Current.PresenterKind = AppWindowPresenterKind.Default;
-                    SplitView.DisplayMode = Settings.IsPaneLocked ? SplitViewDisplayMode.Inline : SplitViewDisplayMode.Overlay;
-
-                    AppTitleBar.Visibility = Visibility.Visible;
-                    SplitView.IsPaneOpen = _wasOpened;
-
-                }
-            }
-        }
 
         private void SplitView_PaneClosedOnFullScreen(SplitView sender, object args)
         {
@@ -239,16 +212,7 @@ namespace Odyssey.Views
 
         private void DocumentTitle_LayoutUpdated(object sender, object e)
         {
-            try
-            {
-                string text = CurrentlySelectedWebView?.CoreWebView2?.DocumentTitle;
-                if (_lastText != text)
-                {
-                    titleBarDragRegions.SetDragRegionForTitleBars();
-                    _lastText = text;
-                }
-            }
-            catch (COMException) { }
+           
         }
 
         private bool lastConnectionState;
@@ -481,16 +445,17 @@ namespace Odyssey.Views
                 {
                     try
                     {                       
-                        string doc = CurrentlySelectedWebView.CoreWebView2.DocumentTitle;
-                        documentTitle.Text = doc;
-
-                        var rect = documentTitle.ContentEnd.GetCharacterRect(Microsoft.UI.Xaml.Documents.LogicalDirection.Backward);
-                        while (rect.Right > (double)this.ActualWidth - 400d)
+                        string doc = Settings.ShowHostInsteadOfDocumentTitle ? CurrentlySelectedWebView.Source.Host : CurrentlySelectedWebView.CoreWebView2.DocumentTitle;
+                        CanvasTextFormat format = new()
                         {
-                            if (documentTitle.Text.EndsWith("...")) documentTitle.Text = documentTitle.Text.Remove(documentTitle.Text.Length - 3, 3);
-                            documentTitle.Text = documentTitle.Text.Remove(documentTitle.Text.Length - 1, 1) + "...";
-                            rect = documentTitle.ContentEnd.GetCharacterRect(Microsoft.UI.Xaml.Documents.LogicalDirection.Backward);
-                        }
+                            FontFamily = "Segoe UI Variable",
+                            FontSize = (float)documentTitle.FontSize,
+                            FontWeight = documentTitle.FontWeight,
+                            FontStretch = documentTitle.FontStretch,
+                            FontStyle = documentTitle.FontStyle
+                        };
+
+                        documentTitle.Text = TextHelpers.TrimTextToDesiredWidth(doc, format, e.NewSize.Width - (buttonsStackPanel.Children.Count() * 38 + 50) * 2);
                     }
                     catch { }
                 }

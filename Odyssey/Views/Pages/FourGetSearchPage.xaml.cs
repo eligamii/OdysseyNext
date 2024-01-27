@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Odyssey.FourGet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,18 +17,25 @@ using Windows.Foundation.Collections;
 
 
 
-namespace Odyssey.Dialogs
+namespace Odyssey.Views.Pages
 {
-    public sealed partial class MigrateDataContentDialog : ContentDialog
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class FourGetSearchPage : Page
     {
-        public MigrateDataContentDialog()
+        public FourGetSearchPage()
         {
             this.InitializeComponent();
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            string param = e.Parameter as string;
 
+            var res = await FourGet.FourGet.SearchAsync(param);
+
+            base.OnNavigatedTo(e);
         }
     }
 }

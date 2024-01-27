@@ -7,8 +7,8 @@ using Odyssey.FWebView;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Views.Pages
 {
@@ -38,7 +38,7 @@ namespace Odyssey.Views.Pages
                     }
                     else
                     {
-                        tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+                        tab.ImageSource = new BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
                     }
                 }
                 catch { }

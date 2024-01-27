@@ -23,6 +23,8 @@
                 <x:String>Qwant</x:String>
                 <x:String>You.com</x:String>
                 <x:String>Startpage</x:String>
+                <x:String>Perplexity AI</x:String>
+                <x:String>Kagi</x:String>
             </ComboBox>
         </controls:SettingsCard>
 

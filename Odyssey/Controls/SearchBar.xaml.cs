@@ -26,8 +26,8 @@ using Windows.Foundation;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using Uri = System.Uri;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Controls
 {

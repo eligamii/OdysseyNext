@@ -23,6 +23,8 @@ namespace Odyssey.Data.Settings
                 case SearchEngines.Qwant: return SearchEngine.Qwant;
                 case SearchEngines.Yahoo: return SearchEngine.Yahoo;
                 case SearchEngines.Bing: return SearchEngine.Bing;
+                case SearchEngines.PerplexityAI: return SearchEngine.PerplexityAI;
+                case SearchEngines.Kagi: return SearchEngine.Kagi;
                 default: return null;
             }
         }
@@ -35,6 +37,8 @@ namespace Odyssey.Data.Settings
             else if (obj == SearchEngine.DuckDuckGo) return SearchEngines.DuckDuckGo;
             else if (obj == SearchEngine.Qwant) return SearchEngines.Qwant;
             else if (obj == SearchEngine.Yahoo) return SearchEngines.Yahoo;
+            else if (obj == SearchEngine.PerplexityAI) return SearchEngines.PerplexityAI;
+            else if (obj == SearchEngine.Kagi) return SearchEngines.Kagi;
             else return SearchEngines.Bing;
         }
 
@@ -132,6 +136,32 @@ namespace Odyssey.Data.Settings
                     Name = "Startpage",
                     Url = "https://www.startpage.com/",
                     Prefix = "do/search?query="
+                };
+            }
+        }
+
+        public static SearchEngine PerplexityAI
+        {
+            get
+            {
+                return new SearchEngine()
+                {
+                    Name = "Perplexity AI",
+                    Url = "https://www.perplexity.ai/",
+                    Prefix = "search?focus=internet&q="
+                };
+            }
+        }
+
+        public static SearchEngine Kagi
+        {
+            get
+            {
+                return new SearchEngine()
+                {
+                    Name = "Kagi",
+                    Url = "https://kagi.com/",
+                    Prefix = "search?q="
                 };
             }
         }

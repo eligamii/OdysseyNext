@@ -23,15 +23,17 @@ using Windows.UI;
 using Windows.UI.WebUI;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.FWebView
 {
 
     public enum EventType
     {
-        FullScreenEvent
+        FullScreenEvent,
+        DocumentTitleChangedEvent,
+        SourceChanged
     }
 
     public class CurrentlySelectedWebViewEventTriggeredEventArgs
@@ -119,29 +121,10 @@ namespace Odyssey.FWebView
         }
 
 
-        public bool IsVisible
+        public bool IsVisible()
         {
-            get
-            {
-                try
-                {
-                    var parent = VisualTreeHelper.GetParent(this);
-                    if (parent != null)
-                    {
-                        parent = VisualTreeHelper.GetParent(parent);
-                        return GetType() == typeof(Frame);
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                catch(COMException)
-                {
-                    return false;
-                }
-            }
-        }
+            return SelectedWebView == this;
+}
 
         public static void OpenDownloadDialog(FrameworkElement element = null)
         {
@@ -213,12 +196,12 @@ namespace Odyssey.FWebView
                 scrollTimer.Tick += ScrollTimer_Tick;
 
                 // Loading cycle
-                sender.CoreWebView2.NavigationStarting += (s, a) => { if (IsVisible) MainProgressBar.Value = 0; };
-                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f / 6f * 100f; };
-                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f / 3f * 100f; };
-                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f / 2f * 100f; };
-                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 7f / 8f * 100f; };
-                sender.CoreWebView2.NavigationCompleted += (s, a) => { if (IsVisible) { MainProgressBar.Value = 0; } };
+                sender.CoreWebView2.NavigationStarting += (s, a) => { if (IsVisible()) MainProgressBar.Value = 0; };
+                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible() && IsPageLoading) MainProgressBar.Value = 1f / 6f * 100f; };
+                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible() && IsPageLoading) MainProgressBar.Value = 1f / 3f * 100f; };
+                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible() && IsPageLoading) MainProgressBar.Value = 1f / 2f * 100f; };
+                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible() && IsPageLoading) MainProgressBar.Value = 7f / 8f * 100f; };
+                sender.CoreWebView2.NavigationCompleted += (s, a) => { if (IsVisible()) { MainProgressBar.Value = 0; } };
             }
 
             sender.CoreWebView2.PermissionRequested += CoreWebView2_PermissionRequested;
@@ -316,7 +299,7 @@ namespace Odyssey.FWebView
             while (true)
             {
                 await Task.Delay(1500);
-                if (IsVisible)
+                if (IsVisible())
                 {
                     try
                     {
@@ -421,7 +404,7 @@ namespace Odyssey.FWebView
 
             LinkedTab.ImageSource = bitmapImage;
 
-            if (IsVisible && !IsPageLoading)
+            if (IsVisible() && !IsPageLoading)
             {
                 MainIconElement.Source = bitmapImage;
             }
@@ -452,7 +435,7 @@ namespace Odyssey.FWebView
             scrollTimer.Stop();
 
             // Checking if the user has finished scrolling for 2 seconds
-            if (isScrolling && IsVisible)
+            if (isScrolling && IsVisible())
             {
                 _ = DynamicTheme.UpdateDynamicThemeAsync(this);
                 isScrolling = false;
@@ -461,7 +444,7 @@ namespace Odyssey.FWebView
 
         private void WebView2_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (IsVisible && !IsLittleWeb)
+            if (IsVisible() && !IsLittleWeb)
             {
                 _ = DynamicTheme.UpdateDynamicThemeAsync(this);
             }
@@ -479,7 +462,7 @@ namespace Odyssey.FWebView
 
             LinkedTab.ImageSource = bitmapImage;
 
-            if (IsVisible)
+            if (IsVisible())
             {
                 MainProgressElement.Visibility = Visibility.Collapsed;
                 _ = DynamicTheme.UpdateDynamicThemeAsync(this);
@@ -497,10 +480,10 @@ namespace Odyssey.FWebView
         private void CoreWebView2_SourceChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2SourceChangedEventArgs args)
         {
             LinkedTab.Url = sender.Source;
-
-            if (IsVisible)
+            bool b = IsVisible();
+            if (b)
             {
-                UrlTextBox.Text = sender.Source;
+                CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.SourceChanged));
             }
         }
 
@@ -528,11 +511,11 @@ namespace Odyssey.FWebView
             }
 
             Tabs.Save();
-            if (IsVisible)
+            if (IsVisible())
             {
                 MainIconElement.Source = null; // will hide the element
                 MainProgressElement.Visibility = Visibility.Visible;
-                DynamicTheme.UpdateDynamicThemeAsync(this);
+                await DynamicTheme.UpdateDynamicThemeAsync(this);
             }
 
 
@@ -551,9 +534,9 @@ namespace Odyssey.FWebView
         private void CoreWebView2_DocumentTitleChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)
         {
             LinkedTab.Title = sender.DocumentTitle;
-            if (IsVisible)
+            if (IsVisible())
             {
-                DocumentTextBlock.Text = sender.DocumentTitle;
+                CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.DocumentTitleChangedEvent));
             }
         }
 

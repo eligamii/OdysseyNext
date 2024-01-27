@@ -16,6 +16,8 @@ namespace Odyssey.Shared.Helpers
             FontFamily = new FontFamily("Segoe Fluent Icons");
         }
 
+        public static string SymbolExToString(SymbolEx symbol) => char.ConvertFromUtf32((int)symbol).ToString();
+
         public SymbolEx Symbol
         {
             get => (SymbolEx)Glyph[0];
