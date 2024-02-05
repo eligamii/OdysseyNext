@@ -309,7 +309,45 @@ namespace Odyssey.Views
                 _ = FWebView.Classes.DynamicTheme.UpdateDynamicThemeAsync(tab.MainWebView);
                 UpdateTabSelection(sender);
             }
+            else if(e.RemovedItems.Count > 0 && e.AddedItems.Count == 0)
+            {
+                Tab removedItem = e.RemovedItems[0] as Tab;
+                Tab parentTab = null;
 
+                if (removedItem.MainWebView != null) // Prevent crashes when the favorite was restored and with no webview
+                {
+                    parentTab = ((WebView)removedItem.MainWebView).ParentTab; // getting the paent favorite if one
+
+                    // Remove the favorite's WebViews
+                    removedItem.MainWebView.Close();
+                    if (removedItem.SplitViewWebView != null) removedItem.SplitViewWebView.Close();
+                    removedItem.MainWebView = removedItem.SplitViewWebView = null;
+                }
+
+                // Remove the favorite from the tabs listView
+                Tabs.Items.Remove(removedItem);
+
+                // Changing the selected favorite to another
+                if (parentTab != null)
+                {
+                    // Select the parent favorite if one 
+                    if (parentTab.GetType() == typeof(Pin))
+                    {
+                        if (Pins.Items.Contains(parentTab as Pin))
+                            PinsTabView.SelectedItem = parentTab as Pin;
+                    }
+                    else if (parentTab.GetType() == typeof(Favorite))
+                    {
+                        if (Favorites.Items.Contains(parentTab))
+                            FavoriteGrid.SelectedItem = parentTab;
+                    }
+                    else
+                    {
+                        if (Tabs.Items.Contains(parentTab))
+                            TabsView.SelectedItem = parentTab;
+                    }
+                }
+            }
 
 
             if (e.AddedItems.Count != 0) // Save tabs as much as possible to avoid data loss after crash

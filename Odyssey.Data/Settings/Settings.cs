@@ -62,6 +62,18 @@ namespace Odyssey.Data.Settings
             set { Values.Values["Inititalized"] = value; }
         }
 
+        public static bool IsPasswordProtectedPrivateModeEnabled
+        {
+            get { return (bool)Values.Values["IsPasswordProtectedPrivateModeEnabled"]; }
+            set { Values.Values["RestoreTabsAftIsPasswordProtectedPrivateModeEnablederCrash"] = value; }
+        }
+
+        public static string ProfileName
+        {
+            get { return (string)Values.Values["ProfileName"]; }
+            set { Values.Values["ProfileName"] = value; }
+        }
+
         public static bool RestoreTabsAfterCrash
         {
             get { return (bool)Values.Values["RestoreTabsAfterCrash"]; }

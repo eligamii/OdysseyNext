@@ -15,8 +15,10 @@ using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -120,6 +122,7 @@ namespace Odyssey.FWebView
             return newWebView;
         }
 
+      
 
         public bool IsVisible()
         {
@@ -204,6 +207,8 @@ namespace Odyssey.FWebView
                 sender.CoreWebView2.NavigationCompleted += (s, a) => { if (IsVisible()) { MainProgressBar.Value = 0; } };
             }
 
+            sender.CoreWebView2.WindowCloseRequested += CoreWebView2_WindowCloseRequested;
+
             sender.CoreWebView2.PermissionRequested += CoreWebView2_PermissionRequested;
 
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect the downloads to aria2
@@ -279,6 +284,15 @@ namespace Odyssey.FWebView
             catch { }
 
             _ = UpdateThemeWithColorChangeAsync();
+        }
+
+        private void CoreWebView2_WindowCloseRequested(CoreWebView2 sender, object args)
+        {
+            this.Close();
+
+            if (LinkedTab.GetType() == typeof(Favorite)) Favorites.Items.Remove((Favorite)LinkedTab);
+            else if (LinkedTab.GetType() == typeof(Pin)) Pins.Items.Remove((Pin)LinkedTab);
+            else if (LinkedTab.GetType() == typeof(Tab)) Tabs.Items.Remove(LinkedTab);
         }
 
         private void CoreWebView2OnContainsFullScreenElementChanged(CoreWebView2 sender, object args)
@@ -455,6 +469,18 @@ namespace Odyssey.FWebView
 
         private async void CoreWebView2_NavigationCompleted(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
         {
+            // Especially for login pages (Figma, etc) that leave an useless blank page after login
+            if (ParentTab != null && !CanGoForward && Source.ToString() == "about:blank")
+            {
+                if(ParentTab.GetType() != typeof(Favorite) && ParentTab.GetType() != typeof(Pin) && ParentTab.GetType() == typeof(Tab))
+                {
+                    Tabs.Items.Remove(ParentTab);
+                    this.Close();
+
+                    return;
+                }
+            }
+
             IsPageLoading = false;
 
             // Getting the favicon from the webView
@@ -517,8 +543,6 @@ namespace Odyssey.FWebView
                 MainProgressElement.Visibility = Visibility.Visible;
                 await DynamicTheme.UpdateDynamicThemeAsync(this);
             }
-
-
         }
 
         private void CoreWebView2_ContextMenuRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2ContextMenuRequestedEventArgs args)

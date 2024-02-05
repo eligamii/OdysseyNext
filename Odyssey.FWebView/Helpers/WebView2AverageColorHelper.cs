@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Runtime.ConstrainedExecution;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -64,8 +65,12 @@ namespace Odyssey.FWebView.Helpers
         public static async Task<Windows.UI.Color> GetFirstPixelColorAsync(WebView2 webView)
         {
             var bmp = await GetBitmapAsync(webView, 1, 1);
-            Color clr = bmp.GetPixel(0, 0);
-            return Windows.UI.Color.FromArgb(255, clr.R, clr.R, clr.B);
+            if(bmp is not null)
+            {
+                Color clr = bmp.GetPixel(0, 0);
+                return Windows.UI.Color.FromArgb(255, clr.R, clr.R, clr.B);
+            }
+            else return Windows.UI.Color.FromArgb(255, 0, 0, 0);
         }
 
         /// <summary>
