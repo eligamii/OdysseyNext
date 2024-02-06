@@ -5,11 +5,48 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Odyssey.Views.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helpers="using:Odyssey.Shared.Helpers"
     mc:Ignorable="d"
     >
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <TextBox Visibility="Collapsed" KeyDown="searchBox_KeyDown" VerticalAlignment="Center" IsSpellCheckEnabled="False" x:Name="searchBox" CornerRadius="8" Height="60" BorderBrush="#33808080" BorderThickness="1" Background="{ThemeResource LayerOnMicaBaseAltFillColorDefaultBrush}" MaxWidth="559"  PlaceholderText="{helpers:ResourceString Name=SearchOnWeb,Filename=Main}"  >
+            <TextBox.Style>
+                <Style TargetType="TextBox">
+                    <Setter Property="Padding" Value="19"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                </Style>
+            </TextBox.Style>
 
+            <TextBox.Resources>
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#33808080"/>
+
+                <SolidColorBrush x:Key="TextControlBackground" Color="Transparent" />
+                <SolidColorBrush x:Key="TextControlBorderBrush" Color="Transparent"/>
+            </TextBox.Resources>
+        </TextBox>
+
+        <ListView Grid.Row="1" x:Name="list" SelectionMode="None" IsItemClickEnabled="True" MaxWidth="700" ItemClick="list_ItemClick">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="0,10,0,20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Padding="0,0,0,5" Text="{Binding title}" Foreground="{StaticResource AccentTextFillColorPrimaryBrush}" FontSize="15" Style="{ThemeResource BodyStrongTextBlockStyle}" Grid.Row="0"/>
+                        <TextBlock Padding="0,0,0,0" Text="{Binding base_url}" Grid.Row="1"/>
+                        <TextBlock Text="{Binding description}" Foreground="{StaticResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Grid.Row="2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>

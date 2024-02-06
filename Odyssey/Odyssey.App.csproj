@@ -111,8 +111,8 @@
     <ProjectReference Include="..\Odyssey.2FA\Odyssey.TwoFactorsAuthentification.csproj" />
     <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
-    <ProjectReference Include="..\Odyssey.FourGet\Odyssey.FourGet.csproj" />
     <ProjectReference Include="..\Odyssey.FWebView\Odyssey.FWebView.csproj" />
+    <ProjectReference Include="..\Odyssey.LibreYAPI\Odyssey.LibreYAPI.csproj" />
     <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
     <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />

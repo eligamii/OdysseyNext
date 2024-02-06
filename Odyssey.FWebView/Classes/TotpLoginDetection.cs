@@ -81,6 +81,7 @@ namespace Odyssey.FWebView.Classes
 
             }
             catch (COMException) { }
+            catch (FormatException) { }
         }
     }
 }

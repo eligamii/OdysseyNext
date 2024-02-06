@@ -5,7 +5,12 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Odyssey.Data.Main;
 using Odyssey.FourGet;
+using Odyssey.FWebView;
+using Odyssey.LibreYAPI;
+using Odyssey.LibreYAPI.Objects;
+using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,9 +38,45 @@ namespace Odyssey.Views.Pages
         {
             string param = e.Parameter as string;
 
-            var res = await FourGet.FourGet.SearchAsync(param);
+            var res = await LibreYAPI.LibreYAPI.SearchAsync(param, 0);
+            List<SearchResult> results = res.Where(p => p.Value.title != null).Select(p => p.Value).ToList();
+
+            list.ItemsSource = results;
+            searchBox.Visibility = Visibility.Visible;
 
             base.OnNavigatedTo(e);
+        }
+
+        private async void searchBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if(e.Key == Windows.System.VirtualKey.Enter)
+            {
+                var res = await LibreYAPI.LibreYAPI.SearchAsync(searchBox.Text, 0);
+                List<SearchResult> results = res.Where(p => p.Value.title != null).Select(p => p.Value).ToList();
+
+                list.ItemsSource = results;
+            }
+        }
+
+        private void list_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            SearchResult clickedItem = e.ClickedItem as SearchResult;
+            WebView webView = WebView.Create(clickedItem.url);
+
+            Tab tab = new()
+            {
+                Url = clickedItem.url,
+                Title = clickedItem.title,
+                ToolTip = clickedItem.url
+            };
+
+            tab.MainWebView = webView;
+
+            webView.LinkedTab = tab;
+
+            Tabs.Items.Add(tab);
+
+            PaneView.Current.TabsView.SelectedItem = tab;
         }
     }
 }
