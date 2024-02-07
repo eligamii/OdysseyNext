@@ -54,12 +54,19 @@ namespace Odyssey.Data.Settings
 
             // Behaviors
             if (!Values.Values.ContainsKey("RestoreTabsAfterCrash")) RestoreTabsAfterCrash = false;
+            if (!Values.Values.ContainsKey("OpenHomePageAtNewTabCreation")) OpenHomePageAtNewTabCreation = true;
         }
 
         public static bool? Inititalized
         {
             get { return (bool?)Values.Values["Inititalized"]; }
             set { Values.Values["Inititalized"] = value; }
+        }
+
+        public static bool OpenHomePageAtNewTabCreation
+        {
+            get { return (bool)Values.Values["OpenHomePageAtNewTabCreation"]; }
+            set { Values.Values["OpenHomePageAtNewTabCreation"] = value; }
         }
 
         public static bool IsPasswordProtectedPrivateModeEnabled

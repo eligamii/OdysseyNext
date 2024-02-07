@@ -16,32 +16,20 @@ namespace Odyssey.Data.Settings
         {
             switch (searchEngineEnum)
             {
-                case SearchEngines.DuckDuckGo: return SearchEngine.DuckDuckGo;
-                case SearchEngines.Startpage: return SearchEngine.Startpage;
-                case SearchEngines.YouDotCom: return SearchEngine.YouDotCom;
-                case SearchEngines.Google: return SearchEngine.Google;
-                case SearchEngines.Qwant: return SearchEngine.Qwant;
-                case SearchEngines.Yahoo: return SearchEngine.Yahoo;
-                case SearchEngines.Bing: return SearchEngine.Bing;
-                case SearchEngines.PerplexityAI: return SearchEngine.PerplexityAI;
-                case SearchEngines.Kagi: return SearchEngine.Kagi;
+                case SearchEngines.DuckDuckGo: return DuckDuckGo;
+                case SearchEngines.Startpage: return Startpage;
+                case SearchEngines.YouDotCom: return YouDotCom;
+                case SearchEngines.Google: return Google;
+                case SearchEngines.Qwant: return Qwant;
+                case SearchEngines.Yahoo: return Yahoo;
+                case SearchEngines.Bing: return Bing;
+                case SearchEngines.PerplexityAI: return PerplexityAI;
+                case SearchEngines.Kagi: return Kagi;
                 default: return null;
             }
         }
 
-        public static SearchEngines ToSearchEngineEnum(SearchEngine obj)
-        {
-            if (obj == SearchEngine.Google) return SearchEngines.Google;
-            else if (obj == SearchEngine.Startpage) return SearchEngines.Startpage;
-            else if (obj == SearchEngine.YouDotCom) return SearchEngines.YouDotCom;
-            else if (obj == SearchEngine.DuckDuckGo) return SearchEngines.DuckDuckGo;
-            else if (obj == SearchEngine.Qwant) return SearchEngines.Qwant;
-            else if (obj == SearchEngine.Yahoo) return SearchEngines.Yahoo;
-            else if (obj == SearchEngine.PerplexityAI) return SearchEngines.PerplexityAI;
-            else if (obj == SearchEngine.Kagi) return SearchEngines.Kagi;
-            else return SearchEngines.Bing;
-        }
-
+        
         public static SearchEngine SelectedSearchEngine
         {
             get => ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine);

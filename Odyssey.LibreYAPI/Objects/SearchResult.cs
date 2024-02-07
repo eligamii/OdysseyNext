@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -18,6 +20,20 @@ namespace Odyssey.LibreYAPI.Objects
         public string description { get; set; }
 
         public string source { get; set; }
+
+
+        public string decodedTitle => WebUtility.HtmlDecode(title); 
+        public string decodedDescription => WebUtility.HtmlDecode(description); 
+        public string subtitle 
+        { 
+            get
+            {
+                Uri url = new Uri(this.url);
+                return url.Host.Replace("www.", "");
+            } 
+        }
+
+        public string iconSource => $"http://muddy-jade-bear.faviconkit.com/{new Uri(url).Host}/21";
 
         public SpecialResponse special_response { get; set; }
 

@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -146,17 +147,34 @@ namespace Odyssey.Controls
 
         bool suggestionChosen = false;
 
+
+        bool isImFeelingLuckyEnabled = false;
         private async void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Shift)
                 newTab = true;
 
+            if (e.Key == Windows.System.VirtualKey.Control)
+                isImFeelingLuckyEnabled = true;
+
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 if (suggestionListView.SelectedItem == null)
                 {
-                    string text = (sender as TextBox).Text;
-                    string url = await WebViewNavigateUrlHelper.ToWebView2Url(text);
+                    string text, url;
+
+                    if(isImFeelingLuckyEnabled)
+                    {
+                        var res = await LibreYAPI.LibreYAPI.SearchAsync(mainSearchBox.Text, 0);
+                        text = url = res.Where(p => p.Value.url != null).Select(p => p.Value).ElementAt(0).url;
+                    }
+                    else
+                    {
+                        text = (sender as TextBox).Text;
+                        url = await WebViewNavigateUrlHelper.ToWebView2Url(text);
+                    }
+
+                    
                     bool ask = false;
 
                     if (url != string.Empty) // The request will be treated differently with commands and app uris
@@ -464,6 +482,11 @@ namespace Odyssey.Controls
             if (e.Key == Windows.System.VirtualKey.Shift)
             {
                 newTab = startNewTab;
+            }
+
+            if(e.Key == Windows.System.VirtualKey.Control)
+            {
+                isImFeelingLuckyEnabled = false;
             }
         }
     }

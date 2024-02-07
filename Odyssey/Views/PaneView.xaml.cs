@@ -13,6 +13,7 @@ using Odyssey.Dialogs;
 using Odyssey.FWebView;
 using Odyssey.OtherWindows;
 using Odyssey.Shared.ViewModels.Data;
+using Odyssey.Views.Pages;
 using System;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
@@ -176,12 +177,19 @@ namespace Odyssey.Views
 
         private void AddTabButton_Click(object sender, RoutedEventArgs e)
         {
-            SearchBar searchBar = new SearchBar(true);
-            FlyoutShowOptions options = new FlyoutShowOptions();
-            options.Placement = FlyoutPlacementMode.Bottom;
-            options.Position = new Point(MainView.Current.splitViewContentFrame.ActualWidth / 2, 100);
+            if(Settings.OpenHomePageAtNewTabCreation)
+            {
+                MainView.Current.splitViewContentFrame.Navigate(typeof(HomePage));
+            }
+            else
+            {
+                SearchBar searchBar = new SearchBar(true);
+                FlyoutShowOptions options = new FlyoutShowOptions();
+                options.Placement = FlyoutPlacementMode.Bottom;
+                options.Position = new Point(MainView.Current.splitViewContentFrame.ActualWidth / 2, 100);
 
-            searchBar.ShowAt(MainView.Current.splitViewContentFrame, options);
+                searchBar.ShowAt(MainView.Current.splitViewContentFrame, options);
+            }
         }
 
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -278,9 +286,9 @@ namespace Odyssey.Views
             }
         }
 
+ 
         private void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             if (e.AddedItems.Count > 0)
             {
                 MainView.Current.splitViewContentFrame.Content = null;
@@ -309,7 +317,12 @@ namespace Odyssey.Views
                 _ = FWebView.Classes.DynamicTheme.UpdateDynamicThemeAsync(tab.MainWebView);
                 UpdateTabSelection(sender);
             }
-            else if(e.RemovedItems.Count > 0 && e.AddedItems.Count == 0)
+            else if(/* As when the tab selection add an item before removing another */
+                    e.RemovedItems.Count > 0 &&
+                    e.AddedItems.Count == 0 &&
+                    FavoriteGrid.SelectedIndex == -1 &&
+                    PinsTabView.SelectedIndex == -1 &&
+                    TabsView.SelectedIndex == -1)
             {
                 Tab removedItem = e.RemovedItems[0] as Tab;
                 Tab parentTab = null;

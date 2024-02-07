@@ -19,6 +19,5 @@
         Startpage,
         PerplexityAI,
         Kagi,
-        FourGetToWinUI,
     }
 }

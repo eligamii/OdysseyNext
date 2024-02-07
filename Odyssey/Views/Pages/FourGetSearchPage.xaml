@@ -40,10 +40,12 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-
-                        <TextBlock Padding="0,0,0,5" Text="{Binding title}" Foreground="{StaticResource AccentTextFillColorPrimaryBrush}" FontSize="15" Style="{ThemeResource BodyStrongTextBlockStyle}" Grid.Row="0"/>
-                        <TextBlock Padding="0,0,0,0" Text="{Binding base_url}" Grid.Row="1"/>
-                        <TextBlock Text="{Binding description}" Foreground="{StaticResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Grid.Row="2"/>
+                        <StackPanel Orientation="Horizontal">
+                            <BitmapIcon UriSource="{Binding iconSource}" Height="20" ShowAsMonochrome="False"/>
+                            <TextBlock Padding="5,5,0,5" Text="{Binding decodedTitle}" Foreground="{StaticResource AccentTextFillColorPrimaryBrush}" FontSize="15" Style="{ThemeResource BodyStrongTextBlockStyle}" Grid.Row="0"/>
+                        </StackPanel>
+                        <TextBlock Padding="0,0,0,0" Text="{Binding subtitle}" Grid.Row="1"/>
+                        <TextBlock Text="{Binding decodedDescription}" Foreground="{StaticResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Grid.Row="2"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
