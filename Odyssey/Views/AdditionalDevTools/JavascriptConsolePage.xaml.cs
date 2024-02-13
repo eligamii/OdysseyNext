@@ -24,7 +24,7 @@ namespace Odyssey.Views.AdditionalDevTools
         {
             if (MainView.CurrentlySelectedWebView != null)
             {
-                string js = await editor.GetTextAsync();
+                string js = editor.Editor.GetText(editor.Editor.TextLength);
                 await MainView.CurrentlySelectedWebView.ExecuteScriptAsync(js);
                 MainWindow.Current.Activate();
             }

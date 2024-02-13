@@ -19,5 +19,8 @@ namespace Odyssey.QuickActions.Commands
             }
             return new Res(false, null, "no tab is currently selected");
         }
+
+        public static Res Execute() => Exec(null);
+
     }
 }

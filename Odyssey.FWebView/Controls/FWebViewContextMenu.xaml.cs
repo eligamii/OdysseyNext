@@ -1,15 +1,19 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
+using Odyssey.FWebView.Controls.Flyouts;
 using Odyssey.Helpers;
 using Odyssey.Integrations.KDEConnect;
 using Odyssey.QuickActions;
 using Odyssey.Shared.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Windows.ApplicationModel.VoiceCommands;
+using Windows.Foundation;
 
 
 
@@ -30,8 +34,8 @@ namespace Odyssey.FWebView.Controls
             "cut"
         };
 
-
-
+        string linkUri;
+        private Point pos;
         public FWebViewContextMenu()
         {
             this.InitializeComponent();
@@ -89,7 +93,9 @@ namespace Odyssey.FWebView.Controls
 
         private async void PopulateWithOdysseyFeatures(CoreWebView2ContextMenuRequestedEventArgs args)
         {
-            if(args.ContextMenuTarget.HasLinkUri)
+            pos = args.Location;
+
+            if (args.ContextMenuTarget.HasLinkUri) // Send to device (KDEConnect)
             {
                 MenuFlyout menuFlyout = new();
 
@@ -111,10 +117,20 @@ namespace Odyssey.FWebView.Controls
                 {
                     sendToAppBarButton.IsEnabled = false;
                 }
+
+                linkUri = args.ContextMenuTarget.LinkUri;
+                
             }
             else
             {
+                // Disable the preview and send to context menus
                 sendToAppBarButton.Visibility = previewAppBarButton.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+            }
+
+            
+            if(args.ContextMenuTarget.HasSelection)
+            {
+
             }
         }
 
@@ -127,7 +143,7 @@ namespace Odyssey.FWebView.Controls
                     AppBarButton button = new();
                     button.Label = item.Label;
                     button.Icon = new SymbolIconEx(item.Icon);
-                    button.Click += async (s, a) => await QACommands.Execute(item.Command);
+                    button.Click += (s, a) =>  QACommands.Execute(item.Command);
                     button.RightTapped += (s, a) => 
                     {
                         MenuFlyout flyout = new();
@@ -292,7 +308,26 @@ namespace Odyssey.FWebView.Controls
 
         private void PreviewButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
+            PreviewFlyout flyout = new();
+            FlyoutShowOptions flyoutOptions = new();
+            flyoutOptions.Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft;
+            flyoutOptions.Position = pos;
+            flyout.webView.Source = new Uri(linkUri);
 
+            flyout.ShowAt(WebView.SelectedWebView, flyoutOptions);
+            
+        }
+
+        private void quickSearchAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            double width = WebView.SelectedWebView.ActualWidth;
+
+            QuickSearchFlyout flyout = new();
+            FlyoutShowOptions flyoutOptions = new();
+            flyoutOptions.Placement = FlyoutPlacementMode.Bottom;
+            flyoutOptions.Position = new Point(width / 2, 90);
+
+            flyout.ShowAt(WebView.SelectedWebView, flyoutOptions);
         }
     }
 }

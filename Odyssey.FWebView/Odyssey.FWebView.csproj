@@ -13,6 +13,8 @@
     <None Remove="Controls\Flyouts\DownloadsFlyout.xaml" />
     <None Remove="Controls\Flyouts\FindFlyout.xaml" />
     <None Remove="Controls\Flyouts\HistoryFlyout.xaml" />
+    <None Remove="Controls\Flyouts\PreviewFlyout.xaml" />
+    <None Remove="Controls\Flyouts\QuickSearchFlyout.xaml" />
     <None Remove="Controls\FWebViewContextMenu.xaml" />
     <None Remove="Dialogs\AppUriLaunchDialog.xaml" />
     <None Remove="WebView.xaml" />
@@ -50,6 +52,18 @@
     <Content Update="Assets\square.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\QuickSearchFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\PreviewFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

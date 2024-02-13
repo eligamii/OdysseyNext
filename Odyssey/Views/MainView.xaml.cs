@@ -186,7 +186,7 @@ namespace Odyssey.Views
             RequestedTheme = UpdateTheme.IssystemDarkMode() ? ElementTheme.Dark : ElementTheme.Light;
             UpdateTheme.UpdateThemeWith(color);
 
-            WebView.CurrentlySelectedWebViewEventTriggered += WebView_CurrentlySelectedWebViewEventTriggered; ;
+            WebView.CurrentlySelectedWebViewEventTriggered += WebView_CurrentlySelectedWebViewEventTriggered; 
 
             Controls.TitleBarButtons.AddButtonsTo(buttonsStackPanel, false);
 

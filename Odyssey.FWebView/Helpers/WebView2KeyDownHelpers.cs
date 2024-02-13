@@ -59,12 +59,29 @@ namespace Odyssey.FWebView.Helpers
                         bool isControlKeyPressed = bool.Parse(keys[1]);
                         bool isAltKeyPressed = bool.Parse(keys[2]);
 
-                        VirtualKey pressedKey = (VirtualKey)(int.Parse(keys[0]) + 64);
+                        int rawKey = int.Parse(keys[0]);
+                        
+                        VirtualKey pressedKey = ConvertToVirtualKey(rawKey);
 
                         KeyDown(sender, new KeyDownPressedEventArgs(isControlKeyPressed, isAltKeyPressed, pressedKey));
                     }
                     catch { }
                 }
+            }
+
+            private VirtualKey ConvertToVirtualKey(int jsKey)  // WIP
+            {
+                if (jsKey >= 97 && jsKey <= 122) // Letter
+                    return (VirtualKey)(jsKey + 64);
+                else
+                {
+                    switch(jsKey)
+                    {
+                        case 32: return VirtualKey.Space;
+                    }
+                }
+
+                return VirtualKey.None;
             }
         }
     }

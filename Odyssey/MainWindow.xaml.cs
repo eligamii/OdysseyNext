@@ -3,8 +3,10 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Odyssey.Classes;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
+using Odyssey.Helpers;
 using Odyssey.Views;
 using Odyssey.Views.Pages;
 using System;
@@ -20,9 +22,12 @@ namespace Odyssey
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
+
+    
     public sealed partial class MainWindow : WindowEx
     {
         public static new MainWindow Current { get; set; }
+        public bool IsActivated { get; set; } = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -56,8 +61,17 @@ namespace Odyssey
             // Make possible to access to MainWindow from anywhere
             Current = this;
 
+            Hotkeys.Init();
 
             AppWindow.Closing += AppWindow_Closing;
+            this.Activated += MainWindow_Activated;
+        }
+
+        private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            if (args.WindowActivationState == WindowActivationState.Deactivated)
+                IsActivated = false;
+            else IsActivated = true;
         }
 
         public static bool ResetEngaged { get; set; } = false;

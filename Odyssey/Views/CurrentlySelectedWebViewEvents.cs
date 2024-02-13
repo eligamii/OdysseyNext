@@ -8,6 +8,9 @@ using System;
 using Microsoft.Graphics.Canvas.Text;
 using Odyssey.Helpers;
 using System.Linq;
+using Odyssey.FWebView.Helpers;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Odyssey.Controls;
 
 namespace Odyssey.Views
 {
@@ -17,10 +20,36 @@ namespace Odyssey.Views
         {
             switch(args.EventType)
             {
-                case EventType.FullScreenEvent: FullScreenEvent(sender); return;
-                case EventType.DocumentTitleChangedEvent: DocumentTitleChangedEvent(sender); return;
+                case EventType.FullScreen: FullScreenEvent(sender); return;
+                case EventType.DocumentTitleChanged: DocumentTitleChangedEvent(sender); return;
                 case EventType.SourceChanged: SourceChangedEvent(sender); return;
+                case EventType.StatusBarTextChanged: StatusBarTextChanged(sender); return;
+                case EventType.KeyDown: KeyDown(args.Args as WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs); return;
             }
+        }
+
+
+        private void KeyDown(WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs args)
+        {
+            switch(args.PressedKey)
+            {
+                case Windows.System.VirtualKey.Space:
+                    if(args.IsAltKeyPressed)
+                    {
+                        SearchBar searchBar = new SearchBar();
+                        FlyoutShowOptions options = new FlyoutShowOptions();
+                        options.Placement = FlyoutPlacementMode.Bottom;
+                        options.Position = new Windows.Foundation.Point(splitViewContentFrame.ActualWidth / 2, 100);
+                        searchBar.ShowAt(splitViewContentFrame, options);
+                    }
+                    break;
+
+            }
+        }
+
+        private void StatusBarTextChanged(CoreWebView2 sender)
+        {
+            statusBar.SetText(sender.StatusBarText);
         }
 
         private void SourceChangedEvent(CoreWebView2 sender)

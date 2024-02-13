@@ -33,9 +33,11 @@ namespace Odyssey.FWebView
 
     public enum EventType
     {
-        FullScreenEvent,
-        DocumentTitleChangedEvent,
-        SourceChanged
+        FullScreen,
+        DocumentTitleChanged,
+        SourceChanged,
+        StatusBarTextChanged,
+        KeyDown
     }
 
     public class CurrentlySelectedWebViewEventTriggeredEventArgs
@@ -192,7 +194,7 @@ namespace Odyssey.FWebView
                 sender.CoreWebView2.FaviconChanged += CoreWebView2_FaviconChanged; // Set the icon of the linked tab
                 sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
 
-                sender.CoreWebView2.ContainsFullScreenElementChanged += (s, a) => CurrentlySelectedWebViewEventTriggered(s, new CurrentlySelectedWebViewEventTriggeredEventArgs(a, EventType.FullScreenEvent));
+                sender.CoreWebView2.ContainsFullScreenElementChanged += (s, a) => CurrentlySelectedWebViewEventTriggered(s, new CurrentlySelectedWebViewEventTriggeredEventArgs(a, EventType.FullScreen));
                 // Scroll events (Uppate dynamic theme)
                 scrollTimer = new DispatcherTimer();
                 scrollTimer.Interval = TimeSpan.FromSeconds(2);
@@ -208,6 +210,7 @@ namespace Odyssey.FWebView
             }
 
             sender.CoreWebView2.WindowCloseRequested += CoreWebView2_WindowCloseRequested;
+            sender.CoreWebView2.StatusBarTextChanged += CoreWebView2_StatusBarTextChanged;
 
             sender.CoreWebView2.PermissionRequested += CoreWebView2_PermissionRequested;
 
@@ -286,6 +289,14 @@ namespace Odyssey.FWebView
             _ = UpdateThemeWithColorChangeAsync();
         }
 
+        private void CoreWebView2_StatusBarTextChanged(CoreWebView2 sender, object args)
+        {
+            if(IsVisible())
+            {
+                CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.StatusBarTextChanged));
+            }
+        }
+
         private void CoreWebView2_WindowCloseRequested(CoreWebView2 sender, object args)
         {
             this.Close();
@@ -361,6 +372,8 @@ namespace Odyssey.FWebView
                         break;
                 }
             }
+
+            CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.KeyDown));
         }
 
         private async void CoreWebView2_NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
@@ -426,7 +439,7 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_DownloadStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2DownloadStartingEventArgs args)
         {
-            if (!args.DownloadOperation.Uri.StartsWith("blob"))
+            if (!args.DownloadOperation.Uri.StartsWith("blob") && false)
             {
                 DownloadsFlyout.Items.Insert(0, new DonwloadItem { DownloadUrl = args.DownloadOperation.Uri });
                 args.Cancel = true;
@@ -560,7 +573,7 @@ namespace Odyssey.FWebView
             LinkedTab.Title = sender.DocumentTitle;
             if (IsVisible())
             {
-                CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.DocumentTitleChangedEvent));
+                CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.DocumentTitleChanged));
             }
         }
 

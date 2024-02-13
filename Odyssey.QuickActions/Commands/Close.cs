@@ -70,7 +70,5 @@ namespace Odyssey.QuickActions.Commands
             }
         }
 
-
-
     }
 }

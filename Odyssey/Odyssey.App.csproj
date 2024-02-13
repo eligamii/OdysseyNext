@@ -43,6 +43,7 @@
     <None Remove="Controls\Flyouts\IconSelectorFlyout.xaml" />
     <None Remove="Controls\MainMenuFlyout.xaml" />
     <None Remove="Controls\SearchBar.xaml" />
+    <None Remove="Controls\StatusBar.xaml" />
     <None Remove="Controls\Tips\InformationTip.xaml" />
     <None Remove="Dialogs\CustomizeTitleBarItemsDialog.xaml" />
     <None Remove="Dialogs\MigrateDataContentDialog.xaml" />
@@ -92,6 +93,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25936-preview" />
+    <PackageReference Include="WinUIEdit" Version="0.0.2-prerelease" />
     <PackageReference Include="WinUIEx" Version="2.3.3" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
@@ -170,6 +172,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>nl-NL.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\StatusBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Pages\FourGetSearchPage.xaml">
