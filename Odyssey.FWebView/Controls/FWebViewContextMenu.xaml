@@ -10,8 +10,8 @@
     mc:Ignorable="d">
 
     <CommandBarFlyout.SecondaryCommands>
-        <AppBarButton Label="{helpers:ResourceString Name=QuickSearch,Filename=ContextMenus}" Icon="Find" x:Name="quickSearchAppBarButton" Click="quickSearchAppBarButton_Click"/>
         <AppBarButton Label="{helpers:ResourceString Name=Preview,Filename=ContextMenus}" Icon="PreviewLink" x:Name="previewAppBarButton" Click="PreviewButton_Click"/>
+        <AppBarButton Label="{helpers:ResourceString Name=QuickSearch,Filename=ContextMenus}" Icon="Find" x:Name="quickSearchAppBarButton" Click="quickSearchAppBarButton_Click"/>
         <AppBarButton Label="{helpers:ResourceString Name=SendTo,Filename=ContextMenus}" Icon="NewWindow" x:Name="sendToAppBarButton"/>
     </CommandBarFlyout.SecondaryCommands>
 </CommandBarFlyout>

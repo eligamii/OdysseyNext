@@ -15,7 +15,7 @@
             <Setter Property="BorderBrush" Value="#33808080"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="MaxHeight" Value="Infinity"/>
             <Setter Property="MaxWidth" Value="Infinity"/>
             <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
@@ -29,15 +29,14 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="15,8,5,0">
-            <TextBlock Grid.Row="0" FontSize="16"
-                   Style="{ThemeResource BodyStrongTextBlockStyle}"
-                   Text="{helpers:ResourceString Name=Downloads,Filename=ContextMenus}"/>
+        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="15,0,5,0">
+            <TextBlock Grid.Row="0" FontSize="14" FontWeight="Medium"
+                       Text="{helpers:ResourceString Name=Downloads, Filename=ContextMenus}"/>
         </Grid>
 
-        <Grid Grid.Row="1" CornerRadius="3" Margin="6" 
+        <Grid Grid.Row="1" CornerRadius="3" Margin="6,0,6,6" 
               BorderThickness="1">
-            <ListView Margin="0,3,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" Loaded="DownloadItemsListView_Loaded" x:Name="DownloadItemsListView">
+            <ListView Margin="0,0,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" Loaded="DownloadItemsListView_Loaded" x:Name="DownloadItemsListView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid Height="58">
@@ -47,12 +46,12 @@
                             </Grid.ColumnDefinitions>
 
                             <Grid>
-                                <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0" Source="{Binding Icon}"/>
+                                <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0" Source="{Binding ImageSource}"/>
                                 <ProgressRing x:Name="progressRing" Value="{Binding Progress}" IsActive="{Binding IsProgressActive}" IsIndeterminate="False" Width="19" Height="19"/>
                             </Grid>
 
                             <StackPanel Margin="10,-3,0,0" VerticalAlignment="Center" Grid.Column="1">
-                                <TextBlock Text="" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
+                                <TextBlock Text="{Binding Name}" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
                                 <TextBlock Text="" Margin="0,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
                             </StackPanel>
 

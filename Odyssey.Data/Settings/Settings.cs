@@ -25,6 +25,10 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("ThemeMode")) ThemeMode = 2;
             if (!Values.Values.ContainsKey("IsDevBarEnabled")) IsDevBarEnabled = false;
             if (!Values.Values.ContainsKey("ShowHostInsteadOfDocumentTitle")) ShowHostInsteadOfDocumentTitle = true;
+            if (!Values.Values.ContainsKey("ColorAlpha")) ColorAlpha = 245;
+            if (!Values.Values.ContainsKey("IsSolidTitleBarEnabled")) IsSolidTitleBarEnabled = true;
+            if (!Values.Values.ContainsKey("ShowHostInsteadOfDocumentTitle")) ShowHostInsteadOfDocumentTitle = true;
+            if (!Values.Values.ContainsKey("SystemBackdrop")) SystemBackdrop = 0; 
 
             // Dark reader
             if (!Values.Values.ContainsKey("IsDarkReaderEnabled")) IsDarkReaderEnabled = true;
@@ -61,6 +65,27 @@ namespace Odyssey.Data.Settings
         {
             get { return (bool?)Values.Values["Inititalized"]; }
             set { Values.Values["Inititalized"] = value; }
+        }
+
+        public static byte ColorAlpha
+        {
+            get { return (byte)Values.Values["ColorAlpha"]; }
+            set { Values.Values["ColorAlpha"] = value; }
+        }
+
+        /// <summary>
+        /// Convert this to BackdropType (0 = Mica, 1 = MicaAlt, 2 = Acrylic)
+        /// </summary>
+        public static int SystemBackdrop
+        {
+            get { return (int)Values.Values["SystemBackdrop"]; }
+            set { Values.Values["SystemBackdrop"] = value; }
+        }
+
+        public static bool IsSolidTitleBarEnabled
+        {
+            get { return (bool)Values.Values["IsTSolidTitleBarEnabled"]; }
+            set { Values.Values["IsTSolidTitleBarEnabled"] = value; }
         }
 
         public static bool OpenHomePageAtNewTabCreation

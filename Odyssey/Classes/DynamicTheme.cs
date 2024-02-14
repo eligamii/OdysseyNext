@@ -7,21 +7,16 @@ using Microsoft.UI.Xaml.Media;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.Helpers;
+using Odyssey.Views;
 using System.Threading.Tasks;
 using Windows.UI;
 
-namespace Odyssey.FWebView.Classes
+namespace Odyssey.Classes
 {
-    public static class DynamicTheme // This is a very bad class only made for Odyssey
+    public static class DynamicTheme 
     {
-        public static AcrylicBrush AcrylicBrush { get; set; }
-        public static Grid TitleBar { get; set; }
-        public static MicaController MicaController { get; set; }
-        public static Page PageToUpdateTheme { get; set; }
-        public static AppWindowTitleBar AppWindowTitleBar { get; set; }
-        public static bool UpdateTheme { get; set; } = true;
 
-        public static async Task UpdateDynamicThemeAsync(WebView2 webView2)
+        public static async void UpdateDynamicThemeAsync(WebView2 webView2)
         {
             // Get webView2 average color
             Color? color = null;
@@ -51,23 +46,23 @@ namespace Odyssey.FWebView.Classes
 
                     if (Settings.IsDynamicThemeModeChangeEnabled)
                     {
-                        PageToUpdateTheme.RequestedTheme = isColorDark ? ElementTheme.Dark : ElementTheme.Light;
+                        MainView.Current.RequestedTheme = isColorDark ? ElementTheme.Dark : ElementTheme.Light;
 
-                        AcrylicBrush.TintOpacity = MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.9f : 0.4f;
-                        AcrylicBrush.TintColor = MicaController.TintColor = Color.FromArgb(245, nnColor.R, nnColor.G, nnColor.B);
-                        TitleBar.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(nnColor);
-                        TitleBar.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(ColorsHelper.LightEquivalent(nnColor, 0.1));
+                        MainView.Current.PaneAcrylicBrush.TintOpacity = MainWindow.Current.Backdrop.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.6f : 0.4f;
+                        MainWindow.Current.Backdrop.TintColor = MainWindow.Current.Backdrop.TintColor = Color.FromArgb(Settings.ColorAlpha, nnColor.R, nnColor.G, nnColor.B);
+                        MainView.Current.AppTitleBar.Background = Settings.IsSolidTitleBarEnabled ? new SolidColorBrush(nnColor) : new SolidColorBrush(Colors.Transparent);
+                        MainView.Current.AppTitleBar.BorderBrush = new SolidColorBrush(ColorsHelper.LightEquivalent(nnColor, 0.1));
 
-                        AppWindowTitleBar.ButtonForegroundColor = AppWindowTitleBar.ButtonHoverForegroundColor = isColorDark ? Colors.White : Colors.Black;
+                        MainWindow.Current.AppWindow.TitleBar.ButtonForegroundColor = MainWindow.Current.AppWindow.TitleBar.ButtonHoverForegroundColor = isColorDark ? Colors.White : Colors.Black;
 
                         var lightColor = ColorsHelper.LightEquivalent(nnColor, 0.1);
 
-                        AppWindowTitleBar.ButtonHoverBackgroundColor = Color.FromArgb(150, lightColor.R, lightColor.G, lightColor.B);
+                        MainWindow.Current.AppWindow.TitleBar.ButtonHoverBackgroundColor = Color.FromArgb(150, lightColor.R, lightColor.G, lightColor.B);
                     }
                     else
                     {
                         isColorDark = ColorsHelper.IsColorDark(nnColor, 0.52);
-                        if (PageToUpdateTheme.ActualTheme == ElementTheme.Light)
+                        if (MainView.Current.ActualTheme == ElementTheme.Light)
                         {
                             if (isColorDark)
                             {
@@ -86,15 +81,15 @@ namespace Odyssey.FWebView.Classes
                             }
                         }
 
-                        AcrylicBrush.TintOpacity = MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
-                        AcrylicBrush.TintColor = MicaController.TintColor = nnColor;
-                        TitleBar.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(ColorsHelper.LightEquivalent(nnColor, 0.01));
+                        MainView.Current.PaneAcrylicBrush.TintOpacity = MainWindow.Current.Backdrop.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.6f : 0.4f;
+                        MainView.Current.PaneAcrylicBrush.TintColor = MainWindow.Current.Backdrop.TintColor = nnColor;
+                        MainView.Current.AppTitleBar.Background = Settings.IsSolidTitleBarEnabled ? new SolidColorBrush(ColorsHelper.LightEquivalent(nnColor, 0.01)) : new SolidColorBrush(Colors.Transparent);
 
-                        AppWindowTitleBar.ButtonForegroundColor = AppWindowTitleBar.ButtonHoverForegroundColor = PageToUpdateTheme.ActualTheme == ElementTheme.Dark ? Colors.White : Colors.Black;
+                        MainWindow.Current.AppWindow.TitleBar.ButtonForegroundColor = MainWindow.Current.AppWindow.TitleBar.ButtonHoverForegroundColor = MainView.Current.ActualTheme == ElementTheme.Dark ? Colors.White : Colors.Black;
 
                         var lightColor = ColorsHelper.LightEquivalent(nnColor, 0.2);
 
-                        AppWindowTitleBar.ButtonHoverBackgroundColor = Color.FromArgb(150, lightColor.R, lightColor.G, lightColor.B);
+                        MainWindow.Current.AppWindow.TitleBar.ButtonHoverBackgroundColor = Color.FromArgb(150, lightColor.R, lightColor.G, lightColor.B);
                     }
                 }
             }

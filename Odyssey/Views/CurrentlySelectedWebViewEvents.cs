@@ -11,6 +11,7 @@ using System.Linq;
 using Odyssey.FWebView.Helpers;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Odyssey.Controls;
+using Odyssey.Classes;
 
 namespace Odyssey.Views
 {
@@ -25,6 +26,7 @@ namespace Odyssey.Views
                 case EventType.SourceChanged: SourceChangedEvent(sender); return;
                 case EventType.StatusBarTextChanged: StatusBarTextChanged(sender); return;
                 case EventType.KeyDown: KeyDown(args.Args as WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs); return;
+                case EventType.DynamicThemeUpdateRequested: DynamicTheme.UpdateDynamicThemeAsync(CurrentlySelectedWebView); return;
             }
         }
 

@@ -15,7 +15,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <!-- Pane dynamic theme acrylic -->
-            <media:AcrylicBrush x:Name="PaneAcrylicBrush" />
+            <media:AcrylicBrush x:Name="PaneAcrylicBrush" x:FieldModifier="internal"/>
 
             <!-- Transpatant button style -->
             <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">

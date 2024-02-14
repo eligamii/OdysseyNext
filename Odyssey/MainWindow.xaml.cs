@@ -28,12 +28,12 @@ namespace Odyssey
     {
         public static new MainWindow Current { get; set; }
         public bool IsActivated { get; set; } = false;
+        public new Backdrop Backdrop { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             this.Title = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Square44x44Logo.altform-lightunplated_targetsize-24.png");
-            AppWindow.SetIcon(path);
+            Backdrop = new(this);
             Init();
         }
 

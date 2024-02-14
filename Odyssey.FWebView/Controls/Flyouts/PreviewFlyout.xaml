@@ -6,6 +6,7 @@
     xmlns:local="using:Odyssey.FWebView.Controls.Flyouts"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    ShouldConstrainToRootBounds="False"
     mc:Ignorable="d">
 
     <Flyout.FlyoutPresenterStyle>
@@ -20,7 +21,7 @@
 
     </Flyout.FlyoutPresenterStyle>
 
-    <Grid Height="400" Width="350" CornerRadius="8">
+    <Grid Height="450" Width="400" CornerRadius="8">
         <WebView2 x:FieldModifier="public" x:Name="webView" Margin="7" Source="about:blank" CoreWebView2Initialized="webView_CoreWebView2Initialized" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         <Button Click="MainButton_Click" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="&#xE8A7;" FontFamily="Segoe Fluent Icons" Height="38" Margin="11" Background="{ThemeResource ControlOnImageFillColorDefaultBrush}"/>
 

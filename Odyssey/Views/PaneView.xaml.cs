@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Odyssey.Classes;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
@@ -287,7 +288,7 @@ namespace Odyssey.Views
         }
 
  
-        private void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
@@ -314,7 +315,7 @@ namespace Odyssey.Views
 
                 MainView.Current.documentTitle.Text = tab.Title;
 
-                _ = FWebView.Classes.DynamicTheme.UpdateDynamicThemeAsync(tab.MainWebView);
+                DynamicTheme.UpdateDynamicThemeAsync(MainView.CurrentlySelectedWebView);
                 UpdateTabSelection(sender);
             }
             else if(/* As when the tab selection add an item before removing another */

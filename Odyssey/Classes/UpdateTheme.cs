@@ -30,13 +30,13 @@ namespace Odyssey.Classes
                 nnColor = Color.FromArgb(240, c.R, c.G, c.B);
             }
 
-            FWebView.Classes.DynamicTheme.MicaController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
-            FWebView.Classes.DynamicTheme.MicaController.TintColor = nnColor;
+            MainWindow.Current.Backdrop.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
+            MainWindow.Current.Backdrop.TintColor = nnColor;
 
-            FWebView.Classes.DynamicTheme.AcrylicBrush.TintOpacity = MicaBackdropHelper.BackdropController.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.9f : 0.4f;
-            FWebView.Classes.DynamicTheme.AcrylicBrush.TintColor = MicaBackdropHelper.BackdropController.TintColor = Color.FromArgb(245, nnColor.R, nnColor.G, nnColor.B);
-            FWebView.Classes.DynamicTheme.TitleBar.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Colors.Transparent);
-            FWebView.Classes.DynamicTheme.TitleBar.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(20, 128, 128, 128));
+            MainView.Current.PaneAcrylicBrush.TintOpacity = MainWindow.Current.Backdrop.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.9f : 0.4f;
+            MainView.Current.PaneAcrylicBrush.TintColor = MainWindow.Current.Backdrop.TintColor = Color.FromArgb(245, nnColor.R, nnColor.G, nnColor.B);
+            MainView.Current.AppTitleBar.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Colors.Transparent);
+            MainView.Current.AppTitleBar.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(20, 128, 128, 128));
 
 
             MainWindow.Current.AppWindow.TitleBar.ButtonForegroundColor = MainWindow.Current.AppWindow.TitleBar.ButtonHoverForegroundColor = MainView.Current.ActualTheme == ElementTheme.Dark ? Colors.White : Colors.Black;

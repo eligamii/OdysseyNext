@@ -1,19 +1,58 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.Web.WebView2.Core;
+using Odyssey.Shared.Helpers;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System;
+using Windows.Storage;
 
 namespace Odyssey.Shared.ViewModels.Data
 {
     [DataContract]
-    public class DonwloadItem : INotifyPropertyChanged
+    public class DownloadItem : INotifyPropertyChanged
     {
         private string name;
         private string subtitle;
-        private BitmapImage image;
+        private BitmapImage image = new();
         private bool downloadCompleted = false;
         public object downloadOperation;
-        private int progress = 0;
+        private long progress = 0;
+
+        public DownloadItem(CoreWebView2DownloadOperation operation)
+        {
+            operation.BytesReceivedChanged += Operation_BytesReceivedChanged;
+            operation.StateChanged += Operation_StateChanged;
+            operation.EstimatedEndTimeChanged += Operation_EstimatedEndTimeChanged;
+        }
+
+        private void Operation_EstimatedEndTimeChanged(CoreWebView2DownloadOperation sender, object args)
+        {
+            Subtitle = sender.EstimatedEndTime;
+        }
+
+        private async void Operation_StateChanged(CoreWebView2DownloadOperation sender, object args)
+        {
+            if(sender.State == CoreWebView2DownloadState.Completed)
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(sender.ResultFilePath);
+                var icon = await FileIconHelper.GetFileIconAsync(file);
+
+                ImageSource.SetSource(icon);
+            }
+        }
+
+        private void Operation_BytesReceivedChanged(CoreWebView2DownloadOperation sender, object args)
+        {
+            FileInfo file = new(sender.ResultFilePath);
+            OutputPath = file.FullName;
+            Name = file.Name;
+            DownloadUrl = sender.Uri;
+            Progress = sender.BytesReceived / sender.TotalBytesToReceive * 100;
+        }
+
+
 
         [DataMember]
         public string OutputPath
@@ -40,7 +79,7 @@ namespace Odyssey.Shared.ViewModels.Data
         }
 
         [DataMember]
-        public int Progress
+        public long Progress
         {
             get { return progress; }
             set
@@ -76,7 +115,7 @@ namespace Odyssey.Shared.ViewModels.Data
                     NotifyPropertyChanged();
                 }
             }
-        }
+        } 
 
         public string Subtitle
         {

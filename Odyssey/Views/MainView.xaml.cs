@@ -88,14 +88,10 @@ namespace Odyssey.Views
 
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
-            // Automatically create titlebar drag regions for the window (see Odyssey.App.Helpers.TitleBarDragRegionsHelpers)
-            titleBarDragRegions = new TitleBarDragRegions(
-                new List<Grid>() { AppTitleBar, secondTitleBar },
-                MainWindow.Current,
-                new List<Type>() { typeof(ProgressBar), typeof(TextBlock), typeof(Microsoft.UI.Xaml.Shapes.Rectangle), typeof(Frame) },
-                MainWindow.Current.Content as FrameworkElement,
-                42);
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
 
+            // Will block the loading of the MainPage 
             if (Settings.FirstLaunch != false)
             {
                 QuickConfigurationDialog quickConfigurationDialog = new()
@@ -106,17 +102,16 @@ namespace Odyssey.Views
                 await quickConfigurationDialog.ShowAsync();
             }
 
-            // Use this instead of Systemackdrop = MicaBackdrop(); to be able to control the color of the Window
-            MicaBackdropHelper.TrySetMicaBackdropTo(MainWindow.Current);
+
+            // Automatically create titlebar drag regions for the window (see Odyssey.App.Helpers.TitleBarDragRegionsHelpers)
+            titleBarDragRegions = new TitleBarDragRegions(
+                new List<Grid>() { AppTitleBar, secondTitleBar },
+                MainWindow.Current,
+                new List<Type>() { typeof(ProgressBar), typeof(TextBlock), typeof(Microsoft.UI.Xaml.Shapes.Rectangle), typeof(Frame) },
+                MainWindow.Current.Content as FrameworkElement,
+                42);
 
             WebView.XamlRoot = XamlRoot;
-            DynamicTheme.PageToUpdateTheme = this;
-            DynamicTheme.MicaController = MicaBackdropHelper.BackdropController;
-            DynamicTheme.AppWindowTitleBar = MainWindow.Current.AppWindow.TitleBar;
-            DynamicTheme.TitleBar = AppTitleBar;
-            DynamicTheme.UpdateTheme = true;
-            DynamicTheme.AcrylicBrush = PaneAcrylicBrush;
-            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
 
             // Restore tabs after crash
             RestoreTabs();
@@ -142,9 +137,9 @@ namespace Odyssey.Views
             WebView.TotpLoginDetectedAction += SetTotpButtonVisibility;
             WebView.LoginPageDetectedAction += LoginDetectedChanged;
 
-
             // Set the custom theme if dynamic theme is not enabled
-            SetCustomTheme();
+            if (!Settings.IsDynamicThemeEnabled)
+                SetCustomTheme();
 
             this.ActualThemeChanged += (s, a) => SetCustomTheme();
 
@@ -173,25 +168,23 @@ namespace Odyssey.Views
             // Update the titlebar drag region based on the text of the documentTitle
             documentTitle.LayoutUpdated += DocumentTitle_LayoutUpdated;
 
-            QuickActions.QACommands.RestoreUIElements();
-
             SplitView.DisplayMode = Settings.IsPaneLocked ? SplitViewDisplayMode.Inline : SplitViewDisplayMode.Overlay;
             SplitView.PaneBackground = Settings.IsPaneLocked ? new SolidColorBrush(Colors.Transparent) : PaneAcrylicBrush;
 
 
-            // Temporary startup colors fix (to match the color when Odyssey is re-opened when the single-instance feature is enabled)
-            bool dark = Classes.UpdateTheme.IssystemDarkMode();
-            string color = dark ? "#202020" : "#F9F9F9";
-
-            RequestedTheme = UpdateTheme.IssystemDarkMode() ? ElementTheme.Dark : ElementTheme.Light;
-            UpdateTheme.UpdateThemeWith(color);
-
             WebView.CurrentlySelectedWebViewEventTriggered += WebView_CurrentlySelectedWebViewEventTriggered; 
-
-            Controls.TitleBarButtons.AddButtonsTo(buttonsStackPanel, false);
 
 
             titleBarDragRegions.SetDragRegionForTitleBars();
+
+            stopwatch.Stop();
+            Debug.WriteLine(stopwatch.ElapsedMilliseconds);
+
+            // Use this instead of Systemackdrop = MicaBackdrop(); to be able to control the color of the Window
+            SplitViewPaneFrame.Navigate(typeof(PaneView), null, new SuppressNavigationTransitionInfo());
+            MainWindow.Current.Backdrop.SetBackdrop((BackdropKind)Settings.SystemBackdrop);
+
+            Controls.TitleBarButtons.AddButtonsTo(buttonsStackPanel, false);
         }
 
         private bool _wasOpened;

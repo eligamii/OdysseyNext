@@ -16,6 +16,7 @@ using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.X86;
@@ -37,7 +38,8 @@ namespace Odyssey.FWebView
         DocumentTitleChanged,
         SourceChanged,
         StatusBarTextChanged,
-        KeyDown
+        KeyDown,
+        DynamicThemeUpdateRequested
     }
 
     public class CurrentlySelectedWebViewEventTriggeredEventArgs
@@ -155,21 +157,22 @@ namespace Odyssey.FWebView
                 }
                 else
                 {
-                    // Getting the favicon from the webView
-                    var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
-                    image = new BitmapImage();
-                    await image.SetSourceAsync(stream);
+                    try
+                    {
+                        // Getting the favicon from the webView
+                        var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
+                        image = new BitmapImage();
+                        await image.SetSourceAsync(stream);
+                    }
+                    catch
+                    {
+                        image = new BitmapImage();
+                        image.UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{Source.Host}/21");
+                    }
                 }
 
 
-                if (this.CoreWebView2.FaviconUri == string.Empty)
-                {
-                    LinkedTab.ForegroundColor = new SolidColorBrush(await WebView2AverageColorHelper.GetAverageColorFromWebView2Async(this, 100, 100, 1));
-                }
-                else
-                {
-                    LinkedTab.ForegroundColor = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-                }
+                
 
                 return image;
             }
@@ -306,17 +309,7 @@ namespace Odyssey.FWebView
             else if (LinkedTab.GetType() == typeof(Tab)) Tabs.Items.Remove(LinkedTab);
         }
 
-        private void CoreWebView2OnContainsFullScreenElementChanged(CoreWebView2 sender, object args)
-        {
-            if (sender.ContainsFullScreenElement)
-            {
-                
-            }
-            else
-            {
-                
-            }
-        }
+        
 
         Color? lastPixel = null;
         private async Task UpdateThemeWithColorChangeAsync()
@@ -331,7 +324,7 @@ namespace Odyssey.FWebView
                         Color pixel = await WebView2AverageColorHelper.GetFirstPixelColorAsync(this);
                         if (pixel != lastPixel)
                         {
-                            _ = DynamicTheme.UpdateDynamicThemeAsync(this);
+                            CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
                         }
                         else
                         {
@@ -441,12 +434,11 @@ namespace Odyssey.FWebView
         {
             if (!args.DownloadOperation.Uri.StartsWith("blob") && false)
             {
-                DownloadsFlyout.Items.Insert(0, new DonwloadItem { DownloadUrl = args.DownloadOperation.Uri });
-                args.Cancel = true;
+                DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation));
             }
             else // The file was downloaded in another location before (mega.nz downloads)
             {
-                DownloadsFlyout.Items.Insert(0, new DonwloadItem { downloadOperation = args.DownloadOperation });
+                DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation));
             }
 
             downloadsFlyout.ShowAt(MainDownloadElement);
@@ -464,7 +456,7 @@ namespace Odyssey.FWebView
             // Checking if the user has finished scrolling for 2 seconds
             if (isScrolling && IsVisible())
             {
-                _ = DynamicTheme.UpdateDynamicThemeAsync(this);
+                CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
                 isScrolling = false;
             }
         }
@@ -473,7 +465,7 @@ namespace Odyssey.FWebView
         {
             if (IsVisible() && !IsLittleWeb)
             {
-                _ = DynamicTheme.UpdateDynamicThemeAsync(this);
+                CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
             }
         }
 
@@ -504,7 +496,7 @@ namespace Odyssey.FWebView
             if (IsVisible())
             {
                 MainProgressElement.Visibility = Visibility.Collapsed;
-                _ = DynamicTheme.UpdateDynamicThemeAsync(this);
+                CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
             }
 
 
@@ -554,7 +546,7 @@ namespace Odyssey.FWebView
             {
                 MainIconElement.Source = null; // will hide the element
                 MainProgressElement.Visibility = Visibility.Visible;
-                await DynamicTheme.UpdateDynamicThemeAsync(this);
+                CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
             }
         }
 

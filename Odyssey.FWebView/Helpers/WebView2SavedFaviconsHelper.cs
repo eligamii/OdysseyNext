@@ -92,7 +92,7 @@ namespace Odyssey.FWebView.Helpers
                         icon.Quality = quality;
 
                         BitmapImage image = new();
-                        await image.SetSourceAsync(randomAccessStream);
+                        image.SetSource(randomAccessStream);
 
                         icon.Image = image;
 

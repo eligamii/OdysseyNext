@@ -29,6 +29,8 @@ namespace Odyssey.FWebView.Controls.Flyouts
         {
             this.InitializeComponent();
             Closing += PreviewFlyout_Closing;
+
+
         }
 
         private void PreviewFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
