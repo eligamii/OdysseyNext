@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Search;
 
 namespace Odyssey.WebSearch
 {
@@ -20,8 +21,10 @@ namespace Odyssey.WebSearch
             if (kind == WebSearchStringKindHelpers.StringKind.MathematicalExpression)
             {
                 var suggestion = await MathematicalExpressionsSuggestionsHelper.EvaluateExpression(query);
-                suggestions.Add(suggestion);
+                if (suggestion is not null) suggestions.Add(suggestion);
             }
+
+
 
             suggestions = suggestions.Concat(TabsSuggestionsHelper.SearchForMatchingTabs(query)).ToList();
 

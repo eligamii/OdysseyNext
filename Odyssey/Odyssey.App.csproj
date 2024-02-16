@@ -40,6 +40,7 @@
     <None Remove="Assets\CascadiaCode.ttf" />
     <None Remove="Assets\icon.png" />
     <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
+    <None Remove="Controls\Flyouts\ColorPickerFlyout.xaml" />
     <None Remove="Controls\Flyouts\IconSelectorFlyout.xaml" />
     <None Remove="Controls\MainMenuFlyout.xaml" />
     <None Remove="Controls\SearchBar.xaml" />
@@ -91,8 +92,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25936-preview" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240205001-preview1" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
     <PackageReference Include="WinUIEdit" Version="0.0.2-prerelease" />
     <PackageReference Include="WinUIEx" Version="2.3.3" />
     <Manifest Include="$(ApplicationManifest)" />
@@ -172,6 +173,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>nl-NL.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\ColorPickerFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\StatusBar.xaml">

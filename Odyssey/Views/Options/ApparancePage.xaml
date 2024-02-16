@@ -9,8 +9,7 @@
     mc:Ignorable="d"
     xmlns:helpers="using:Odyssey.Shared.Helpers"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    >
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:flyouts="using:Odyssey.Controls.Flyouts">
 
     <StackPanel Margin="20,20,20,0" Spacing="4">
         <win:StackPanel.ChildrenTransitions>
@@ -42,7 +41,11 @@
         <controls:SettingsExpander x:Name="customThemeExpander" Header="{helpers:ResourceString Name=CustomTheme, Filename=Settings}" Description="{helpers:ResourceString Name=CustomTheme, Filename=SettingsDescriptions}">
             <StackPanel Spacing="4" Orientation="Horizontal">
                 <TextBox x:Name="customThemeTextBox" Width="125" PlaceholderText="#FFFFFF" KeyDown="TextBox_KeyDown" TextChanging="TextBox_TextChanging"/>
-                <Button Click="CustomThemeButton_Click" Content="{helpers:ResourceString Name=Apply, Filename=Settings}" Style="{ThemeResource AccentButtonStyle}"/>
+                <DropDownButton Click="CustomThemeButton_Click" Content="{helpers:ResourceString Name=Apply, Filename=Settings}">
+                    <DropDownButton.Flyout>
+                        <flyouts:ColorPickerFlyout ColorChanged="ColorPickerFlyout_ColorChanged"/>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
             </StackPanel>
             <controls:SettingsExpander.ItemsHeader>
                 <InfoBar Title="Pre-made themes soon!"

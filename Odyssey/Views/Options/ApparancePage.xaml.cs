@@ -8,6 +8,8 @@ using Odyssey.Dialogs;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 
 
@@ -97,6 +99,15 @@ namespace Odyssey.Views.Options
             var dialog = new CustomizeTitleBarItemsDialog();
             dialog.XamlRoot = this.Content.XamlRoot;
             await dialog.ShowAsync();
+        }
+
+        private void ColorPickerFlyout_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+        {
+            Color c = args.NewColor;
+            string hexColor = System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B));
+
+            UpdateTheme.UpdateThemeWith(hexColor);
+            Settings.CustomThemeColors = hexColor;
         }
     }
 }

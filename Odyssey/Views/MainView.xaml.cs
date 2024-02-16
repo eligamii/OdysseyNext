@@ -137,9 +137,7 @@ namespace Odyssey.Views
             WebView.TotpLoginDetectedAction += SetTotpButtonVisibility;
             WebView.LoginPageDetectedAction += LoginDetectedChanged;
 
-            // Set the custom theme if dynamic theme is not enabled
-            if (!Settings.IsDynamicThemeEnabled)
-                SetCustomTheme();
+            
 
             this.ActualThemeChanged += (s, a) => SetCustomTheme();
 
@@ -185,6 +183,11 @@ namespace Odyssey.Views
             MainWindow.Current.Backdrop.SetBackdrop((BackdropKind)Settings.SystemBackdrop);
 
             Controls.TitleBarButtons.AddButtonsTo(buttonsStackPanel, false);
+
+            // Set the custom theme if dynamic theme is not enabled
+            if (!Settings.IsDynamicThemeEnabled)
+                SetCustomTheme();
+
         }
 
         private bool _wasOpened;

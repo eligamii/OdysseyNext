@@ -17,6 +17,7 @@
     <None Remove="Controls\Flyouts\QuickSearchFlyout.xaml" />
     <None Remove="Controls\FWebViewContextMenu.xaml" />
     <None Remove="Dialogs\AppUriLaunchDialog.xaml" />
+    <None Remove="Dialogs\InstallExtensionDialog.xaml" />
     <None Remove="WebView.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -30,9 +31,11 @@
 
   <ItemGroup>
       <PackageReference Include="Aria2.NET" Version="1.0.5" />
+      <PackageReference Include="Downloader" Version="3.0.6" />
       <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.1" />
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231219000" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240205001-preview1" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+      <PackageReference Include="SharpZipLib" Version="1.4.2" />
       <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.7" />
       <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
   </ItemGroup>
@@ -52,6 +55,12 @@
     <Content Update="Assets\square.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Dialogs\InstallExtensionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Markup;
+using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
 
 // This entire code is from https://github.com/files-community/Files/blob/main/src/Files.App/Helpers/ResourceHelpers.cs
@@ -18,6 +19,7 @@ namespace Odyssey.Shared.Helpers
             resourceLoader = new(filename);
             return resourceLoader.GetString(name);
         }
+
 
         protected override object ProvideValue()
         {

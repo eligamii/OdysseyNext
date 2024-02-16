@@ -65,6 +65,9 @@ namespace Odyssey.FWebView
         public static Action TotpLoginDetectedAction { get; set; }
         public static Action LoginPageDetectedAction { get; set; }
 
+
+        private static CoreWebView2Environment _environment { get; set; } 
+        
         public bool IsPrivateModeEnabled { get; set; } = false;
         public bool IsLoginPageDetected { get; set; }
         public List<Login> AvailableLoginsForPage { get; set; }
@@ -119,6 +122,8 @@ namespace Odyssey.FWebView
 
         public static WebView Create(string url = "about:blank", bool privateMode = false)
         {
+            Init();
+
             WebView newWebView = new();
             newWebView.Source = new Uri(url);
             newWebView.IsPrivateModeEnabled = privateMode;
@@ -126,7 +131,17 @@ namespace Odyssey.FWebView
             return newWebView;
         }
 
-      
+        private static async void Init() // Not fully implemented
+        {
+            if(_environment == null)
+            {
+                CoreWebView2EnvironmentOptions options = new();
+                options.EnableTrackingPrevention = true;
+                //options.AreBrowserExtensionsEnabled = true; Not supported for now (InvalidCastException)
+
+                _environment = await CoreWebView2Environment.CreateWithOptionsAsync(null, null, options);
+            }
+        }
 
         public bool IsVisible()
         {
@@ -185,8 +200,10 @@ namespace Odyssey.FWebView
         }
 
 
-        private void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
+        private async void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
+           
+
             if (!IsLittleWeb)
             {
                 sender.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged; // Update the text of the tabs
@@ -212,6 +229,8 @@ namespace Odyssey.FWebView
                 sender.CoreWebView2.NavigationCompleted += (s, a) => { if (IsVisible()) { MainProgressBar.Value = 0; } };
             }
 
+           
+
             sender.CoreWebView2.WindowCloseRequested += CoreWebView2_WindowCloseRequested;
             sender.CoreWebView2.StatusBarTextChanged += CoreWebView2_StatusBarTextChanged;
 
@@ -220,7 +239,7 @@ namespace Odyssey.FWebView
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect the downloads to aria2
             sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
 
-            // Set the tracking level to strict (will block 50%+ of the trackers)
+            // Set the tracking level to strict (will block 30%+ of the trackers)
             sender.CoreWebView2.Profile.PreferredTrackingPreventionLevel = CoreWebView2TrackingPreventionLevel.Strict;
 
             // May not work for now
@@ -233,7 +252,8 @@ namespace Odyssey.FWebView
             // Show native tooltips instead of Edge ones (disabled for now)
             //WebViewNativeToolTips tips = new(this);
 
-
+            // Testing extensions (Cannot enable this feature for now, see the TestExtension() method)
+            //await sender.CoreWebView2.Profile.AddBrowserExtensionAsync(@"C:\Users\eliga\Desktop\CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_55_0_0(2)");
 
             // Disable default keyboard accelerators keys to add custom find,... dialogs
             sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = Settings.AreExperimentalFeaturesEnabled;
@@ -438,7 +458,19 @@ namespace Odyssey.FWebView
             }
             else // The file was downloaded in another location before (mega.nz downloads)
             {
-                DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation));
+                FileInfo resultPath = new(args.DownloadOperation.ResultFilePath);
+
+                if (resultPath.Extension == ".crx")
+                {
+                    args.Cancel = true;
+
+                    string extensionId = resultPath.Name.Split("_")[0]; // For Chrome Web Store extensions (TODO: Create a regex for it)
+                    InstallExtensionAsync(extensionId);
+                }
+                else
+                {
+                    DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation));
+                }
             }
 
             downloadsFlyout.ShowAt(MainDownloadElement);

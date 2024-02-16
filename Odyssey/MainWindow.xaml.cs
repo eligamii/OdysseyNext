@@ -116,15 +116,6 @@ namespace Odyssey
 
                     MainView.Current.documentTitle.Text = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
 
-                    bool dark = Classes.UpdateTheme.IssystemDarkMode();
-                    string color = dark ? "#202020" : "#F9F9F9";
-
-                    if (Settings.IsDynamicThemeEnabled)
-                    {
-                        MainView.Current.RequestedTheme = Classes.UpdateTheme.IssystemDarkMode() ? Microsoft.UI.Xaml.ElementTheme.Dark : Microsoft.UI.Xaml.ElementTheme.Light;
-                        Classes.UpdateTheme.UpdateThemeWith(color);
-                    }
-
                     Tabs.Items.Clear();
 
                     AppWindow.Hide();
