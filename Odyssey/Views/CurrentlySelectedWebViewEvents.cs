@@ -27,9 +27,23 @@ namespace Odyssey.Views
                 case EventType.StatusBarTextChanged: StatusBarTextChanged(sender); return;
                 case EventType.KeyDown: KeyDown(args.Args as WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs); return;
                 case EventType.DynamicThemeUpdateRequested: DynamicTheme.UpdateDynamicThemeAsync(CurrentlySelectedWebView); return;
+                case EventType.ExtensionInstalled: ExtensionInstalled(args.Args as BrowserExtensionInfo); return;
             }
         }
 
+
+        private void ExtensionInstalled(BrowserExtensionInfo extensionInfo)
+        {
+            BitmapIcon bitmapIcon = new();
+            bitmapIcon.UriSource = new(extensionInfo.MinQualityIcon);
+            bitmapIcon.ShowAsMonochrome = false;
+
+            MenuFlyoutItem item = new();
+            item.Text = extensionInfo.DisplayName;
+            item.Icon = bitmapIcon;
+
+            (moreButton.Flyout as MenuFlyout).Items.Add(item);
+        }
 
         private void KeyDown(WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs args)
         {

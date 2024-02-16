@@ -104,10 +104,10 @@ namespace Odyssey.Views.Options
         private void ColorPickerFlyout_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
         {
             Color c = args.NewColor;
-            string hexColor = System.Drawing.ColorTranslator.ToHtml(System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B));
+            string color = $"{c.A},{c.R},{c.G},{c.B}";
 
-            UpdateTheme.UpdateThemeWith(hexColor);
-            Settings.CustomThemeColors = hexColor;
+            UpdateTheme.UpdateThemeWith(color);
+            Settings.CustomThemeColors = color;
         }
     }
 }

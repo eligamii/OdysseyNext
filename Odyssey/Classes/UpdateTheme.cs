@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Odyssey.Helpers;
 using Odyssey.Shared.Helpers;
 using Odyssey.Views;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Windows.UI;
 
@@ -13,28 +14,18 @@ namespace Odyssey.Classes
         [DllImport("UXTheme.dll", SetLastError = true, EntryPoint = "#138")]
         public static extern bool IssystemDarkMode();
 
-        internal static void UpdateThemeWith(string color)
+        internal static void UpdateThemeWith(string colorString)
         {
-            var sdc = System.Drawing.ColorTranslator.FromHtml(color);
-            var nnColor = Color.FromArgb(140, sdc.R, sdc.G, sdc.B);
+            var color = colorString.Split(',').Select(byte.Parse).ToArray();
+            var nnColor = Color.FromArgb(color[0], color[1], color[2], color[3]);
 
-            bool isColorDark = ColorsHelper.IsColorDark(nnColor, 0.52);
-            if (MainView.Current.ActualTheme == ElementTheme.Light)
-            {
-                var c = ColorsHelper.Lighten(nnColor, 0.9);
-                nnColor = Color.FromArgb(240, c.R, c.G, c.B);
-            }
-            else
-            {
-                var c = ColorsHelper.Darken(nnColor, 0.3);
-                nnColor = Color.FromArgb(240, c.R, c.G, c.B);
-            }
+            MainWindow.Current.Backdrop.SetBackdrop(BackdropKind.Acrylic);
 
-            MainWindow.Current.Backdrop.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.4f : 0.9f;
+            MainWindow.Current.Backdrop.TintOpacity = color[0] / 255;
             MainWindow.Current.Backdrop.TintColor = nnColor;
 
             MainView.Current.PaneAcrylicBrush.TintOpacity = MainWindow.Current.Backdrop.TintOpacity = ColorsHelper.IsColorGrayTint(nnColor) ? 0.9f : 0.4f;
-            MainView.Current.PaneAcrylicBrush.TintColor = MainWindow.Current.Backdrop.TintColor = Color.FromArgb(245, nnColor.R, nnColor.G, nnColor.B);
+            MainView.Current.PaneAcrylicBrush.TintColor = MainWindow.Current.Backdrop.TintColor = Color.FromArgb(nnColor.A, nnColor.R, nnColor.G, nnColor.B);
             MainView.Current.AppTitleBar.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Colors.Transparent);
             MainView.Current.AppTitleBar.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(20, 128, 128, 128));
 

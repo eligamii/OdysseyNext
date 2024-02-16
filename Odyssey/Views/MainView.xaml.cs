@@ -137,8 +137,6 @@ namespace Odyssey.Views
             WebView.TotpLoginDetectedAction += SetTotpButtonVisibility;
             WebView.LoginPageDetectedAction += LoginDetectedChanged;
 
-            
-
             this.ActualThemeChanged += (s, a) => SetCustomTheme();
 
             if(Settings.OpenTabAtStartup)
@@ -187,6 +185,22 @@ namespace Odyssey.Views
             // Set the custom theme if dynamic theme is not enabled
             if (!Settings.IsDynamicThemeEnabled)
                 SetCustomTheme();
+
+            // TODO: Remove this (this is for testing purposes)
+            var extensions = await WebView.GetExtensionsAsync();
+
+            foreach(var extension in extensions)
+            {
+                BitmapIcon bitmapIcon = new();
+                bitmapIcon.UriSource = new(extension.MinQualityIcon);
+                bitmapIcon.ShowAsMonochrome = false;
+
+                MenuFlyoutItem item = new();
+                item.Text = extension.DisplayName;
+                item.Icon = bitmapIcon;
+
+                (moreButton.Flyout as MenuFlyout).Items.Add(item);
+            }
 
         }
 
@@ -393,10 +407,14 @@ namespace Odyssey.Views
 
         private void MainMenuButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CurrentlySelectedWebView != null && false) // disabled
+            if (CurrentlySelectedWebView != null)
             {
                 MainMenuFlyout mainMenuFlyout = new();
-                mainMenuFlyout.ShowAt(infoRegionStckPanel);
+                FlyoutShowOptions options = new FlyoutShowOptions();
+                options.Placement = FlyoutPlacementMode.Bottom;
+                options.Position = new Windows.Foundation.Point(splitViewContentFrame.ActualWidth / 2, 4);
+
+                mainMenuFlyout.ShowAt(splitViewContentFrame, options);
             }
         }
 

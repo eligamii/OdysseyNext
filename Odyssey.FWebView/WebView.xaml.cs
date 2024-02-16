@@ -39,7 +39,8 @@ namespace Odyssey.FWebView
         SourceChanged,
         StatusBarTextChanged,
         KeyDown,
-        DynamicThemeUpdateRequested
+        DynamicThemeUpdateRequested,
+        ExtensionInstalled
     }
 
     public class CurrentlySelectedWebViewEventTriggeredEventArgs
