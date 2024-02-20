@@ -15,6 +15,7 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("FirstLaunch")) FirstLaunch = true;
             if (!Values.Values.ContainsKey("Inititalized")) Inititalized = true;
             if (!Values.Values.ContainsKey("SuccessfullyClosed")) SuccessfullyClosed = true;
+            if (!Values.Values.ContainsKey("TabIndex")) TabIndex = -1;
 
             // Personalization
             if (!Values.Values.ContainsKey("IsPaneLocked")) IsPaneLocked = true;
@@ -28,7 +29,9 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("ColorAlpha")) ColorAlpha = 245;
             if (!Values.Values.ContainsKey("IsSolidTitleBarEnabled")) IsSolidTitleBarEnabled = true;
             if (!Values.Values.ContainsKey("ShowHostInsteadOfDocumentTitle")) ShowHostInsteadOfDocumentTitle = true;
-            if (!Values.Values.ContainsKey("SystemBackdrop")) SystemBackdrop = 0; 
+            if (!Values.Values.ContainsKey("SystemBackdrop")) SystemBackdrop = 0;
+            if (!Values.Values.ContainsKey("HoverToOpenPane")) HoverToOpenPane = true;
+
 
             // Dark reader
             if (!Values.Values.ContainsKey("IsDarkReaderEnabled")) IsDarkReaderEnabled = true;
@@ -59,12 +62,35 @@ namespace Odyssey.Data.Settings
             // Behaviors
             if (!Values.Values.ContainsKey("RestoreTabsAfterCrash")) RestoreTabsAfterCrash = false;
             if (!Values.Values.ContainsKey("OpenHomePageAtNewTabCreation")) OpenHomePageAtNewTabCreation = true;
+
+            
         }
 
         public static bool? Inititalized
         {
             get { return (bool?)Values.Values["Inititalized"]; }
             set { Values.Values["Inititalized"] = value; }
+        }
+
+        public static bool HoverToOpenPane
+        {
+            get { return (bool)Values.Values["HoverToOpenPane"]; }
+            set { Values.Values["HoverToOpenPane"] = value; }
+        }
+
+        public static int TabIndex
+        {
+            get { return (int)Values.Values["TabIndex"]; }
+            set { Values.Values["TabIndex"] = value; }
+        }
+
+        /// <summary>
+        /// 0 = favorites, 1 = pins, 2 = tabs
+        /// </summary>
+        public static int TabType
+        {
+            get { return (int)Values.Values["TabType"]; }
+            set { Values.Values["TabType"] = value; }
         }
 
         public static byte ColorAlpha

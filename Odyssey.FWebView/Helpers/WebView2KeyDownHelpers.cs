@@ -60,7 +60,7 @@ namespace Odyssey.FWebView.Helpers
                         bool isAltKeyPressed = bool.Parse(keys[2]);
 
                         int rawKey = int.Parse(keys[0]);
-                        
+
                         VirtualKey pressedKey = ConvertToVirtualKey(rawKey);
 
                         KeyDown(sender, new KeyDownPressedEventArgs(isControlKeyPressed, isAltKeyPressed, pressedKey));
@@ -75,7 +75,7 @@ namespace Odyssey.FWebView.Helpers
                     return (VirtualKey)(jsKey + 64);
                 else
                 {
-                    switch(jsKey)
+                    switch (jsKey)
                     {
                         case 32: return VirtualKey.Space;
                     }

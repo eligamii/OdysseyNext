@@ -1,17 +1,18 @@
-﻿using Microsoft.UI;
+﻿using Microsoft.Graphics.Canvas.Text;
+using Microsoft.UI;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Newtonsoft.Json.Linq;
+using Odyssey.AdBlocker;
 using Odyssey.Classes;
 using Odyssey.Controls;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Dialogs;
 using Odyssey.FWebView;
-using Odyssey.FWebView.Classes;
 using Odyssey.Helpers;
 using Odyssey.OtherWindows;
 using Odyssey.QuickActions;
@@ -19,18 +20,12 @@ using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views.Pages;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Web.WebView2.Core;
+using Windows.Foundation;
 using Type = System.Type;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.Linq;
-using Odyssey.Shared.Helpers;
-using System.Diagnostics;
-using Microsoft.UI.Windowing;
-using Odyssey.AdBlocker;
-using Microsoft.Graphics.Canvas.Text;
 
 
 
@@ -81,6 +76,13 @@ namespace Odyssey.Views
             if (Settings.SuccessfullyClosed == false && Settings.RestoreTabsAfterCrash && instances.Count == 1)
             {
                 PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
+                
+                switch(Settings.TabType)
+                {
+                    case 0: PaneView.Current.FavoriteGrid.SelectedIndex = Settings.TabIndex; break;
+                    case 1: PaneView.Current.PinsTabView.SelectedIndex = Settings.TabIndex; break;
+                    case 2: PaneView.Current.TabsView.SelectedIndex = Settings.TabIndex; break;
+                }
             }
 
             Settings.SuccessfullyClosed = false;
@@ -113,8 +115,6 @@ namespace Odyssey.Views
 
             WebView.XamlRoot = XamlRoot;
 
-            // Restore tabs after crash
-            RestoreTabs();
 
             DiltillNETAdBlocker.Init();
 
@@ -139,7 +139,7 @@ namespace Odyssey.Views
 
             this.ActualThemeChanged += (s, a) => SetCustomTheme();
 
-            if(Settings.OpenTabAtStartup)
+            if (Settings.OpenTabAtStartup)
             {
                 WebView webView = WebView.Create(SearchEngine.SelectedSearchEngine.Url);
 
@@ -168,7 +168,7 @@ namespace Odyssey.Views
             SplitView.PaneBackground = Settings.IsPaneLocked ? new SolidColorBrush(Colors.Transparent) : PaneAcrylicBrush;
 
 
-            WebView.CurrentlySelectedWebViewEventTriggered += WebView_CurrentlySelectedWebViewEventTriggered; 
+            WebView.CurrentlySelectedWebViewEventTriggered += WebView_CurrentlySelectedWebViewEventTriggered;
 
 
             titleBarDragRegions.SetDragRegionForTitleBars();
@@ -189,7 +189,7 @@ namespace Odyssey.Views
             // TODO: Remove this (this is for testing purposes)
             var extensions = await WebView.GetExtensionsAsync();
 
-            foreach(var extension in extensions)
+            foreach (var extension in extensions)
             {
                 BitmapIcon bitmapIcon = new();
                 bitmapIcon.UriSource = new(extension.MinQualityIcon);
@@ -202,10 +202,13 @@ namespace Odyssey.Views
                 (moreButton.Flyout as MenuFlyout).Items.Add(item);
             }
 
+
+            // Restore tabs after crash
+            RestoreTabs();
         }
 
         private bool _wasOpened;
-       
+
 
 
         private void SplitView_PaneClosedOnFullScreen(SplitView sender, object args)
@@ -222,7 +225,7 @@ namespace Odyssey.Views
 
         private void DocumentTitle_LayoutUpdated(object sender, object e)
         {
-           
+
         }
 
         private bool lastConnectionState;
@@ -350,8 +353,8 @@ namespace Odyssey.Views
             SearchBar searchBar = new SearchBar();
             FlyoutShowOptions options = new FlyoutShowOptions();
             options.Placement = FlyoutPlacementMode.Bottom;
-            
-            if(splitViewContentFrame.ActualWidth > 610)
+
+            if (splitViewContentFrame.ActualWidth > 610)
             {
                 options.Position = new Windows.Foundation.Point(splitViewContentFrame.ActualWidth / 2, 100);
             }
@@ -458,7 +461,7 @@ namespace Odyssey.Views
                 if (CurrentlySelectedWebView.CoreWebView2?.DocumentTitle != null)
                 {
                     try
-                    {                       
+                    {
                         string doc = Settings.ShowHostInsteadOfDocumentTitle ? CurrentlySelectedWebView.Source.Host : CurrentlySelectedWebView.CoreWebView2.DocumentTitle;
                         CanvasTextFormat format = new()
                         {
@@ -554,7 +557,7 @@ namespace Odyssey.Views
             {
                 int newIndex = index + indexShift;
 
-                if(newIndex >= 0 && newIndex <= maxIndex)
+                if (newIndex >= 0 && newIndex <= maxIndex)
                 {
                     PaneView.Current.TabsView.SelectedIndex = newIndex;
                 }
@@ -577,7 +580,7 @@ namespace Odyssey.Views
                 Position = e.GetPosition(this)
             };
 
-            foreach(Tab tab in Favorites.Items)
+            foreach (Tab tab in Favorites.Items)
             {
                 var bit = new BitmapIcon();
 
@@ -618,7 +621,7 @@ namespace Odyssey.Views
                 item.IsChecked = CurrentlySelectedWebView == tab.MainWebView;
                 item.Click += (s, a) =>
                 {
-                    if(item.IsChecked) PaneView.Current.TabsView.SelectedItem = tab;
+                    if (item.IsChecked) PaneView.Current.TabsView.SelectedItem = tab;
                 };
 
                 flyout.Items.Add(item);
@@ -635,7 +638,18 @@ namespace Odyssey.Views
 
         private void RootGrid_PointerMoved(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            
+
+        }
+
+        private void showPaneButton_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (Settings.HoverToOpenPane && SplitView.DisplayMode == SplitViewDisplayMode.Overlay) SplitView.IsPaneOpen = true;
+        }
+
+        private void secondTitleBar_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            PointerPoint pos = e.GetCurrentPoint(this);
+            if (Settings.HoverToOpenPane && SplitView.DisplayMode == SplitViewDisplayMode.Overlay && pos.Position.X > 5) SplitView.IsPaneOpen = false;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
-using Odyssey.QuickActions.Commands;
 using Odyssey.QuickActions.Data;
 using System.Collections.Generic;
 

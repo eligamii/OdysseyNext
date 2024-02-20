@@ -1,27 +1,9 @@
 using CommunityToolkit.WinUI.Controls;
-using CommunityToolkit.WinUI.UI.Controls.TextToolbarSymbols;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
-using Odyssey.Data.Settings;
-using Odyssey.Shared.Helpers;
-using Odyssey.Shared.ViewModels.Data;
-using Odyssey.Views.Options;
 using Odyssey.Views.QuickActionsDialog;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 
 
@@ -49,7 +31,7 @@ namespace Odyssey.Dialogs
 
         private void segmented_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.RemovedItems.Count > 0)
+            if (e.RemovedItems.Count > 0)
             {
                 Segmented segmented = sender as Segmented;
                 int oldIndex = segmented.Items.IndexOf(e.RemovedItems[0]);

@@ -1,15 +1,11 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 
@@ -32,7 +28,7 @@ namespace Odyssey.FWebView.Helpers
             public int Quality { get; set; }
         }
 
-        
+
         /// <summary>
         /// Load saved favicons
         /// </summary>
@@ -101,7 +97,8 @@ namespace Odyssey.FWebView.Helpers
 
                     }
                 }
-            } catch { }
+            }
+            catch { }
         }
 
         private static int GetIdFromUrl(string url)
@@ -110,12 +107,12 @@ namespace Odyssey.FWebView.Helpers
             return map == null ? 0 : map.IconId; // The first iconId is 1 so return 0
         }
 
-        public static bool GetFaviconAsBitmapImage(string url, out BitmapImage bitmapImage, bool maxQuality = false) 
+        public static bool GetFaviconAsBitmapImage(string url, out BitmapImage bitmapImage, bool maxQuality = false)
         {
             int id = GetIdFromUrl(url);
             var iconsToUse = icons.Where(p => p.IconId == id).ToList();
 
-            if(iconsToUse.Count > 0)
+            if (iconsToUse.Count > 0)
             {
                 if (maxQuality)
                 {
@@ -136,6 +133,6 @@ namespace Odyssey.FWebView.Helpers
                 return false;
             }
         }
-            
+
     }
 }

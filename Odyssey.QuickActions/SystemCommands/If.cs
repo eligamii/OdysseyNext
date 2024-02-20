@@ -18,7 +18,7 @@ namespace Odyssey.QuickActions.SystemCommands
                 {
                     string command = string.Empty;
 
-                    for(int i = 1; i > options.Count() - 1; i++)
+                    for (int i = 1; i > options.Count() - 1; i++)
                     {
                         command += options[i];
                     }

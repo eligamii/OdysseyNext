@@ -1,7 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
@@ -15,15 +14,11 @@ using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI;
-using Windows.UI.WebUI;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
 
@@ -58,7 +53,7 @@ namespace Odyssey.FWebView
     {
         public TotpLoginDetection TotpLoginDetection { get; private set; }
 
-        
+
         public delegate void CurrentlySelectedWebViewEventEventHandler(CoreWebView2 sender, CurrentlySelectedWebViewEventTriggeredEventArgs args);
 
         public static event CurrentlySelectedWebViewEventEventHandler CurrentlySelectedWebViewEventTriggered;
@@ -67,8 +62,8 @@ namespace Odyssey.FWebView
         public static Action LoginPageDetectedAction { get; set; }
 
 
-        private static CoreWebView2Environment _environment { get; set; } 
-        
+        private static CoreWebView2Environment _environment { get; set; }
+
         public bool IsPrivateModeEnabled { get; set; } = false;
         public bool IsLoginPageDetected { get; set; }
         public List<Login> AvailableLoginsForPage { get; set; }
@@ -134,7 +129,7 @@ namespace Odyssey.FWebView
 
         private static async void Init() // Not fully implemented
         {
-            if(_environment == null)
+            if (_environment == null)
             {
                 CoreWebView2EnvironmentOptions options = new();
                 options.EnableTrackingPrevention = true;
@@ -147,7 +142,7 @@ namespace Odyssey.FWebView
         public bool IsVisible()
         {
             return SelectedWebView == this;
-}
+        }
 
         public static void OpenDownloadDialog(FrameworkElement element = null)
         {
@@ -188,7 +183,7 @@ namespace Odyssey.FWebView
                 }
 
 
-                
+
 
                 return image;
             }
@@ -203,7 +198,7 @@ namespace Odyssey.FWebView
 
         private async void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
-           
+
 
             if (!IsLittleWeb)
             {
@@ -230,7 +225,7 @@ namespace Odyssey.FWebView
                 sender.CoreWebView2.NavigationCompleted += (s, a) => { if (IsVisible()) { MainProgressBar.Value = 0; } };
             }
 
-           
+
 
             sender.CoreWebView2.WindowCloseRequested += CoreWebView2_WindowCloseRequested;
             sender.CoreWebView2.StatusBarTextChanged += CoreWebView2_StatusBarTextChanged;
@@ -315,7 +310,7 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_StatusBarTextChanged(CoreWebView2 sender, object args)
         {
-            if(IsVisible())
+            if (IsVisible())
             {
                 CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.StatusBarTextChanged));
             }
@@ -330,7 +325,7 @@ namespace Odyssey.FWebView
             else if (LinkedTab.GetType() == typeof(Tab)) Tabs.Items.Remove(LinkedTab);
         }
 
-        
+
 
         Color? lastPixel = null;
         private async Task UpdateThemeWithColorChangeAsync()
@@ -455,7 +450,7 @@ namespace Odyssey.FWebView
         {
             if (!args.DownloadOperation.Uri.StartsWith("blob") && false)
             {
-                DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation));
+                //DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation));
             }
             else // The file was downloaded in another location before (mega.nz downloads)
             {
@@ -465,12 +460,12 @@ namespace Odyssey.FWebView
                 {
                     args.Cancel = true;
 
-                    string extensionId = resultPath.Name.Split("_")[0]; // For Chrome Web Store extensions (TODO: Create a regex for it)
+                    string extensionId = resultPath.Name.Split("_")[0]; 
                     InstallExtensionAsync(extensionId);
                 }
                 else
                 {
-                    DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation));
+                    DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation.Uri));
                 }
             }
 
@@ -510,7 +505,7 @@ namespace Odyssey.FWebView
             // Especially for login pages (Figma, etc) that leave an useless blank page after login
             if (ParentTab != null && !CanGoForward && Source.ToString() == "about:blank")
             {
-                if(ParentTab.GetType() != typeof(Favorite) && ParentTab.GetType() != typeof(Pin) && ParentTab.GetType() == typeof(Tab))
+                if (ParentTab.GetType() != typeof(Favorite) && ParentTab.GetType() != typeof(Pin) && ParentTab.GetType() == typeof(Tab))
                 {
                     Tabs.Items.Remove(ParentTab);
                     this.Close();

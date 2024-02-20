@@ -1,7 +1,6 @@
-﻿using Microsoft.Graphics.Canvas.Text;
-using Microsoft.Graphics.Canvas;
+﻿using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Text;
 using Windows.Foundation;
-using Newtonsoft.Json.Linq;
 
 namespace Odyssey.Helpers
 {
@@ -23,14 +22,14 @@ namespace Odyssey.Helpers
         {
             string modifiedText = text;
             int count = 0;
-            
-            while(MeasureText(modifiedText, textFormat).Width > desiredWidth)
+
+            while (MeasureText(modifiedText, textFormat).Width > desiredWidth)
             {
                 count++;
                 modifiedText = text.Remove(text.Length - count, count) + "...";
             }
 
-            return modifiedText; 
+            return modifiedText;
         }
     }
 }

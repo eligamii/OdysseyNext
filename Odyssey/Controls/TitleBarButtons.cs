@@ -3,16 +3,10 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Odyssey.Data.Main;
-using Odyssey.Data.Settings;
 using Odyssey.FWebView;
 using Odyssey.QuickActions;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Controls
 {
@@ -42,17 +36,17 @@ namespace Odyssey.Controls
 
         public static void AddButtonsTo(Panel panel, bool placeholder)
         {
-            foreach(var b in Data.Main.TitleBarButtons.Items)
+            foreach (var b in Data.Main.TitleBarButtons.Items)
             {
-                var button = CreateButton(placeholder ,b.Id, b.Icon, b.Command);
+                var button = CreateButton(placeholder, b.Id, b.Icon, b.Command);
                 panel.Children.Insert(0, button);
             }
         }
 
-        private static UITitleBarButton CreateButton(bool placeholder ,int id, string icon, string command = null)
+        private static UITitleBarButton CreateButton(bool placeholder, int id, string icon, string command = null)
         {
             UITitleBarButton button = new();
-            if(!placeholder) button.Click += Button_Click;
+            if (!placeholder) button.Click += Button_Click;
             button.Content = icon;
             button.Id = id;
             button.Command = command;
@@ -65,7 +59,7 @@ namespace Odyssey.Controls
             var button = sender as UITitleBarButton;
             int id = button.Id;
 
-            switch(id)
+            switch (id)
             {
                 case -1: Command(button.Command); break;
 
@@ -100,7 +94,7 @@ namespace Odyssey.Controls
 
         private static void Back()
         {
-            if(MainView.CurrentlySelectedWebView != null)
+            if (MainView.CurrentlySelectedWebView != null)
             {
                 if (MainView.CurrentlySelectedWebView.CanGoBack) MainView.CurrentlySelectedWebView.GoBack();
             }
@@ -108,7 +102,7 @@ namespace Odyssey.Controls
 
         private static void Forward()
         {
-            if(MainView.CurrentlySelectedWebView != null)
+            if (MainView.CurrentlySelectedWebView != null)
             {
                 if (MainView.CurrentlySelectedWebView.CanGoForward) MainView.CurrentlySelectedWebView.GoForward();
             }
@@ -145,7 +139,7 @@ namespace Odyssey.Controls
 
         private static void Favorite()
         {
-            if(PaneView.Current.TabsView.SelectedIndex != -1)
+            if (PaneView.Current.TabsView.SelectedIndex != -1)
             {
                 Tab itam = PaneView.Current.TabsView.SelectedItem as Tab;
                 Favorite favorite = new()
@@ -165,7 +159,7 @@ namespace Odyssey.Controls
 
         private static void Pin()
         {
-            if(PaneView.Current.TabsView.SelectedIndex == -1)
+            if (PaneView.Current.TabsView.SelectedIndex == -1)
             {
                 Tab item = PaneView.Current.TabsView.SelectedItem as Tab;
 
@@ -185,7 +179,7 @@ namespace Odyssey.Controls
                 Tabs.Items.Remove(item);
             }
 
-            
+
         }
         private static async void Command(string cmd)
         {

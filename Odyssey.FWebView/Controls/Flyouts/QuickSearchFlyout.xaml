@@ -20,39 +20,18 @@
 
     </Flyout.FlyoutPresenterStyle>
 
-    <Grid Width="400" Height="500">
+    <Grid Width="400" MaxHeight="400">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition x:Name="webViewRowDef" Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid BorderBrush="#33080808" BorderThickness="0,0,0,1" Grid.Row="0">
-            <TextBox PlaceholderText="Search here..." VerticalAlignment="Center" Margin="5" x:Name="mainSearchBox" />
+        <Grid Grid.Row="0">
+            <TextBox PlaceholderText="Search here..." VerticalAlignment="Center" Margin="5" x:Name="mainSearchBox" TextChanged="mainSearchBox_TextChanged"/>
         </Grid>
 
-        <Grid Grid.Row="1">
-            <TextBlock TextWrapping="WrapWholeWords" x:Name="quickAnswerTextBlock"/>
-        </Grid>
-
-        <ListView x:Name="searchResults" Grid.Row="2">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Padding="0,10,0,20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal">
-                            <BitmapIcon UriSource="{Binding iconSource}" Height="20" ShowAsMonochrome="False"/>
-                            <TextBlock Padding="5,5,0,5" Text="{Binding decodedTitle}" Foreground="{StaticResource AccentTextFillColorPrimaryBrush}" FontSize="15" Style="{ThemeResource BodyStrongTextBlockStyle}" Grid.Row="0"/>
-                        </StackPanel>
-                        <TextBlock Padding="0,0,0,0" Text="{Binding subtitle}" Grid.Row="1"/>
-                        <TextBlock Text="{Binding decodedDescription}" Foreground="{StaticResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Grid.Row="2"/>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        
+        <WebView2 x:Name="webView" Source="about:blank" Grid.Row="1" CoreWebView2Initialized="webView_CoreWebView2Initialized"/>
+        <Rectangle Grid.Row="1" Fill="#33080808" Height="1" VerticalAlignment="Top" HorizontalAlignment="Stretch"/>
     </Grid>
 </Flyout>

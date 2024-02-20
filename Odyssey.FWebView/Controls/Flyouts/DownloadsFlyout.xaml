@@ -25,37 +25,40 @@
 
     <Grid Width="290" MaxHeight="510">
         <Grid.RowDefinitions>
-            <RowDefinition Height="42"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" VerticalAlignment="Center" Margin="15,0,5,0">
-            <TextBlock Grid.Row="0" FontSize="14" FontWeight="Medium"
-                       Text="{helpers:ResourceString Name=Downloads, Filename=ContextMenus}"/>
+        <Grid Grid.Row="1"  VerticalAlignment="Stretch" BorderThickness="0,1,0,0" BorderBrush="#33080808" Background="{StaticResource LayerOnAcrylicFillColorDefaultBrush}">
+  
         </Grid>
 
-        <Grid Grid.Row="1" CornerRadius="3" Margin="6,0,6,6" 
+        <Grid Grid.Row="0" CornerRadius="3" Margin="0,2,0,2" 
               BorderThickness="1">
-            <ListView Margin="0,0,0,0" SelectionMode="None" x:FieldModifier="public" IsItemClickEnabled="True" Loaded="DownloadItemsListView_Loaded" x:Name="DownloadItemsListView">
+            <ListView Margin="0,0,0,0" SelectionMode="None" ItemClick="DownloadItemsListView_ItemClick" x:FieldModifier="public" IsItemClickEnabled="True" Loaded="DownloadItemsListView_Loaded" x:Name="DownloadItemsListView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Height="58">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
+                        <ListViewItem PointerEntered="ListViewItem_PointerEntered" PointerExited="ListViewItem_PointerExited">
+                            <Grid Height="58">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="0"/>
+                                </Grid.ColumnDefinitions>
 
-                            <Grid>
-                                <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0" Source="{Binding ImageSource}"/>
-                                <ProgressRing x:Name="progressRing" Value="{Binding Progress}" IsActive="{Binding IsProgressActive}" IsIndeterminate="False" Width="19" Height="19"/>
+                                <Grid>
+                                    <Image x:Name="iconImage" Width="19" Margin="0,-2,0,0" Source="{Binding ImageSource}"/>
+                                    <ProgressRing x:Name="progressRing" Value="{Binding Progress}" IsActive="{Binding DownloadInProgress}" IsIndeterminate="False" Width="19" Height="19"/>
+                                </Grid>
+
+                                <StackPanel Margin="10,-3,0,0" VerticalAlignment="Center" Grid.Column="1">
+                                    <TextBlock Text="{Binding Name}" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
+                                    <TextBlock Text="{Binding Subtitle}" Margin="0,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
+                                </StackPanel>
+
+                                <Button Background="Transparent" CornerRadius="3" Margin="10,0,-20,0" Height="50" BorderThickness="0" Grid.Column="2" Content="&#xE712;" FontFamily="Segoe Fluent Icons"/>
                             </Grid>
-
-                            <StackPanel Margin="10,-3,0,0" VerticalAlignment="Center" Grid.Column="1">
-                                <TextBlock Text="{Binding Name}" Grid.Column="1" Margin="0,0,0,0" ToolTipService.ToolTip="test" x:Name="fileName"/>
-                                <TextBlock Text="" Margin="0,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" x:Name="subtitle"/>
-                            </StackPanel>
-
-                        </Grid>
+                        </ListViewItem>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

@@ -81,7 +81,7 @@ namespace Odyssey.QuickActions
             command = Variables.ConvertToValues(command);
 
             // Resolve the (test)
-            command = ResolveTests(command); 
+            command = ResolveTests(command);
 
             // Remove the first "$" is the command is from the search box
             if (command.StartsWith("$"))

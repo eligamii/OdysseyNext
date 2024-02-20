@@ -47,9 +47,9 @@
                    PaneOpened="SplitView_PaneClosed">
             
             <!-- SplitView pane -->
-            <SplitView.Pane>
+            <SplitView.Pane >
                 <!-- Main pane content -->
-                <Grid x:Name="secondTitleBar" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Grid x:Name="secondTitleBar" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  PointerExited="secondTitleBar_PointerExited">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="45"/>
                         <RowDefinition/>
@@ -225,6 +225,7 @@
                                     Visibility="Collapsed"
                                     RightTapped="HomeButton_RightTapped"
                                     PointerWheelChanged="wheelTabSwitchItems_PointerWheelChanged"
+                                    PointerEntered="showPaneButton_PointerEntered"
                                     />
 
                             <Grid.Transitions>

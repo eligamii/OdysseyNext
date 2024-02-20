@@ -1,7 +1,4 @@
-using Monaco.Helpers;
 using Odyssey.QuickActions.Objects;
-using System;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -16,7 +13,7 @@ namespace Odyssey.QuickActions.Commands
             if (calc.HasErrors()) return new Res(false, "0", "Wrong syntax");
 
             string res = calc.Evaluate().ToString();
-                           
+
             return new Res(true, res);
         }
     }

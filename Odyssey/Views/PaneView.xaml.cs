@@ -13,6 +13,7 @@ using Odyssey.Data.Settings;
 using Odyssey.Dialogs;
 using Odyssey.FWebView;
 using Odyssey.OtherWindows;
+using Odyssey.Shared.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views.Pages;
 using System;
@@ -178,7 +179,7 @@ namespace Odyssey.Views
 
         private void AddTabButton_Click(object sender, RoutedEventArgs e)
         {
-            if(Settings.OpenHomePageAtNewTabCreation)
+            if (Settings.OpenHomePageAtNewTabCreation)
             {
                 MainView.Current.splitViewContentFrame.Navigate(typeof(HomePage));
             }
@@ -287,7 +288,7 @@ namespace Odyssey.Views
             }
         }
 
- 
+
         private async void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
@@ -318,7 +319,7 @@ namespace Odyssey.Views
                 DynamicTheme.UpdateDynamicThemeAsync(MainView.CurrentlySelectedWebView);
                 UpdateTabSelection(sender);
             }
-            else if(/* As when the tab selection add an item before removing another */
+            else if (/* As when the tab selection add an item before removing another */
                     e.RemovedItems.Count > 0 &&
                     e.AddedItems.Count == 0 &&
                     FavoriteGrid.SelectedIndex == -1 &&
@@ -360,7 +361,16 @@ namespace Odyssey.Views
                         if (Tabs.Items.Contains(parentTab))
                             TabsView.SelectedItem = parentTab;
                     }
+                    
+                    
                 }
+                else
+
+                {
+                    MainView.Current.documentTitle.Text = ResourceString.GetString("Odyssey", "Main");
+                }
+
+                Settings.TabIndex = FavoriteGrid.SelectedIndex * PinsTabView.SelectedIndex * TabsView.SelectedIndex;
             }
 
 
@@ -440,9 +450,9 @@ namespace Odyssey.Views
 
         private void UpdateTabSelection(object selectedTabsView)
         {
-            if ((ListViewBase)selectedTabsView != TabsView) TabsView.SelectedIndex = -1;
-            if ((ListViewBase)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1;
-            if ((ListViewBase)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1;
+            if ((ListViewBase)selectedTabsView != TabsView) TabsView.SelectedIndex = -1; else Settings.TabType = 0;
+            if ((ListViewBase)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1; else Settings.TabType = 1;
+            if ((ListViewBase)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1; else Settings.TabType = 2;
         }
 
 

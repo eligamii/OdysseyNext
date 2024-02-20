@@ -34,7 +34,7 @@ namespace Odyssey.FWebView.Classes.Integrations
 
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

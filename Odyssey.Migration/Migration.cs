@@ -26,6 +26,7 @@ namespace Odyssey.Migration
             Opera,
             OperaGx,
             ArcBrowser,
+           
 
             Firefox
         }
@@ -51,7 +52,8 @@ namespace Odyssey.Migration
         {
             @"Local\Microsoft\Edge\User Data",
             @"Local\Google\Chrome\User Data",
-            @"Roaming\Opera Software\Opera Stable"
+            @"Roaming\Opera Software\Opera Stable",
+            @"Local\Packages\TheBrowserCompany.Arc_ttt1ap7aakyb4\LocalCache\Local\Arc\User Data"
 
             // Need to add Firefox and OperaGX, them Arc when available
         };
@@ -72,11 +74,16 @@ namespace Odyssey.Migration
 
             if (from.BrowserBase == Browser.Base.Chromium)
             {
-                data.Logins = Chromium.Passwords.Get(datapath);  
+                data.Logins = Chromium.Passwords.Get(datapath);
                 data.History = Chromium.History.Get(datapath);
 
                 Chromium.Extensions.Apply(datapath); // useless untill extensions support in WinUI3 WebView2
                 Chromium.Cookies.Apply(datapath);
+
+                if(from.BrowserName == Browser.Name.ArcBrowser)
+                {
+
+                }
             }
         }
     }

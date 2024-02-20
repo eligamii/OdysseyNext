@@ -5,8 +5,8 @@ namespace Odyssey.Shared.Helpers
 {
     public sealed class SymbolIconEx : FontIcon
     {
-        public SymbolIconEx(SymbolEx symbol) 
-        { 
+        public SymbolIconEx(SymbolEx symbol)
+        {
             FontFamily = new FontFamily("Segoe Fluent Icons");
             Symbol = symbol;
         }

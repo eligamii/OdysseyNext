@@ -1,9 +1,7 @@
 ﻿using Odyssey.Integrations.KDEConnect;
 using Odyssey.QuickActions.Objects;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Commands
@@ -13,15 +11,15 @@ namespace Odyssey.QuickActions.Commands
         private static string content = string.Empty;
         internal static async Task<Res> Exec(string[] options)
         {
-            if(options.Count() == 1)
+            if (options.Count() == 1)
             {
                 SetOptions(options[0]);
 
-                if(content != string.Empty)
+                if (content != string.Empty)
                 {
                     var devices = await KDEConnect.GetDevicesAsync();
-                    
-                    if(devices.Count >= 1)
+
+                    if (devices.Count >= 1)
                     {
                         KDEConnect.Share(content, devices[0]);
 

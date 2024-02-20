@@ -4,11 +4,6 @@ using Odyssey.Data.Main;
 using Odyssey.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 
 namespace Odyssey.Classes
@@ -30,7 +25,7 @@ namespace Odyssey.Classes
 
         private static void SystemWideHotkeys_HotkeyTriggered(Key key)
         {
-            if(MainWindow.Current.IsActivated) // As the hotkey can trigger even when the window is not focused / minimized
+            if (MainWindow.Current.IsActivated) // As the hotkey can trigger even when the window is not focused / minimized
             {
                 switch (key)
                 {
@@ -56,7 +51,7 @@ namespace Odyssey.Classes
                         break;
 
                     case Key.VK_W:
-                        if(MainView.CurrentlySelectedWebView != null)
+                        if (MainView.CurrentlySelectedWebView != null)
                         {
                             Tab tab = MainView.CurrentlySelectedWebView.LinkedTab;
                             if (tab.GetType() != typeof(Favorite) && tab.GetType() != typeof(Pin))
@@ -70,7 +65,7 @@ namespace Odyssey.Classes
 
                 }
             }
-            
+
         }
     }
 }

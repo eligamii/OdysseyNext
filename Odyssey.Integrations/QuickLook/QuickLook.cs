@@ -34,7 +34,7 @@ namespace Odyssey.Integrations.QuickLook
 
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

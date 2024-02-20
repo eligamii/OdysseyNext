@@ -1,15 +1,9 @@
-﻿using Odyssey.Shared.ViewModels.Data;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Interop;
-using System.Windows;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Microsoft.UI.Xaml.Controls;
 
 namespace Odyssey.FWebView.Helpers
 {

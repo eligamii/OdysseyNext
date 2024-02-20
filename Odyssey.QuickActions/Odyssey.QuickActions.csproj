@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\AriaSharp-main\AriaSharp-main\AriaSharp.csproj" />
+
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
     <ProjectReference Include="..\Odyssey.Integrations\Odyssey.Integrations.csproj" />
     <ProjectReference Include="..\Odyssey.Migration\Odyssey.Migration.csproj" />

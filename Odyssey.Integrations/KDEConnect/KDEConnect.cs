@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.System;
 
 namespace Odyssey.Integrations.KDEConnect
 {
@@ -14,7 +13,7 @@ namespace Odyssey.Integrations.KDEConnect
         public string Name { get; private set; }
         public string Id { get; private set; }
 
-        internal Device(string name, string id) 
+        internal Device(string name, string id)
         {
             Name = name;
             Id = id;
@@ -38,11 +37,19 @@ namespace Odyssey.Integrations.KDEConnect
             };
 
             process.StartInfo = startInfo;
-            process.Start();
+            
+            try
+            {
+                process.Start();
 
-            await process.WaitForExitAsync();
+                await process.WaitForExitAsync();
 
-            return await process.StandardOutput.ReadToEndAsync();
+                return await process.StandardOutput.ReadToEndAsync();
+            }
+            catch (Win32Exception)
+            {
+                return string.Empty;
+            }
         }
 
         public static async Task<List<Device>> GetDevicesAsync()
@@ -52,7 +59,7 @@ namespace Odyssey.Integrations.KDEConnect
             string rawOutput = await Send("-a");
             string[] devicesLines = rawOutput.Split("\r\n").Where(p => p.StartsWith('-')).ToArray();
 
-            foreach(string line in devicesLines)
+            foreach (string line in devicesLines)
             {
                 string lineWithoutStartChar = line.Remove(0, 2);
 

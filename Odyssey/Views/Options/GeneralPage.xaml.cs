@@ -36,7 +36,7 @@ namespace Odyssey.Views.Options
 
         private async void ForceDarkModeCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Delay(100); 
+            await Task.Delay(100);
             Settings.ForceDarkReader = forceDarkModeCheckBox.IsChecked == true;
         }
 

@@ -1,7 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
-using System;
 
 namespace Odyssey.Helpers
 {
@@ -91,7 +89,7 @@ namespace Odyssey.Helpers
                     break;
             }
 
-            if(glyph != string.Empty)
+            if (glyph != string.Empty)
             {
                 fontIcon.Glyph = glyph;
 
@@ -119,7 +117,7 @@ namespace Odyssey.Helpers
             FontIcon fontIcon = new FontIcon() { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons") };
             string glyph = "";
 
-            switch(current.CommandId)
+            switch (current.CommandId)
             {
                 case 50211: // Voice
                     glyph = "\uE720";

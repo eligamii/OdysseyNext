@@ -2,13 +2,8 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Migration.Helpers;
-using Odyssey.Shared.ViewModels.Data;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Migration.Chromium
 {
@@ -31,7 +26,7 @@ namespace Odyssey.Migration.Chromium
                 SqliteCommand selectHistoryCommand = new SqliteCommand("SELECT name, encrypted_value, host_key, path, is_secure, is_httponly, samesite FROM cookies", connection);
                 SqliteDataReader query = selectHistoryCommand.ExecuteReader();
 
-                while(query.Read())
+                while (query.Read())
                 {
                     // Decrypt the cookie
                     var encryptedCookie = (byte[])query[1];
@@ -44,7 +39,7 @@ namespace Odyssey.Migration.Chromium
 
                     short sameSite = query.GetInt16(6);
                     if (sameSite != -1) cookie.SameSite = (CoreWebView2CookieSameSiteKind)sameSite;
-                    
+
                     // Add the cookie
                     manager.AddOrUpdateCookie(cookie);
                 }

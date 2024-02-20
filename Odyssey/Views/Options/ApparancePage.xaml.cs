@@ -9,7 +9,6 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 
 

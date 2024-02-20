@@ -24,6 +24,5 @@
     <Grid Height="450" Width="400" CornerRadius="8">
         <WebView2 x:FieldModifier="public" x:Name="webView" Margin="7" Source="about:blank" CoreWebView2Initialized="webView_CoreWebView2Initialized" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         <Button Click="MainButton_Click" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="&#xE8A7;" FontFamily="Segoe Fluent Icons" Height="38" Margin="11" Background="{ThemeResource ControlOnImageFillColorDefaultBrush}"/>
-
     </Grid>
 </Flyout>

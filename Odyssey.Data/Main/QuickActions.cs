@@ -30,7 +30,7 @@ namespace Odyssey.Data.Main
                 Items = new ObservableCollection<QuickAction>();
             }
 
-            
+
 
             Items.CollectionChanged += (s, a) => Save();
         }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Shared.Helpers;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System;
 using Windows.Storage;
 
 namespace Odyssey.Shared.ViewModels.Data
@@ -16,16 +16,12 @@ namespace Odyssey.Shared.ViewModels.Data
         private string name;
         private string subtitle;
         private BitmapImage image = new();
-        private bool downloadCompleted = false;
+        private bool downloadInProgress = true;
         public object downloadOperation;
         private long progress = 0;
 
-        public DownloadItem(CoreWebView2DownloadOperation operation)
-        {
-            operation.BytesReceivedChanged += Operation_BytesReceivedChanged;
-            operation.StateChanged += Operation_StateChanged;
-            operation.EstimatedEndTimeChanged += Operation_EstimatedEndTimeChanged;
-        }
+        public DownloadItem(string url) => DownloadUrl = url;
+
 
         private void Operation_EstimatedEndTimeChanged(CoreWebView2DownloadOperation sender, object args)
         {
@@ -34,7 +30,7 @@ namespace Odyssey.Shared.ViewModels.Data
 
         private async void Operation_StateChanged(CoreWebView2DownloadOperation sender, object args)
         {
-            if(sender.State == CoreWebView2DownloadState.Completed)
+            if (sender.State == CoreWebView2DownloadState.Completed)
             {
                 StorageFile file = await StorageFile.GetFileFromPathAsync(sender.ResultFilePath);
                 var icon = await FileIconHelper.GetFileIconAsync(file);
@@ -46,7 +42,7 @@ namespace Odyssey.Shared.ViewModels.Data
         private void Operation_BytesReceivedChanged(CoreWebView2DownloadOperation sender, object args)
         {
             FileInfo file = new(sender.ResultFilePath);
-            OutputPath = file.FullName;
+            OutputFile = file.FullName;
             Name = file.Name;
             DownloadUrl = sender.Uri;
             Progress = sender.BytesReceived / sender.TotalBytesToReceive * 100;
@@ -55,7 +51,7 @@ namespace Odyssey.Shared.ViewModels.Data
 
 
         [DataMember]
-        public string OutputPath
+        public string OutputFile
         {
             get; set;
         }
@@ -92,14 +88,14 @@ namespace Odyssey.Shared.ViewModels.Data
             }
         }
         [DataMember]
-        public bool DownloadCompleted
+        public bool DownloadInProgress
         {
-            get { return downloadCompleted; }
+            get { return downloadInProgress; }
             set
             {
-                if (value != downloadCompleted)
+                if (value != downloadInProgress)
                 {
-                    downloadCompleted = value;
+                    downloadInProgress = value;
                     NotifyPropertyChanged();
                 }
             }
@@ -115,7 +111,7 @@ namespace Odyssey.Shared.ViewModels.Data
                     NotifyPropertyChanged();
                 }
             }
-        } 
+        }
 
         public string Subtitle
         {

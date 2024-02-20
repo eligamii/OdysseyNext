@@ -2,7 +2,6 @@
 using Microsoft.Web.WebView2.Core;
 using Odyssey.Data.Settings;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
@@ -46,7 +45,7 @@ namespace Odyssey.AdBlocker
                     { "X-Requested-With", args.ResourceContext.ToString() },
                 };
 
-                foreach(var header in args.Request.Headers)
+                foreach (var header in args.Request.Headers)
                 {
                     var nvcol = new NameValueCollection(StringComparer.OrdinalIgnoreCase) { { header.Key, header.Value } };
                     headers.Add(nvcol);
@@ -57,7 +56,7 @@ namespace Odyssey.AdBlocker
 
                 bool matches = filters.Any(p => p.IsMatch(url, headers)) && !whitelist.Any(p => p.IsMatch(url, headers));
 
-                if(matches)
+                if (matches)
                 {
                     sender.Stop();
                     args.Response = sender.Environment.CreateWebResourceResponse(null, 503, "Service Unavailable", "");

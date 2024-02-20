@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Odyssey.Migration.Chromium
 {
-    public class Extensions 
+    public class Extensions
     {
         public static async void Apply(string path)
         {

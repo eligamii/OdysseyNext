@@ -17,7 +17,7 @@ namespace Odyssey.WebSearch.Helpers
         {
             if (!string.IsNullOrWhiteSpace(str1) && !string.IsNullOrEmpty(str2))
             {
-                
+
 
                 string longestString = str1.Length > str2.Length ? str1 : str2;
                 string shortestString = str1.Length > str2.Length ? str2 : str1;
@@ -28,14 +28,14 @@ namespace Odyssey.WebSearch.Helpers
                 char firstShortestStringChar = shortestString[0];
                 List<int> indexes = new();
 
-                for(int i = longestString.IndexOf(firstShortestStringChar); i != -1; i = longestString.IndexOf(firstShortestStringChar, i + 1))
+                for (int i = longestString.IndexOf(firstShortestStringChar); i != -1; i = longestString.IndexOf(firstShortestStringChar, i + 1))
                 {
                     indexes.Add(i);
                 }
 
-                
 
-                foreach(int index in indexes)
+
+                foreach (int index in indexes)
                 {
                     int matches = 0;
                     int tests = 0;
@@ -45,7 +45,7 @@ namespace Odyssey.WebSearch.Helpers
                         tests++;
                         int longIndex = i + index;
 
-                        if (longestString[longIndex] == shortestString[i]) 
+                        if (longestString[longIndex] == shortestString[i])
                             matches++;
                     }
 
@@ -53,7 +53,7 @@ namespace Odyssey.WebSearch.Helpers
 
                     bool success = successPercentage >= tolerability;
 
-                    if(success) 
+                    if (success)
                         return new MatchValue() { Success = success, SuccessRate = successPercentage };
                 }
             }

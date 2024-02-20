@@ -1,6 +1,5 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
 
 
 
@@ -19,7 +18,7 @@ namespace Odyssey.FWebView.Controls.Flyouts
 
         private void PreviousButton_Click(object sender, RoutedEventArgs e)
         {
-             _ = webView.ExecuteScriptAsync($@"window.find(""{searchBox.Text}"", false, true)");
+            _ = webView.ExecuteScriptAsync($@"window.find(""{searchBox.Text}"", false, true)");
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)

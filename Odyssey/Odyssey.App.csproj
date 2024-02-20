@@ -107,8 +107,8 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\AriaSharp-main\AriaSharp-main\AriaSharp.csproj" />
-    <ProjectReference Include="..\..\..\..\Monaco-main\Monaco-main\Monaco.csproj" />
+
+    
   
 
     <ProjectReference Include="..\Odyssey.2FA\Odyssey.TwoFactorsAuthentification.csproj" />

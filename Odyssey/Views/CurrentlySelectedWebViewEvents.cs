@@ -1,17 +1,17 @@
-﻿using Microsoft.UI.Windowing;
+﻿using Microsoft.Graphics.Canvas.Text;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Web.WebView2.Core;
+using Odyssey.Classes;
+using Odyssey.Controls;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView;
-using Microsoft.UI.Xaml;
-using System;
-using Microsoft.Graphics.Canvas.Text;
-using Odyssey.Helpers;
-using System.Linq;
 using Odyssey.FWebView.Helpers;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Odyssey.Controls;
-using Odyssey.Classes;
+using Odyssey.Helpers;
+using System;
+using System.Linq;
 
 namespace Odyssey.Views
 {
@@ -19,7 +19,7 @@ namespace Odyssey.Views
     {
         private void WebView_CurrentlySelectedWebViewEventTriggered(CoreWebView2 sender, CurrentlySelectedWebViewEventTriggeredEventArgs args)
         {
-            switch(args.EventType)
+            switch (args.EventType)
             {
                 case EventType.FullScreen: FullScreenEvent(sender); return;
                 case EventType.DocumentTitleChanged: DocumentTitleChangedEvent(sender); return;
@@ -47,10 +47,10 @@ namespace Odyssey.Views
 
         private void KeyDown(WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs args)
         {
-            switch(args.PressedKey)
+            switch (args.PressedKey)
             {
                 case Windows.System.VirtualKey.Space:
-                    if(args.IsAltKeyPressed)
+                    if (args.IsAltKeyPressed)
                     {
                         SearchBar searchBar = new SearchBar();
                         FlyoutShowOptions options = new FlyoutShowOptions();
@@ -73,7 +73,7 @@ namespace Odyssey.Views
             if (Settings.ShowHostInsteadOfDocumentTitle)
             {
 
-               string text = new Uri(sender.Source).Host;
+                string text = new Uri(sender.Source).Host;
                 CanvasTextFormat format = new()
                 {
                     FontFamily = "Segoe UI Variable",
@@ -84,7 +84,7 @@ namespace Odyssey.Views
                 };
 
                 documentTitle.Text = TextHelpers.TrimTextToDesiredWidth(text, format, this.ActualWidth - (buttonsStackPanel.Children.Count() * 38 + 50) * 2);
-            
+
             }
 
             urlTextBox.Text = sender.Source;

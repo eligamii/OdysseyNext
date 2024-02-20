@@ -1,7 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
-
-namespace Odyssey.Data.Settings
+﻿namespace Odyssey.Data.Settings
 {
 
     public class SearchEngine
@@ -29,7 +26,7 @@ namespace Odyssey.Data.Settings
             }
         }
 
-        
+
         public static SearchEngine SelectedSearchEngine
         {
             get => ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine);

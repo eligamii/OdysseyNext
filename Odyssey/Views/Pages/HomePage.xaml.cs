@@ -32,13 +32,13 @@ namespace Odyssey.Views.Pages
             {
                 try
                 {
-                    if(FWebView.Helpers.WebView2SavedFavicons.GetFaviconAsBitmapImage(tab.Url, out BitmapImage image))
+                    if (FWebView.Helpers.WebView2SavedFavicons.GetFaviconAsBitmapImage(tab.Url, out BitmapImage image))
                     {
                         tab.ImageSource = image;
                     }
                     else
                     {
-                        tab.ImageSource = new BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+                        tab.ImageSource = new BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new Uri(tab.Url).Host}/21") };
                     }
                 }
                 catch { }
@@ -77,8 +77,8 @@ namespace Odyssey.Views.Pages
                 MainView.Current.splitViewContentFrame.Navigate(typeof(FourGetSearchPage), searchBox.Text);
             }
 
-            
-            
+
+
         }
 
         private void lastSessionListView_ItemClick(object sender, ItemClickEventArgs e)

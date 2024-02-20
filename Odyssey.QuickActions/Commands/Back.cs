@@ -2,7 +2,7 @@
 
 namespace Odyssey.QuickActions.Commands
 {
-    
+
     internal class Back
     {
         internal static Res Exec(string[] options)

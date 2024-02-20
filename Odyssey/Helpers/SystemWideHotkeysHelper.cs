@@ -33,11 +33,11 @@ namespace Odyssey.Helpers
 
         public static void RegisterHotkeysForWindow(Window window, params Hotkey[] hotkeys)
         {
-            if(!_event) { _event = true; HotkeyTriggered += (x) => { }; }
+            if (!_event) { _event = true; HotkeyTriggered += (x) => { }; }
 
             Windows.Win32.Foundation.HWND hwnd = new Windows.Win32.Foundation.HWND(WinRT.Interop.WindowNative.GetWindowHandle(window).ToInt32());
 
-            foreach(Hotkey hotkey in hotkeys)
+            foreach (Hotkey hotkey in hotkeys)
             {
                 Windows.Win32.PInvoke.RegisterHotKey(hwnd, 0, hotkey.Modifiers, (uint)hotkey.Key);
             }
@@ -78,7 +78,7 @@ namespace Odyssey.Helpers
     /// Key enum from https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
     /// Region- and OEM-specific keys are not present in this enum 
     /// </summary>
-    public enum Key 
+    public enum Key
     {
         VK_LBUTTON = 0x01,
         VK_RBUTTON = 0x02,

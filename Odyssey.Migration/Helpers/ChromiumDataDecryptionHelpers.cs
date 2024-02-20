@@ -7,13 +7,12 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using static Odyssey.Migration.Chromium.Passwords;
 
 namespace Odyssey.Migration.Helpers
 {
     public class ChromiumDataDecryptionHelpers
     {
-        public class os_crypt 
+        public class os_crypt
         {
             public string encrypted_key { get; set; }
         }

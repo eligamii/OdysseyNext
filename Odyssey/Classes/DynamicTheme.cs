@@ -1,6 +1,4 @@
 ﻿using Microsoft.UI;
-using Microsoft.UI.Composition.SystemBackdrops;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -8,12 +6,11 @@ using Odyssey.Data.Settings;
 using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.Helpers;
 using Odyssey.Views;
-using System.Threading.Tasks;
 using Windows.UI;
 
 namespace Odyssey.Classes
 {
-    public static class DynamicTheme 
+    public static class DynamicTheme
     {
 
         public static async void UpdateDynamicThemeAsync(WebView2 webView2)
@@ -69,7 +66,7 @@ namespace Odyssey.Classes
                                 var c = ColorsHelper.Lighten(nnColor, 0.7);
                                 nnColor = Color.FromArgb(255, c.R, c.G, c.B);
 
-                                
+
                             }
                         }
                         else

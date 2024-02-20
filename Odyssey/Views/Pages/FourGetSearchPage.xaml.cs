@@ -1,23 +1,13 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Data.Main;
-using Odyssey.FourGet;
 using Odyssey.FWebView;
-using Odyssey.LibreYAPI;
 using Odyssey.LibreYAPI.Objects;
 using Odyssey.Shared.ViewModels.Data;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 
 
 
@@ -49,7 +39,7 @@ namespace Odyssey.Views.Pages
 
         private async void searchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if(e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 var res = await LibreYAPI.LibreYAPI.SearchAsync(searchBox.Text, 0);
                 List<SearchResult> results = res.Where(p => p.Value.title != null).Select(p => p.Value).ToList();

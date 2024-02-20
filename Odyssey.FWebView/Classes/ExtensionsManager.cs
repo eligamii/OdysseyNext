@@ -1,14 +1,11 @@
-﻿using AriaSharp;
-using Downloader;
+﻿using Downloader;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
 using Odyssey.FWebView.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -16,7 +13,7 @@ namespace Odyssey.FWebView
 {
     public class BrowserExtensionInfo
     {
-        
+
         public static async Task<BrowserExtensionInfo> GetFromExtensionFolderAsync(string extensionId)
         {
             var extensionsFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync("Extensions");
@@ -47,10 +44,10 @@ namespace Odyssey.FWebView
     {
         public static async Task<List<BrowserExtensionInfo>> GetExtensionsAsync()
         {
-            StorageFolder extensionFolder = await ApplicationData.Current.LocalFolder.GetFolderAsync("Extensions");
+            StorageFolder extensionFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Extensions", CreationCollisionOption.OpenIfExists);
             List<BrowserExtensionInfo> browserExtensionsList = new();
 
-            foreach(StorageFolder folder in await extensionFolder.GetFoldersAsync())
+            foreach (StorageFolder folder in await extensionFolder.GetFoldersAsync())
             {
                 string path = folder.Path;
                 browserExtensionsList.Add(await BrowserExtensionInfo.GetFromExtensionFolderAsync(folder.Name));

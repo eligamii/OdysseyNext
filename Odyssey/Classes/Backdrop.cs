@@ -2,7 +2,7 @@
 using Microsoft.UI.Xaml;
 using Odyssey.Helpers;
 using Windows.UI;
-using WinRT; 
+using WinRT;
 
 namespace Odyssey.Classes
 {
@@ -16,7 +16,7 @@ namespace Odyssey.Classes
     {
         BackdropKind Kind { get; set; } = BackdropKind.Mica;
 
-        WindowsSystemDispatcherQueueHelper m_wsdqHelper; 
+        WindowsSystemDispatcherQueueHelper m_wsdqHelper;
         object m_backdropController;
         SystemBackdropConfiguration m_configurationSource;
 
@@ -30,14 +30,14 @@ namespace Odyssey.Classes
         public Backdrop(Window targetWindow, BackdropKind? kind = null)
         {
             TargetWindow = targetWindow;
-            
+
             if (kind != null)
             {
                 Kind = (BackdropKind)kind;
                 SetBackdrop((BackdropKind)kind);
             }
 
-            
+
         }
 
 
@@ -81,7 +81,7 @@ namespace Odyssey.Classes
                 m_backdropController = new MicaController();
                 (m_backdropController as MicaController).AddSystemBackdropTarget(TargetWindow.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
                 (m_backdropController as MicaController).SetSystemBackdropConfiguration(m_configurationSource);
-                
+
 
                 (m_backdropController as MicaController).Kind = (MicaKind)kind;
             }

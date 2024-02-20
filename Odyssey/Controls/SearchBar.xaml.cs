@@ -16,10 +16,7 @@ using Odyssey.WebSearch;
 using Odyssey.WebSearch.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Text;
-using System.IO;
 using System.Linq;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -39,7 +36,7 @@ namespace Odyssey.Controls
         private bool startNewTab;
         private string command;
 
-        private static FontFamily cascadiaCode; 
+        private static FontFamily cascadiaCode;
 
         public SearchBar(bool newTab = false)
         {
@@ -163,7 +160,7 @@ namespace Odyssey.Controls
                 {
                     string text, url;
 
-                    if(isImFeelingLuckyEnabled)
+                    if (isImFeelingLuckyEnabled)
                     {
                         var res = await LibreYAPI.LibreYAPI.SearchAsync(mainSearchBox.Text, 0);
                         text = url = res.Where(p => p.Value.url != null).Select(p => p.Value).ElementAt(0).url;
@@ -174,7 +171,7 @@ namespace Odyssey.Controls
                         url = await WebViewNavigateUrlHelper.ToWebView2Url(text);
                     }
 
-                    
+
                     bool ask = false;
 
                     if (url != string.Empty) // The request will be treated differently with commands and app uris
@@ -404,7 +401,7 @@ namespace Odyssey.Controls
 
         private void EnableCodeMode(bool enable)
         {
-            if(enable)
+            if (enable)
             {
                 mainSearchBox.FontFamily = new("Consolas");
 
@@ -430,9 +427,9 @@ namespace Odyssey.Controls
         {
             string newText = mainSearchBox.Text;
 
-            if(newText.Length - oldText.Length == 1) // One character added at the end 
+            if (newText.Length - oldText.Length == 1) // One character added at the end 
             {
-                
+
             }
         }
 
@@ -484,7 +481,7 @@ namespace Odyssey.Controls
                 newTab = startNewTab;
             }
 
-            if(e.Key == Windows.System.VirtualKey.Control)
+            if (e.Key == Windows.System.VirtualKey.Control)
             {
                 isImFeelingLuckyEnabled = false;
             }

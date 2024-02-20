@@ -1,17 +1,12 @@
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Classes;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
-using Odyssey.Helpers;
 using Odyssey.Views;
 using Odyssey.Views.Pages;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using WinUIEx;
 
 
@@ -23,7 +18,7 @@ namespace Odyssey
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
 
-    
+
     public sealed partial class MainWindow : WindowEx
     {
         public static new MainWindow Current { get; set; }

@@ -2,7 +2,6 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Data.Settings;
-using Odyssey.Helpers;
 using Odyssey.Views;
 using WinUIEx;
 

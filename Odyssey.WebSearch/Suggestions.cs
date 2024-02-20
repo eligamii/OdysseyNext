@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Search;
 
 namespace Odyssey.WebSearch
 {
@@ -28,11 +27,11 @@ namespace Odyssey.WebSearch
 
             suggestions = suggestions.Concat(TabsSuggestionsHelper.SearchForMatchingTabs(query)).ToList();
 
-            if(Settings.AreSearchSuggestionsEnabled)
+            if (Settings.AreSearchSuggestionsEnabled)
             {
                 try
                 {
-                    if(true)
+                    if (true)
                     {
                         var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
                         suggestions = suggestions.Concat(ddgSuggestions).ToList();

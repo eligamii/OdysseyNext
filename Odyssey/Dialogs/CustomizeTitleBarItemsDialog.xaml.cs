@@ -1,24 +1,11 @@
-using Antlr4.Runtime.Atn;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Odyssey.Controls;
-using Odyssey.Data.Main;
 using Odyssey.Shared.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using static Odyssey.Controls.TitleBarButtons;
 
 
@@ -37,7 +24,7 @@ namespace Odyssey.Dialogs
         private void CustomizeTitleBarItemsDialog_Loaded(object sender, RoutedEventArgs e)
         {
             AddButtonsTo(buttonsStackPanel, true);
-            foreach(Button button in buttonsStackPanel.Children) button.Click += ButtonsStackPanel_RightTapped;
+            foreach (Button button in buttonsStackPanel.Children) button.Click += ButtonsStackPanel_RightTapped;
             _availableButtons = defaultTitleBarButtons.Where(p => !Data.Main.TitleBarButtons.Items.Any(q => q.Id == p.Id)).ToList();
 
             availableItems.ItemsSource = _availableButtons;
@@ -51,7 +38,7 @@ namespace Odyssey.Dialogs
             leftItem.Click += LeftItem_Click;
             leftItem.Tag = sender;
             flyout.Items.Add(leftItem);
-            
+
 
             MenuFlyoutItem rightItem = new() { Icon = new Shared.Helpers.SymbolIconEx(Shared.Helpers.SymbolEx.Forward) };
             rightItem.Click += RightItem_Click;
@@ -91,7 +78,7 @@ namespace Odyssey.Dialogs
 
             int bIndex = buttonsStackPanel.Children.IndexOf(b);
             int tbIndex = buttonsStackPanel.Children.Count() - bIndex - 1;
-           
+
 
             if (tbIndex > -1 && bIndex < buttonsStackPanel.Children.Count() - 1)
             {
@@ -100,7 +87,7 @@ namespace Odyssey.Dialogs
                 Data.Main.TitleBarButtons.Items.Remove(button); Data.Main.TitleBarButtons.Items.Insert(tbIndex - 1, button);
             }
 
-            
+
 
         }
 
@@ -117,9 +104,9 @@ namespace Odyssey.Dialogs
             {
                 buttonsStackPanel.Children.Move((uint)bIndex, (uint)bIndex - 1);
                 TitleBarButton button = Data.Main.TitleBarButtons.Items.ElementAt(tbIndex);
-                Data.Main.TitleBarButtons.Items.Remove(button); 
+                Data.Main.TitleBarButtons.Items.Remove(button);
 
-                if(tbIndex == buttonsStackPanel.Children.Count - 1)
+                if (tbIndex == buttonsStackPanel.Children.Count - 1)
                 {
                     Data.Main.TitleBarButtons.Items.Insert(tbIndex, button);
                 }
@@ -164,7 +151,7 @@ namespace Odyssey.Dialogs
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            for(int i = 0; MainView.Current.buttonsStackPanel.Children.Count() > 1; i++)
+            for (int i = 0; MainView.Current.buttonsStackPanel.Children.Count() > 1; i++)
             {
                 MainView.Current.buttonsStackPanel.Children.RemoveAt(0);
             }

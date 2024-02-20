@@ -1,5 +1,4 @@
-﻿using Odyssey.Migration;
-using Odyssey.QuickActions.Objects;
+﻿using Odyssey.QuickActions.Objects;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -8,12 +7,9 @@ namespace Odyssey.QuickActions.Commands
         internal static async System.Threading.Tasks.Task<Res> Exec(string[] options)
         {
             //Odyssey.Migration.Migration.Migrate(Browser.Edge);
-            return new Res(true, await POST());
+            return null;
         }
 
-        internal static async System.Threading.Tasks.Task<string> POST()
-        {
-            return await AriaSharp.Helpers.AriaRPCHelper.AddUriAsync(["https://proof.ovh.net/files/1Mb.dat"]);            
-        }
+
     }
 }

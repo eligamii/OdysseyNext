@@ -3,13 +3,12 @@ using Odyssey.Migration.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 
 namespace Odyssey.Migration.Chromium
 {
     public static class Passwords
     {
-        
+
 
         public static List<Login> Get(string default_path)
         {
