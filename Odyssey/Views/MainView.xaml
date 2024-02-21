@@ -80,7 +80,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <!-- Titlebar content -->
-                        <Grid x:Name="AppTitleBar" MinHeight="42"
+                        <Grid x:Name="AppTitleBar" 
                                 Tag="ignorepane"
                                 VerticalAlignment="Stretch"
                                 BorderBrush="#33808080"
@@ -106,7 +106,11 @@
                             </ProgressBar>
 
                             <TextBox Visibility="Collapsed" Grid.Row="1" Margin="7,0,7,7" x:Name="urlTextBox" KeyDown="urlTextBox_KeyDown" Tag="ignore" Loaded="urlTextBox_Loaded"/>
-
+                            <Button Width="80" Visibility="Collapsed" Click="focusButton_Click" VerticalAlignment="Stretch" x:FieldModifier="public" Tag="ignorepane" x:Name="focusButton" Padding="0" FontSize="23" HorizontalAlignment="Center">
+                                <Button.Content>
+                                    <helpers:SymbolIconEx Symbol="More" FontSize="29"/>
+                                </Button.Content>
+                            </Button>
 
                             <!-- Controls region -->
                             <StackPanel x:Name="buttonsStackPanel" x:FieldModifier="public" Margin="4,0,0,0" Orientation="Horizontal" HorizontalAlignment="Left">
@@ -188,10 +192,12 @@
                             </StackPanel>
 
                             <!-- Info region -->
-                            <StackPanel Tag="children" Orientation="Horizontal" x:Name="infoRegionStckPanel" HorizontalAlignment="Center"  Grid.Column="2" >
+                            <StackPanel Tag="children" Orientation="Horizontal" x:Name="infoRegionStckPanel" HorizontalAlignment="Center" >
                                 <Button Content="&#xE9E9;" Click="MainMenuButton_Click"/>
                                 <TextBlock x:FieldModifier="public" x:Name="documentTitle" Tapped="documentTitle_Tapped" TextWrapping="NoWrap" VerticalAlignment="Center" Margin="4,0" Text="{helpers:ResourceString Name=Odyssey,Filename=Main}"/>
                             </StackPanel>
+
+                            <controls:CaptionButtons HorizontalAlignment="Right"/>
                         </Grid>
 
                         <Grid Grid.Row="1" Visibility="Collapsed">

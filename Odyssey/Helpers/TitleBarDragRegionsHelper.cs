@@ -12,8 +12,8 @@ using WinRT.Interop;
 
 namespace Odyssey.Helpers
 {
-    // This was made specifically for the Odyssey and LightCode titlebars but should works on almost every app without modification
-    public class TitleBarDragRegions // v1
+    // Should works on almost every app without any modification
+    public class TitleBarDragRegions // v1.2
     {
         [DllImport("Shcore.dll", SetLastError = true)]
         public static extern int GetDpiForMonitor(IntPtr hmonitor, Monitor_DPI_Type dpiType, out uint dpiX, out uint dpiY);
@@ -47,6 +47,7 @@ namespace Odyssey.Helpers
         // Test if the titlebar is inside of a closed or opened StackPanel
         private static bool IsVisible(FrameworkElement element)
         {
+
             try
             {
                 if ((string)element.Tag != "ignorepane")
@@ -83,10 +84,16 @@ namespace Odyssey.Helpers
         private FrameworkElement _titleBarParent; // this should be Window.Content in most cases
         private int _height;
 
+        public void SetTitleBarsHeight(int height)
+        {
+            _height = height;
+            SetDragRegionForTitleBars();
+        }
+
         /// <remarks>
         /// Remarks :
         /// <list type="bullet">
-        /// <item>Every Grid and StackPanel used should have fixed value or HorizontalAlignement</item>
+        /// <item>Every Grid and StackPanel used should have fixed value or an HorizontalAlignement</item>
         /// <item>You can use the "children" and "ignore" tag on your elements to threat only their children or ingore them</item>
         /// </list>
         /// </remarks>
@@ -116,7 +123,7 @@ namespace Odyssey.Helpers
         private List<UIElement> GetChildrenForTitleBar(Grid titleBar)
         {
             List<UIElement> finalList = new();
-            var tempList = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
+            var tempList = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType()) && p.Visibility != Visibility.Collapsed).ToList();
 
             foreach (FrameworkElement child in tempList)
             {
@@ -135,7 +142,7 @@ namespace Odyssey.Helpers
                 }
             }
 
-            return finalList.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
+            return finalList.ToList().Where(p => !_whiteList.Contains(p.GetType()) && p.Visibility != Visibility.Collapsed).ToList();
         }
 
         private Windows.Graphics.RectInt32 GetFirstOrLastDragRegionForTitleBar(Grid titleBar, bool first = true)
@@ -227,8 +234,7 @@ namespace Odyssey.Helpers
                                              (int)((element1Position.X - (element2Position.X + element2.ActualSize.X)) * scaleAdjustment));
 
                         // Idem but for too high values
-                        int x = Math.Max((int)((element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment),
-                                         (int)((element2.ActualSize.X + titleBarPosition.X) * scaleAdjustment));
+                        int x = (int)((element1Position.X + element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment);
 
                         // Create the actual drag region based on the elements 1 and 2 and the titleBar position
                         Windows.Graphics.RectInt32 dragRect;

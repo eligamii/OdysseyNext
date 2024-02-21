@@ -1,4 +1,5 @@
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -7,6 +8,7 @@ using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.Views;
 using Odyssey.Views.Pages;
+using Windows.UI.WindowManagement;
 using WinUIEx;
 
 
@@ -35,12 +37,12 @@ namespace Odyssey
         private void Init()
         {
             ExtendsContentIntoTitleBar = true;
+            AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Collapsed; // To create custom caption buttons (will remove the default ones)
 
             MinWidth = MinHeight = 500;
 
-            // Change the size of the window to match with the UWP default window size
-            Width = 1040;
-            Height = 810;
+            Width = Settings.Width;
+            Height = Settings.Height;
 
             AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
 
@@ -60,6 +62,17 @@ namespace Odyssey
 
             AppWindow.Closing += AppWindow_Closing;
             this.Activated += MainWindow_Activated;
+            this.SizeChanged += MainWindow_SizeChanged;
+        }
+
+        private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+        {
+            if(this.WindowState == WindowState.Normal)
+            {
+                Settings.Width = args.Size.Width;
+                Settings.Height = args.Size.Height;
+
+            }
         }
 
         private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)

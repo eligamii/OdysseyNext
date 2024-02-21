@@ -314,7 +314,7 @@ namespace Odyssey.Views
 
                 MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
 
-                MainView.Current.documentTitle.Text = tab.Title;
+                MainView.Current.documentTitle.Text = Settings.ShowHostInsteadOfDocumentTitle && tab.Url != null ? new Uri(tab.Url).Host : tab.Title;
 
                 DynamicTheme.UpdateDynamicThemeAsync(MainView.CurrentlySelectedWebView);
                 UpdateTabSelection(sender);
@@ -370,7 +370,6 @@ namespace Odyssey.Views
                     MainView.Current.documentTitle.Text = ResourceString.GetString("Odyssey", "Main");
                 }
 
-                Settings.TabIndex = FavoriteGrid.SelectedIndex * PinsTabView.SelectedIndex * TabsView.SelectedIndex;
             }
 
 
@@ -450,9 +449,9 @@ namespace Odyssey.Views
 
         private void UpdateTabSelection(object selectedTabsView)
         {
-            if ((ListViewBase)selectedTabsView != TabsView) TabsView.SelectedIndex = -1; else Settings.TabType = 0;
-            if ((ListViewBase)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1; else Settings.TabType = 1;
-            if ((ListViewBase)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1; else Settings.TabType = 2;
+            if ((ListViewBase)selectedTabsView != TabsView) TabsView.SelectedIndex = -1; else { Settings.TabType = 2; Settings.TabIndex = TabsView.SelectedIndex; }
+            if ((ListViewBase)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1; else { Settings.TabType = 1; Settings.TabIndex = PinsTabView.SelectedIndex; }
+            if ((ListViewBase)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1; else { Settings.TabType = 0; Settings.TabIndex = FavoriteGrid.SelectedIndex; }
         }
 
 

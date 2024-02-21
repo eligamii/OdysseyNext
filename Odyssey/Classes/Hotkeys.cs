@@ -1,15 +1,18 @@
-﻿using Microsoft.UI.Xaml.Controls.Primitives;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Odyssey.Controls;
 using Odyssey.Data.Main;
 using Odyssey.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
+using System.Linq;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 
 namespace Odyssey.Classes
 {
     internal static class Hotkeys
     {
+        private static bool _focusMode = false;
         public static void Init()
         {
             SystemWideHotkeys.RegisterHotkeysForWindow(MainWindow.Current,
@@ -17,7 +20,8 @@ namespace Odyssey.Classes
                  new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_G), // Open pane
                  new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_N), // New tab
                  new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_W), // Close tab
-                 new Hotkey(HOT_KEY_MODIFIERS.MOD_SHIFT, Key.VK_TAB) // Alt+Tab equivalent
+                 new Hotkey(HOT_KEY_MODIFIERS.MOD_SHIFT, Key.VK_TAB), // Alt+Tab equivalent
+                 new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_K) // Toggle focus mode
             );
 
             SystemWideHotkeys.HotkeyTriggered += SystemWideHotkeys_HotkeyTriggered;
@@ -62,6 +66,32 @@ namespace Odyssey.Classes
                             }
                         }
                         break;
+
+                    case Key.VK_K:
+                        if(!MainView.Current.FocusModeEnabled)
+                        {
+                            foreach (var element in MainView.Current.AppTitleBar.Children.Where(p => p.GetType() != typeof(TextBox)))
+                                element.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+
+                            MainView.Current.AppTitleBar.RowDefinitions[0].Height = new Microsoft.UI.Xaml.GridLength(22);
+                            MainView.Current.titleBarDragRegions.SetTitleBarsHeight(20);
+
+                            MainView.Current.focusButton.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+                            MainView.Current.FocusModeEnabled = true;
+                        }
+                        else
+                        {
+                            foreach (var element in MainView.Current.AppTitleBar.Children.Where(p => p.GetType() != typeof(TextBox)))
+                                element.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+
+                            MainView.Current.AppTitleBar.RowDefinitions[0].Height = new Microsoft.UI.Xaml.GridLength(42);
+                            MainView.Current.titleBarDragRegions.SetTitleBarsHeight(42);
+
+                            MainView.Current.focusButton.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                            MainView.Current.FocusModeEnabled = false;
+                        }
+                        break;
+
 
                 }
             }

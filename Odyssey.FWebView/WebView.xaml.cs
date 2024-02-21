@@ -124,6 +124,8 @@ namespace Odyssey.FWebView
             newWebView.Source = new Uri(url);
             newWebView.IsPrivateModeEnabled = privateMode;
 
+            newWebView.EnsureCoreWebView2Async(_environment);
+
             return newWebView;
         }
 
@@ -133,11 +135,15 @@ namespace Odyssey.FWebView
             {
                 CoreWebView2EnvironmentOptions options = new();
                 options.EnableTrackingPrevention = true;
-                //options.AreBrowserExtensionsEnabled = true; Not supported for now (InvalidCastException)
+                //options.AreBrowserExtensionsEnabled = true;
 
+                
                 _environment = await CoreWebView2Environment.CreateWithOptionsAsync(null, null, options);
+
             }
         }
+
+
 
         public bool IsVisible()
         {

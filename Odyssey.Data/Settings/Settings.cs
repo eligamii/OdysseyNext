@@ -16,6 +16,8 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("Inititalized")) Inititalized = true;
             if (!Values.Values.ContainsKey("SuccessfullyClosed")) SuccessfullyClosed = true;
             if (!Values.Values.ContainsKey("TabIndex")) TabIndex = -1;
+            if (!Values.Values.ContainsKey("Width")) Width = 1040; // Default UWP window size
+            if (!Values.Values.ContainsKey("Height")) Height = 810; // Idem
 
             // Personalization
             if (!Values.Values.ContainsKey("IsPaneLocked")) IsPaneLocked = true;
@@ -63,13 +65,17 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("RestoreTabsAfterCrash")) RestoreTabsAfterCrash = false;
             if (!Values.Values.ContainsKey("OpenHomePageAtNewTabCreation")) OpenHomePageAtNewTabCreation = true;
 
-            
+            // Profile
+            if (!Values.Values.ContainsKey("ProfileName")) ProfileName = "Default";
+            if (!Values.Values.ContainsKey("Profiles")) Profiles = "Default";
         }
+
 
         public static bool? Inititalized
         {
             get { return (bool?)Values.Values["Inititalized"]; }
             set { Values.Values["Inititalized"] = value; }
+        
         }
 
         public static bool HoverToOpenPane
@@ -82,6 +88,18 @@ namespace Odyssey.Data.Settings
         {
             get { return (int)Values.Values["TabIndex"]; }
             set { Values.Values["TabIndex"] = value; }
+        }
+
+        public static double Width
+        {
+            get { return (double)Values.Values["Width"]; }
+            set { Values.Values["Width"] = value; }
+        }
+
+        public static double Height
+        {
+            get { return (double)Values.Values["Height"]; }
+            set { Values.Values["Height"] = value; }
         }
 
         /// <summary>
@@ -130,6 +148,12 @@ namespace Odyssey.Data.Settings
         {
             get { return (string)Values.Values["ProfileName"]; }
             set { Values.Values["ProfileName"] = value; }
+        }
+
+        public static string Profiles // List of ProfileName separated by a ","
+        {
+            get { return (string)Values.Values["Profiles"]; }
+            set { Values.Values["Profiles"] = value; }
         }
 
         public static bool RestoreTabsAfterCrash

@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Media.Devices;
 using Type = System.Type;
 
 
@@ -38,6 +39,7 @@ namespace Odyssey.Views
     public sealed partial class MainView : Page
     {
         public static MainView Current { get; set; }
+        public bool FocusModeEnabled { get; set; } = false;
         public TitleBarDragRegions titleBarDragRegions;
         public string MainDocumentTitle
         {
@@ -76,7 +78,7 @@ namespace Odyssey.Views
             if (Settings.SuccessfullyClosed == false && Settings.RestoreTabsAfterCrash && instances.Count == 1)
             {
                 PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
-                
+
                 switch(Settings.TabType)
                 {
                     case 0: PaneView.Current.FavoriteGrid.SelectedIndex = Settings.TabIndex; break;
@@ -88,6 +90,7 @@ namespace Odyssey.Views
             Settings.SuccessfullyClosed = false;
         }
 
+        DispatcherTimer focusModeCooldownTimer = new() { Interval = TimeSpan.FromSeconds(2) };
         private async void MainView_Loaded(object sender, RoutedEventArgs e)
         {
             Stopwatch stopwatch = new();
@@ -155,7 +158,7 @@ namespace Odyssey.Views
                 Tabs.Items.Add(tab);
                 PaneView.Current.TabsView.SelectedItem = tab;
             }
-            else
+            else if(Settings.SuccessfullyClosed == true)
             {
                 splitViewContentFrame.Navigate(typeof(HomePage));
             }
@@ -202,10 +205,13 @@ namespace Odyssey.Views
                 (moreButton.Flyout as MenuFlyout).Items.Add(item);
             }
 
+            focusModeCooldownTimer.Tick += FocusModeCooldownTimer_Tick;
 
             // Restore tabs after crash
             RestoreTabs();
         }
+
+        
 
         private bool _wasOpened;
 
@@ -321,9 +327,12 @@ namespace Odyssey.Views
 
 
         // Titlear buttons
+        private bool _wasPaneManuallyOpened = false;
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             SplitView.IsPaneOpen ^= true;
+            _wasPaneManuallyOpened = SplitView.IsPaneOpen;
+
         }
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
@@ -649,7 +658,44 @@ namespace Odyssey.Views
         private void secondTitleBar_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             PointerPoint pos = e.GetCurrentPoint(this);
-            if (Settings.HoverToOpenPane && SplitView.DisplayMode == SplitViewDisplayMode.Overlay && pos.Position.X > 5) SplitView.IsPaneOpen = false;
+            if (!_wasPaneManuallyOpened && Settings.HoverToOpenPane && SplitView.DisplayMode == SplitViewDisplayMode.Overlay && pos.Position.X > 5) SplitView.IsPaneOpen = false;
+        }
+
+        
+        private void focusButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var element in AppTitleBar.Children.Where(p => p.GetType() != typeof(TextBox)))
+                element.Visibility = Visibility.Visible;
+
+            AppTitleBar.RowDefinitions[0].Height = new GridLength(42);
+            titleBarDragRegions.SetTitleBarsHeight(42);
+
+            focusButton.Visibility = Visibility.Collapsed;
+
+            this.PointerEntered += (s, a) => focusModeCooldownTimer.Start(); // See this as AppTitleBar.PointerExited
+            this.PointerExited += (s, a) => focusModeCooldownTimer.Stop(); // and this as AppTitleBar.PointerEntered
+
+            focusModeCooldownTimer.Stop();
+
+        }
+
+      
+        private void FocusModeCooldownTimer_Tick(object sender, object e)
+        {
+            if(FocusModeEnabled)
+            {
+                foreach (var element in AppTitleBar.Children.Where(p => p.GetType() != typeof(TextBox)))
+                    element.Visibility = Visibility.Collapsed;
+
+                AppTitleBar.RowDefinitions[0].Height = new GridLength(22);
+                titleBarDragRegions.SetTitleBarsHeight(20);
+
+                focusButton.Visibility = Visibility.Visible;
+            }
+
+            focusModeCooldownTimer.Stop();
+
+
         }
     }
 }
