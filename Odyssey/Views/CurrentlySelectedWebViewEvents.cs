@@ -42,7 +42,9 @@ namespace Odyssey.Views
             item.Text = extensionInfo.DisplayName;
             item.Icon = bitmapIcon;
 
-            (moreButton.Flyout as MenuFlyout).Items.Add(item);
+            item.Click += (s, a) => extensionInfo.OpenDefultPopup(moreButton);
+
+            extensionFlyoutItem.Items.Add(item);
         }
 
         private void KeyDown(WebView2KeyDownHelpers.KeyDownListener.KeyDownPressedEventArgs args)

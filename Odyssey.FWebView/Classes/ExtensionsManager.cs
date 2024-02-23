@@ -1,6 +1,8 @@
 ﻿using Downloader;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Newtonsoft.Json;
+using Odyssey.FWebView.Controls;
 using Odyssey.FWebView.Objects;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,7 @@ namespace Odyssey.FWebView
                 DisplayName = res.browser_action.default_title,
                 MinQualityIcon = Path.Combine(extensionFolder, res.browser_action.default_icon.First().Value),
                 MaxQualityIcon = Path.Combine(extensionFolder, res.browser_action.default_icon.Last().Value),
-                DefaultPopup = Path.Combine(extensionFolder, res.browser_action.default_popup),
+                DefaultPopup = $"extension://{extensionId}/{res.browser_action.default_popup}",
                 Id = extensionId
             };
         }
@@ -36,8 +38,13 @@ namespace Odyssey.FWebView
         public string MinQualityIcon { get; set; }
         public string MaxQualityIcon { get; set; }
         public string DefaultPopup { get; set; }
-
         public string Id { get; set; }
+
+        public void OpenDefultPopup(FrameworkElement target)
+        {
+            ExtensionPopupFlyout flyout = new(this);
+            flyout.ShowAt(target);
+        }
     }
 
     public sealed partial class WebView : WebView2

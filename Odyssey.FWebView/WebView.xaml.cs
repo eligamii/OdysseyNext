@@ -258,7 +258,7 @@ namespace Odyssey.FWebView
             //await sender.CoreWebView2.Profile.AddBrowserExtensionAsync(@"C:\Users\eliga\Desktop\CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_55_0_0(2)");
 
             // Disable default keyboard accelerators keys to add custom find,... dialogs
-            sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = Settings.AreExperimentalFeaturesEnabled;
+            sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = !Settings.AreExperimentalFeaturesEnabled;
 
             // Save things only when private mode is disabled
             if (!IsPrivateModeEnabled)
@@ -380,10 +380,7 @@ namespace Odyssey.FWebView
                 switch (args.PressedKey)
                 {
                     case Windows.System.VirtualKey.F:
-                        FindFlyout findFlyout = new(this);
-                        findFlyout.PreferredPlacement = TeachingTipPlacementMode.Top;
-                        findFlyout.XamlRoot = XamlRoot;
-                        findFlyout.IsOpen = true;
+                        
                         break;
                 }
             }

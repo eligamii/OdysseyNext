@@ -63,7 +63,7 @@ namespace Odyssey.Views
 
             Loaded += MainView_Loaded;
 
-
+            
 
             Current = this;
         }
@@ -201,8 +201,9 @@ namespace Odyssey.Views
                 MenuFlyoutItem item = new();
                 item.Text = extension.DisplayName;
                 item.Icon = bitmapIcon;
+                item.Click += (s, a) => extension.OpenDefultPopup(moreButton);
 
-                (moreButton.Flyout as MenuFlyout).Items.Add(item);
+                extensionFlyoutItem.Items.Add(item);
             }
 
             focusModeCooldownTimer.Tick += FocusModeCooldownTimer_Tick;

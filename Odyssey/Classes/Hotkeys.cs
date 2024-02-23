@@ -1,7 +1,9 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Odyssey.Controls;
 using Odyssey.Data.Main;
+using Odyssey.FWebView.Controls.Flyouts;
 using Odyssey.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using Odyssey.Views;
@@ -21,7 +23,8 @@ namespace Odyssey.Classes
                  new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_N), // New tab
                  new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_W), // Close tab
                  new Hotkey(HOT_KEY_MODIFIERS.MOD_SHIFT, Key.VK_TAB), // Alt+Tab equivalent
-                 new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_K) // Toggle focus mode
+                 new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_K), // Toggle focus mode
+                 new Hotkey(HOT_KEY_MODIFIERS.MOD_CONTROL, Key.VK_U)
             );
 
             SystemWideHotkeys.HotkeyTriggered += SystemWideHotkeys_HotkeyTriggered;
@@ -33,7 +36,7 @@ namespace Odyssey.Classes
             {
                 switch (key)
                 {
-                    case Key.VK_SPACE: // Space
+                    case Key.VK_SPACE:
                         SearchBar searchBar = new();
                         FlyoutShowOptions options = new();
                         options.Placement = FlyoutPlacementMode.Bottom;
@@ -42,11 +45,11 @@ namespace Odyssey.Classes
 
                         break;
 
-                    case Key.VK_G: // G
+                    case Key.VK_G:
                         MainView.Current.SplitView.IsPaneOpen ^= true;
                         break;
 
-                    case Key.VK_N: // N
+                    case Key.VK_N:
                         SearchBar newTabSearchBar = new(true);
                         FlyoutShowOptions options_2 = new();
                         options_2.Placement = FlyoutPlacementMode.Bottom;
@@ -92,6 +95,12 @@ namespace Odyssey.Classes
                         }
                         break;
 
+
+                    case Key.VK_U:
+                        FindFlyout findFlyout = new(MainView.CurrentlySelectedWebView);
+                        findFlyout.PreferredPlacement = TeachingTipPlacementMode.Top;
+                        findFlyout.IsOpen = true;
+                        break;
 
                 }
             }

@@ -139,6 +139,12 @@
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
                                             <MenuFlyoutSeparator/>
+                                            <MenuFlyoutSubItem Text="Extensions" x:Name="extensionFlyoutItem">
+                                                <MenuFlyoutSubItem.Icon>
+                                                    <FontIcon Glyph="&#xEA86;" />
+                                                </MenuFlyoutSubItem.Icon>
+                                            </MenuFlyoutSubItem>
+                                            <MenuFlyoutSeparator/>
                                             <MenuFlyoutItem Text="{helpers:ResourceString Name=History, Filename=ContextMenus}" Click="HistoryMenuFlyoutItem_Click">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE81C;"/>

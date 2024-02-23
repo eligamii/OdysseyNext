@@ -10,6 +10,7 @@
   <ItemGroup>
     <None Remove="Binary\aria2.exe" />
     <None Remove="Controls\DownloadItem.xaml" />
+    <None Remove="Controls\ExtensionPopupFlyout.xaml" />
     <None Remove="Controls\Flyouts\DownloadsFlyout.xaml" />
     <None Remove="Controls\Flyouts\FindFlyout.xaml" />
     <None Remove="Controls\Flyouts\HistoryFlyout.xaml" />
@@ -115,5 +116,13 @@
     <Page Update="Controls\Flyout\DownloadsFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <CustomAdditionalCompileInputs Remove="Controls\ExtensionPopupFlyout.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Remove="Controls\ExtensionPopupFlyout.xaml" />
   </ItemGroup>
 </Project>
