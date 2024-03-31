@@ -1,6 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Odyssey.Data.Settings;
+using Odyssey.Dialogs;
+using System;
 using System.Threading.Tasks;
 
 
@@ -44,5 +46,16 @@ namespace Odyssey.Views.Options
         {
             Settings.AreSearchSuggestionsEnabled = searchSuggestionToggleSwitch.IsOn;
         }
+
+        private async void MigrateButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog.Current.Hide();
+
+            MigrateDataContentDialog dialog = new();
+            dialog.XamlRoot = MainWindow.Current.Content.XamlRoot;
+
+            await dialog.ShowAsync();
+        }
+
     }
 }

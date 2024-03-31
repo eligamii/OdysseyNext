@@ -20,54 +20,78 @@
         </ResourceDictionary>
     </ContentDialog.Resources>
 
-    <Grid Height="600" Width="700" MinHeight="0" MinWidth="0">
+    <Grid Height="400" Width="550" MinHeight="0" MinWidth="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="56"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Background="{StaticResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{StaticResource ControlStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
-            <StackPanel Orientation="Horizontal">
-                <Button 
-                x:Name="backButton"
-                Visibility="Collapsed"
-                ToolTipService.ToolTip="Close"
-                BorderBrush="Transparent"
-                Background="Transparent"
-                Margin="6,0,0,0"
-                BorderThickness="0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Right" 
-                Height="36" Width="36" 
-                FontFamily="Segoe Fluent Icons"
-                FontSize="12" Content="&#xE0A6;"/>
-
-                <TextBlock Style="{ThemeResource BodyStrongTextBlockStyle}" Text="Options" Margin="14,0" VerticalAlignment="Center">
-                    <TextBlock.Transitions>
-                        <TransitionCollection>
-                            <RepositionThemeTransition />
-                        </TransitionCollection>
-                    </TextBlock.Transitions>
-                </TextBlock>
+            <StackPanel Margin="20,20,0,0" >
+                <TextBlock Text="Migration" Style="{ThemeResource TitleTextBlockStyle}"/>
+                <TextBlock Margin="0,5,100,0" Style="{ThemeResource BodyTextBlockStyle}" Text="Migrate all of your data from your old browser to Odyssey, including your passwords, cookies, history and extensions."/>
+                <TextBlock Text="Select the browser to migrate&#x0a;data from :" TextWrapping="WrapWholeWords"  Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                <GridView x:Name="selectionView" SelectedIndex="1" Margin="0,10,0,0" Grid.Row="1">
+                    <GridView.Resources>
+                        <ResourceDictionary>
+                            <Style TargetType="GridViewItem" BasedOn="{StaticResource DefaultGridViewItemStyle}">
+                                <Setter Property="Height" Value="50"/>
+                            </Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Height" Value="40"/>
+                            </Style>
+                        </ResourceDictionary>
+                    </GridView.Resources>
+                    <GridViewItem>
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="ms-appx:///Assets/arc.png"/>
+                            </Image.Source>
+                        </Image>
+                    </GridViewItem>
+                    <GridViewItem>
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="ms-appx:///Assets/chrome.png"/>
+                            </Image.Source>
+                        </Image>
+                    </GridViewItem>
+                    <GridViewItem>
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="ms-appx:///Assets/edge.png"/>
+                            </Image.Source>
+                        </Image>
+                    </GridViewItem>
+                    <GridViewItem>
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="ms-appx:///Assets/opera.png"/>
+                            </Image.Source>
+                        </Image>
+                    </GridViewItem>
+                </GridView>
             </StackPanel>
 
-            <Button Click="CloseButton_Click"
-                ToolTipService.ToolTip="Close"
-                BorderBrush="Transparent"
-                Background="Transparent"
-                BorderThickness="0"
-                Margin="6,0"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Right" 
-                Height="36" Width="36" 
-                FontFamily="Segoe Fluent Icons"
-                FontSize="10" Content="&#xE8BB;"/>
+
+            <StackPanel VerticalAlignment="Bottom" Grid.Row="1" Margin="20,10,0,10" HorizontalAlignment="Stretch">
+                <CheckBox x:Name="bookmarksBox" Content="Migrate your bookmarks as pins" IsChecked="True"/>
+                <CheckBox x:Name="specificBox" Content="Migrate data specific to your browser (Arc's Spaces,...)"/>
+            </StackPanel>
         </Grid>
 
 
-
-        <Grid Grid.Row="1">
-            
-        </Grid>
+        <Grid Grid.Row="1" Height="70" BorderBrush="#33080808" BorderThickness="0,1,0,0" Background="{StaticResource LayerOnAcrylicFillColorDefaultBrush}">
+            <TextBlock x:Name="infoText" VerticalAlignment="Center" Margin="20,0" Foreground="{StaticResource SystemFillColorCriticalBrush}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Click="CloseButton_Click" Padding="20,10" Content="Cancel" VerticalAlignment="Stretch" HorizontalAlignment="Right" Margin="10,10,0,10"/>
+                <Button Click="MigrateButton_Click" x:Name="migrateButton" IsEnabled="True" Style="{ThemeResource AccentButtonStyle}" Padding="20,10" Content="Migrate" VerticalAlignment="Stretch" HorizontalAlignment="Right" Margin="10"/>
+            </StackPanel>
+        </Grid> 
     </Grid>
 </ContentDialog>

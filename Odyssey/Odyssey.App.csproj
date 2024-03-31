@@ -37,8 +37,14 @@
     <Content Remove="Assets\Resources\nl-NL.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\arc.png" />
     <None Remove="Assets\CascadiaCode.ttf" />
+    <None Remove="Assets\chrome.png" />
+    <None Remove="Assets\edge.png" />
     <None Remove="Assets\icon.png" />
+    <None Remove="Assets\MigrateDark.png" />
+    <None Remove="Assets\MigrateLight.png" />
+    <None Remove="Assets\opera.png" />
     <None Remove="Controls\CaptionButtons.xaml" />
     <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
     <None Remove="Controls\Flyouts\ColorPickerFlyout.xaml" />
@@ -147,10 +153,28 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\arc.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\CascadiaCode.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="Assets\chrome.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\edge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\MigrateDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\MigrateLight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\opera.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png">

@@ -60,5 +60,9 @@
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
 
+        <controls:SettingsCard Header="Migrate" Description="Migrate all of your data, including cookies and passwords">
+            <Button Content="Migrate" Click="MigrateButton_Click"/>
+        </controls:SettingsCard>
+
     </StackPanel>
 </Page>

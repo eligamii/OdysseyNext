@@ -24,9 +24,8 @@ namespace Odyssey.Migration
             Edge,
             Chrome,
             Opera,
-            OperaGx,
             ArcBrowser,
-           
+            OperaGx,
 
             Firefox
         }
@@ -63,7 +62,7 @@ namespace Odyssey.Migration
 
     public class Migration
     {
-        public static void Migrate(Browser from)
+        public static MigrationData Migrate(Browser from)
         {
             MigrationData data = new();
             DirectoryInfo file = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
@@ -72,6 +71,8 @@ namespace Odyssey.Migration
             // Get the path of the data folder of the browser
             string datapath = appData + Browser.Paths.ElementAt((int)from.BrowserName);
 
+            if (!Directory.Exists(datapath)) return null;
+
             if (from.BrowserBase == Browser.Base.Chromium)
             {
                 data.Logins = Chromium.Passwords.Get(datapath);
@@ -79,12 +80,9 @@ namespace Odyssey.Migration
 
                 Chromium.Extensions.Apply(datapath); // useless untill extensions support in WinUI3 WebView2
                 Chromium.Cookies.Apply(datapath);
-
-                if(from.BrowserName == Browser.Name.ArcBrowser)
-                {
-
-                }
             }
+
+            return data;
         }
     }
 }

@@ -7,6 +7,10 @@
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\tlds-alpha-by-domain.txt" />
+    <None Remove="Controls\ExtendedContentDialog.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
       <PackageReference Include="CoreCLR-NCalc" Version="3.0.130" />
@@ -17,5 +21,17 @@
   <ItemGroup>
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Assets\tlds-alpha-by-domain.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\ExtendedContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

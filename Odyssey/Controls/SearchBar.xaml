@@ -58,7 +58,7 @@
         <ListView Width="599" IsTabStop="False" Visibility="Collapsed" ItemContainerTransitions="{x:Null}" Transitions="{x:Null}" x:Name="suggestionListView" ItemClick="suggestionListView_ItemClick" RightTapped="suggestionListView_RightTapped" IsItemClickEnabled="True" SelectionMode="Single" Grid.Row="1" Margin="0,0,0,3">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" Height="{Binding Height}">
+                    <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="28"/>
                             <ColumnDefinition/>

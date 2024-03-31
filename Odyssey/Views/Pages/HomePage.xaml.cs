@@ -53,10 +53,8 @@ namespace Odyssey.Views.Pages
 
         private async void TextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                /*
                 string text = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(searchBox.Text);
                 webView.CoreWebView2.Navigate(text);
 
@@ -72,13 +70,7 @@ namespace Odyssey.Views.Pages
                 Tabs.Items.Add(tab);
 
                 PaneView.Current.TabsView.SelectedItem = tab;
-                */
-
-                MainView.Current.splitViewContentFrame.Navigate(typeof(FourGetSearchPage), searchBox.Text);
             }
-
-
-
         }
 
         private void lastSessionListView_ItemClick(object sender, ItemClickEventArgs e)

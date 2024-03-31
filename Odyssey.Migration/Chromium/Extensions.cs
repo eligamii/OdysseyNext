@@ -14,6 +14,8 @@ namespace Odyssey.Migration.Chromium
                 string extensionsPath = Path.Combine(path, "Default", "Extensions");
                 var odysseyExtensionFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Extensions", CreationCollisionOption.OpenIfExists);
 
+                if (!Directory.Exists(extensionsPath)) return;
+
                 foreach (string dirPath in Directory.GetDirectories(extensionsPath, "*", SearchOption.AllDirectories))
                 {
                     FileInfo file = new(dirPath);

@@ -27,10 +27,9 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("ThemePerformanceMode")) ThemePerformanceMode = 1;
             if (!Values.Values.ContainsKey("ThemeMode")) ThemeMode = 2;
             if (!Values.Values.ContainsKey("IsDevBarEnabled")) IsDevBarEnabled = false;
-            if (!Values.Values.ContainsKey("ShowHostInsteadOfDocumentTitle")) ShowHostInsteadOfDocumentTitle = true;
+            if (!Values.Values.ContainsKey("ShowHostInsteadOfDocumentTitle")) ShowHostInsteadOfDocumentTitle = false;
             if (!Values.Values.ContainsKey("ColorAlpha")) ColorAlpha = 245;
             if (!Values.Values.ContainsKey("IsSolidTitleBarEnabled")) IsSolidTitleBarEnabled = true;
-            if (!Values.Values.ContainsKey("ShowHostInsteadOfDocumentTitle")) ShowHostInsteadOfDocumentTitle = true;
             if (!Values.Values.ContainsKey("SystemBackdrop")) SystemBackdrop = 0;
             if (!Values.Values.ContainsKey("HoverToOpenPane")) HoverToOpenPane = true;
 
@@ -43,7 +42,7 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("AutoPictureInPicture")) IsAutoPictureInPictureEnabled = true;
             if (!Values.Values.ContainsKey("PlaySoundsOnOnlyOneTab")) PlaySoundsOnOnlyOneTab = false;
             if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabAtStartup = false;
-            if (!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = false;
+            if (!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = true;
             if (!Values.Values.ContainsKey("IsHisoryEncryptionEnabled")) IsHisoryEncryptionEnabled = false;
 
             // Misc
@@ -51,19 +50,19 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("DisplayQACommandErrors")) DisplayQACommandErrors = true;
 
             // Ad blocker
-            if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
-            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0; // Experimental (adblock t o regex adblocker)
+            if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = false;
+            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0; // Experimental (adblock to regex adblocker)
             if (!Values.Values.ContainsKey("IsEasylistFilterListEnabled")) IsEasylistFilterListEnabled = true;
             if (!Values.Values.ContainsKey("IsEasyprivacyFilterListEnabled")) IsEasyprivacyFilterListEnabled = true;
             if (!Values.Values.ContainsKey("IsSpam404FilterListEnabled")) IsSpam404FilterListEnabled = true;
 
             // Search engine
             if (!Values.Values.ContainsKey("SelectedSearchEngine")) SelectedSearchEngine = (int)SearchEngines.Startpage;
-            if (!Values.Values.ContainsKey("AreSearchSuggestionsEnabled")) AreSearchSuggestionsEnabled = false;
+            if (!Values.Values.ContainsKey("AreSearchSuggestionsEnabled")) AreSearchSuggestionsEnabled = true;
 
             // Behaviors
-            if (!Values.Values.ContainsKey("RestoreTabsAfterCrash")) RestoreTabsAfterCrash = false;
-            if (!Values.Values.ContainsKey("OpenHomePageAtNewTabCreation")) OpenHomePageAtNewTabCreation = true;
+            if (!Values.Values.ContainsKey("RestoreTabsAfterCrash")) RestoreTabsAfterCrash = true;
+            if (!Values.Values.ContainsKey("OpenHomePageAtNewTabCreation")) OpenHomePageAtNewTabCreation = false;
 
             // Profile
             if (!Values.Values.ContainsKey("ProfileName")) ProfileName = "Default";
