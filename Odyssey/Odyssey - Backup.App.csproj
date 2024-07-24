@@ -3,8 +3,8 @@
   <PropertyGroup>
 	<UseRidGraph>true</UseRidGraph>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>Odyssey</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;ARM64</Platforms>

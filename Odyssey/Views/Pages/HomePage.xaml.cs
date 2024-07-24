@@ -28,6 +28,8 @@ namespace Odyssey.Views.Pages
         private void LastSessionListView_Loaded(object sender, RoutedEventArgs e)
         {
             lastSessionListView.ItemsSource = Tabs.Get();
+            if (Tabs.Items.Count == 0) return;
+
             foreach (Tab tab in lastSessionListView.Items)
             {
                 try

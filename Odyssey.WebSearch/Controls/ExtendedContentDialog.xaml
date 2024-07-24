@@ -65,7 +65,7 @@
                     Height="36" Width="36" 
                     FontFamily="Segoe Fluent Icons"
                     FontSize="10" Content="&#xE8BB;"
-                    x:Name="closeButton"/>
+                    />
         </Grid>
 
 
