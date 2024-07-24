@@ -1,9 +1,7 @@
 ﻿using Odyssey.Shared.ViewModels.Data;
 using OtpNet;
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace Odyssey.TwoFactorsAuthentification.ViewModels

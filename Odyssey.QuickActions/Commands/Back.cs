@@ -1,23 +1,17 @@
-﻿using Odyssey.FWebView;
-using Odyssey.Migration;
-using Odyssey.QuickActions.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Odyssey.QuickActions.Objects;
 
 namespace Odyssey.QuickActions.Commands
 {
+
     internal class Back
     {
         internal static Res Exec(string[] options)
         {
-            if(WebView.SelectedWebView != null)
+            if (Variables.SelectedWebView != null)
             {
-                if(WebView.SelectedWebView.CanGoBack)
+                if (Variables.SelectedWebView.CanGoBack)
                 {
-                    WebView.SelectedWebView.GoBack();
+                    Variables.SelectedWebView.GoBack();
                     return new Res(true);
                 }
 
@@ -25,5 +19,8 @@ namespace Odyssey.QuickActions.Commands
             }
             return new Res(false, null, "no tab is currently selected");
         }
+
+        public static Res Execute() => Exec(null);
+
     }
 }

@@ -1,14 +1,6 @@
 ﻿using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
-using Newtonsoft.Json.Linq;
-using Odyssey.QuickActions.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Odyssey.QuickActions.Objects
 {
@@ -38,13 +30,13 @@ namespace Odyssey.QuickActions.Objects
             XAMLButton.Click += XAMLButton_Click;
 
             // Save the UIButton 
-            if(!isRestoring) QACommands.Execute($"$set var:{options[0].Replace("\"", "")} value:\"{option}\"");
+            if (!isRestoring) QACommands.Execute($"$set var:{options[0].Replace("\"", "")} value:\"{option}\"");
             QACommands.ButtonsStackPanel.Children.Insert(2, XAMLButton);
         }
 
         private async void XAMLButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            if(command.StartsWith("\"")) command = command.Remove(command.IndexOf("\""), 1).Remove(command.Length - 2, 1);
+            if (command.StartsWith("\"")) command = command.Remove(command.IndexOf("\""), 1).Remove(command.Length - 2, 1);
             await QACommands.Execute(command);
         }
     }

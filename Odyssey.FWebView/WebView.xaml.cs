@@ -1,10 +1,10 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
+using Odyssey.AdBlocker;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView.Classes;
@@ -14,24 +14,55 @@ using Odyssey.FWebView.Helpers;
 using Odyssey.Shared.ViewModels.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.FWebView
 {
+
+    public enum EventType
+    {
+        FullScreen,
+        DocumentTitleChanged,
+        SourceChanged,
+        StatusBarTextChanged,
+        KeyDown,
+        DynamicThemeUpdateRequested,
+        ExtensionInstalled
+    }
+
+    public class CurrentlySelectedWebViewEventTriggeredEventArgs
+    {
+        public object Args { get; set; }
+        public EventType EventType { get; set; }
+
+        public CurrentlySelectedWebViewEventTriggeredEventArgs(object args, EventType type)
+        {
+            Args = args;
+            EventType = type;
+        }
+    }
     public sealed partial class WebView : WebView2 // Everything here has been made for Odyssey
     {
         public TotpLoginDetection TotpLoginDetection { get; private set; }
 
+
+        public delegate void CurrentlySelectedWebViewEventEventHandler(CoreWebView2 sender, CurrentlySelectedWebViewEventTriggeredEventArgs args);
+
+        public static event CurrentlySelectedWebViewEventEventHandler CurrentlySelectedWebViewEventTriggered;
         // To remove
         public static Action TotpLoginDetectedAction { get; set; }
         public static Action LoginPageDetectedAction { get; set; }
+
+
+        private static CoreWebView2Environment _environment { get; set; }
 
         public bool IsPrivateModeEnabled { get; set; } = false;
         public bool IsLoginPageDetected { get; set; }
@@ -80,36 +111,43 @@ namespace Odyssey.FWebView
             }
         }
 
-        
+
         // Ojects to know if the user finished scrolling for 2s
         private DispatcherTimer scrollTimer;
         private bool isScrolling = false;
-        
+
         public static WebView Create(string url = "about:blank", bool privateMode = false)
         {
+            Init();
+
             WebView newWebView = new();
             newWebView.Source = new Uri(url);
             newWebView.IsPrivateModeEnabled = privateMode;
 
+            newWebView.EnsureCoreWebView2Async(_environment);
+
             return newWebView;
         }
 
-
-        public bool IsVisible
+        private static async void Init() // Not fully implemented
         {
-            get
+            if (_environment == null)
             {
-                var parent = VisualTreeHelper.GetParent(this);
-                if (parent != null)
-                {
-                    parent = VisualTreeHelper.GetParent(parent);
-                    return parent.GetType() == typeof(Frame);
-                }
-                else
-                {
-                    return false;
-                }
+                CoreWebView2EnvironmentOptions options = new();
+                options.EnableTrackingPrevention = true;
+                //options.AreBrowserExtensionsEnabled = true;
+
+                
+                _environment = await CoreWebView2Environment.CreateWithOptionsAsync(null, null, options);
+
             }
+        }
+
+
+
+        public bool IsVisible()
+        {
+            return SelectedWebView == this;
         }
 
         public static void OpenDownloadDialog(FrameworkElement element = null)
@@ -126,12 +164,36 @@ namespace Odyssey.FWebView
 
         private async Task<BitmapImage> GetFaviconAsBitmapImageAsync()
         {
-            // Getting the favicon from the webView
-            var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
-            BitmapImage bitmapImage = new();
-            await bitmapImage.SetSourceAsync(stream);
+            try
+            {
+                BitmapImage image;
 
-            return bitmapImage;
+                if (WebView2SavedFavicons.GetFaviconAsBitmapImage(this.Source.ToString(), out BitmapImage savedImage))
+                {
+                    image = savedImage;
+                }
+                else
+                {
+                    try
+                    {
+                        // Getting the favicon from the webView
+                        var stream = await this.CoreWebView2.GetFaviconAsync(CoreWebView2FaviconImageFormat.Png);
+                        image = new BitmapImage();
+                        await image.SetSourceAsync(stream);
+                    }
+                    catch
+                    {
+                        image = new BitmapImage();
+                        image.UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{Source.Host}/21");
+                    }
+                }
+
+
+
+
+                return image;
+            }
+            catch { return null; }
         }
 
         public WebView()
@@ -139,9 +201,11 @@ namespace Odyssey.FWebView
             this.InitializeComponent();
         }
 
-        
-        private void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
+
+        private async void WebView2_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
+
+
             if (!IsLittleWeb)
             {
                 sender.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged; // Update the text of the tabs
@@ -152,42 +216,49 @@ namespace Odyssey.FWebView
                 sender.CoreWebView2.FaviconChanged += CoreWebView2_FaviconChanged; // Set the icon of the linked tab
                 sender.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted; // Update various UI things / save history
 
+                sender.CoreWebView2.ContainsFullScreenElementChanged += (s, a) => CurrentlySelectedWebViewEventTriggered(s, new CurrentlySelectedWebViewEventTriggeredEventArgs(a, EventType.FullScreen));
                 // Scroll events (Uppate dynamic theme)
                 scrollTimer = new DispatcherTimer();
                 scrollTimer.Interval = TimeSpan.FromSeconds(2);
                 scrollTimer.Tick += ScrollTimer_Tick;
 
                 // Loading cycle
-                sender.CoreWebView2.NavigationStarting += (s, a) => { if (IsVisible) MainProgressBar.Value = 0; };
-                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/6f * 100f; };
-                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/3f * 100f; };
-                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 1f/2f * 100f; };
-                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible && IsPageLoading) MainProgressBar.Value = 7f/8f * 100f; };
-                sender.CoreWebView2.NavigationCompleted += async (s, a) => { if (IsVisible) { MainProgressBar.Value = 100; await Task.Delay(1000); MainProgressBar.Value = 0; } };
+                sender.CoreWebView2.NavigationStarting += (s, a) => { if (IsVisible()) MainProgressBar.Value = 0; };
+                sender.CoreWebView2.SourceChanged += (s, a) => { if (IsVisible() && IsPageLoading) MainProgressBar.Value = 1f / 6f * 100f; };
+                sender.CoreWebView2.ContentLoading += (s, a) => { if (IsVisible() && IsPageLoading) MainProgressBar.Value = 1f / 3f * 100f; };
+                sender.CoreWebView2.HistoryChanged += (s, a) => { if (IsVisible() && IsPageLoading) MainProgressBar.Value = 1f / 2f * 100f; };
+                sender.CoreWebView2.DOMContentLoaded += (s, a) => { if (IsVisible() && IsPageLoading) MainProgressBar.Value = 7f / 8f * 100f; };
+                sender.CoreWebView2.NavigationCompleted += (s, a) => { if (IsVisible()) { MainProgressBar.Value = 0; } };
             }
+
+
+
+            sender.CoreWebView2.WindowCloseRequested += CoreWebView2_WindowCloseRequested;
+            sender.CoreWebView2.StatusBarTextChanged += CoreWebView2_StatusBarTextChanged;
 
             sender.CoreWebView2.PermissionRequested += CoreWebView2_PermissionRequested;
 
             sender.CoreWebView2.DownloadStarting += CoreWebView2_DownloadStarting; // Redirect the downloads to aria2
             sender.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested; // Custom context menus
 
-            // Set the tracking level to strict
+            // Set the tracking level to strict (will block 30%+ of the trackers)
             sender.CoreWebView2.Profile.PreferredTrackingPreventionLevel = CoreWebView2TrackingPreventionLevel.Strict;
-     
+
             // May not work for now
             sender.CoreWebView2.Settings.IsPasswordAutosaveEnabled = true;
             sender.CoreWebView2.Settings.IsGeneralAutofillEnabled = true;
 
             // Add extensions
-            AdBlocker.AdBlocker blocker = new(sender.CoreWebView2);
+            DiltillNETAdBlocker.AttachCoreWebView2(sender.CoreWebView2);
 
             // Show native tooltips instead of Edge ones (disabled for now)
             //WebViewNativeToolTips tips = new(this);
 
-            
+            // Testing extensions (Cannot enable this feature for now, see the TestExtension() method)
+            //await sender.CoreWebView2.Profile.AddBrowserExtensionAsync(@"C:\Users\eliga\Desktop\CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_55_0_0(2)");
 
             // Disable default keyboard accelerators keys to add custom find,... dialogs
-            sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = Settings.AreExperimentalFeaturesEnabled;
+            sender.CoreWebView2.Settings.AreBrowserAcceleratorKeysEnabled = !Settings.AreExperimentalFeaturesEnabled;
 
             // Save things only when private mode is disabled
             if (!IsPrivateModeEnabled)
@@ -240,23 +311,42 @@ namespace Odyssey.FWebView
             }
             catch { }
 
-            UpdateThemeWithColorChange();
+            _ = UpdateThemeWithColorChangeAsync();
         }
 
-        Color? lastPixel = null; 
-        private async void UpdateThemeWithColorChange()
+        private void CoreWebView2_StatusBarTextChanged(CoreWebView2 sender, object args)
         {
-            while(true)
+            if (IsVisible())
+            {
+                CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.StatusBarTextChanged));
+            }
+        }
+
+        private void CoreWebView2_WindowCloseRequested(CoreWebView2 sender, object args)
+        {
+            this.Close();
+
+            if (LinkedTab.GetType() == typeof(Favorite)) Favorites.Items.Remove((Favorite)LinkedTab);
+            else if (LinkedTab.GetType() == typeof(Pin)) Pins.Items.Remove((Pin)LinkedTab);
+            else if (LinkedTab.GetType() == typeof(Tab)) Tabs.Items.Remove(LinkedTab);
+        }
+
+
+
+        Color? lastPixel = null;
+        private async Task UpdateThemeWithColorChangeAsync()
+        {
+            while (true)
             {
                 await Task.Delay(1500);
-                if(IsVisible)
+                if (IsVisible())
                 {
                     try
                     {
-                        Color pixel = await WebView2AverageColorHelper.GetFirstPixelColor(this);
+                        Color pixel = await WebView2AverageColorHelper.GetFirstPixelColorAsync(this);
                         if (pixel != lastPixel)
                         {
-                            DynamicTheme.UpdateDynamicTheme(this);
+                            CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
                         }
                         else
                         {
@@ -264,7 +354,7 @@ namespace Odyssey.FWebView
                         }
                     }
                     catch { }
-                    
+
                 }
             }
         }
@@ -272,10 +362,10 @@ namespace Odyssey.FWebView
         private void DevToolsProtocolEventReceived(CoreWebView2 sender, CoreWebView2DevToolsProtocolEventReceivedEventArgs args)
         {
             // memory access violation
-            
+
             string json = args.ParameterObjectAsJson;
             SecurityInformation = JsonConvert.DeserializeObject<SecurityInformation>(json);
-            
+
         }
 
         private void CoreWebView2_PermissionRequested(CoreWebView2 sender, CoreWebView2PermissionRequestedEventArgs args)
@@ -290,13 +380,12 @@ namespace Odyssey.FWebView
                 switch (args.PressedKey)
                 {
                     case Windows.System.VirtualKey.F:
-                        FindFlyout findFlyout = new(this);
-                        findFlyout.PreferredPlacement = TeachingTipPlacementMode.Top;
-                        findFlyout.XamlRoot = XamlRoot;
-                        findFlyout.IsOpen = true;
+                        
                         break;
                 }
             }
+
+            CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.KeyDown));
         }
 
         private async void CoreWebView2_NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
@@ -354,7 +443,7 @@ namespace Odyssey.FWebView
 
             LinkedTab.ImageSource = bitmapImage;
 
-            if (IsVisible && !IsPageLoading)
+            if (IsVisible() && !IsPageLoading)
             {
                 MainIconElement.Source = bitmapImage;
             }
@@ -362,14 +451,25 @@ namespace Odyssey.FWebView
 
         private void CoreWebView2_DownloadStarting(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2DownloadStartingEventArgs args)
         {
-            if (!args.DownloadOperation.Uri.StartsWith("blob"))
+            if (!args.DownloadOperation.Uri.StartsWith("blob") && false)
             {
-                DownloadsFlyout.Items.Insert(0, new DonwloadItem { DownloadUrl = args.DownloadOperation.Uri });
-                args.Cancel = true;
+                //DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation));
             }
             else // The file was downloaded in another location before (mega.nz downloads)
             {
-                DownloadsFlyout.Items.Insert(0, new DonwloadItem { downloadOperation = args.DownloadOperation });
+                FileInfo resultPath = new(args.DownloadOperation.ResultFilePath);
+
+                if (resultPath.Extension == ".crx")
+                {
+                    args.Cancel = true;
+
+                    string extensionId = resultPath.Name.Split("_")[0]; 
+                    InstallExtensionAsync(extensionId);
+                }
+                else
+                {
+                    DownloadsFlyout.Items.Insert(0, new Shared.ViewModels.Data.DownloadItem(args.DownloadOperation.Uri));
+                }
             }
 
             downloadsFlyout.ShowAt(MainDownloadElement);
@@ -385,18 +485,18 @@ namespace Odyssey.FWebView
             scrollTimer.Stop();
 
             // Checking if the user has finished scrolling for 2 seconds
-            if (isScrolling && IsVisible)
+            if (isScrolling && IsVisible())
             {
-                DynamicTheme.UpdateDynamicTheme(this);
+                CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
                 isScrolling = false;
             }
         }
 
         private void WebView2_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (IsVisible && !IsLittleWeb)
+            if (IsVisible() && !IsLittleWeb)
             {
-                DynamicTheme.UpdateDynamicTheme(this);
+                CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
             }
         }
 
@@ -405,6 +505,18 @@ namespace Odyssey.FWebView
 
         private async void CoreWebView2_NavigationCompleted(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs args)
         {
+            // Especially for login pages (Figma, etc) that leave an useless blank page after login
+            if (ParentTab != null && !CanGoForward && Source.ToString() == "about:blank")
+            {
+                if (ParentTab.GetType() != typeof(Favorite) && ParentTab.GetType() != typeof(Pin) && ParentTab.GetType() == typeof(Tab))
+                {
+                    Tabs.Items.Remove(ParentTab);
+                    this.Close();
+
+                    return;
+                }
+            }
+
             IsPageLoading = false;
 
             // Getting the favicon from the webView
@@ -412,11 +524,10 @@ namespace Odyssey.FWebView
 
             LinkedTab.ImageSource = bitmapImage;
 
-            if (IsVisible)
+            if (IsVisible())
             {
                 MainProgressElement.Visibility = Visibility.Collapsed;
-                MainIconElement.Source = bitmapImage;
-                DynamicTheme.UpdateDynamicTheme(this);
+                CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
             }
 
 
@@ -431,10 +542,10 @@ namespace Odyssey.FWebView
         private void CoreWebView2_SourceChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2SourceChangedEventArgs args)
         {
             LinkedTab.Url = sender.Source;
-
-            if(IsVisible)
+            bool b = IsVisible();
+            if (b)
             {
-                UrlTextBox.Text = sender.Source;
+                CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.SourceChanged));
             }
         }
 
@@ -447,7 +558,7 @@ namespace Odyssey.FWebView
                 args.Cancel = true;
                 AppUriLaunch.Launch(new Uri(args.Uri));
             }
-            else if (kind == StringKind.OdysseyUrl)
+            else if (kind == StringKind.InternalUrl)
             {
                 if (Regex.IsMatch(args.Uri, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
                 {
@@ -462,14 +573,12 @@ namespace Odyssey.FWebView
             }
 
             Tabs.Save();
-            if (IsVisible)
+            if (IsVisible())
             {
                 MainIconElement.Source = null; // will hide the element
                 MainProgressElement.Visibility = Visibility.Visible;
-                DynamicTheme.UpdateDynamicTheme(this);
+                CurrentlySelectedWebViewEventTriggered(this.CoreWebView2, new CurrentlySelectedWebViewEventTriggeredEventArgs(null, EventType.DynamicThemeUpdateRequested));
             }
-
-
         }
 
         private void CoreWebView2_ContextMenuRequested(Microsoft.Web.WebView2.Core.CoreWebView2 sender, Microsoft.Web.WebView2.Core.CoreWebView2ContextMenuRequestedEventArgs args)
@@ -478,14 +587,16 @@ namespace Odyssey.FWebView
 
             FWebViewContextMenu fWebViewContextMenu = new();
             fWebViewContextMenu.Show(this, args);
+
+            QuickActions.Variables.ContextMenuArgs = args;
         }
 
         private void CoreWebView2_DocumentTitleChanged(Microsoft.Web.WebView2.Core.CoreWebView2 sender, object args)
         {
             LinkedTab.Title = sender.DocumentTitle;
-            if(IsVisible)
+            if (IsVisible())
             {
-                DocumentTextBlock.Text = sender.DocumentTitle;
+                CurrentlySelectedWebViewEventTriggered(sender, new CurrentlySelectedWebViewEventTriggeredEventArgs(args, EventType.DocumentTitleChanged));
             }
         }
 

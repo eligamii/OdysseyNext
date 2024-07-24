@@ -1,4 +1,3 @@
-using Microsoft.UI.Xaml.Shapes;
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.IO;
@@ -6,14 +5,15 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Path = System.IO.Path;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Data.Main
 {
     public class Data
     {
         internal static string SearchBarShortcutsFilePath { get; private set; }
+        internal static string TitleBarButtonsFilePath { get; private set; }
         internal static string QuickActionFilePath { get; private set; } // %localappdata%\...\LocalState\Data\QuickActions.json
         internal static string DownloadsFilePath { get; private set; }
         internal static string FavoritesFilePath { get; private set; } // %localappdata%\...\LocalState\Data\Favorites.json
@@ -34,18 +34,22 @@ namespace Odyssey.Data.Main
             string path = dataPath = dataFolder.Path;
 
             SearchBarShortcutsFilePath = Path.Combine(path, "SearchBarShortcuts.json");
+            TitleBarButtonsFilePath = Path.Combine(path, "TitleBarButtons.json");
             QuickActionFilePath = Path.Combine(path, "QuickActions.json");
             DownloadsFilePath = Path.Combine(path, "Downloads.json");
             FavoritesFilePath = Path.Combine(path, "Favorites.json");
-            HistoryFilePath = Path.Combine(path, "History.json");  
+            HistoryFilePath = Path.Combine(path, "History.json");
             PinsFilePath = Path.Combine(path, "Pins.json");
             TabsFilePath = Path.Combine(path, "Tabs.json");
+
 
             // Always encrypted data
             LoginsFilePath = Path.Combine(path, "Logins.json");
             TotpFilePath = Path.Combine(path, "2FA.json");
 
+            await TwoFactorsAuthentification.Load();
             SearchBarShortcuts.Load();
+            TitleBarButtons.Load();
             QuickActions.Load();
             Downloads.Load();
             Favorites.Load();
@@ -59,7 +63,7 @@ namespace Odyssey.Data.Main
         {
             await core.Profile.ClearBrowsingDataAsync();
 
-            foreach(var file in await dataFolder.GetFilesAsync())
+            foreach (var file in await dataFolder.GetFilesAsync())
             {
                 await file.DeleteAsync();
             }

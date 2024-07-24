@@ -1,5 +1,5 @@
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -8,7 +8,6 @@ using Odyssey.QuickActions.Data;
 using Odyssey.QuickActions.Helpers;
 using Odyssey.QuickActions.Objects;
 using Odyssey.QuickActions.SystemCommands;
-using Org.BouncyCastle.Asn1.IsisMtt.X509;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ namespace Odyssey.QuickActions
         public static Window MainWindow { internal get; set; } // for commands which manipulate the app itself as $close or $minimize do
         public static void RestoreUIElements()
         {
-            foreach(var variable in UserVariables.Items)
+            foreach (var variable in UserVariables.Items)
             {
                 string pattern = "\"([^ ]*,){3}[^ ]*\"";
                 bool match = Regex.IsMatch(variable.Value, pattern);
@@ -36,14 +35,14 @@ namespace Odyssey.QuickActions
             }
         }
 
-        public static async Task<string> ExecuteSubCommands(string command)
+        private static async Task<string> ExecuteSubCommands(string command)
         {
             Regex subCommandPresentRegex = new("(?<!\\\\)(\\[|\\])");
             Regex subCommandsSeparator = new("(?<=\\[)[^\\]\\[]*(?=\\])");
             var c = subCommandPresentRegex.Matches(command).Count();
             while (c % 2 == 0 && c > 0)
             {
-                foreach(Match match in subCommandsSeparator.Matches(command))
+                foreach (Match match in subCommandsSeparator.Matches(command))
                 {
                     Res res = await Execute(match.Value);
                     command = command.Replace($"[{match.Value}]", $"\"{res.Output}\"");
@@ -54,16 +53,16 @@ namespace Odyssey.QuickActions
             return command;
         }
 
-        public static string ResolveTests(string command)
+        private static string ResolveTests(string command)
         {
             Regex testPresentRegex = new("(?<!\\\\)(\\(|\\))");
             Regex testSeparator = new("(?<=\\()[^\\)\\(]*(?=\\))");
             var c = testPresentRegex.Matches(command).Count();
-            while (c % 2 == 0 && c > 0)
+            while (c > 0)
             {
                 foreach (Match match in testSeparator.Matches(command))
                 {
-                    string boolean = TestHelper.Test(match.Value);
+                    string boolean = TestHelper.ResolveTest(match.Value);
                     command = command.Replace($"({match.Value})", $"{boolean}");
                     c = testSeparator.Matches(command).Count();
                 }
@@ -71,6 +70,7 @@ namespace Odyssey.QuickActions
 
             return command;
         }
+
 
         public static async Task<Res> Execute(string command)
         {
@@ -80,15 +80,15 @@ namespace Odyssey.QuickActions
             // Replace the <variable> with real values
             command = Variables.ConvertToValues(command);
 
-            // Do the eventual tests
-            command = ResolveTests(command); // == doest work for now
+            // Resolve the (test)
+            command = ResolveTests(command);
 
             // Remove the first "$" is the command is from the search box
             if (command.StartsWith("$"))
                 command = command.Substring(1);
 
             string commandName;
-           
+
             try
             {
                 // Get the command var (ex: flyout)
@@ -103,7 +103,7 @@ namespace Odyssey.QuickActions
             {
                 commandWithoutCommandName = command.Substring(commandName.Length + 1); // also remove the first space
             }
-            catch 
+            catch
             {
                 commandWithoutCommandName = string.Empty;
             }
@@ -114,8 +114,9 @@ namespace Odyssey.QuickActions
             // Execute the command (it's the only part you should worry about when adding new commands)
             switch (commandName)
             {
-                case "if": return await If.Exec(options); // test then execute something
-                case "while": return await While.Exec(options); // While loop
+
+                case "if": return await If.Exec(options); // execute another command only if the (test) returns true, wip
+                case "while": return await While.Exec(options); // execute the command while the test is true, wip
 
                 case "flyout": return Flyout.Exec(options); // opens a flyout at desired position
                 case "close": return Close.Exec(options); // close the window or tabs
@@ -123,14 +124,16 @@ namespace Odyssey.QuickActions
                 case "set": return Set.Exec(options); // create or modify a new variable
                 case "toast": return Toast.Exec(options); // create a toast notification, wip
                 case "new": return New.Exec(options); // create a new tab
-                case "test": return Test.Exec(options); // only for testing purposes, to remove in stable releases
+                case "test": return await Test.Exec(options); // only for testing purposes, to remove in stable releases
                 case "js": return await Js.Exec(options); // execute js scripts
                 case "navigate": return Navigate.Exec(options); // navigate to an url
-                case "ui": return Ui.Exec(options); // Create a control visible and usable by the user
+                case "ui": return Ui.Exec(options); // create a control visible and usable by the user
                 case "back": return Back.Exec(options); // go back
                 case "forward": return Forward.Exec(options); // go forward
                 case "refresh": return Refresh.Exec(options); // refresh the webview, wip
                 case "webview": return Webview.Exec(options); // webview tools, like devtools, task manager, etc, wip
+                case "kdesend": return await Kde_send.Exec(options); // share a file or a link to another device, wip
+                case "calc": return Calc.Exec(options); // Calculate a mathematical expression using NCalc
 
                 default: return new Res(false, null, "Command not found");
             }

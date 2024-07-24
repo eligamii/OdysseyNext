@@ -8,30 +8,41 @@ namespace Odyssey.Data.Settings
 
         public static void Init()
         {
-            // Individually test if each setting has a key to make adding settings without crash possible
+            // Set default settings configuration
+            // Individually test if each setting has a key to avoid crashes when programmatically adding settings key to the project
+
             // Internal
             if (!Values.Values.ContainsKey("FirstLaunch")) FirstLaunch = true;
             if (!Values.Values.ContainsKey("Inititalized")) Inititalized = true;
             if (!Values.Values.ContainsKey("SuccessfullyClosed")) SuccessfullyClosed = true;
+            if (!Values.Values.ContainsKey("TabIndex")) TabIndex = -1;
+            if (!Values.Values.ContainsKey("Width")) Width = 1040; // Default UWP window size
+            if (!Values.Values.ContainsKey("Height")) Height = 810; // Idem
 
             // Personalization
             if (!Values.Values.ContainsKey("IsPaneLocked")) IsPaneLocked = true;
-            if (!Values.Values.ContainsKey("CancelAppUriLaunchConfirmationDialog")) CancelAppUriLaunchConfirmationDialog = false;
+            if (!Values.Values.ContainsKey("CancelAppUriLaunchConfirmationDialog")) CancelAppUriLaunchConfirmationDialog = true;
             if (!Values.Values.ContainsKey("DynamicThemeEnabled")) IsDynamicThemeEnabled = true;
             if (!Values.Values.ContainsKey("IsDynamicThemeModeChangeEnabled")) IsDynamicThemeModeChangeEnabled = true;
             if (!Values.Values.ContainsKey("ThemePerformanceMode")) ThemePerformanceMode = 1;
             if (!Values.Values.ContainsKey("ThemeMode")) ThemeMode = 2;
             if (!Values.Values.ContainsKey("IsDevBarEnabled")) IsDevBarEnabled = false;
+            if (!Values.Values.ContainsKey("ShowHostInsteadOfDocumentTitle")) ShowHostInsteadOfDocumentTitle = false;
+            if (!Values.Values.ContainsKey("ColorAlpha")) ColorAlpha = 245;
+            if (!Values.Values.ContainsKey("IsSolidTitleBarEnabled")) IsSolidTitleBarEnabled = true;
+            if (!Values.Values.ContainsKey("SystemBackdrop")) SystemBackdrop = 0;
+            if (!Values.Values.ContainsKey("HoverToOpenPane")) HoverToOpenPane = true;
+
 
             // Dark reader
             if (!Values.Values.ContainsKey("IsDarkReaderEnabled")) IsDarkReaderEnabled = true;
             if (!Values.Values.ContainsKey("ForceDarkReader")) ForceDarkReader = false;
 
             // Features
-            if (!Values.Values.ContainsKey("AutoPictureInPicture")) AutoPictureInPicture = true;
+            if (!Values.Values.ContainsKey("AutoPictureInPicture")) IsAutoPictureInPictureEnabled = true;
             if (!Values.Values.ContainsKey("PlaySoundsOnOnlyOneTab")) PlaySoundsOnOnlyOneTab = false;
-            if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabOnStartup = false;
-            if(!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = false;
+            if (!Values.Values.ContainsKey("OpenTabOnStartup")) OpenTabAtStartup = false;
+            if (!Values.Values.ContainsKey("IsSingleInstanceEnabled")) IsSingleInstanceEnabled = true;
             if (!Values.Values.ContainsKey("IsHisoryEncryptionEnabled")) IsHisoryEncryptionEnabled = false;
 
             // Misc
@@ -39,17 +50,145 @@ namespace Odyssey.Data.Settings
             if (!Values.Values.ContainsKey("DisplayQACommandErrors")) DisplayQACommandErrors = true;
 
             // Ad blocker
-            if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = true;
-            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0;
-            if (!Values.Values.ContainsKey("IsEasylistFilterListEnabled")) IsEasylistFilterListEnabled = false;
-            if (!Values.Values.ContainsKey("IsEasyprivacyFilterListEnabled")) IsEasyprivacyFilterListEnabled = false;
-            if (!Values.Values.ContainsKey("IsSpam404FilterListEnabled")) IsSpam404FilterListEnabled = false;
+            if (!Values.Values.ContainsKey("IsAdBlockerEnabled")) IsAdBlockerEnabled = false;
+            if (!Values.Values.ContainsKey("AdBlockerType")) AdBlockerType = 0; // Experimental (adblock to regex adblocker)
+            if (!Values.Values.ContainsKey("IsEasylistFilterListEnabled")) IsEasylistFilterListEnabled = true;
+            if (!Values.Values.ContainsKey("IsEasyprivacyFilterListEnabled")) IsEasyprivacyFilterListEnabled = true;
+            if (!Values.Values.ContainsKey("IsSpam404FilterListEnabled")) IsSpam404FilterListEnabled = true;
+
+            // Search engine
+            if (!Values.Values.ContainsKey("SelectedSearchEngine")) SelectedSearchEngine = (int)SearchEngines.Startpage;
+            if (!Values.Values.ContainsKey("AreSearchSuggestionsEnabled")) AreSearchSuggestionsEnabled = true;
+
+            // Behaviors
+            if (!Values.Values.ContainsKey("RestoreTabsAfterCrash")) RestoreTabsAfterCrash = true;
+            if (!Values.Values.ContainsKey("OpenHomePageAtNewTabCreation")) OpenHomePageAtNewTabCreation = false;
+
+            // Profile
+            if (!Values.Values.ContainsKey("ProfileName")) ProfileName = "Default";
+            if (!Values.Values.ContainsKey("Profiles")) Profiles = "Default";
         }
+
 
         public static bool? Inititalized
         {
             get { return (bool?)Values.Values["Inititalized"]; }
             set { Values.Values["Inititalized"] = value; }
+        
+        }
+
+        public static bool HoverToOpenPane
+        {
+            get { return (bool)Values.Values["HoverToOpenPane"]; }
+            set { Values.Values["HoverToOpenPane"] = value; }
+        }
+
+        public static int TabIndex
+        {
+            get { return (int)Values.Values["TabIndex"]; }
+            set { Values.Values["TabIndex"] = value; }
+        }
+
+        public static double Width
+        {
+            get { return (double)Values.Values["Width"]; }
+            set { Values.Values["Width"] = value; }
+        }
+
+        public static double Height
+        {
+            get { return (double)Values.Values["Height"]; }
+            set { Values.Values["Height"] = value; }
+        }
+
+        /// <summary>
+        /// 0 = favorites, 1 = pins, 2 = tabs
+        /// </summary>
+        public static int TabType
+        {
+            get { return (int)Values.Values["TabType"]; }
+            set { Values.Values["TabType"] = value; }
+        }
+
+        public static byte ColorAlpha
+        {
+            get { return (byte)Values.Values["ColorAlpha"]; }
+            set { Values.Values["ColorAlpha"] = value; }
+        }
+
+        /// <summary>
+        /// Convert this to BackdropType (0 = Mica, 1 = MicaAlt, 2 = Acrylic)
+        /// </summary>
+        public static int SystemBackdrop
+        {
+            get { return (int)Values.Values["SystemBackdrop"]; }
+            set { Values.Values["SystemBackdrop"] = value; }
+        }
+
+        public static bool IsSolidTitleBarEnabled
+        {
+            get { return (bool)Values.Values["IsTSolidTitleBarEnabled"]; }
+            set { Values.Values["IsTSolidTitleBarEnabled"] = value; }
+        }
+
+        public static bool OpenHomePageAtNewTabCreation
+        {
+            get { return (bool)Values.Values["OpenHomePageAtNewTabCreation"]; }
+            set { Values.Values["OpenHomePageAtNewTabCreation"] = value; }
+        }
+
+        public static bool IsPasswordProtectedPrivateModeEnabled
+        {
+            get { return (bool)Values.Values["IsPasswordProtectedPrivateModeEnabled"]; }
+            set { Values.Values["RestoreTabsAftIsPasswordProtectedPrivateModeEnablederCrash"] = value; }
+        }
+
+        public static string ProfileName
+        {
+            get { return (string)Values.Values["ProfileName"]; }
+            set { Values.Values["ProfileName"] = value; }
+        }
+
+        public static string Profiles // List of ProfileName separated by a ","
+        {
+            get { return (string)Values.Values["Profiles"]; }
+            set { Values.Values["Profiles"] = value; }
+        }
+
+        public static bool RestoreTabsAfterCrash
+        {
+            get { return (bool)Values.Values["RestoreTabsAfterCrash"]; }
+            set { Values.Values["RestoreTabsAfterCrash"] = value; }
+        }
+
+        public static bool AreSearchSuggestionsEnabled
+        {
+            get { return (bool)Values.Values["AreSearchSuggestionsEnabled"]; }
+            set { Values.Values["AreSearchSuggestionsEnabled"] = value; }
+        }
+
+        public static bool ShowHostInsteadOfDocumentTitle
+        {
+            get { return (bool)Values.Values["ShowHostInsteadOfDocumentTitle"]; }
+            set { Values.Values["ShowHostInsteadOfDocumentTitle"] = value; }
+        }
+
+        public static string CustomSearchSuggestionApiUrl
+        {
+            get { return (string)Values.Values["CustomSearchSuggestionApiUrl"]; }
+            set { Values.Values["CustomSearchSuggestionApiUrl"] = value; }
+        }
+
+        public static int SearchSuggestionApi // 0 = searx, 1 = duckduckgo (need more testing with searx)
+        {
+            get { return (int)Values.Values["SearchSuggestionApi"]; }
+            set { Values.Values["SearchSuggestionApi"] = value; }
+        }
+
+        public static string KDEDefaultDevice
+        {
+            get { return (string)Values.Values["KDEDefaultDevice"]; }
+            set { Values.Values["KDEDefaultDevice"] = value; }
         }
 
         public static bool DisplayQACommandErrors
@@ -82,25 +221,13 @@ namespace Odyssey.Data.Settings
             set { Values.Values["IsDevBarEnabled"] = value; }
         }
 
-        public static bool IsHisoryEncryptionEnabled 
+        public static bool IsHisoryEncryptionEnabled
         {
             get { return (bool)Values.Values["IsHisoryEncryptionEnabled"]; }
             set { Values.Values["IsHisoryEncryptionEnabled"] = value; }
         }
 
-        public static bool UseCustomAdBlockers
-        {
-            get { return (bool)Values.Values["UseCustomAdBlockers"]; }
-            set { Values.Values["UseCustomAdBlockers"] = value; }
-        }
-
-        public static string CustomAdBlockerPath // paths separated by ','
-        {
-            get { return (string)Values.Values["CustomAdBlockerPath"]; }
-            set { Values.Values["CustomAdBlockerPath"] = value; }
-        }
-
-        public static bool AutoPictureInPicture
+        public static bool IsAutoPictureInPictureEnabled
         {
             get { return (bool)Values.Values["AutoPictureInPicture"]; }
             set { Values.Values["AutoPictureInPicture"] = value; }
@@ -124,7 +251,7 @@ namespace Odyssey.Data.Settings
             set { Values.Values["IsSingleInstanceEnabled"] = value; }
         }
 
-        public static bool OpenTabOnStartup
+        public static bool OpenTabAtStartup
         {
             get { return (bool)Values.Values["OpenTabOnStartup"]; }
             set { Values.Values["OpenTabOnStartup"] = value; }

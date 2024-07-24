@@ -1,10 +1,4 @@
-﻿using Odyssey.FWebView;
-using Odyssey.QuickActions.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Odyssey.QuickActions.Objects;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -12,14 +6,12 @@ namespace Odyssey.QuickActions.Commands
     {
         internal static Res Exec(string[] options)
         {
-            if (WebView.SelectedWebView != null)
+            if (Variables.SelectedWebView != null)
             {
-                switch(options[0])
+                switch (options[0])
                 {
-                    case "devtools": WebView.SelectedWebView.CoreWebView2?.OpenDevToolsWindow(); break;
-                    case "taskmgr": WebView.SelectedWebView.CoreWebView2?.OpenTaskManagerWindow(); break;
-                    case "downloads": WebView.OpenDownloadDialog(); break;
-                    case "history": WebView.OpenHistoryDialog(); break;
+                    case "devtools": Variables.SelectedWebView.CoreWebView2?.OpenDevToolsWindow(); break;
+                    case "taskmgr": Variables.SelectedWebView.CoreWebView2?.OpenTaskManagerWindow(); break;
 
                     default: return new Res(false, null, "Invalid parameter");
                 }

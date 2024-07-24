@@ -1,23 +1,17 @@
 using CommunityToolkit.Common;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Odyssey.Classes;
 using Odyssey.Data.Settings;
+using Odyssey.Dialogs;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Views.Options
 {
@@ -45,7 +39,7 @@ namespace Odyssey.Views.Options
         private void dynamicThemeModeComboBox_Toggled(object sender, RoutedEventArgs e)
         {
             Settings.IsDynamicThemeModeChangeEnabled = dynamicThemeModeComboBox.IsOn;
-            
+
         }
 
         private void dynamicThemePerfComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -57,7 +51,7 @@ namespace Odyssey.Views.Options
         {
             string text = ((TextBox)sender).Text;
 
-            if(text.Length == 7)
+            if (text.Length == 7)
             {
                 UpdateTheme.UpdateThemeWith(text);
                 Settings.CustomThemeColors = text;
@@ -70,9 +64,9 @@ namespace Odyssey.Views.Options
             var selection = sender.SelectionStart;
             char[] hexChars = { 'A', 'B', 'C', 'D', 'E', 'F' };
 
-            if(sender.Text.Count() > 7)
+            if (sender.Text.Count() > 7)
             {
-                sender.Text =  sender.Text.Truncate(7);
+                sender.Text = sender.Text.Truncate(7);
             }
 
             if (sender.Text.ToUpper().All(c => (char.IsDigit(c) || hexChars.Contains(c)) && sender.Text.Count() == 6))
@@ -86,7 +80,7 @@ namespace Odyssey.Views.Options
             sender.SelectionStart = selection;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void CustomThemeButton_Click(object sender, RoutedEventArgs e)
         {
             string text = customThemeTextBox.Text;
 
@@ -95,6 +89,24 @@ namespace Odyssey.Views.Options
                 UpdateTheme.UpdateThemeWith(text);
                 Settings.CustomThemeColors = text;
             }
+        }
+
+        private async void CustomizeTitleBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog.Current.Hide();
+
+            var dialog = new CustomizeTitleBarItemsDialog();
+            dialog.XamlRoot = this.Content.XamlRoot;
+            await dialog.ShowAsync();
+        }
+
+        private void ColorPickerFlyout_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+        {
+            Color c = args.NewColor;
+            string color = $"{c.A},{c.R},{c.G},{c.B}";
+
+            UpdateTheme.UpdateThemeWith(color);
+            Settings.CustomThemeColors = color;
         }
     }
 }

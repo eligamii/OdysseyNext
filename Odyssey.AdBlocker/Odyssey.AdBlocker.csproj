@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
@@ -6,16 +6,10 @@
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Assets\Easylist.txt" />
-    <None Remove="Assets\easylist_general_block.txt" />
-    <None Remove="Assets\Easyprivacy.txt" />
-    <None Remove="Assets\MalwaresList.txt" />
-    <None Remove="Assets\Whitelist.txt" />
-  </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
+      <PackageReference Include="DistillNET" Version="1.6.6" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240205001-preview1" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
   </ItemGroup>
 
@@ -24,22 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Assets\Easylist.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Easyprivacy.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\MalwaresList.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Whitelist.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Assets\easylist_general_block.txt">
+    <Content Update="Assets\easylist.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

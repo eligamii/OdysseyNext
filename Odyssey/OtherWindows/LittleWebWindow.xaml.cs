@@ -2,12 +2,11 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Odyssey.Data.Settings;
-using Odyssey.Helpers;
 using Odyssey.Views;
 using WinUIEx;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.OtherWindows
 {
@@ -27,9 +26,6 @@ namespace Odyssey.OtherWindows
             // Load data          
             //Downloads.Aria2.Init();
             AdBlocker.AdBlocker.Init();
-
-            // Use this instead of Systemackdrop = Micaackdrop(); to be able to control the color of the Window
-            MicaBackdropHelper.TrySetMicaBackdropTo(this);
 
             ExtendsContentIntoTitleBar = true;
 

@@ -34,5 +34,12 @@
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
+
+        <controls:SettingsCard Header="Auto Picture-in-Picture" Description="Automatically enable the PiP player when the selected tab change">
+            <controls:SettingsCard.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE714;" />
+            </controls:SettingsCard.HeaderIcon>
+            <ToggleSwitch x:Name="autoPIPToggleSwitch" Toggled="autoPIPToggleSwitch_Toggled"/>
+        </controls:SettingsCard>
     </StackPanel>
 </Page>

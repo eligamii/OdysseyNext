@@ -1,47 +1,48 @@
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Odyssey.Classes;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
-using Odyssey.QuickActions.Data;
 using Odyssey.Views;
 using Odyssey.Views.Pages;
-using System;
-using System.IO;
-using Windows.Storage;
+using Windows.UI.WindowManagement;
 using WinUIEx;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey
 {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
+
+
     public sealed partial class MainWindow : WindowEx
     {
         public static new MainWindow Current { get; set; }
+        public bool IsActivated { get; set; } = false;
+        public new Backdrop Backdrop { get; set; }
         public MainWindow()
         {
             InitializeComponent();
             this.Title = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Square44x44Logo.altform-lightunplated_targetsize-24.png");
-            AppWindow.SetIcon(path);
+            Backdrop = new(this);
             Init();
         }
 
-        private async void Init()
+        private void Init()
         {
-            
-
             ExtendsContentIntoTitleBar = true;
+            AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Collapsed; // To create custom caption buttons (will remove the default ones)
 
             MinWidth = MinHeight = 500;
 
-            // Change the size of the window to match with the UWP default window size
-            Width = 1040;
-            Height = 810;
+            Width = Settings.Width;
+            Height = Settings.Height;
 
             AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
 
@@ -57,20 +58,39 @@ namespace Odyssey
             // Make possible to access to MainWindow from anywhere
             Current = this;
 
-            
+            Hotkeys.Init();
 
             AppWindow.Closing += AppWindow_Closing;
+            this.Activated += MainWindow_Activated;
+            this.SizeChanged += MainWindow_SizeChanged;
         }
 
-        private bool _close = false;
+        private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+        {
+            if(this.WindowState == WindowState.Normal)
+            {
+                Settings.Width = args.Size.Width;
+                Settings.Height = args.Size.Height;
+
+            }
+        }
+
+        private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            if (args.WindowActivationState == WindowActivationState.Deactivated)
+                IsActivated = false;
+            else IsActivated = true;
+        }
+
         public static bool ResetEngaged { get; set; } = false;
         private void AppWindow_Closing(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowClosingEventArgs args)
         {
-            if(!ResetEngaged)
+            if (!ResetEngaged)
             {
                 args.Cancel = Settings.IsSingleInstanceEnabled;
                 Settings.SuccessfullyClosed = true;
                 QuickActions.Data.UserVariables.Save();
+                Data.Main.TitleBarButtons.Save();
 
                 if (!Settings.IsSingleInstanceEnabled)
                 {
@@ -103,15 +123,6 @@ namespace Odyssey
                     MainView.Current.splitViewContentFrame.Navigate(typeof(HomePage), null, new SuppressNavigationTransitionInfo());
 
                     MainView.Current.documentTitle.Text = Shared.Helpers.ResourceString.GetString("Odyssey", "Main");
-
-                    bool dark = Classes.UpdateTheme.IssystemDarkMode();
-                    string color = dark ? "#202020" : "#F9F9F9";
-
-                    if (Settings.IsDynamicThemeEnabled)
-                    {
-                        MainView.Current.RequestedTheme = Classes.UpdateTheme.IssystemDarkMode() ? Microsoft.UI.Xaml.ElementTheme.Dark : Microsoft.UI.Xaml.ElementTheme.Light;
-                        Classes.UpdateTheme.UpdateThemeWith(color);
-                    }
 
                     Tabs.Items.Clear();
 

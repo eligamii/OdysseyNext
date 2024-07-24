@@ -1,10 +1,4 @@
-﻿using Odyssey.FWebView;
-using Odyssey.QuickActions.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Odyssey.QuickActions.Objects;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -12,9 +6,9 @@ namespace Odyssey.QuickActions.Commands
     {
         internal static Res Exec(string[] options)
         {
-            if (WebView.SelectedWebView != null)
+            if (Variables.SelectedWebView != null)
             {
-                WebView.SelectedWebView.Reload();
+                Variables.SelectedWebView.Reload();
                 return new Res(true);
             }
             return new Res(false, null, "no tab is currently selected");

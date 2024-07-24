@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Odyssey.AdBlocker
 {
-    public class AdBlocker
+    public class AdBlocker // Instalnt and only compatible with host-based lists
     {
         private static string[] easylist;
         private static string[] easyprivacy;
@@ -34,7 +34,7 @@ namespace Odyssey.AdBlocker
                 whitelist = File.ReadAllLines(whitelistListPath);
             }
 
-            if(EasyListAdBlocker.AdBlockList.Count() == 0 && Settings.AdBlockerType == 1)
+            if (EasyListAdBlocker.AdBlockList.Count() == 0 && Settings.AdBlockerType == 1)
             {
                 EasyListAdBlocker.CreateRegexBasedFilterList();
             }
@@ -50,9 +50,9 @@ namespace Odyssey.AdBlocker
 
         private async void CoreWebView_WebResourceRequested(CoreWebView2 sender, CoreWebView2WebResourceRequestedEventArgs args)
         {
-            if(Settings.IsAdBlockerEnabled)
+            if (Settings.IsAdBlockerEnabled)
             {
-                if(Settings.AdBlockerType == 0) // host-based
+                if (Settings.AdBlockerType == 0) // host-based
                 {
                     string host = new Uri(args.Request.Uri).Host;
 

@@ -7,13 +7,13 @@ namespace Odyssey.Data.Main
 {
     public class QuickActions
     {
-        public static ObservableCollection<QuickAction> QuickActionsList { get; set; }
+        public static ObservableCollection<QuickAction> Items { get; set; }
 
         internal static void Save()
         {
-            
+
             var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(QuickActionsList, options);
+            string jsonString = JsonSerializer.Serialize(Items, options);
             File.WriteAllText(Data.QuickActionFilePath, jsonString);
         }
 
@@ -23,12 +23,16 @@ namespace Odyssey.Data.Main
             {
                 string jsonString = File.ReadAllText(Data.QuickActionFilePath);
 
-                QuickActionsList = JsonSerializer.Deserialize<ObservableCollection<QuickAction>>(jsonString);
+                Items = JsonSerializer.Deserialize<ObservableCollection<QuickAction>>(jsonString);
+            }
+            else
+            {
+                Items = new ObservableCollection<QuickAction>();
             }
 
-            QuickActionsList = new ObservableCollection<QuickAction>();
 
-            QuickActionsList.CollectionChanged += (s, a) => Save();
+
+            Items.CollectionChanged += (s, a) => Save();
         }
     }
 }

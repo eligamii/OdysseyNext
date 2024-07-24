@@ -17,7 +17,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
                 string resString = res.ToString();
 
                 suggestion.Title = resString;
-                suggestion.Url = await WebViewNavigateUrlHelper.ToUrl(resString);
+                suggestion.Url = await WebViewNavigateUrlHelper.ToWebView2Url(resString);
                 suggestion.Kind = SuggestionKind.MathematicalExpression;
 
                 return suggestion;

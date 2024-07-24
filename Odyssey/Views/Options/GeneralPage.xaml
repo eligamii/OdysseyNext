@@ -23,8 +23,17 @@
                 <x:String>Qwant</x:String>
                 <x:String>You.com</x:String>
                 <x:String>Startpage</x:String>
+                <x:String>Perplexity AI</x:String>
+                <x:String>Kagi</x:String>
             </ComboBox>
         </controls:SettingsCard>
+
+        <controls:SettingsExpander Header="Enable online search suggestions" Description="Get search suggestion from online sources">
+            <controls:SettingsExpander.HeaderIcon>
+                <helpers:SymbolIconEx Symbol="SearchAndApps"/>
+            </controls:SettingsExpander.HeaderIcon>
+            <ToggleSwitch x:Name="searchSuggestionToggleSwitch" Toggled="searchSuggestionToggleSwitch_Toggled"/>
+        </controls:SettingsExpander>
 
         <controls:SettingsExpander Header="{helpers:ResourceString Name=DarkMode, Filename=Settings}" Description="{helpers:ResourceString Name=DarkMode, Filename=SettingsDescriptions}">
             <controls:SettingsExpander.HeaderIcon>
@@ -50,6 +59,10 @@
                 </controls:SettingsCard>
             </controls:SettingsExpander.Items>
         </controls:SettingsExpander>
+
+        <controls:SettingsCard Header="Migrate" Description="Migrate all of your data, including cookies and passwords">
+            <Button Content="Migrate" Click="MigrateButton_Click"/>
+        </controls:SettingsCard>
 
     </StackPanel>
 </Page>

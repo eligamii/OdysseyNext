@@ -1,8 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.QuickActions.Controls
 {
@@ -16,6 +16,7 @@ namespace Odyssey.QuickActions.Controls
 
         private void webView_CoreWebView2Initialized(WebView2 sender, CoreWebView2InitializedEventArgs args)
         {
+            sender.CoreWebView2.Settings.UserAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36 Edg/120.0.0.0";
             sender.CoreWebView2.SourceChanged += (s, a) => Variables.QAFlyoutUrl = s.Source;
         }
 

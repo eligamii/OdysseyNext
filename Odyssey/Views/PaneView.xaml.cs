@@ -4,6 +4,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
+using Odyssey.Classes;
 using Odyssey.Controls;
 using Odyssey.Controls.ContextMenus;
 using Odyssey.Data.Main;
@@ -11,14 +13,16 @@ using Odyssey.Data.Settings;
 using Odyssey.Dialogs;
 using Odyssey.FWebView;
 using Odyssey.OtherWindows;
+using Odyssey.Shared.Helpers;
 using Odyssey.Shared.ViewModels.Data;
+using Odyssey.Views.Pages;
 using System;
 using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Views
 {
@@ -54,10 +58,18 @@ namespace Odyssey.Views
                 {
                     if (tab.ImageSource == null && tab.Url != null)
                     {
-                        tab.ImageSource = new()
+                        try
                         {
-                            UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
-                        };
+                            if (FWebView.Helpers.WebView2SavedFavicons.GetFaviconAsBitmapImage(tab.Url, out BitmapImage image))
+                            {
+                                tab.ImageSource = image;
+                            }
+                            else
+                            {
+                                tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+                            }
+                        }
+                        catch { }
                     }
                 }
 
@@ -65,10 +77,18 @@ namespace Odyssey.Views
                 {
                     if (tab.ImageSource == null && tab.Url != null)
                     {
-                        tab.ImageSource = new()
+                        try
                         {
-                            UriSource = new System.Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21")
-                        };
+                            if (FWebView.Helpers.WebView2SavedFavicons.GetFaviconAsBitmapImage(tab.Url, out BitmapImage image))
+                            {
+                                tab.ImageSource = image;
+                            }
+                            else
+                            {
+                                tab.ImageSource = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage { UriSource = new Uri($"https://muddy-jade-bear.faviconkit.com/{new System.Uri(tab.Url).Host}/21") };
+                            }
+                        }
+                        catch { }
                     }
                 }
             }
@@ -159,12 +179,19 @@ namespace Odyssey.Views
 
         private void AddTabButton_Click(object sender, RoutedEventArgs e)
         {
-            SearchBar searchBar = new SearchBar(true);
-            FlyoutShowOptions options = new FlyoutShowOptions();
-            options.Placement = FlyoutPlacementMode.Bottom;
-            options.Position = new Point(MainView.Current.splitViewContentFrame.ActualWidth / 2, 100);
+            if (Settings.OpenHomePageAtNewTabCreation)
+            {
+                MainView.Current.splitViewContentFrame.Navigate(typeof(HomePage));
+            }
+            else
+            {
+                SearchBar searchBar = new SearchBar(true);
+                FlyoutShowOptions options = new FlyoutShowOptions();
+                options.Placement = FlyoutPlacementMode.Bottom;
+                options.Position = new Point(MainView.Current.splitViewContentFrame.ActualWidth / 2, 100);
 
-            searchBar.ShowAt(MainView.Current.splitViewContentFrame, options);
+                searchBar.ShowAt(MainView.Current.splitViewContentFrame, options);
+            }
         }
 
         private void CloseButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -261,19 +288,107 @@ namespace Odyssey.Views
             }
         }
 
+
         private async void ItemsViews_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (e.AddedItems.Count > 0)
+            {
+                MainView.Current.splitViewContentFrame.Content = null;
+
+                var tab = e.AddedItems.FirstOrDefault() as Tab;
+                if (tab.MainWebView == null)
+                {
+                    if (tab.Url != null)
+                    {
+                        WebView webView = WebView.Create(tab.Url);
+                        webView.LinkedTab = tab;
+                        tab.MainWebView = webView;
+                    }
+                    else
+                    {
+                        WebView webView = WebView.Create(SearchEngine.ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine).Url);
+                        webView.LinkedTab = tab;
+                        tab.MainWebView = webView;
+                    }
+                }
+
+                MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
+
+                MainView.Current.documentTitle.Text = Settings.ShowHostInsteadOfDocumentTitle && tab.Url != null ? new Uri(tab.Url).Host : tab.Title;
+
+                DynamicTheme.UpdateDynamicThemeAsync(MainView.CurrentlySelectedWebView);
+                UpdateTabSelection(sender);
+            }
+            else if (/* As when the tab selection add an item before removing another */
+                    e.RemovedItems.Count > 0 &&
+                    e.AddedItems.Count == 0 &&
+                    FavoriteGrid.SelectedIndex == -1 &&
+                    PinsTabView.SelectedIndex == -1 &&
+                    TabsView.SelectedIndex == -1)
+            {
+                Tab removedItem = e.RemovedItems[0] as Tab;
+                Tab parentTab = null;
+
+                if (removedItem.MainWebView != null) // Prevent crashes when the favorite was restored and with no webview
+                {
+                    parentTab = ((WebView)removedItem.MainWebView).ParentTab; // getting the paent favorite if one
+
+                    // Remove the favorite's WebViews
+                    removedItem.MainWebView.Close();
+                    if (removedItem.SplitViewWebView != null) removedItem.SplitViewWebView.Close();
+                    removedItem.MainWebView = removedItem.SplitViewWebView = null;
+                }
+
+                // Remove the favorite from the tabs listView
+                Tabs.Items.Remove(removedItem);
+
+                // Changing the selected favorite to another
+                if (parentTab != null)
+                {
+                    // Select the parent favorite if one 
+                    if (parentTab.GetType() == typeof(Pin))
+                    {
+                        if (Pins.Items.Contains(parentTab as Pin))
+                            PinsTabView.SelectedItem = parentTab as Pin;
+                    }
+                    else if (parentTab.GetType() == typeof(Favorite))
+                    {
+                        if (Favorites.Items.Contains(parentTab))
+                            FavoriteGrid.SelectedItem = parentTab;
+                    }
+                    else
+                    {
+                        if (Tabs.Items.Contains(parentTab))
+                            TabsView.SelectedItem = parentTab;
+                    }
+                    
+                    
+                }
+                else
+
+                {
+                    MainView.Current.documentTitle.Text = ResourceString.GetString("Odyssey", "Main");
+                }
+
+            }
+
+
+            if (e.AddedItems.Count != 0) // Save tabs as much as possible to avoid data loss after crash
+                Tabs.Save();
+
+            MainView.Current.SetTotpButtonVisibility();
+
             try
             {
                 // Enable picture in picture
-                if (Settings.AutoPictureInPicture != false)
+                if (Settings.IsAutoPictureInPictureEnabled != false)
                 {
                     if (e.RemovedItems.Count > 0)
                     {
                         Tab item = e.RemovedItems[0] as Tab;
                         if (item.MainWebView != null)
                         {
-                            await item.MainWebView.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
+                            _ = item.MainWebView.ExecuteScriptAsync("document.querySelector(\"video\").requestPictureInPicture();");
                         }
                     }
                     if (e.AddedItems.Count > 0)
@@ -281,59 +396,12 @@ namespace Odyssey.Views
                         Tab addedItem = e.AddedItems[0] as Tab;
                         if (addedItem.MainWebView != null)
                         {
-                            await addedItem.MainWebView.ExecuteScriptAsync("document.exitPictureInPicture();");
+                            _ = addedItem.MainWebView.ExecuteScriptAsync("document.exitPictureInPicture();");
                         }
                     }
                 }
-            }catch (InvalidOperationException){ }
-
-            if (e.AddedItems.Count > 0)
-            {
-                var tab = e.AddedItems[0] as Tab;
-                if (tab.MainWebView == null)
-                {
-                    if (tab.Url != null)
-                    {
-                        WebView webView = WebView.Create(tab.Url);
-                        webView.LinkedTab = tab;
-                        await webView.EnsureCoreWebView2Async();
-                        tab.MainWebView = webView;
-                    }
-                    else
-                    {
-                        WebView webView = WebView.Create(SearchEngine.ToSearchEngineObject(((SearchEngines)Settings.SelectedSearchEngine)).Url);
-                        webView.LinkedTab = tab;
-                        await webView.EnsureCoreWebView2Async();
-                        tab.MainWebView = webView;
-                    }
-                }
-
-
-                if ((tab.MainWebView as WebView).IsPageLoading)
-                {
-                    //MainView.Current.Favicon.Source = null;
-                    //MainView.Current.progressRing.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    //MainView.Current.Favicon.Source = tab.ImageSource;
-                    //MainView.Current.progressRing.Visibility = Visibility.Collapsed;
-                }
-
-                MainView.Current.documentTitle.Text = tab.Title;
-
-                FWebView.Classes.DynamicTheme.UpdateDynamicTheme(tab.MainWebView);
-
-                MainView.Current.splitViewContentFrame.Content = tab.MainWebView;
-                UpdateTabSelection(sender);
             }
-
-
-
-            if (e.AddedItems.Count != 0) // Save tabs as much as possible to avoid data loss after crash
-                Tabs.Save();
-
-            MainView.Current.SetTotpButtonVisibility();
+            catch (InvalidOperationException) { }
         }
         private void FavoriteGridItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -381,9 +449,9 @@ namespace Odyssey.Views
 
         private void UpdateTabSelection(object selectedTabsView)
         {
-            if ((ListViewBase)selectedTabsView != TabsView) TabsView.SelectedIndex = -1;
-            if ((ListViewBase)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1;
-            if ((ListViewBase)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1;
+            if ((ListViewBase)selectedTabsView != TabsView) TabsView.SelectedIndex = -1; else { Settings.TabType = 2; Settings.TabIndex = TabsView.SelectedIndex; }
+            if ((ListViewBase)selectedTabsView != PinsTabView) PinsTabView.SelectedIndex = -1; else { Settings.TabType = 1; Settings.TabIndex = PinsTabView.SelectedIndex; }
+            if ((ListViewBase)selectedTabsView != FavoriteGrid) FavoriteGrid.SelectedIndex = -1; else { Settings.TabType = 0; Settings.TabIndex = FavoriteGrid.SelectedIndex; }
         }
 
 
@@ -454,7 +522,7 @@ namespace Odyssey.Views
             {
                 string text = await e.DataView.GetTextAsync();
 
-                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(text);
 
                 pin = new()
                 {
@@ -501,7 +569,7 @@ namespace Odyssey.Views
             {
                 string text = await e.DataView.GetTextAsync();
 
-                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(text);
 
                 tab = new()
                 {
@@ -563,7 +631,7 @@ namespace Odyssey.Views
             {
                 string text = await e.DataView.GetTextAsync();
 
-                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToUrl(text);
+                string url = await WebSearch.Helpers.WebViewNavigateUrlHelper.ToWebView2Url(text);
 
                 favorite = new()
                 {
@@ -599,20 +667,20 @@ namespace Odyssey.Views
             FavoriteGrid.SelectedItem = favorite;
         }
 
-        
+
         private void ViewportBehavior_EnteredViewport(object sender, EventArgs e)
         {
             secondNewTabButton.Visibility = ViewportBehavior.IsFullyInViewport ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        private async void SettingsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void SettingsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             SettingsDialog settingsDialog = new()
             {
                 XamlRoot = this.XamlRoot
             };
 
-            await settingsDialog.ShowAsync();
+            _ = settingsDialog.ShowAsync();
         }
 
         private void DevToolsMenuFlyoutItem_Click(object sender, RoutedEventArgs e)

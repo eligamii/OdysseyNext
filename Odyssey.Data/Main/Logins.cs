@@ -39,7 +39,7 @@ namespace Odyssey.Data.Main
                 Items = new ObservableCollection<Login>();
             }
 
-            
+
 
             Items.CollectionChanged += (s, a) => Save();
         }

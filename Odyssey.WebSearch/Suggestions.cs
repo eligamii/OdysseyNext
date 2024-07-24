@@ -1,8 +1,10 @@
-﻿using Odyssey.Shared.ViewModels.WebSearch;
+﻿using Odyssey.Data.Settings;
+using Odyssey.Shared.ViewModels.WebSearch;
 using Odyssey.WebSearch.Helpers;
 using Odyssey.WebSearch.Helpers.Suggestions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Odyssey.WebSearch
@@ -18,14 +20,29 @@ namespace Odyssey.WebSearch
             if (kind == WebSearchStringKindHelpers.StringKind.MathematicalExpression)
             {
                 var suggestion = await MathematicalExpressionsSuggestionsHelper.EvaluateExpression(query);
-                suggestions.Add(suggestion);
+                if (suggestion is not null) suggestions.Add(suggestion);
             }
+
+
 
             suggestions = suggestions.Concat(TabsSuggestionsHelper.SearchForMatchingTabs(query)).ToList();
 
-            //var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
-
-            //suggestions = suggestions.Concat(ddgSuggestions).ToList();
+            if (Settings.AreSearchSuggestionsEnabled)
+            {
+                try
+                {
+                    if (true)
+                    {
+                        var ddgSuggestions = (await DuckDuckGoSuggestionsHelper.GetFromDuckDuckGoSuggestions(query)).Where(p => p.Query == CurrentQuery);
+                        suggestions = suggestions.Concat(ddgSuggestions).ToList();
+                    }
+                    else
+                    {
+                        // [TODO] implement searx
+                    }
+                }
+                catch (HttpRequestException) { }
+            }
 
             return suggestions.Take(maxSuggestions).ToList();
         }

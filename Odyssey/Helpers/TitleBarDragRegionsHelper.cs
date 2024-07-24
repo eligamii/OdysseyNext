@@ -7,15 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using WinRT.Interop;
 
 namespace Odyssey.Helpers
 {
-    // This was made specifically for the Odyssey and LightCode titlebars but should works on almost every app without modification
-    public class TitleBarDragRegions // v1
+    // Should works on almost every app without any modification
+    public class TitleBarDragRegions // v1.2
     {
         [DllImport("Shcore.dll", SetLastError = true)]
         public static extern int GetDpiForMonitor(IntPtr hmonitor, Monitor_DPI_Type dpiType, out uint dpiX, out uint dpiY);
@@ -49,9 +47,10 @@ namespace Odyssey.Helpers
         // Test if the titlebar is inside of a closed or opened StackPanel
         private static bool IsVisible(FrameworkElement element)
         {
+
             try
             {
-                if((string)element.Tag != "ignorepane")
+                if ((string)element.Tag != "ignorepane")
                 {
                     var parent = VisualTreeHelper.GetParent(element);
                     int tests = 0;
@@ -85,10 +84,16 @@ namespace Odyssey.Helpers
         private FrameworkElement _titleBarParent; // this should be Window.Content in most cases
         private int _height;
 
+        public void SetTitleBarsHeight(int height)
+        {
+            _height = height;
+            SetDragRegionForTitleBars();
+        }
+
         /// <remarks>
         /// Remarks :
         /// <list type="bullet">
-        /// <item>Every Grid and StackPanel used should have fixed value or HorizontalAlignement</item>
+        /// <item>Every Grid and StackPanel used should have fixed value or an HorizontalAlignement</item>
         /// <item>You can use the "children" and "ignore" tag on your elements to threat only their children or ingore them</item>
         /// </list>
         /// </remarks>
@@ -118,7 +123,7 @@ namespace Odyssey.Helpers
         private List<UIElement> GetChildrenForTitleBar(Grid titleBar)
         {
             List<UIElement> finalList = new();
-            var tempList = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
+            var tempList = titleBar.Children.ToList().Where(p => !_whiteList.Contains(p.GetType()) && p.Visibility != Visibility.Collapsed).ToList();
 
             foreach (FrameworkElement child in tempList)
             {
@@ -126,20 +131,20 @@ namespace Odyssey.Helpers
 
                 if (tag == "children")
                 {
-                    foreach(var grandChild in ((Panel)child).Children)
+                    foreach (var grandChild in ((Panel)child).Children)
                     {
                         finalList.Add(grandChild);
                     }
                 }
-                else if(tag != "ignore")
+                else if (tag != "ignore")
                 {
                     finalList.Add(child);
                 }
             }
 
-            return finalList.ToList().Where(p => !_whiteList.Contains(p.GetType())).ToList();
+            return finalList.ToList().Where(p => !_whiteList.Contains(p.GetType()) && p.Visibility != Visibility.Collapsed).ToList();
         }
-        
+
         private Windows.Graphics.RectInt32 GetFirstOrLastDragRegionForTitleBar(Grid titleBar, bool first = true)
         {
             var children = GetChildrenForTitleBar(titleBar);
@@ -192,7 +197,7 @@ namespace Odyssey.Helpers
 
 
 
-        
+
         public void SetDragRegionForTitleBars()
         {
             List<Windows.Graphics.RectInt32> dragRectsList = new();
@@ -209,17 +214,17 @@ namespace Odyssey.Helpers
                 {
                     // Set the first drag region (between the start of the titlebar and the first control)
                     dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar));
-    
+
                     for (int i = 0; i < children.Count - 1; i++)
                     {
                         // Get the two element which in between the drag region will be setted
                         UIElement element1 = children[i];
                         UIElement element2 = children[i + 1];
-    
+
                         // Get the position of the two element relative to the titlebar
                         var transform = element1.TransformToVisual(titleBar);
                         var transform2 = element2.TransformToVisual(titleBar);
-    
+
                         // Convert to point
                         Point element1Position = transform.TransformPoint(new Point(0, 0));
                         Point element2Position = transform2.TransformPoint(new Point(0, 0));
@@ -229,8 +234,7 @@ namespace Odyssey.Helpers
                                              (int)((element1Position.X - (element2Position.X + element2.ActualSize.X)) * scaleAdjustment));
 
                         // Idem but for too high values
-                        int x = Math.Max((int)((element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment),
-                                         (int)((element2.ActualSize.X + titleBarPosition.X) * scaleAdjustment));
+                        int x = (int)((element1Position.X + element1.ActualSize.X + titleBarPosition.X) * scaleAdjustment);
 
                         // Create the actual drag region based on the elements 1 and 2 and the titleBar position
                         Windows.Graphics.RectInt32 dragRect;
@@ -240,7 +244,7 @@ namespace Odyssey.Helpers
                         dragRect.Width = width;
                         dragRectsList.Add(dragRect);
                     }
-    
+
                     // Set the last titleBar (between the last control and the end of the titlebar)
                     dragRectsList.Add(GetFirstOrLastDragRegionForTitleBar(titleBar, false));
                 }
@@ -260,7 +264,8 @@ namespace Odyssey.Helpers
             try
             {
                 _window.AppWindow.TitleBar.SetDragRectangles(dragRects);
-            } catch { }
+            }
+            catch { }
         }
     }
 }

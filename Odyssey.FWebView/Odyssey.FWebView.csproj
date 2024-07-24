@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>  
     <UseRidGraph>true</UseRidGraph>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
@@ -8,37 +8,72 @@
     <UseWinUI>true</UseWinUI>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Binary\aria2.exe" />
     <None Remove="Controls\DownloadItem.xaml" />
+    <None Remove="Controls\ExtensionPopupFlyout.xaml" />
     <None Remove="Controls\Flyouts\DownloadsFlyout.xaml" />
     <None Remove="Controls\Flyouts\FindFlyout.xaml" />
     <None Remove="Controls\Flyouts\HistoryFlyout.xaml" />
+    <None Remove="Controls\Flyouts\PreviewFlyout.xaml" />
+    <None Remove="Controls\Flyouts\QuickSearchFlyout.xaml" />
     <None Remove="Controls\FWebViewContextMenu.xaml" />
     <None Remove="Dialogs\AppUriLaunchDialog.xaml" />
+    <None Remove="Dialogs\InstallExtensionDialog.xaml" />
     <None Remove="WebView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Binary\aria2.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
+      <PackageReference Include="Aria2.NET" Version="1.0.5" />
+      <PackageReference Include="Downloader" Version="3.0.6" />
+      <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.1" />
+      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240205001-preview1" />
       <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-      <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+      <PackageReference Include="SharpZipLib" Version="1.4.2" />
+      <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="2.1.7" />
+      <PackageReference Include="System.Drawing.Common" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230518007-experimental1" />
-      <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
-      <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Downloads\WebView2Ex-master\WebView2Ex.WinUI\WebView2Ex.WinUI.csproj" />
-    <ProjectReference Include="..\..\liMusic\AriaSharp\AriaSharp.csproj" />
+   
     <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
+    <ProjectReference Include="..\Odyssey.Integrations\Odyssey.Integrations.csproj" />
+    <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
     <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Assets\square.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Dialogs\InstallExtensionDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\QuickSearchFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\PreviewFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
@@ -81,5 +116,13 @@
     <Page Update="Controls\Flyout\DownloadsFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <CustomAdditionalCompileInputs Remove="Controls\ExtensionPopupFlyout.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Remove="Controls\ExtensionPopupFlyout.xaml" />
   </ItemGroup>
 </Project>

@@ -19,6 +19,17 @@
     <MultilingualFallbackLanguage>en-US</MultilingualFallbackLanguage>
     <TranslationReport Condition="'$(Configuration)' == 'Release'">true</TranslationReport>
     <SuppressPseudoWarning Condition="'$(Configuration)' == 'Debug'">true</SuppressPseudoWarning>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <PackageCertificateKeyFile>Odyssey.App_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Auto</AppxBundle>
+    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <AppxPackageDir>C:\Users\eliga\Documents\Odyssey\OdysseyNext-preview\OdysseyNext-preview\Odyssey\bin\x64\0.8.0\</AppxPackageDir>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\Resources\en-US.resx" />
@@ -26,11 +37,25 @@
     <Content Remove="Assets\Resources\nl-NL.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\arc.png" />
+    <None Remove="Assets\CascadiaCode.ttf" />
+    <None Remove="Assets\chrome.png" />
+    <None Remove="Assets\edge.png" />
     <None Remove="Assets\icon.png" />
+    <None Remove="Assets\MigrateDark.png" />
+    <None Remove="Assets\MigrateLight.png" />
+    <None Remove="Assets\opera.png" />
+    <None Remove="Controls\CaptionButtons.xaml" />
     <None Remove="Controls\ContextMenus\TabsContextMenu.xaml" />
+    <None Remove="Controls\Flyouts\ColorPickerFlyout.xaml" />
+    <None Remove="Controls\Flyouts\IconSelectorFlyout.xaml" />
     <None Remove="Controls\MainMenuFlyout.xaml" />
     <None Remove="Controls\SearchBar.xaml" />
+    <None Remove="Controls\StatusBar.xaml" />
     <None Remove="Controls\Tips\InformationTip.xaml" />
+    <None Remove="Dialogs\CustomizeTitleBarItemsDialog.xaml" />
+    <None Remove="Dialogs\MigrateDataContentDialog.xaml" />
+    <None Remove="Dialogs\QuickActionsContentDialog.xaml" />
     <None Remove="Dialogs\QuickConfigurationDialog.xaml" />
     <None Remove="Dialogs\SettingsDialog.xaml" />
     <None Remove="MultilingualResources\Odyssey.App.nl.xlf" />
@@ -43,8 +68,11 @@
     <None Remove="Views\Options\FeaturesPage.xaml" />
     <None Remove="Views\Options\GeneralPage.xaml" />
     <None Remove="Views\Options\MiscPage.xaml" />
+    <None Remove="Views\Pages\FourGetSearchPage.xaml" />
     <None Remove="Views\Pages\HomePage.xaml" />
     <None Remove="Views\PaneView.xaml" />
+    <None Remove="Views\QuickActionsDialog\CreateQuickActionView.xaml" />
+    <None Remove="Views\QuickActionsDialog\ManageQuickActionsView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -57,12 +85,12 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Common" Version="8.2.2" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
-    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.230907" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.230907" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.230907" />
-    <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.230907" />
-    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.230907" />
-    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.0.230907" />
+    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Behaviors" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
@@ -71,16 +99,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.231202003-experimental1" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.25936-preview" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240205001-preview1" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+    <PackageReference Include="WinUIEdit" Version="0.0.2-prerelease" />
     <PackageReference Include="WinUIEx" Version="2.3.3" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.231008000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
   <!-- 
@@ -92,12 +114,15 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\liMusic\AriaSharp\AriaSharp.csproj" />
-    <ProjectReference Include="..\Monaco\Monaco.csproj" />
+
+    
+  
+
     <ProjectReference Include="..\Odyssey.2FA\Odyssey.TwoFactorsAuthentification.csproj" />
     <ProjectReference Include="..\Odyssey.AdBlocker\Odyssey.AdBlocker.csproj" />
     <ProjectReference Include="..\Odyssey.Data\Odyssey.Data.csproj" />
     <ProjectReference Include="..\Odyssey.FWebView\Odyssey.FWebView.csproj" />
+    <ProjectReference Include="..\Odyssey.LibreYAPI\Odyssey.LibreYAPI.csproj" />
     <ProjectReference Include="..\Odyssey.QuickActions\Odyssey.QuickActions.csproj" />
     <ProjectReference Include="..\Odyssey.Shared\Odyssey.Shared.csproj" />
     <ProjectReference Include="..\Odyssey.WebSearch\Odyssey.WebSearch.csproj" />
@@ -128,7 +153,28 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\arc.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\CascadiaCode.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\chrome.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\edge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\MigrateDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\MigrateLight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\opera.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png">
@@ -152,6 +198,46 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>nl-NL.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\CaptionButtons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\ColorPickerFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\StatusBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\Pages\FourGetSearchPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Dialogs\CustomizeTitleBarItemsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Dialogs\MigrateDataContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\QuickActionsDialog\ManageQuickActionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Dialogs\QuickActionsContentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Options\FeaturesPage.xaml">
@@ -246,6 +332,8 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
+
+	
 	
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.PriResources.targets" Label="MultilingualAppToolkit" Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\v$(MultilingualAppToolkitVersion)\Microsoft.Multilingual.PriResources.targets')" />
   <Target Name="MATPrerequisite" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.PriResources.targets')" Label="MultilingualAppToolkit">
@@ -258,6 +346,16 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\AdditionalDevTools\JavascriptConsolePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Views\QuickActionsDialog\CreateQuickActionView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Flyouts\IconSelectorFlyout.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

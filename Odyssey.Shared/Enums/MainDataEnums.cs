@@ -23,9 +23,11 @@
 
     public enum QuickActionShowPosition
     {
+        PrimaryItems,
         Top,
-        InShowMoreOptions,
-        BeforeInspectItem
+        BeforeInspectItem,
+        TitleBarButton,
+        Nowhere,
     }
 
     public enum QuickActionShowCondition

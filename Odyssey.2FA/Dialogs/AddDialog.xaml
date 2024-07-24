@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Do not copy or use this file as it is without heavy modifications -->
 <ContentDialog
     x:Class="Odyssey.TwoFactorsAuthentification.Dialogs.AddDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -22,7 +23,7 @@
 
     <Grid Width="370">
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition />
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -34,7 +35,6 @@
                 <TextBox PlaceholderText="Secret" x:Name="secretBox"/>
                 <TextBox PlaceholderText="Name" x:Name="nameBox" Margin="0,10,0,0"/>
                 <TextBlock IsTextSelectionEnabled="True" x:Name="codeBlock"/>
-
             </StackPanel>
         </Grid>
 

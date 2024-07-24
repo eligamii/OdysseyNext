@@ -39,7 +39,7 @@ namespace Odyssey.QuickActions.Objects
 
                         case '*':
                             var expression = new NCalc.Expression(valueWithoutSpecial.Replace("\"", ""));
-                            if (expression.HasErrors()) Value = "Syntax error";
+                            if (expression.HasErrors()) Value = "0";
                             else Value = expression.Evaluate().ToString();
                             break;
                     }

@@ -87,28 +87,100 @@ namespace Odyssey.Helpers
                 case "selectAll":
                     glyph = "\uE14E";
                     break;
+            }
 
-                case "other":
-                    if (current.Label.Contains("Voice"))
+            if (glyph != string.Empty)
+            {
+                fontIcon.Glyph = glyph;
+
+                if (newItem != null)
+                {
+                    if (newItem.GetType() == typeof(AppBarButton) || newItem.GetType() == typeof(AppBarToggleButton))
                     {
-                        glyph = "\uE1D6";
+                        ((AppBarButton)newItem).Icon = fontIcon;
                     }
-                    else
+                    else if (newItem.GetType() != typeof(AppBarSeparator))
                     {
-                        glyph = "";
+                        ((MenuFlyoutItem)newItem).Icon = fontIcon;
                     }
+                }
+            }
+            else
+            {
+                SetIconById(newItem, current);
+            }
+        }
+
+        // For the icons without name (wip and not tested on other devices, ids may change in the future)
+        private static void SetIconById(object newItem, CoreWebView2ContextMenuItem current)
+        {
+            FontIcon fontIcon = new FontIcon() { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons") };
+            string glyph = "";
+
+            switch (current.CommandId)
+            {
+                case 50211: // Voice
+                    glyph = "\uE720";
                     break;
+
+                case 41005: // Spell check
+                    glyph = "\uF87B";
+                    break;
+
+                case 41120: // Writing direction
+                    glyph = "\uE8AB";
+                    break;
+
+                case 41000 or 41001 or 41002: // Spell check suggestions
+                    glyph = "\uE73E";
+                    break;
+
+                case 50123: // Copy video screen
+                    glyph = "\uEE71";
+                    break;
+
+                case 50124: // Open video in new tab
+                    glyph = "\uE8A7";
+                    break;
+
+                case 50125: // PiP
+                    glyph = "\uE8A7";
+                    break;
+
+                case 50131: // Media controls
+                    glyph = "\uE90F";
+                    break;
+
+                case 50130: // Repeat
+                    glyph = "\uE8EE";
+                    break;
+
+                case 50148: // Copy highlighted
+                    glyph = "\uE16F";
+                    break;
+
+                case 50116: // Load image (when images fail to load)
+                    glyph = "\uE72C";
+                    break;
+
             }
 
             fontIcon.Glyph = glyph;
 
-            if (newItem.GetType() == typeof(MenuFlyoutSubItem))
+            if (newItem != null)
             {
-                ((MenuFlyoutSubItem)newItem).Icon = fontIcon;
-            }
-            else
-            {
-                ((MenuFlyoutItem)newItem).Icon = fontIcon;
+                if (newItem.GetType() == typeof(AppBarButton))
+                {
+                    ((AppBarButton)newItem).Icon = fontIcon;
+                }
+                else if (newItem.GetType() == typeof(AppBarToggleButton))
+                {
+                    ((AppBarToggleButton)newItem).Icon = fontIcon;
+                }
+                else if (newItem.GetType() != typeof(AppBarSeparator))
+                {
+                    ((MenuFlyoutItem)newItem).Icon = fontIcon;
+                }
             }
         }
     }

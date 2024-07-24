@@ -1,18 +1,13 @@
 ﻿using Newtonsoft.Json;
 using Odyssey.Shared.ViewModels.Data;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odyssey.Data.Main
 {
     public class Downloads
     {
-        public static ObservableCollection<DonwloadItem> Items { get; set; }
+        public static ObservableCollection<DownloadItem> Items { get; set; }
 
         internal static void Save()
         {
@@ -35,11 +30,11 @@ namespace Odyssey.Data.Main
             {
                 string jsonString = File.ReadAllText(Data.DownloadsFilePath);
 
-                Items = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<DonwloadItem>>(jsonString);
+                Items = System.Text.Json.JsonSerializer.Deserialize<ObservableCollection<DownloadItem>>(jsonString);
             }
             else
             {
-                Items = new ObservableCollection<DonwloadItem>();
+                Items = new ObservableCollection<DownloadItem>();
             }
 
             Items.CollectionChanged += (s, a) => Save();

@@ -1,55 +1,111 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Odyssey.QuickActions.Helpers
 {
-    public class TestHelper
+    public static partial class TestHelper
     {
-        public static string Test(string test)
+        [GeneratedRegex(@"[^<>\!\=\|\&]*")]
+        private static partial Regex MembersSeparatorRegex();
+
+        [GeneratedRegex(@"[<>\!\=\|\&]{0,1}[\=\|\&]{0,1}")]
+        private static partial Regex OperatorRegex();
+
+        public static string ResolveTest(string test)
         {
-            string[] members = test.Split('=');
+            // Prevent the array from having multiple blank values
+            var members = MembersSeparatorRegex().Matches(test).Where(p => p.Length > 0).ToArray();
+            string operators = OperatorRegex().Matches(test).Where(p => p.Length > 0).ToArray()[0].Value;
 
-            string rawLeft = members[0]; // ex: hello world!, hello world=, 25< or 25>
+            bool negate = false;
 
-            string left = rawLeft.Remove(rawLeft.Length - 1, 1); // ex: hello world or 25
-            string right = members[1]; // ex: good luck or 59
+            bool operatorTest = false;
 
-            // Finding what test to do
-            bool? negate = null;
-            bool? greater = null;
-
-            switch(rawLeft.Last())
+            switch (operators[0])
             {
-                case '!': negate = true; break;
-                case '=': negate = false; break;
-                case '<': greater = false; break;
-                case '>': greater = true; break;
+                case '<':
+                    operatorTest = IsGreater(members[0].Value, members[1].Value, false);
+                    break;
+
+                case '>':
+                    operatorTest = IsGreater(members[0].Value, members[1].Value, false);
+                    break;
+
+                case '!':
+                    negate = true;
+                    break;
+
+                case '|':
+                    operatorTest = members[0].Value == "true" || members[1].Value == "true";
+                    break;
+
+                case '&':
+                    operatorTest = members[0].Value == "true" && members[1].Value == "true";
+                    break;
+
+                case '=': break;
+
+                default:
+                    return "null";
             }
 
-            // ex: when the test is hello world &= good luck (when the test is invalid)
-            if (negate == null && greater == null) return "null";
-
-            // ******** mathematical test *********
-            if (greater != null)
+            if (operators.Length == 2)
             {
-                bool isRightInt = int.TryParse(right, out int rightInt);
-                bool isLeftInt = int.TryParse(left, out int leftInt);
-
-                // ex: the test is linux >= windows
-                if (!isRightInt || !isLeftInt) return "null";
-
-                // doo the actual test
-                if (greater == true) return (leftInt > rightInt).ToString().ToLower();
-                else return (leftInt < rightInt).ToString().ToLower();
+                if (operators[1] == '=')
+                {
+                    if (negate)
+                    {
+                        return (!(operatorTest || members[0].Value == members[1].Value)).ToString().ToLower();
+                    }
+                    else
+                    {
+                        return (operatorTest || members[0].Value == members[1].Value).ToString().ToLower();
+                    }
+                }
+                else if ((operators[1] == '|' && operators[0] == '|') || (operators[1] == '&' && operators[0] == '&')
+                      && (members[0].Value == "true" || members[0].Value == "false") // the members should be only be true or false
+                      && (members[1].Value == "true" || members[1].Value == "false"))
+                {
+                    return operatorTest.ToString().ToLower();
+                }
+                else
+                {
+                    return "null";
+                }
             }
-            else // ******** equals test *********
+            else
             {
-                return (negate == false && left == right).ToString().ToLower();
+                return operatorTest.ToString().ToLower();
+            }
+
+        }
+
+        private static bool IsGreater(string member1, string member2, bool greater)
+        {
+            float intMember1, intMember2 = 0;
+            bool membersAreNumbers = float.TryParse(member1, out intMember1) && float.TryParse(member2, out intMember2);
+            bool membersAreCoordinates = Regex.IsMatch(member1, "[0-9]*;[0-9]*") && Regex.IsMatch(member2, "[0-9]*;[0-9]*");
+            int lengthMember1 = member1.Length; int lengthMember2 = member2.Length;
+
+            if (membersAreNumbers)
+            {
+                if (greater)
+                    return intMember1 > intMember2;
+                else
+                    return intMember1 < intMember2;
+            }
+            else if (membersAreCoordinates)
+            {
+                if (greater) { return int.Parse(member1.Split(";")[1]) > int.Parse(member2.Split(";")[1]); }
+                else { return int.Parse(member1.Split(";")[1]) < int.Parse(member2.Split(";")[1]); }
+            }
+            else
+            {
+                if (greater) { return lengthMember1 > lengthMember2; }
+                else { return lengthMember1 < lengthMember2; }
             }
         }
+
+
     }
 }

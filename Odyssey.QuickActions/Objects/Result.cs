@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Odyssey.QuickActions.Objects
+﻿namespace Odyssey.QuickActions.Objects
 {
     public class Res
     {

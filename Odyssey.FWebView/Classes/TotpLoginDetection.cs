@@ -1,5 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Odyssey.FWebView.Classes
@@ -47,35 +48,40 @@ namespace Odyssey.FWebView.Classes
 
         public async void ContainTotp(CoreWebView2 webView)
         {
-            // Page that ask for OTP login are usually page with an input with the type 'tel' and autocomplete off
-            // They can also have a input with 'otc' or 'totp' as input id/name
-
-            // Prevent timing issues
-            await Task.Delay(750);
-
-            // Getting the input element
-            await webView.ExecuteScriptAsync("testInput = document.querySelector('input[type=\"tel\"]')");
-
-            // Test if the testInput JS variable = null
-            string hasTelInput = await webView.ExecuteScriptAsync("testInput != null");
-
-            if (bool.Parse(hasTelInput))
+            try
             {
-                // Test if the autocomplete is turned off
-                string autocompleteOff = await webView.ExecuteScriptAsync("testInput.autocomplete == \"off\"");
+                // Page that ask for OTP login are usually page with an input with the type 'tel' and autocomplete off
+                // They can also have a input with 'otc' or 'totp' as input id/name
 
-                if (bool.Parse(autocompleteOff))
+                // Prevent timing issues
+                await Task.Delay(750);
+
+                // Getting the input element
+                await webView.ExecuteScriptAsync("testInput = document.querySelector('input[type=\"tel\"]')");
+
+                // Test if the testInput JS variable = null
+                string hasTelInput = await webView.ExecuteScriptAsync("testInput != null");
+
+                if (bool.Parse(hasTelInput))
                 {
-                    this.webView.IsTotpDetected = true;
-                    TotpLoginDetected(webView, new TotpLoginDetectedEventArgs(webView.Source, true));
+                    // Test if the autocomplete is turned off
+                    string autocompleteOff = await webView.ExecuteScriptAsync("testInput.autocomplete == \"off\"");
 
-                    return;
+                    if (bool.Parse(autocompleteOff))
+                    {
+                        this.webView.IsTotpDetected = true;
+                        TotpLoginDetected(webView, new TotpLoginDetectedEventArgs(webView.Source, true));
+
+                        return;
+                    }
                 }
+
+                this.webView.IsTotpDetected = false;
+                TotpLoginDetected(webView, new TotpLoginDetectedEventArgs(webView.Source, false));
+
             }
-
-            this.webView.IsTotpDetected = false;
-            TotpLoginDetected(webView, new TotpLoginDetectedEventArgs(webView.Source, false));
-
+            catch (COMException) { }
+            catch (FormatException) { }
         }
     }
 }

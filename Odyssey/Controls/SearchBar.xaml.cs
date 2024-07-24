@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Odyssey.Data.Main;
 using Odyssey.Data.Settings;
 using Odyssey.FWebView;
@@ -18,12 +19,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using static Odyssey.WebSearch.Helpers.WebSearchStringKindHelpers;
 using Uri = System.Uri;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Controls
 {
@@ -31,12 +33,15 @@ namespace Odyssey.Controls
     {
         private string mainIcon = string.Empty;
         private bool newTab;
+        private bool startNewTab;
         private string command;
+
+        private static FontFamily cascadiaCode;
 
         public SearchBar(bool newTab = false)
         {
             this.InitializeComponent();
-            this.newTab = newTab || MainView.CurrentlySelectedWebView == null;
+            this.newTab = startNewTab = newTab || MainView.CurrentlySelectedWebView == null;
 
             mainIcon = this.newTab ? "\uEC6C" : "\uE11A";
             searchBarIcon.Glyph = mainIcon;
@@ -44,7 +49,7 @@ namespace Odyssey.Controls
             Opened += SearchBar_Opened;
         }
 
-        // For the <ask> static variable
+        // For the <ask> QACommand variable
         public async Task<string> GetText()
         {
             FlyoutShowOptions options = new FlyoutShowOptions();
@@ -139,14 +144,34 @@ namespace Odyssey.Controls
 
         bool suggestionChosen = false;
 
+
+        bool isImFeelingLuckyEnabled = false;
         private async void mainSearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (e.Key == Windows.System.VirtualKey.Shift)
+                newTab = true;
+
+            if (e.Key == Windows.System.VirtualKey.Control)
+                isImFeelingLuckyEnabled = true;
+
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 if (suggestionListView.SelectedItem == null)
                 {
-                    string text = (sender as TextBox).Text;
-                    string url = await WebViewNavigateUrlHelper.ToUrl(text);
+                    string text, url;
+
+                    if (isImFeelingLuckyEnabled)
+                    {
+                        var res = await LibreYAPI.LibreYAPI.SearchAsync(mainSearchBox.Text, 0);
+                        text = url = res.Where(p => p.Value.url != null).Select(p => p.Value).ElementAt(0).url;
+                    }
+                    else
+                    {
+                        text = (sender as TextBox).Text;
+                        url = await WebViewNavigateUrlHelper.ToWebView2Url(text);
+                    }
+
+
                     bool ask = false;
 
                     if (url != string.Empty) // The request will be treated differently with commands and app uris
@@ -183,8 +208,9 @@ namespace Odyssey.Controls
                     {
                         StringKind kind = await GetStringKindAsync(text);
                         if (kind == StringKind.ExternalAppUri) AppUriLaunch.Launch(new Uri(text));
-                        else if (kind == StringKind.OdysseyUrl)
+                        else if (kind == StringKind.InternalUrl)
                         {
+                            // Redirect edge://downloads and edge://history to the Odyssey flyouts
                             if (Regex.IsMatch(text, ".*/downloads/{0,1}.*", RegexOptions.IgnoreCase))
                             {
                                 WebView.OpenDownloadDialog();
@@ -303,8 +329,20 @@ namespace Odyssey.Controls
                     try
                     {
                         var list = new List<Suggestion>();
-                        Suggestion defaultSuggestion = new() { Kind = SuggestionKind.Search, Title = mainSearchBox.Text, Url = await WebViewNavigateUrlHelper.ToUrl(mainSearchBox.Text) };
+                        Suggestion defaultSuggestion = new() { Kind = SuggestionKind.Search, Title = mainSearchBox.Text, Url = await WebViewNavigateUrlHelper.ToWebView2Url(mainSearchBox.Text) };
                         list.Add(defaultSuggestion);
+
+                        var package = Clipboard.GetContent();
+                        if (package.Contains(StandardDataFormats.Text))
+                        {
+                            var clipboardText = await package.GetTextAsync();
+                            if (GetStringKind(clipboardText) == StringKind.Url)
+                            {
+                                Suggestion suggestion = new() { Kind = SuggestionKind.Url, Title = clipboardText, Url = await WebViewNavigateUrlHelper.ToWebView2Url(clipboardText) };
+                                list.Add(suggestion);
+                            }
+                        }
+
 
                         list = list.Concat(await Suggestions.Suggest(mainSearchBox.Text, 8)).ToList();
 
@@ -316,7 +354,7 @@ namespace Odyssey.Controls
 
                         suggestionListView.ItemsSource = list;
 
-                        suggestionListView.Visibility = list.Where(p => p != defaultSuggestion).ToList().Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+                        suggestionListView.Visibility = list.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                     }
                     catch { }
                 }
@@ -337,10 +375,10 @@ namespace Odyssey.Controls
             suggestionChosen = false;
         }
 
-
         private async void UpdateIcon(string text)
         {
             StringKind kind = await GetStringKindAsync(text);
+            bool enableCode = false;
 
             switch (kind)
             {
@@ -352,11 +390,47 @@ namespace Odyssey.Controls
 
                 case StringKind.ExternalAppUri: searchBarIcon.Glyph = "\uECAA"; break;
 
-                case StringKind.QuickActionCommand: searchBarIcon.Glyph = "\uE756"; break;
+                case StringKind.QuickActionCommand: searchBarIcon.Glyph = "\uE756"; enableCode = true; break;
 
-                case StringKind.OdysseyUrl: searchBarIcon.Glyph = "\uE115"; break;
+                case StringKind.InternalUrl: searchBarIcon.Glyph = "\uE115"; break;
             }
 
+            EnableCodeMode(enableCode);
+
+        }
+
+        private void EnableCodeMode(bool enable)
+        {
+            if (enable)
+            {
+                mainSearchBox.FontFamily = new("Consolas");
+
+                mainSearchBox.TextChanging += MainSearchBoxInCodeMode_TextChanging;
+                mainSearchBox.TextChanged += MainSearchBoxInCodeMode_TextChanged;
+            }
+            else
+            {
+                mainSearchBox.FontFamily = new("Segoe UI Variable");
+
+                mainSearchBox.TextChanging -= MainSearchBoxInCodeMode_TextChanging;
+                mainSearchBox.TextChanged -= MainSearchBoxInCodeMode_TextChanged;
+            }
+        }
+
+        string oldText = string.Empty;
+        private void MainSearchBoxInCodeMode_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            oldText = mainSearchBox.Text;
+        }
+
+        private void MainSearchBoxInCodeMode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string newText = mainSearchBox.Text;
+
+            if (newText.Length - oldText.Length == 1) // One character added at the end 
+            {
+
+            }
         }
 
         private void suggestionListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -399,7 +473,18 @@ namespace Odyssey.Controls
         {
             args.TryCancel();
         }
+
+        private void mainSearchBox_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Shift)
+            {
+                newTab = startNewTab;
+            }
+
+            if (e.Key == Windows.System.VirtualKey.Control)
+            {
+                isImFeelingLuckyEnabled = false;
+            }
+        }
     }
 }
-
-

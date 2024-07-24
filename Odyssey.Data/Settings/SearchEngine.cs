@@ -1,5 +1,6 @@
 ﻿namespace Odyssey.Data.Settings
 {
+
     public class SearchEngine
     {
         public string Name { get; private set; }
@@ -7,31 +8,30 @@
         public string Prefix { get; private set; }
         public string SearchUrl { get { return Url + Prefix; } }
 
+
         public static SearchEngine ToSearchEngineObject(SearchEngines? searchEngineEnum)
         {
             switch (searchEngineEnum)
             {
-                case SearchEngines.DuckDuckGo: return SearchEngine.DuckDuckGo;
-                case SearchEngines.Startpage: return SearchEngine.Startpage;
-                case SearchEngines.YouDotCom: return SearchEngine.YouDotCom;
-                case SearchEngines.Google: return SearchEngine.Google;
-                case SearchEngines.Qwant: return SearchEngine.Qwant;
-                case SearchEngines.Yahoo: return SearchEngine.Yahoo;
-                case SearchEngines.Bing: return SearchEngine.Bing;
+                case SearchEngines.DuckDuckGo: return DuckDuckGo;
+                case SearchEngines.Startpage: return Startpage;
+                case SearchEngines.YouDotCom: return YouDotCom;
+                case SearchEngines.Google: return Google;
+                case SearchEngines.Qwant: return Qwant;
+                case SearchEngines.Yahoo: return Yahoo;
+                case SearchEngines.Bing: return Bing;
+                case SearchEngines.PerplexityAI: return PerplexityAI;
+                case SearchEngines.Kagi: return Kagi;
                 default: return null;
             }
         }
 
-        public static SearchEngines ToSearchEngineEnum(SearchEngine obj)
+
+        public static SearchEngine SelectedSearchEngine
         {
-            if (obj == SearchEngine.Google) return SearchEngines.Google;
-            else if (obj == SearchEngine.Startpage) return SearchEngines.Startpage;
-            else if (obj == SearchEngine.YouDotCom) return SearchEngines.YouDotCom;
-            else if (obj == SearchEngine.DuckDuckGo) return SearchEngines.DuckDuckGo;
-            else if (obj == SearchEngine.Qwant) return SearchEngines.Qwant;
-            else if (obj == SearchEngine.Yahoo) return SearchEngines.Yahoo;
-            else return SearchEngines.Bing;
+            get => ToSearchEngineObject((SearchEngines)Settings.SelectedSearchEngine);
         }
+
 
         public static SearchEngine Google
         {
@@ -121,6 +121,32 @@
                     Name = "Startpage",
                     Url = "https://www.startpage.com/",
                     Prefix = "do/search?query="
+                };
+            }
+        }
+
+        public static SearchEngine PerplexityAI
+        {
+            get
+            {
+                return new SearchEngine()
+                {
+                    Name = "Perplexity AI",
+                    Url = "https://www.perplexity.ai/",
+                    Prefix = "search?focus=internet&q="
+                };
+            }
+        }
+
+        public static SearchEngine Kagi
+        {
+            get
+            {
+                return new SearchEngine()
+                {
+                    Name = "Kagi",
+                    Url = "https://kagi.com/",
+                    Prefix = "search?q="
                 };
             }
         }

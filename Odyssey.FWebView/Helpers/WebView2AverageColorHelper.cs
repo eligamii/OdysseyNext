@@ -1,16 +1,10 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json.Linq;
-using Odyssey.Shared.Helpers;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using Windows.UI;
 
 namespace Odyssey.FWebView.Helpers
 {
@@ -33,7 +27,7 @@ namespace Odyssey.FWebView.Helpers
             return bmpReturn;
         }
 
-        private static async Task<Bitmap> GetBitmap(WebView2 webView, int width, int height)
+        private static async Task<Bitmap> GetBitmapAsync(WebView2 webView, int width, int height)
         {
             dynamic clip = new JObject();
             clip.x = 0;
@@ -52,19 +46,30 @@ namespace Odyssey.FWebView.Helpers
 
 
             string p = settings.ToString(Newtonsoft.Json.Formatting.None);
-            string data = await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.captureScreenshot", p);
-            var deserializedData = JsonSerializer.Deserialize<DeserializerClass>(data);
+            if (webView.CoreWebView2 != null)
+            {
+                string data = await webView.CoreWebView2.CallDevToolsProtocolMethodAsync("Page.captureScreenshot", p);
+                var deserializedData = JsonSerializer.Deserialize<DeserializerClass>(data);
 
-            var bmp = Base64StringToBitmap(deserializedData.data);
-            return bmp;
+                var bmp = Base64StringToBitmap(deserializedData.data);
+                return bmp;
+            }
+            else
+            {
+                return null;
+            }
         }
 
 
-        public static async Task<Windows.UI.Color> GetFirstPixelColor(WebView2 webView)
+        public static async Task<Windows.UI.Color> GetFirstPixelColorAsync(WebView2 webView)
         {
-            var bmp = await GetBitmap(webView, 1, 1);
-            System.Drawing.Color clr = bmp.GetPixel(0, 0);
-            return Windows.UI.Color.FromArgb(255, clr.R, clr.R, clr.B);
+            var bmp = await GetBitmapAsync(webView, 1, 1);
+            if (bmp is not null)
+            {
+                Color clr = bmp.GetPixel(0, 0);
+                return Windows.UI.Color.FromArgb(255, clr.R, clr.R, clr.B);
+            }
+            else return Windows.UI.Color.FromArgb(255, 0, 0, 0);
         }
 
         /// <summary>
@@ -74,10 +79,10 @@ namespace Odyssey.FWebView.Helpers
         /// <param name="width">The width (>= 1) of the part to calculate</param>
         /// <param name="height">The height (>=1) of the part to calculate</param>
         /// <param name="step">(>=1) Greater value = less precision / better performance</param>
-        public static async Task<Windows.UI.Color> GetAverageColorFrom(WebView2 webView, int width, int height, int step = 1)
+        public static async Task<Windows.UI.Color> GetAverageColorFromWebView2Async(WebView2 webView, int width, int height, int step = 1)
         {
             // Capture an image
-            var bmp = await GetBitmap(webView, width, height);
+            var bmp = await GetBitmapAsync(webView, width, height);
 
             int r = 0;
             int g = 0;
@@ -89,7 +94,7 @@ namespace Odyssey.FWebView.Helpers
             {
                 for (int y = 0; y < height; y++)
                 {
-                    System.Drawing.Color clr = bmp.GetPixel(x, y);
+                    Color clr = bmp.GetPixel(x, y);
                     r += clr.R;
                     g += clr.G;
                     b += clr.B;
@@ -106,8 +111,8 @@ namespace Odyssey.FWebView.Helpers
 
         }
 
-        
-        
+
+
     }
 
 }

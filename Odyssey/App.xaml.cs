@@ -1,15 +1,10 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Odyssey.Data.Settings;
-using Odyssey.Helpers;
-using Odyssey.OtherWindows;
 using Odyssey.QuickActions.Data;
 using System;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey
 {
@@ -63,8 +58,9 @@ namespace Odyssey
 
             // Load data          
             //Downloads.Aria2.Init();
-            AdBlocker.AdBlocker.Init();
+            //AdBlocker.AdBlocker.Init();
             UserVariables.Load();
+            FWebView.Helpers.WebView2SavedFavicons.Init();
 
 
             m_window = new MainWindow();

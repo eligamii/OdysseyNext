@@ -1,39 +1,50 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.Web.WebView2.Core;
+using Odyssey.FWebView.Controls.Flyouts;
 using Odyssey.Helpers;
+using Odyssey.Integrations.KDEConnect;
+using Odyssey.QuickActions;
+using Odyssey.Shared.Helpers;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Windows.Foundation;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.FWebView.Controls
 {
-    public sealed partial class FWebViewContextMenu : MenuFlyout
+    public sealed partial class FWebViewContextMenu : CommandBarFlyout
     {
-        List<string> MoreList = new List<string>()
+        private readonly List<string> primaryList = new List<string>()
         {
-            "webSelect",
-            "webCapture",
-            "other"
-
+            "back",
+            "forward",
+            "reload",
+            "copy",
+            "paste",
+            "redo",
+            "undo",
+            "cut"
         };
 
-
-        MenuFlyoutSubItem moreFlyout = new MenuFlyoutSubItem();
-
-
-
+        string linkUri;
+        string selectionText = null;
+        private Point pos;
         public FWebViewContextMenu()
         {
             this.InitializeComponent();
         }
 
-
-
+        private WebView2 webView;
         public void Show(WebView2 webView, CoreWebView2ContextMenuRequestedEventArgs args)
         {
+
+            this.webView = webView;
             CoreWebView2 core = webView.CoreWebView2;
 
             IList<CoreWebView2ContextMenuItem> menuList = args.MenuItems;
@@ -41,177 +52,278 @@ namespace Odyssey.FWebView.Controls
             args.Handled = true;
 
             this.Closed += (s, ex) => deferral.Complete();
-            PopulateContextMenu(args, menuList, this);
-            //GetQuickActionItems(webView, args);
+            PopulateContextMenu(args);
+            PopulateWithQuickActions(args);
+            PopulateWithOdysseyFeatures(args);
 
-            // Fix the two separators at the same place issue, temporary
-            int sepCount = 0;
-            foreach(var item in this.Items)
+            var options = new FlyoutShowOptions() { Position = args.Location, Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft };
+            this.AlwaysExpanded = true;
+
+            // Clean the CommandBarFlyout from unwanted separators
+            foreach (var item in SecondaryCommands)
             {
-                if (item.GetType() == typeof(MenuFlyoutSeparator)) sepCount++;
-                else sepCount = 0;
-
-                if (sepCount == 2) this.Items.Remove(item);
-
+                if (item.GetType() == typeof(AppBarSeparator))
+                {
+                    if (SecondaryCommands.IndexOf(item) == 0 ||
+                       SecondaryCommands.IndexOf(item) == SecondaryCommands.Count - 1)
+                    {
+                        ((AppBarSeparator)item).Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                    }
+                    else if (SecondaryCommands.ElementAt(SecondaryCommands.IndexOf(item) - 1).GetType() == typeof(AppBarSeparator))
+                    {
+                        ((AppBarSeparator)item).Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                    }
+                }
+                else if (item.GetType() == typeof(AppBarButton))
+                {
+                    if (SecondaryCommands.Where(p => p.GetType() == typeof(AppBarButton)).Where(p => ((AppBarButton)p).Label == ((AppBarButton)item).Label).Count() >= 2)
+                    {
+                        ((AppBarButton)item).Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                    }
+                }
             }
 
-            var options = new FlyoutShowOptions() { Position = args.Location };
 
             this.ShowAt(webView, options);
+
         }
 
-        /*
-        private void GetQuickActionItems(WebView2 webView, CoreWebView2ContextMenuRequestedEventArgs args)
 
+
+        private async void PopulateWithOdysseyFeatures(CoreWebView2ContextMenuRequestedEventArgs args)
         {
-            SymbolIconEx symbolIconEx = new SymbolIconEx();
-            symbolIconEx.Symbol = SymbolEx.MusicSharing;
+            pos = args.Location;
 
-            bool haveItemsInTop = false;
-            bool haveItemsInBottom = false;
-            bool haveItemsInShowMoreOptions = false;
-
-            foreach (var item in QuickActionItems.Items)
+            if (args.ContextMenuTarget.HasLinkUri) // Send to device (KDEConnect)
             {
-                var menuItem = item.ReturnCorrespondingMenuFlyoutItem((FWebView)webView, args);
+                MenuFlyout menuFlyout = new();
 
-                if (menuItem != null)
+                foreach (Device device in await KDEConnect.GetDevicesAsync())
                 {
-                    var showOptions = menuItem.QuickAction.ShowOptions;
-                    switch (showOptions.Position)
+                    MenuFlyoutItem deviceButton = new();
+                    deviceButton.Click += (s, a) => { KDEConnect.Share(args.ContextMenuTarget.LinkUri, device); this.Hide(); };
+                    deviceButton.Text = device.Name;
+                    deviceButton.Icon = new SymbolIconEx(SymbolEx.MobileTablet);
+
+                    menuFlyout.Items.Insert(0, deviceButton);
+                }
+
+                if (menuFlyout.Items.Count > 0)
+                {
+                    sendToAppBarButton.Flyout = menuFlyout;
+                }
+                else
+                {
+                    sendToAppBarButton.IsEnabled = false;
+                }
+
+                linkUri = args.ContextMenuTarget.LinkUri;
+
+            }
+            else
+            {
+                // Disable the preview and send to context menus
+                sendToAppBarButton.Visibility = previewAppBarButton.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+            }
+
+            if (args.ContextMenuTarget.HasSelection) selectionText = args.ContextMenuTarget.SelectionText;
+            else if (args.ContextMenuTarget.HasLinkText) selectionText = args.ContextMenuTarget.LinkText;
+        }
+
+        private void PopulateWithQuickActions(CoreWebView2ContextMenuRequestedEventArgs args)
+        {
+            foreach (var item in Data.Main.QuickActions.Items.Where(p => (int)p.ShowOptions.Position < 3))
+            {
+                if (item.CondiditonsAreMet(args))
+                {
+                    AppBarButton button = new();
+                    button.Label = item.Label;
+                    button.Icon = new SymbolIconEx(item.Icon);
+                    button.Click += (s, a) => QACommands.Execute(item.Command);
+                    button.RightTapped += (s, a) =>
                     {
-                        case QuickActionItemShowPosition.Top:
-                            this.Items.Insert(0, menuItem);
-                            if (!haveItemsInTop) { this.Items.Insert(1, new MenuFlyoutSeparator()); haveItemsInTop = true; }
+                        MenuFlyout flyout = new();
+                        MenuFlyoutItem fitem = new() { Text = "Remove" };
+                        fitem.Click += (s, a) =>
+                        {
+                            button.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                            Data.Main.QuickActions.Items.Remove(item);
+                        };
+
+                        flyout.Items.Add(fitem);
+
+                        flyout.ShowAt(button);
+                    };
+
+                    switch (item.ShowOptions.Position)
+                    {
+                        case Shared.Enums.QuickActionShowPosition.PrimaryItems:
+                            PrimaryCommands.Insert(0, button);
                             break;
 
-                        case QuickActionItemShowPosition.BeforeInspectItem:
-                            this.Items.Insert(this.Items.Count - 2, menuItem);
-                            if (!haveItemsInBottom) { this.Items.Insert(this.Items.Count - 3, new MenuFlyoutSeparator()); haveItemsInBottom = true; }
+                        case Shared.Enums.QuickActionShowPosition.Top:
+                            SecondaryCommands.Insert(0, button);
                             break;
 
-                        case QuickActionItemShowPosition.InShowMoreOptions:
-                            moreFlyout.Items.Add(menuItem);
-                            if (!haveItemsInShowMoreOptions) { moreFlyout.Items.Insert(1, new MenuFlyoutSeparator()); haveItemsInShowMoreOptions = true; }
+                        case Shared.Enums.QuickActionShowPosition.BeforeInspectItem:
+                            SecondaryCommands.Insert(SecondaryCommands.Count - 2, button);
                             break;
                     }
                 }
-
             }
         }
-        */
 
-        private void PopulateContextMenu(CoreWebView2ContextMenuRequestedEventArgs args, IList<CoreWebView2ContextMenuItem> menuList, object menuFlyout)
+
+        private List<MenuFlyoutItemBase> PopulateSubContextMenus(CoreWebView2ContextMenuRequestedEventArgs args, CoreWebView2ContextMenuItem current, object parent)
         {
-            if (menuFlyout.GetType() == typeof(FWebViewContextMenu))
-            {
-                string text = Shared.Helpers.ResourceString.GetString("More", "ContextMenus");
+            List<MenuFlyoutItemBase> newItem = new();
 
-                moreFlyout = new MenuFlyoutSubItem() { Text = text, Icon = new FontIcon { FontFamily = new Microsoft.UI.Xaml.Media.FontFamily("Segoe Fluent Icons"), Glyph = "\uE10C" } };
+            foreach (var child in current.Children)
+            {
+                object newContextMenuItem = null;
+
+                switch (child.Kind)
+                {
+                    case CoreWebView2ContextMenuItemKind.Separator:
+                        newContextMenuItem = new MenuFlyoutSeparator();
+                        break;
+
+                    case CoreWebView2ContextMenuItemKind.CheckBox or CoreWebView2ContextMenuItemKind.Radio:
+                        newContextMenuItem = new ToggleMenuFlyoutItem();
+                        ((ToggleMenuFlyoutItem)newContextMenuItem).Text = child.Label.Replace("&", "");
+                        ((ToggleMenuFlyoutItem)newContextMenuItem).KeyboardAcceleratorTextOverride = child.ShortcutKeyDescription;
+                        ((ToggleMenuFlyoutItem)newContextMenuItem).IsChecked = child.IsChecked;
+                        ((ToggleMenuFlyoutItem)newContextMenuItem).Click += (s, ex) =>
+                        {
+                            args.SelectedCommandId = child.CommandId;
+                            this.Hide();
+                        };
+                        break;
+
+                    default:
+                        newContextMenuItem = new MenuFlyoutItem();
+                        ((MenuFlyoutItem)newContextMenuItem).Text = child.Label.Replace("&", "");
+                        ((MenuFlyoutItem)newContextMenuItem).KeyboardAcceleratorTextOverride = child.ShortcutKeyDescription;
+                        ((MenuFlyoutItem)newContextMenuItem).Click += (s, ex) =>
+                        {
+                            args.SelectedCommandId = child.CommandId;
+                            this.Hide();
+                        };
+                        break;
+                }
+
+                newItem.Add((MenuFlyoutItemBase)newContextMenuItem);
             }
 
-            IList<MenuFlyoutItemBase> itemList = new List<MenuFlyoutItemBase>();
+            return newItem;
+        }
 
-
-            for (int i = 0; i < menuList.Count; i++)
+        private void PopulateContextMenu(CoreWebView2ContextMenuRequestedEventArgs args)
+        {
+            foreach (var webView2contextMenuItem in args.MenuItems)
             {
+                // The item that will be added
+                object newContextMenuItem = null;
+                Debug.WriteLine(webView2contextMenuItem.Label + " " + webView2contextMenuItem.CommandId);
 
-                CoreWebView2ContextMenuItem current = menuList[i];
-                if (current.Kind == CoreWebView2ContextMenuItemKind.Separator)
+                switch (webView2contextMenuItem.Kind)
                 {
-                    if(menuList.Count > 0)
-                    {
-                        if(menuList.Last().GetType() != typeof(MenuFlyoutSeparator))
+                    case CoreWebView2ContextMenuItemKind.Separator:
+                        newContextMenuItem = new AppBarSeparator();
+                        break;
+
+                    case CoreWebView2ContextMenuItemKind.CheckBox or CoreWebView2ContextMenuItemKind.Radio:
+                        newContextMenuItem = new AppBarToggleButton();
+                        ((AppBarToggleButton)newContextMenuItem).IsEnabled = webView2contextMenuItem.IsEnabled;
+                        ((AppBarToggleButton)newContextMenuItem).Label = webView2contextMenuItem.Label.Replace("&", "");
+                        ((AppBarToggleButton)newContextMenuItem).KeyboardAcceleratorTextOverride = webView2contextMenuItem.ShortcutKeyDescription;
+                        ((AppBarToggleButton)newContextMenuItem).IsChecked = webView2contextMenuItem.IsChecked;
+                        ((AppBarToggleButton)newContextMenuItem).Click += (s, ex) =>
                         {
-                            MenuFlyoutSeparator sep = new MenuFlyoutSeparator();
-                            itemList.Add(sep);
+                            args.SelectedCommandId = webView2contextMenuItem.CommandId;
+                        };
+                        break;
+
+                    case CoreWebView2ContextMenuItemKind.Submenu:
+                        newContextMenuItem = new AppBarButton();
+                        ((AppBarButton)newContextMenuItem).IsEnabled = webView2contextMenuItem.IsEnabled;
+                        ((AppBarButton)newContextMenuItem).Label = webView2contextMenuItem.Label.Replace("&", "");
+                        ((AppBarButton)newContextMenuItem).KeyboardAcceleratorTextOverride = webView2contextMenuItem.ShortcutKeyDescription;
+                        var flyout = new MenuFlyout();
+                        foreach (var item in PopulateSubContextMenus(args, webView2contextMenuItem, this))
+                        {
+                            flyout.Items.Add(item);
+                        }
+
+                        ((AppBarButton)newContextMenuItem).Flyout = flyout;
+                        break;
+
+                    default:
+                        newContextMenuItem = new AppBarButton();
+                        ((AppBarButton)newContextMenuItem).IsEnabled = webView2contextMenuItem.IsEnabled;
+                        ((AppBarButton)newContextMenuItem).Label = webView2contextMenuItem.Label.Replace("&", "");
+                        ((AppBarButton)newContextMenuItem).KeyboardAcceleratorTextOverride = webView2contextMenuItem.ShortcutKeyDescription;
+                        ((AppBarButton)newContextMenuItem).Click += (s, ex) =>
+                        {
+                            args.SelectedCommandId = webView2contextMenuItem.CommandId;
+                        };
+                        break;
+                }
+
+                ContextMenuIconsHelper.SetIcon(newContextMenuItem, webView2contextMenuItem);
+
+
+
+                if (primaryList.Contains(webView2contextMenuItem.Name))
+                {
+                    if (((AppBarButton)newContextMenuItem).IsEnabled && webView2contextMenuItem.Label != string.Empty)
+                    {
+                        // Fix the forward button with a test
+                        if (webView.CanGoForward && webView2contextMenuItem.Name == "forward")
+                        {
+                            this.PrimaryCommands.Add((ICommandBarElement)newContextMenuItem);
+                            ((AppBarButton)newContextMenuItem).Click += (s, a) => this.Hide();
+                        }
+                        else if (webView2contextMenuItem.Name != "forward")
+                        {
+                            this.PrimaryCommands.Add((ICommandBarElement)newContextMenuItem);
+                            ((AppBarButton)newContextMenuItem).Click += (s, a) => this.Hide();
                         }
                     }
-                    continue;
-                }
-
-                if (current.Kind == CoreWebView2ContextMenuItemKind.Submenu)
-                {
-                    MenuFlyoutSubItem newItem = new MenuFlyoutSubItem();
-                    // The accessibility key is the key after the & in the label
-                    // Replace with '_' so it is underlined in the label
-                    newItem.Text = current.Label.Replace("&", "");
-                    newItem.IsEnabled = current.IsEnabled;
-
-                    ContextMenuIconsHelper.SetIcon(newItem, current);
-
-                    if (MoreList.Contains(current.Name)) moreFlyout.Items.Add(newItem);
-                    else itemList.Add(newItem);
-
                 }
                 else
                 {
-
-                    if (current.Kind == CoreWebView2ContextMenuItemKind.CheckBox
-                    || current.Kind == CoreWebView2ContextMenuItemKind.Radio)
-                    {
-                        ToggleMenuFlyoutItem newItem = new ToggleMenuFlyoutItem();
-                        // The accessibility key is the key after the & in the label
-                        // Replace with '_' so it is underlined in the label
-                        newItem.Text = current.Label.Replace("&", "");
-                        newItem.IsEnabled = current.IsEnabled;
-
-                        newItem.IsChecked = current.IsChecked;
-
-                        newItem.Click += (s, ex) =>
-                        {
-                            args.SelectedCommandId = current.CommandId;
-                        };
-                        if (MoreList.Contains(current.Name)) moreFlyout.Items.Add(newItem);
-                        else itemList.Add(newItem);
-                    }
-                    else
-                    {
-                        MenuFlyoutItem newItem = new MenuFlyoutItem();
-                        // The accessibility key is the key after the & in the label
-                        // Replace with '_' so it is underlined in the label
-                        newItem.Text = current.Label.Replace("&", "");
-                        newItem.IsEnabled = current.IsEnabled;
-
-                        newItem.Click += (s, ex) =>
-                        {
-                            args.SelectedCommandId = current.CommandId;
-                        };
-                        ContextMenuIconsHelper.SetIcon(newItem, current);
-                        if (MoreList.Contains(current.Name))
-                            moreFlyout.Items.Add(newItem);
-                        else itemList.Add(newItem);
-                    }
-
+                    this.SecondaryCommands.Add((ICommandBarElement)newContextMenuItem);
                 }
-
-                if (current.Name == "inspectElement" && moreFlyout.Items.Count != 0)
-                {
-                    itemList.Insert(itemList.Count - 1, moreFlyout);
-                }
-
-                if (menuFlyout.GetType() == typeof(FWebViewContextMenu))
-                {
-                    var item = (FWebViewContextMenu)menuFlyout;
-                    foreach (var menuItem in itemList)
-                    {
-                        item.Items.Add(menuItem);
-                    }
-                }
-                else
-                {
-                    var item = (MenuFlyoutSubItem)menuFlyout;
-                    foreach (var menuItem in itemList)
-                    {
-                        item.Items.Add(menuItem);
-                    }
-                }
-
-                itemList.Clear();
-
             }
+        }
 
 
+
+
+
+        private void PreviewButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            PreviewFlyout flyout = new();
+            FlyoutShowOptions flyoutOptions = new();
+            flyoutOptions.Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft;
+            flyoutOptions.Position = pos;
+            flyout.webView.Source = new Uri(linkUri);
+
+            flyout.ShowAt(WebView.SelectedWebView, flyoutOptions);
+
+        }
+
+        private void quickSearchAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            double width = WebView.SelectedWebView.ActualWidth;
+
+            QuickSearchFlyout flyout = new() { SearchText = selectionText != null ? selectionText : string.Empty };
+            FlyoutShowOptions flyoutOptions = new();
+            flyoutOptions.Placement = FlyoutPlacementMode.Bottom;
+            flyoutOptions.Position = new Point(width / 2, 90);
+
+            flyout.ShowAt(WebView.SelectedWebView, flyoutOptions);
         }
     }
 }

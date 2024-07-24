@@ -1,10 +1,4 @@
-﻿using Odyssey.FWebView;
-using Odyssey.QuickActions.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Odyssey.QuickActions.Objects;
 
 namespace Odyssey.QuickActions.Commands
 {
@@ -12,11 +6,11 @@ namespace Odyssey.QuickActions.Commands
     {
         internal static Res Exec(string[] options)
         {
-            if (WebView.SelectedWebView != null)
+            if (Variables.SelectedWebView != null)
             {
-                if (WebView.SelectedWebView.CanGoForward)
+                if (Variables.SelectedWebView.CanGoForward)
                 {
-                    WebView.SelectedWebView.GoForward();
+                    Variables.SelectedWebView.GoForward();
                     return new Res(true);
                 }
 

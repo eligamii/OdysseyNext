@@ -1,10 +1,12 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Odyssey.Data.Settings;
+using Odyssey.Dialogs;
+using System;
 using System.Threading.Tasks;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.Views.Options
 {
@@ -18,8 +20,10 @@ namespace Odyssey.Views.Options
             this.InitializeComponent();
 
             searchEngineComboBox.SelectedIndex = Settings.SelectedSearchEngine;
+            searchSuggestionToggleSwitch.IsOn = Settings.AreSearchSuggestionsEnabled;
             darkModeToggleSwitch.IsOn = Settings.IsDarkReaderEnabled;
             forceDarkModeCheckBox.IsChecked = Settings.ForceDarkReader;
+
         }
 
         private void searchEngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -37,5 +41,21 @@ namespace Odyssey.Views.Options
             await Task.Delay(100);
             Settings.ForceDarkReader = forceDarkModeCheckBox.IsChecked == true;
         }
+
+        private void searchSuggestionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            Settings.AreSearchSuggestionsEnabled = searchSuggestionToggleSwitch.IsOn;
+        }
+
+        private async void MigrateButton_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog.Current.Hide();
+
+            MigrateDataContentDialog dialog = new();
+            dialog.XamlRoot = MainWindow.Current.Content.XamlRoot;
+
+            await dialog.ShowAsync();
+        }
+
     }
 }

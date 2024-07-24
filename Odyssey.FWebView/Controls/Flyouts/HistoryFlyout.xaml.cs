@@ -3,8 +3,8 @@ using Microsoft.UI.Xaml.Controls;
 using Odyssey.Data.Main;
 using Odyssey.Shared.ViewModels.Data;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.FWebView.Controls.Flyouts
 {

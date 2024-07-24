@@ -16,6 +16,8 @@
         DuckDuckGo,
         Qwant,
         YouDotCom,
-        Startpage
+        Startpage,
+        PerplexityAI,
+        Kagi,
     }
 }

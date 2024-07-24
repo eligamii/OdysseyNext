@@ -141,6 +141,9 @@
   <data name="History" xml:space="preserve">
     <value>Historique</value>
   </data>
+  <data name="Lock pane" xml:space="preserve">
+    <value>Verrouiller le paanneau</value>
+  </data>
   <data name="More" xml:space="preserve">
     <value>Afficher plus d'options</value>
   </data>
@@ -155,6 +158,15 @@
   </data>
   <data name="PinSearchBar" xml:space="preserve">
     <value>Épingler de la barre de recherche</value>
+  </data>
+  <data name="Preview" xml:space="preserve">
+    <value>Aperçu</value>
+  </data>
+  <data name="QuickActions" xml:space="preserve">
+    <value>Quick Actions</value>
+  </data>
+  <data name="QuickSearch" xml:space="preserve">
+    <value>Recherche rapide</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Râfraichir</value>
@@ -179,5 +191,14 @@
   </data>
   <data name="UnpinSearchBar" xml:space="preserve">
     <value>Desépingler de la barre de recherche</value>
+  </data>
+  <data name="UrlBar" xml:space="preserve">
+    <value>Afficher la barre d'adresse</value>
+  </data>
+  <data name="LockPane" xml:space="preserve">
+    <value>Verrouiller le paanneau principal</value>
+  </data>
+  <data name="SendTo" xml:space="preserve">
+    <value>Envoyer à</value>
   </data>
 </root>

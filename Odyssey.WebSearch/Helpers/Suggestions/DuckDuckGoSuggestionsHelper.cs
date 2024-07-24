@@ -10,7 +10,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
 {
     internal static class DuckDuckGoSuggestionsHelper
     {
-        private static List<Suggestion> suggestions = new(); // Save suggestions for faster suggestions
+        private static List<Suggestion> suggestions = new(); // cache suggestions for faster suggestions
         public class DDGSuggestion //DuckDuckGo JSON suggestions
         {
             public string phrase { get; set; }
@@ -18,6 +18,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
 
 
         private static HttpClient client = new HttpClient();
+
         public async static Task<List<Suggestion>> GetFromDuckDuckGoSuggestions(string query)
         {
             if (!suggestions.Any(p => p.Query == query))
@@ -31,7 +32,7 @@ namespace Odyssey.WebSearch.Helpers.Suggestions
                 {
                     Suggestion suggestion = new();
                     suggestion.Title = ddgsuggestion.phrase;
-                    suggestion.Url = await WebViewNavigateUrlHelper.ToUrl(ddgsuggestion.phrase);
+                    suggestion.Url = await WebViewNavigateUrlHelper.ToWebView2Url(ddgsuggestion.phrase);
                     suggestion.Kind = SuggestionKind.Search;
                     suggestion.Query = query;
 

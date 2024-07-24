@@ -25,6 +25,7 @@ namespace Odyssey.QuickActions.Commands
 
                 FlyoutShowOptions flyoutOptions = new();
                 flyoutOptions.Position = new Windows.Foundation.Point(x, y);
+                flyoutOptions.Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft;
 
                 flyout.webView.Source = new Uri(content);
                 flyout.Command = buttoncommand;

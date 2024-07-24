@@ -7,14 +7,18 @@ namespace Odyssey.WebSearch.Helpers
 {
     public class WebViewNavigateUrlHelper
     {
-        // Get the corresponding url from a query (ex: "whats 1+1?" can return "https://www.google.com/search?q=whats+1%2B1%3F")
-        public static async Task<string> ToUrl(string query)
+        /// <summary>
+        /// Return an url usable for WebView2.CoreWebView2.Navigate() and WebView2.Source (ex: "whats 1+1?" can return "https://www.google.com/search?q=whats+1%2B1%3F")
+        /// </summary>
+        /// <param name="query">The string to convert into a WebView2 url</param>
+        /// <returns></returns>
+        public static async Task<string> ToWebView2Url(string query)
         {
             var kind = await GetStringKindAsync(query);
 
             switch (kind)
             {
-                case StringKind.Url or StringKind.OdysseyUrl:
+                case StringKind.Url or StringKind.InternalUrl:
                     if (!query.Contains("://")) query = "https://" + query;
                     return query;
 

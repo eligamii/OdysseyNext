@@ -1,9 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.FWebView.Controls.Flyouts
 {
@@ -17,14 +16,14 @@ namespace Odyssey.FWebView.Controls.Flyouts
             this.webView = webView;
         }
 
-        private async void PreviousButton_Click(object sender, RoutedEventArgs e)
+        private void PreviousButton_Click(object sender, RoutedEventArgs e)
         {
-            await webView.ExecuteScriptAsync($@"window.find(""{searchBox.Text}"", false, true)");
+            _ = webView.ExecuteScriptAsync($@"window.find(""{searchBox.Text}"", false, true)");
         }
 
-        private async void NextButton_Click(object sender, RoutedEventArgs e)
+        private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            await webView.ExecuteScriptAsync($@"window.find(""{searchBox.Text}"", false, false)");
+            _ = webView.ExecuteScriptAsync($@"window.find(""{searchBox.Text}"", false, false)");
         }
     }
 }

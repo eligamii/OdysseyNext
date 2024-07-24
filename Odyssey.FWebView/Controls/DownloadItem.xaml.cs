@@ -1,23 +1,47 @@
+using Downloader;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using System.ComponentModel;
+using Microsoft.UI.Xaml.Shapes;
+using Odyssey.Shared.Helpers;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using System.IO;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+
 
 namespace Odyssey.FWebView.Controls
 {
     public sealed partial class DownloadItem : ListViewItem
     {
-        public DownloadItem(Process process)
+        public DownloadItem(string url)
         {
             this.InitializeComponent();
-            //process.OutputDataReceived += Process_OutputDataReceived; // Get the download info
 
-            //this.DataContext = downloadData;
+            var downloadOpt = new DownloadConfiguration()
+            {
+                ChunkCount = 8,
+            };
+
+            var downloader = new DownloadService(downloadOpt);
+
+            var downloadFolder = KnownFolders.GetPath(KnownFolder.Downloads);
+            DirectoryInfo folderInfo = new(downloadFolder);
+
+            downloader.DownloadProgressChanged += Downloader_DownloadProgressChanged;
+            downloader.DownloadFileCompleted += Downloader_DownloadFileCompleted;
+
+            downloader.DownloadFileTaskAsync(url, folderInfo);
+        }
+
+        private void Downloader_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void Downloader_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            progressRing.Value = e.ProgressPercentage;
         }
 
         /*
