@@ -1,1 +1,7 @@
-﻿
+﻿﻿﻿SetForegroundWindow
+ShowWindow
+RegisterHotKey
+SetWindowLongPtr
+CallWindowProc
+GetWindowThreadProcessId
+GetWindowLong

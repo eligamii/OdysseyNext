@@ -77,14 +77,17 @@ namespace Odyssey.Views
 
             if (Settings.SuccessfullyClosed == false && Settings.RestoreTabsAfterCrash && instances.Count == 1)
             {
-                PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
-
-                switch(Settings.TabType)
+                try
                 {
-                    case 0: PaneView.Current.FavoriteGrid.SelectedIndex = Settings.TabIndex; break;
-                    case 1: PaneView.Current.PinsTabView.SelectedIndex = Settings.TabIndex; break;
-                    case 2: PaneView.Current.TabsView.SelectedIndex = Settings.TabIndex; break;
-                }
+                    PaneView.Current.TabsView.ItemsSource = Tabs.Restore();
+
+                    switch (Settings.TabType)
+                    {
+                        case 0: PaneView.Current.FavoriteGrid.SelectedIndex = Settings.TabIndex; break;
+                        case 1: PaneView.Current.PinsTabView.SelectedIndex = Settings.TabIndex; break;
+                        case 2: PaneView.Current.TabsView.SelectedIndex = Settings.TabIndex; break;
+                    }
+                } catch { }
             }
 
             Settings.SuccessfullyClosed = false;
