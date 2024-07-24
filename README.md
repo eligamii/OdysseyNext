@@ -1,2 +1,3 @@
 # Odyssey
-_This repository will not be updated anymore. See [OdysseyApp](https://github.com/eligamii/OdysseyApp) when made public_
+_Odyssey is currently being rewritten to allow extension support, among others, in another repository that is currenly made private._
+
